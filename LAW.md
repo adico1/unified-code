@@ -34,10 +34,24 @@ Verification returns its verdict and evidence as part of the thing.
 
 Unknown, absent, invalid, and false are distinct states.
 
+```text
+unknown  — admitted, not yet classified
+absent   — value is None
+false    — value is False
+invalid  — failed verification or rejected shape
+```
+
 ## L7 — No hidden effects
 
 Input/output, time, randomness, persistence, and network access must be
 visible boundary parts.
+
+```python
+outward(world(verify(space(letter(inward(host_value))))))
+```
+
+`inward` admits host values; `outward` records emission. Kernel parts do
+not print, write, or call the network.
 
 ## L8 — No object hierarchy
 

@@ -8,6 +8,14 @@
 - 1D, 2D, and 3D spatial construction
 - Evidence-bearing verification
 - Conformance tests
+- Explicit inward/outward boundaries (L7)
+- Distinct unknown / absent / false / invalid states (L6)
+
+### Open (not decided in 0.1)
+
+- Whether `world()` may append `world:composed` to an invalid thing, or
+  must require `state == "valid"`. Recorded in SPEC.md; do not treat the
+  current permissive behavior as law.
 
 ## 0.2 — Computation
 

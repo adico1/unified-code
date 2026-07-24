@@ -44,9 +44,13 @@ python -m pytest
 ## Small example
 
 ```python
-from unified import letter, space, verify, world
+from unified import inward, letter, outward, space, verify, world
 
-result = world(verify(space(letter("seed"))))
+result = outward(world(verify(space(letter(inward("seed"))))))
 ```
+
+`inward` / `outward` are visible boundaries (L7). `letter` accepts a
+canonical thing, not a bare host value (L1). States `unknown`, `absent`,
+`false`, and `invalid` are distinct (L6).
 
 See [SPEC.md](SPEC.md), [LAW.md](LAW.md), and [ROADMAP.md](ROADMAP.md).

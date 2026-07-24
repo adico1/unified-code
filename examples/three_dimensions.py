@@ -1,8 +1,11 @@
-from unified import letter, space, verify, world
+from unified import inward, letter, space, verify, world
 
 
 def program(thing):
-    return world(verify(space(letter(thing))))
+    return world(verify(space(letter(inward(thing)))))
 
 
-print(program("seed"))
+if __name__ == "__main__":
+    from unified import host_render, outward
+
+    print(host_render(outward(program("seed"))))

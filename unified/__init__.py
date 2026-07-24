@@ -1,5 +1,6 @@
 """Unified Code experimental kernel."""
 
+from .boundary import host_render, inward, outward
 from .depth import (
     above,
     bad,
@@ -13,7 +14,7 @@ from .depth import (
     west,
 )
 from .dimension import line, plane, space, time, value
-from .thing import letter, world
+from .thing import is_thing, letter, world
 from .verify import verify
 
 __all__ = [
@@ -24,9 +25,13 @@ __all__ = [
     "east",
     "end",
     "good",
+    "host_render",
+    "inward",
+    "is_thing",
     "letter",
     "line",
     "north",
+    "outward",
     "plane",
     "south",
     "space",
