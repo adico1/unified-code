@@ -53,4 +53,21 @@ result = outward(world(verify(space(letter(inward("seed"))))))
 canonical thing, not a bare host value (L1). States `unknown`, `absent`,
 `false`, and `invalid` are distinct (L6).
 
+## Developer workflow
+
+Learn one construction process once and use it everywhere. The developer
+supplies only the meaningful difference; the generator supplies the
+repeated structure.
+
+```bash
+uc new my-project
+cd my-project
+pytest
+python -m my_project
+uc add double
+```
+
+See [docs/DEVELOPER_WORKFLOW.md](docs/DEVELOPER_WORKFLOW.md) for the full
+sequence, scales (UC-0 through UC-4), and design speed targets.
+
 See [SPEC.md](SPEC.md), [LAW.md](LAW.md), and [ROADMAP.md](ROADMAP.md).

@@ -39,6 +39,7 @@
 - Module assembly
 - Project assembly
 - Generated tests
+- `uc new` / `uc add` generator (started in v0.1)
 
 ## 0.5 — Translation
 

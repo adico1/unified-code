@@ -11,8 +11,14 @@ requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [{ name = "Adi Ovadia Cohen" }]
 
+[project.scripts]
+uc = "unified.generator.cli:host_main"
+
 [project.optional-dependencies]
 test = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+include = ["unified*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
