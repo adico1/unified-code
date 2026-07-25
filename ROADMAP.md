@@ -20,11 +20,11 @@
 
 ## 0.2 — Computation
 
-- Choice
-- Recursion and termination
-- Repetition
-- Structured failure
-- Transformation examples
+- Choice as declarative event routes (L10)
+- Repetition as audited `map_event` / `fold_event` / `until_quiet` (L10)
+- Structured failure and `ticket.open` for unhandled exceptions (L10)
+- Recursion forbidden as unaudited loop substitute
+- Transformation examples (expression IR + event pipeline)
 
 ## 0.3 — Boundaries
 

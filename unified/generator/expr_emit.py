@@ -251,138 +251,167 @@ def _dig(obj, path):
                 return None
             cur = cur[part]
     return cur
+
+
+def run_expression(thing, name, program, bindings, input_key, merge_mode):
+    """Audited expression Part body (L10: domain must not contain this control flow).
+
+    Validation failures become invalid Things (no ticket).
+    Unexpected exceptions propagate so call_part can open tickets.
+    """
+    from .boundary import is_thing
+
+    if not is_thing(thing):
+        return {
+            "value": thing,
+            "depths": (),
+            "axes": (),
+            "evidence": (f"part:{name}", f"{name}:rejected-non-thing"),
+            "state": "invalid",
+        }
+    if thing["state"] in {"invalid", "absent", "false", "unknown"}:
+        return {
+            **thing,
+            "evidence": (*thing["evidence"], f"part:{name}", f"{name}:skipped"),
+            "state": thing["state"],
+        }
+    value = thing["value"]
+    if not isinstance(value, dict):
+        return {
+            **thing,
+            "value": {"error": "invalid-internal-thing"},
+            "evidence": (*thing["evidence"], f"part:{name}", f"{name}:bad-value"),
+            "state": "invalid",
+        }
+    if (
+        "error" in value
+        and input_key not in value
+        and "text" not in value
+        and "document" not in value
+    ):
+        return {
+            **thing,
+            "evidence": (*thing["evidence"], f"part:{name}", f"{name}:prior-error"),
+            "state": "invalid",
+        }
+
+    if input_key == "text":
+        if "text" not in value or not isinstance(value.get("text"), str):
+            return {
+                **thing,
+                "value": {**value, "error": "missing-text"},
+                "evidence": (*thing["evidence"], f"part:{name}", f"{name}:missing-text"),
+                "state": "absent",
+            }
+        root = {"text": value["text"]}
+    elif input_key == "document":
+        if "document" not in value:
+            return {
+                **thing,
+                "value": {**value, "error": "missing-document"},
+                "evidence": (
+                    *thing["evidence"],
+                    f"part:{name}",
+                    f"{name}:missing-document",
+                ),
+                "state": "absent",
+            }
+        root = value["document"]
+        if not isinstance(root, dict):
+            return {
+                **thing,
+                "value": {**value, "error": "input-not-an-object", "path": []},
+                "evidence": (*thing["evidence"], f"part:{name}", f"{name}:not-object"),
+                "state": "invalid",
+            }
+    else:
+        root = value
+
+    ctx = {"root": root, "path": []}
+    try:
+        bound = {}
+        for bname, bnode in (bindings or {}).items():
+            bound[bname] = eval_expr(bnode, ctx)
+            ctx = {**ctx, "bindings": bound}
+        ctx = {**ctx, "bindings": bound}
+        result = eval_expr(program, ctx)
+    except ValueError as exc:
+        if not is_expr_fail(exc):
+            raise
+        err_value = {
+            **value,
+            "error": exc.uc_expr_error,
+            "path": list(exc.uc_expr_path),
+        }
+        return {
+            **thing,
+            "value": err_value,
+            "evidence": (
+                *thing["evidence"],
+                f"part:{name}",
+                f"{name}:error:{exc.uc_expr_error}",
+            ),
+            "state": "invalid",
+        }
+
+    if merge_mode == "stats":
+        new_value = {**value, "stats": result}
+    elif merge_mode == "merge":
+        if not isinstance(result, dict):
+            return {
+                **thing,
+                "value": {**value, "error": "invalid-internal-thing"},
+                "evidence": (*thing["evidence"], f"part:{name}", f"{name}:bad-result"),
+                "state": "invalid",
+            }
+        new_value = {**value, **result}
+    else:
+        new_value = {**value, "result": result}
+
+    return {
+        **thing,
+        "value": new_value,
+        "evidence": (*thing["evidence"], f"part:{name}", f"{name}:ok"),
+        "state": "formed",
+    }
 '''
 
 
 def emit_expression_feature_body(name: str, transformation: dict) -> str:
-    """Emit feature function body for kind=expression."""
+    """Emit thin L10 domain body: no if/for — delegates to audited run_expression."""
     program = transformation.get("program")
     if program is None:
-        # allow bindings + result form
         bindings = transformation.get("bindings") or {}
         result = transformation.get("result")
         if result is None:
             raise ValueError("expression transformation requires program or result")
-        # Synthesize object program from bindings by inlining
-        # For simplicity require program key
         program = result
 
     errors = validate_expression(program)
     if errors:
         raise ValueError(f"invalid expression: {errors}")
 
-    # Also validate binding expressions if present
     bindings = transformation.get("bindings") or {}
     for bname, bnode in bindings.items():
         errs = validate_expression(bnode)
         if errs:
             raise ValueError(f"invalid binding {bname}: {errs}")
 
-    input_key = transformation.get("input_key", "document")  # document | text | value
-    merge_mode = transformation.get("merge", "replace_stats")  
-    # merge modes: replace_stats (put in value["stats"]), merge_value, set_value
+    input_key = transformation.get("input_key", "document")
+    merge_mode = transformation.get("merge", "replace_stats")
 
     program_literal = _py_literal(program)
     bindings_literal = _py_literal(bindings)
 
-    return f'''    if thing["state"] in {{"invalid", "absent", "false", "unknown"}}:
-        return {{
-            **thing,
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:skipped"),
-            "state": thing["state"],
-        }}
-    value = thing["value"]
-    if not isinstance(value, dict):
-        return {{
-            **thing,
-            "value": {{"error": "invalid-internal-thing"}},
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:bad-value"),
-            "state": "invalid",
-        }}
-    if "error" in value and "{input_key}" not in value and "text" not in value and "document" not in value:
-        return {{
-            **thing,
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:prior-error"),
-            "state": "invalid",
-        }}
-
-    # Resolve evaluation root
-    if "{input_key}" == "text":
-        if "text" not in value or not isinstance(value.get("text"), str):
-            return {{
-                **thing,
-                "value": {{**value, "error": "missing-text"}},
-                "evidence": (*thing["evidence"], "part:{name}", "{name}:missing-text"),
-                "state": "absent",
-            }}
-        root = {{"text": value["text"]}}
-    elif "{input_key}" == "document":
-        if "document" not in value:
-            return {{
-                **thing,
-                "value": {{**value, "error": "missing-document"}},
-                "evidence": (*thing["evidence"], "part:{name}", "{name}:missing-document"),
-                "state": "absent",
-            }}
-        root = value["document"]
-        if not isinstance(root, dict):
-            return {{
-                **thing,
-                "value": {{**value, "error": "input-not-an-object", "path": []}},
-                "evidence": (*thing["evidence"], "part:{name}", "{name}:not-object"),
-                "state": "invalid",
-            }}
-    else:
-        root = value
-
-    from .expr_runtime import eval_expr, is_expr_fail
-
-    program = {program_literal}
-    bindings = {bindings_literal}
-    ctx = {{"root": root, "path": []}}
-    try:
-        bound = {{}}
-        for bname, bnode in bindings.items():
-            bound[bname] = eval_expr(bnode, ctx)
-            # later bindings may ref earlier ones
-            ctx = {{**ctx, "bindings": bound}}
-        ctx = {{**ctx, "bindings": bound}}
-        result = eval_expr(program, ctx)
-    except ValueError as exc:
-        if not is_expr_fail(exc):
-            raise
-        err_value = {{
-            **value,
-            "error": exc.uc_expr_error,
-            "path": list(exc.uc_expr_path),
-        }}
-        return {{
-            **thing,
-            "value": err_value,
-            "evidence": (*thing["evidence"], "part:{name}", f"{name}:error:{{exc.uc_expr_error}}"),
-            "state": "invalid",
-        }}
-
-    if "{merge_mode}" == "stats":
-        new_value = {{**value, "stats": result}}
-    elif "{merge_mode}" == "merge":
-        if not isinstance(result, dict):
-            return {{
-                **thing,
-                "value": {{**value, "error": "invalid-internal-thing"}},
-                "evidence": (*thing["evidence"], "part:{name}", "{name}:bad-result"),
-                "state": "invalid",
-            }}
-        new_value = {{**value, **result}}
-    else:
-        new_value = {{**value, "result": result}}
-
-    return {{
-        **thing,
-        "value": new_value,
-        "evidence": (*thing["evidence"], "part:{name}", "{name}:ok"),
-        "state": "formed",
-    }}
+    return f'''    from .expr_runtime import run_expression
+    return run_expression(
+        thing,
+        {name!r},
+        {program_literal},
+        {bindings_literal},
+        {input_key!r},
+        {merge_mode!r},
+    )
 '''
 
 

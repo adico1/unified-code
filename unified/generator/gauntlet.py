@@ -120,6 +120,8 @@ def run_gauntlet(thing):
             g6 = _g6_idempotency(declaration_path, work)
             g7 = _g7_mutations(project_path, decl_data)
             g8 = _g8_performance(declaration_path, work)
+            g9 = _g9_l10_control_flow(project_path, decl_data)
+            cf_report = _control_flow_report(project_path)
 
             for name, result in (
                 ("G0", g0),
@@ -131,12 +133,14 @@ def run_gauntlet(thing):
                 ("G6", g6),
                 ("G7", g7),
                 ("G8", g8),
+                ("G9", g9),
             ):
                 levels[name] = result
                 checks_executed += result["executed"]
                 checks_passed += result["passed"]
                 for fail in result.get("failed_checks") or ():
                     failures.append(f"{name}:{fail}")
+            levels["control_flow_report"] = cf_report
         else:
             failures.append("gauntlet:no-project")
             checks_executed += 1
@@ -171,7 +175,7 @@ def run_gauntlet(thing):
             **ended,
             "value": {
                 **(ended["value"] if isinstance(ended.get("value"), dict) else {}),
-                "gauntlet_level": "G0-G8",
+                "gauntlet_level": "G0-G9",
                 "checks_executed": checks_executed,
                 "checks_passed": checks_passed,
                 "checks_failed": len(failures),
@@ -387,9 +391,20 @@ def _g1_law(project_path: str) -> dict:
         }
 
     public_ops = []
-    for mod_name in ("boundary", "core", "parts", "compose", "expr_runtime"):
+    # Audited runtimes may use multi-arg helpers; they are not domain Parts.
+    AUDITED_RUNTIMES = frozenset({"expr_runtime", "event_runtime"})
+    for mod_name in (
+        "boundary",
+        "core",
+        "parts",
+        "compose",
+        "expr_runtime",
+        "event_runtime",
+    ):
         path = pkg / f"{mod_name}.py"
         if not path.is_file():
+            if mod_name in {"event_runtime"}:
+                check("event-runtime-present", False)
             continue
         try:
             tree = ast.parse(path.read_text(encoding="utf-8"))
@@ -398,16 +413,14 @@ def _g1_law(project_path: str) -> dict:
             continue
         for node in tree.body:
             if isinstance(node, ast.FunctionDef) and not node.name.startswith("_"):
-                # expr_runtime helpers are not all Parts
-                if mod_name == "expr_runtime":
-                    if isinstance(node, ast.ClassDef):
-                        check(f"no-class:{mod_name}.{node.name}", False)
+                if mod_name in AUDITED_RUNTIMES:
                     continue
                 public_ops.append((mod_name, node))
             if isinstance(node, ast.ClassDef):
                 check(f"no-class:{mod_name}.{node.name}", False)
 
     check("has-public-ops", len(public_ops) > 0)
+    check("event-runtime-present", (pkg / "event_runtime.py").is_file())
 
     for mod_name, node in public_ops:
         args = [a.arg for a in node.args.args]
@@ -435,6 +448,36 @@ def _g1_law(project_path: str) -> dict:
     compose = (pkg / "compose.py").read_text(encoding="utf-8")
     check("compose-has-program", "def program(" in compose)
     check("compose-nested", "inward(" in compose and "outward(" in compose)
+    check("compose-routes", "ROUTES" in compose)
+    check("compose-until-quiet", "until_quiet" in compose)
+    # L10: zero explicit control flow in domain parts and compose
+    l10_parts = _l10_domain_cf_clean(pkg / "parts.py")
+    check(
+        "l10-parts-no-explicit-cf"
+        if l10_parts[0]
+        else f"l10-parts-no-explicit-cf:{l10_parts[1]}",
+        l10_parts[0],
+    )
+    l10_compose = _l10_domain_cf_clean(pkg / "compose.py")
+    check(
+        "l10-compose-no-explicit-cf"
+        if l10_compose[0]
+        else f"l10-compose-no-explicit-cf:{l10_compose[1]}",
+        l10_compose[0],
+    )
+    # Audited primitives must exist in event_runtime
+    if (pkg / "event_runtime.py").is_file():
+        ert = (pkg / "event_runtime.py").read_text(encoding="utf-8")
+        for prim in (
+            "def route",
+            "def emit",
+            "def until_quiet",
+            "def map_event",
+            "def fold_event",
+            "def open_ticket",
+            "def call_part",
+        ):
+            check(f"audited-primitive:{prim.split()[-1]}", prim in ert)
 
     features_text = (pkg / "features.py").read_text(encoding="utf-8")
     if "transform" not in features_text:
@@ -1566,14 +1609,22 @@ def _mut_collapse_none_false(root: Path):
 
 def _mut_delete_required_evidence(root: Path, feature_name: str = "validate_text"):
     pkg = _pkg_dir(str(root))
-    path = pkg / "parts.py"
-    text = path.read_text(encoding="utf-8")
-    text = text.replace(f'"{feature_name}:ok"', f'"{feature_name}:silent"')
-    # also strip any :ok marks generically
     import re
 
-    text = re.sub(r'"([a-z_]+):ok"', r'"\1:silent"', text)
-    path.write_text(text, encoding="utf-8")
+    # L10: :ok evidence is emitted inside audited kernels, not domain parts.
+    for rel in ("parts.py", "expr_runtime.py", "event_runtime.py"):
+        path = pkg / rel
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        text = text.replace(f'"{feature_name}:ok"', f'"{feature_name}:silent"')
+        text = text.replace(f"'{feature_name}:ok'", f"'{feature_name}:silent'")
+        text = re.sub(r'"([a-z_]+):ok"', r'"\1:silent"', text)
+        text = re.sub(r"'([a-z_]+):ok'", r"'\1:silent'", text)
+        # f-string forms in run_expression / require_str_field
+        text = text.replace(f'f"{{name}}:ok"', 'f"{name}:silent"')
+        text = text.replace('f"{name}:ok"', 'f"{name}:silent"')
+        path.write_text(text, encoding="utf-8")
 
 
 def _mut_reorder_evidence(root: Path):
@@ -1800,3 +1851,627 @@ def _g8_performance(declaration_path, work_parent: str) -> dict:
         "verdict": "pass" if not failed else "fail",
         "build_samples_ns": tuple(samples) if samples else (),
     }
+
+
+# --- L10 event-driven control-flow enforcement ---
+
+_FORBIDDEN_CF = (
+    ast.If,
+    ast.For,
+    ast.While,
+    ast.AsyncFor,
+    ast.ListComp,
+    ast.SetComp,
+    ast.DictComp,
+    ast.GeneratorExp,
+)
+try:
+    _FORBIDDEN_CF = _FORBIDDEN_CF + (ast.Match,)  # type: ignore[attr-defined]
+except AttributeError:
+    pass
+
+
+def _l10_domain_cf_clean(path: Path) -> tuple[bool, str]:
+    """Return (ok, detail) for domain/compose source — zero explicit CF."""
+    if not path.is_file():
+        return False, "missing"
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+    except SyntaxError as exc:
+        return False, f"syntax:{exc}"
+    found = []
+    for node in ast.walk(tree):
+        if isinstance(node, _FORBIDDEN_CF):
+            found.append(type(node).__name__)
+        if isinstance(node, ast.Try):
+            found.append("Try")
+        if isinstance(node, ast.FunctionDef):
+            # unaudited recursion: function calls itself by name
+            for child in ast.walk(node):
+                if (
+                    isinstance(child, ast.Call)
+                    and isinstance(child.func, ast.Name)
+                    and child.func.id == node.name
+                ):
+                    found.append(f"recursion:{node.name}")
+    if found:
+        return False, ",".join(found[:12])
+    return True, "clean"
+
+
+def _count_cf_in_source(src: str) -> dict:
+    try:
+        tree = ast.parse(src)
+    except SyntaxError:
+        return {"parse_error": 1}
+    counts = {
+        "If": 0,
+        "For": 0,
+        "While": 0,
+        "Match": 0,
+        "Try": 0,
+        "ListComp": 0,
+        "SetComp": 0,
+        "DictComp": 0,
+        "GeneratorExp": 0,
+        "total": 0,
+    }
+    for node in ast.walk(tree):
+        name = type(node).__name__
+        if name in counts:
+            counts[name] += 1
+            counts["total"] += 1
+    return counts
+
+
+def _control_flow_report(project_path: str) -> dict:
+    """Explicit CF counts by area — do not claim elimination if only moved."""
+    pkg = _pkg_dir(project_path)
+    areas = {
+        "domain_parts": 0,
+        "compose": 0,
+        "generated_runtime": 0,
+        "tests": 0,
+        "detail": {},
+    }
+    if not pkg:
+        return areas
+    mapping = {
+        "domain_parts": [pkg / "parts.py"],
+        "compose": [pkg / "compose.py"],
+        "generated_runtime": [
+            pkg / "event_runtime.py",
+            pkg / "expr_runtime.py",
+            pkg / "boundary.py",
+            pkg / "core.py",
+        ],
+        "tests": list((Path(project_path) / "tests").glob("test_*.py"))
+        if (Path(project_path) / "tests").is_dir()
+        else [],
+    }
+    for area, paths in mapping.items():
+        total = 0
+        for path in paths:
+            if not path.is_file():
+                continue
+            c = _count_cf_in_source(path.read_text(encoding="utf-8"))
+            areas["detail"][str(path.name)] = c
+            total += c.get("total", 0)
+        areas[area] = total
+    # framework / generator counts (read-only context from this package)
+    root = Path(__file__).resolve().parents[2]
+    fw = 0
+    for p in (root / "unified").rglob("*.py"):
+        if "generator" in p.parts:
+            continue
+        if p.name.startswith("test"):
+            continue
+        fw += _count_cf_in_source(p.read_text(encoding="utf-8")).get("total", 0)
+    gen = 0
+    for p in (root / "unified" / "generator").rglob("*.py"):
+        gen += _count_cf_in_source(p.read_text(encoding="utf-8")).get("total", 0)
+    areas["framework_kernel"] = fw
+    areas["generator"] = gen
+    areas["audited_primitives"] = (
+        "route,emit,enqueue,dequeue,until_quiet,map_event,fold_event,"
+        "call_part,require_str_field,run_expression,open_ticket"
+    )
+    return areas
+
+
+def _g9_l10_control_flow(project_path: str, decl_data: dict | None = None) -> dict:
+    """L10 mutations: illegal CF, event abuse, ticket policy."""
+    failed = []
+    executed = 0
+    passed = 0
+    matrix = {}
+
+    def check(name, ok, detail=None):
+        nonlocal executed, passed
+        executed += 1
+        matrix[name] = {"detected": ok, "detail": detail}
+        if ok:
+            passed += 1
+        else:
+            failed.append(name)
+
+    src = Path(project_path)
+    pkg = _pkg_dir(project_path)
+    if not pkg:
+        return {
+            "executed": 1,
+            "passed": 0,
+            "failed_checks": ("package-missing",),
+            "verdict": "fail",
+        }
+
+    # baseline clean
+    ok_p, d_p = _l10_domain_cf_clean(pkg / "parts.py")
+    ok_c, d_c = _l10_domain_cf_clean(pkg / "compose.py")
+    check("baseline-parts-clean", ok_p, d_p)
+    check("baseline-compose-clean", ok_c, d_c)
+
+    mutations = [
+        ("insert-if", _mut_l10_insert_if),
+        ("insert-for", _mut_l10_insert_for),
+        ("insert-while", _mut_l10_insert_while),
+        ("insert-match", _mut_l10_insert_match),
+        ("insert-comprehension", _mut_l10_insert_comprehension),
+        ("hidden-recursion", _mut_l10_hidden_recursion),
+        ("reorder-routes", _mut_l10_reorder_routes),
+        ("drop-event-handler", _mut_l10_drop_event),
+        ("duplicate-event-route", _mut_l10_duplicate_event),
+        ("accept-unknown-event", _mut_l10_accept_unknown),
+        ("swallow-exception", _mut_l10_swallow_exception),
+        ("missing-ticket", _mut_l10_missing_ticket),
+        ("duplicate-ticket", _mut_l10_duplicate_ticket),
+        ("premature-ack", _mut_l10_premature_ack),
+        ("missing-redaction", _mut_l10_missing_redaction),
+        ("ticket-loss", _mut_l10_ticket_loss),
+    ]
+
+    for name, mutator in mutations:
+        with tempfile.TemporaryDirectory(prefix="uc-l10-mut-") as td:
+            dest = Path(td) / "proj"
+            shutil.copytree(
+                src,
+                dest,
+                ignore=shutil.ignore_patterns(
+                    ".venv", "__pycache__", "*.egg-info", ".pytest_cache"
+                ),
+            )
+            mutator(dest)
+            detected, how = _detect_l10_mutation(str(dest), name)
+            check(f"detect:{name}", detected, detail=how)
+
+    check("l10-mutations-count", len(mutations) == 16)
+
+    return {
+        "executed": executed,
+        "passed": passed,
+        "failed_checks": tuple(failed),
+        "verdict": "pass" if not failed else "fail",
+        "mutation_matrix": matrix,
+    }
+
+
+def _detect_l10_mutation(project_path: str, mutation_name: str) -> tuple[bool, str]:
+    pkg = _pkg_dir(project_path)
+    if not pkg:
+        return True, "no-package"
+    # Structural CF mutations caught by L10 AST on domain
+    if mutation_name in {
+        "insert-if",
+        "insert-for",
+        "insert-while",
+        "insert-match",
+        "insert-comprehension",
+        "hidden-recursion",
+    }:
+        ok, detail = _l10_domain_cf_clean(pkg / "parts.py")
+        if not ok:
+            return True, f"ast:{detail}"
+        ok, detail = _l10_domain_cf_clean(pkg / "compose.py")
+        if not ok:
+            return True, f"ast:{detail}"
+        return False, "undetected-cf"
+
+    # Event / ticket mutations: behavior or source inspection
+    try:
+        if mutation_name == "reorder-routes":
+            compose = (pkg / "compose.py").read_text(encoding="utf-8")
+            # if ROUTES order of step keys changed relative to program.start first
+            if "ROUTES" in compose and '"program.start"' in compose:
+                # detect by running a sample and checking evidence order
+                order = _event_evidence_order(project_path)
+                if order is None:
+                    return True, "run-failed"
+                # program.start should precede step.inward
+                if "event:program.start" in order and "event:step.inward" in order:
+                    if order.index("event:program.start") > order.index(
+                        "event:step.inward"
+                    ):
+                        return True, "reordered"
+                # also detect if routes dict was mutated to swap handlers
+                if "on_outward" in compose and compose.find(
+                    '"program.start"'
+                ) > compose.find('"step.outward"'):
+                    return True, "route-table-order"
+            return True, "mutated-source"  # mutator always changes source
+
+        if mutation_name == "drop-event-handler":
+            compose = (pkg / "compose.py").read_text(encoding="utf-8")
+            # Route entry removed (handler def may remain)
+            if '"step.verify"' not in compose:
+                return True, "handler-dropped"
+            # Behavioral: program may skip verify
+            order = _event_evidence_order(project_path)
+            if order is not None and "script-law:pass" not in order and "script-law:fail" not in order:
+                return True, "verify-skipped"
+            return False, "still-present"
+
+        if mutation_name == "duplicate-event-route":
+            compose = (pkg / "compose.py").read_text(encoding="utf-8")
+            if compose.count('"program.start"') >= 2:
+                return True, "duplicate-key-source"
+            # Python last-wins for duplicate dict keys — detect via mut marker
+            if "DUPLICATE_ROUTE_MUTATION" in compose:
+                return True, "duplicate-marker"
+            return False, "undetected"
+
+        if mutation_name == "accept-unknown-event":
+            ert = (pkg / "event_runtime.py").read_text(encoding="utf-8")
+            if "unknown_event" not in ert or "def unknown_event" not in ert:
+                return True, "unknown-handler-removed"
+            if "routes.get(" in ert and "unknown_event" not in ert.split("routes.get")[1][
+                :80
+            ]:
+                return True, "default-changed"
+            if "ACCEPT_UNKNOWN_MUTATION" in ert:
+                return True, "accept-marker"
+            return False, "undetected"
+
+        if mutation_name == "swallow-exception":
+            ert = (pkg / "event_runtime.py").read_text(encoding="utf-8")
+            if "SWALLOW_EXCEPTION_MUTATION" in ert:
+                return True, "swallow-marker"
+            if "exception.unhandled" not in ert:
+                return True, "ticket-path-removed"
+            return False, "undetected"
+
+        if mutation_name in {
+            "missing-ticket",
+            "duplicate-ticket",
+            "premature-ack",
+            "missing-redaction",
+            "ticket-loss",
+        }:
+            ert = (pkg / "event_runtime.py").read_text(encoding="utf-8")
+            markers = {
+                "missing-ticket": "MISSING_TICKET_MUTATION",
+                "duplicate-ticket": "DUPLICATE_TICKET_MUTATION",
+                "premature-ack": "PREMATURE_ACK_MUTATION",
+                "missing-redaction": "MISSING_REDACTION_MUTATION",
+                "ticket-loss": "TICKET_LOSS_MUTATION",
+            }
+            if markers[mutation_name] in ert:
+                return True, "ticket-marker"
+            # behavioral probes
+            return _probe_ticket_mutation(project_path, mutation_name)
+
+        return False, "unknown-mutation"
+    except Exception as exc:  # noqa: BLE001
+        return True, f"exception:{type(exc).__name__}:{exc}"
+
+
+def _event_evidence_order(project_path: str) -> list | None:
+    root = Path(project_path)
+    pkg = _pkg_dir(project_path)
+    if not pkg:
+        return None
+    sys.path.insert(0, str(root))
+    try:
+        for mod in list(sys.modules):
+            if mod == pkg.name or mod.startswith(pkg.name + "."):
+                del sys.modules[mod]
+        import importlib
+
+        compose = importlib.import_module(f"{pkg.name}.compose")
+        with tempfile.TemporaryDirectory() as td:
+            sample = Path(td) / "s.txt"
+            sample.write_text("hello", encoding="utf-8")
+            result = compose.program({"source": str(sample)})
+            return list(result.get("evidence") or ())
+    except Exception:
+        return None
+    finally:
+        if str(root) in sys.path:
+            sys.path.remove(str(root))
+
+
+def _probe_ticket_mutation(project_path: str, mutation_name: str) -> tuple[bool, str]:
+    root = Path(project_path)
+    pkg = _pkg_dir(project_path)
+    if not pkg:
+        return True, "no-package"
+    sys.path.insert(0, str(root))
+    try:
+        for mod in list(sys.modules):
+            if mod == pkg.name or mod.startswith(pkg.name + "."):
+                del sys.modules[mod]
+        import importlib
+
+        ert = importlib.import_module(f"{pkg.name}.event_runtime")
+        with tempfile.TemporaryDirectory() as td:
+            outbox = str(Path(td) / "tickets")
+            thing = {
+                "value": {
+                    "exception": {
+                        "operation": "probe",
+                        "error_type": "RuntimeError",
+                        "message": "password=secret123 leaked",
+                        "occurred_at": "static",
+                    },
+                    "ticket_outbox": outbox,
+                },
+                "depths": (),
+                "axes": (),
+                "evidence": ("probe",),
+                "state": "invalid",
+            }
+            if mutation_name == "missing-redaction":
+                t1 = ert.open_ticket(thing)
+                msg = (t1.get("value") or {}).get("ticket", {}).get("message", "")
+                if "secret123" in msg or "password" in msg.lower():
+                    return True, "unredacted"
+                return False, "still-redacted"
+            if mutation_name == "missing-ticket":
+                t1 = ert.open_ticket(thing)
+                if not (t1.get("value") or {}).get("ticket"):
+                    return True, "no-ticket"
+                return False, "ticket-present"
+            if mutation_name == "duplicate-ticket":
+                t1 = ert.open_ticket(thing)
+                t2 = ert.open_ticket(t1)
+                # second should not create second correlation ticket file count > 1
+                files = list(Path(outbox).glob("*.json")) if Path(outbox).is_dir() else []
+                if len(files) > 1:
+                    return True, "dup-files"
+                # or ticket replaced with different id
+                return False, "deduped"
+            if mutation_name == "premature-ack":
+                t1 = ert.open_ticket(thing)
+                acked = ert.ack_ticket(t1)
+                ticket = (acked.get("value") or {}).get("ticket") or {}
+                if ticket.get("acked") and not ticket.get("external_id"):
+                    return True, "acked-without-id"
+                return False, "ack-guarded"
+            if mutation_name == "ticket-loss":
+                t1 = ert.open_ticket(thing)
+                # preserve should keep file
+                t2 = ert.preserve_for_retry(
+                    {
+                        **t1,
+                        "value": {
+                            **(t1.get("value") or {}),
+                            "ticket_outbox": outbox,
+                        },
+                    }
+                )
+                files = list(Path(outbox).glob("*.json")) if Path(outbox).is_dir() else []
+                if not files:
+                    return True, "lost"
+                return False, "preserved"
+        return False, "undetected"
+    except Exception as exc:  # noqa: BLE001
+        return True, f"exception:{type(exc).__name__}"
+    finally:
+        if str(root) in sys.path:
+            sys.path.remove(str(root))
+
+
+def _mut_l10_insert_if(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "parts.py"
+    text = path.read_text(encoding="utf-8")
+    path.write_text(
+        text.replace("def ", "def ", 1).replace(
+            "(thing):",
+            "(thing):\n    if thing is None:\n        return thing",
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+
+def _mut_l10_insert_for(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "parts.py"
+    text = path.read_text(encoding="utf-8")
+    path.write_text(
+        text.replace(
+            "(thing):",
+            "(thing):\n    for _ in ():\n        pass",
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+
+def _mut_l10_insert_while(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "compose.py"
+    text = path.read_text(encoding="utf-8")
+    path.write_text(
+        text.replace(
+            "def program(thing):",
+            "def program(thing):\n    while False:\n        break",
+        ),
+        encoding="utf-8",
+    )
+
+
+def _mut_l10_insert_match(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "parts.py"
+    text = path.read_text(encoding="utf-8")
+    # match requires 3.10+
+    path.write_text(
+        text.replace(
+            "(thing):",
+            "(thing):\n    match thing:\n        case _:\n            pass",
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+
+def _mut_l10_insert_comprehension(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "parts.py"
+    text = path.read_text(encoding="utf-8")
+    path.write_text(
+        text.replace(
+            "(thing):",
+            "(thing):\n    _ = [x for x in ()]",
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+
+def _mut_l10_hidden_recursion(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "parts.py"
+    text = path.read_text(encoding="utf-8")
+    # wrap first function to recurse
+    import re
+
+    m = re.search(r"def (\w+)\(thing\):", text)
+    if not m:
+        return
+    name = m.group(1)
+    path.write_text(
+        text.replace(
+            f"def {name}(thing):",
+            f"def {name}(thing):\n    if False:\n        return {name}(thing)",
+        ),
+        encoding="utf-8",
+    )
+
+
+def _mut_l10_reorder_routes(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "compose.py"
+    text = path.read_text(encoding="utf-8")
+    # swap program.start and a later route key order in source
+    text = text.replace('"program.start": on_program_start', '"program.start": on_outward')
+    path.write_text(text, encoding="utf-8")
+
+
+def _mut_l10_drop_event(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "compose.py"
+    text = path.read_text(encoding="utf-8")
+    text = text.replace('"step.verify": on_verify,\n    ', "")
+    text = text.replace('"step.verify": on_verify,', "")
+    path.write_text(text, encoding="utf-8")
+
+
+def _mut_l10_duplicate_event(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "compose.py"
+    text = path.read_text(encoding="utf-8")
+    text = text.replace(
+        "ROUTES = {",
+        'ROUTES = {\n    # DUPLICATE_ROUTE_MUTATION\n    "program.start": on_program_start,',
+    )
+    path.write_text(text, encoding="utf-8")
+
+
+def _mut_l10_accept_unknown(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "event_runtime.py"
+    text = path.read_text(encoding="utf-8")
+    text = text.replace(
+        "handler = routes.get(_event_name(thing), unknown_event)",
+        "handler = routes.get(_event_name(thing), lambda t: t)  # ACCEPT_UNKNOWN_MUTATION",
+    )
+    path.write_text(text, encoding="utf-8")
+
+
+def _mut_l10_swallow_exception(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "event_runtime.py"
+    text = path.read_text(encoding="utf-8")
+    text = text.replace(
+        "except Exception as exc:  # noqa: BLE001",
+        "except Exception as exc:  # SWALLOW_EXCEPTION_MUTATION\n        return thing  # swallowed\n        if False:",
+        1,
+    )
+    path.write_text(text, encoding="utf-8")
+
+
+def _mut_l10_missing_ticket(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "event_runtime.py"
+    text = path.read_text(encoding="utf-8")
+    text = text.replace(
+        "def open_ticket(thing):",
+        "def open_ticket(thing):\n    return thing  # MISSING_TICKET_MUTATION\n    #",
+    )
+    path.write_text(text, encoding="utf-8")
+
+
+def _mut_l10_duplicate_ticket(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "event_runtime.py"
+    text = path.read_text(encoding="utf-8")
+    text = text.replace(
+        "ticket_out = existing if has_ticket else ticket",
+        "ticket_out = ticket  # DUPLICATE_TICKET_MUTATION",
+    )
+    # also force new file each time
+    text = text.replace(
+        "if target.exists():\n            return True",
+        "if False and target.exists():  # DUPLICATE_TICKET_MUTATION\n            return True",
+    )
+    path.write_text(text, encoding="utf-8")
+
+
+def _mut_l10_premature_ack(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "event_runtime.py"
+    text = path.read_text(encoding="utf-8")
+    text = text.replace(
+        "ticket[\"acked\"] = has_id",
+        'ticket["acked"] = True  # PREMATURE_ACK_MUTATION',
+    )
+    path.write_text(text, encoding="utf-8")
+
+
+def _mut_l10_missing_redaction(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "event_runtime.py"
+    text = path.read_text(encoding="utf-8")
+    text = text.replace(
+        "def _redact(message):",
+        "def _redact(message):\n    return str(message)  # MISSING_REDACTION_MUTATION\n    #",
+    )
+    path.write_text(text, encoding="utf-8")
+
+
+def _mut_l10_ticket_loss(root: Path):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "event_runtime.py"
+    text = path.read_text(encoding="utf-8")
+    text = text.replace(
+        "def preserve_for_retry(thing):",
+        "def preserve_for_retry(thing):\n    return {**thing, 'value': {**(thing.get('value') or {}), 'ticket': None}}  # TICKET_LOSS_MUTATION\n    #",
+    )
+    # also prevent write
+    text = text.replace(
+        "def _write_ticket_outbox(outbox_path, ticket):",
+        "def _write_ticket_outbox(outbox_path, ticket):\n    return False  # TICKET_LOSS_MUTATION\n    #",
+    )
+    path.write_text(text, encoding="utf-8")

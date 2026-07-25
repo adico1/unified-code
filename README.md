@@ -78,6 +78,26 @@ on ordinary local hardware. Measure with:
 uc benchmark --iterations 20
 ```
 
+### L10 — Event-Driven Flow
+
+Generated applications do not use explicit `if`/`for`/`while`/`match` in
+domain or composition code. Control is data:
+
+```python
+ROUTES = {
+    "program.start": on_program_start,
+    "step.verify": on_verify,
+    "exception.unhandled": open_ticket,
+}
+
+def program(thing):
+    return until_quiet(enqueue(emit(thing, "program.start"), "program.start"), ROUTES)
+```
+
+Iteration and selection remain only in audited primitives
+(`event_runtime`, `expr_runtime`). Unhandled exceptions open a ticket
+via the outward ticket boundary (local outbox when no provider).
+
 See [docs/DEVELOPER_WORKFLOW.md](docs/DEVELOPER_WORKFLOW.md) for the full
 sequence, scales (UC-0 through UC-4), and L9 measurement scope.
 

@@ -118,6 +118,10 @@ A v0.1 implementation conforms when:
    completes in ≤ 1 second (1_000_000_000 ns) on ordinary local hardware
    for both project creation and feature addition, measured at p95 with
    all results valid (L9).
+9. Generated domain and composition code use event-driven flow only; no
+   explicit if/for/while/match/comprehensions (L10). Selection and
+   iteration live only in audited primitives. Unhandled exceptions open
+   a ticket via the outward ticket boundary.
 
 ## L9 — One-second construction
 
@@ -184,6 +188,74 @@ all generated results are valid
 
 Authoritative L9 measurement is local ordinary hardware. CI verifies
 benchmark logic; cloud-runner wall time is not the authority for L9.
+
+## L10 — Event-Driven Flow
+
+### Application surface
+
+Generated `parts.py` and `compose.py` must contain **zero** of:
+
+```text
+If, For, While, Match, ListComp, SetComp, DictComp, GeneratorExp
+Try used as control-flow (except inside audited event_runtime)
+Recursion used as a loop substitute
+```
+
+Routing is data (`ROUTES` / `EVENTS` dict). Handlers are `Thing → Thing`.
+Every event appends ordered evidence. Unknown events produce an explicit
+invalid Thing (`unknown-event`). Event ordering is deterministic (FIFO
+queue processed by `until_quiet`).
+
+### Audited primitives (where control flow remains)
+
+| Primitive | Role |
+| --- | --- |
+| `emit` | set event + evidence |
+| `enqueue` / `dequeue` | deterministic queue |
+| `route` | table lookup |
+| `until_quiet` | process until queue empty |
+| `map_event` / `fold_event` | collection iteration |
+| `call_part` | Part invoke; unhandled → ticket path |
+| `require_str_field` / `identity_part` | domain guards without domain if |
+| `run_expression` | expression evaluation (expr_runtime) |
+| `open_ticket` / `preserve_for_retry` / `ack_ticket` | ticket boundary |
+
+Moving an `if` from `parts.py` into a non-audited generated helper is a
+**conformance failure**. The primitives above are the only permitted homes
+for selection and iteration in generated applications.
+
+### Exception policy
+
+```text
+Expected domain rejection:
+    validation.failed → reject
+    No ticket is opened.
+
+Recoverable operational failure:
+    operation.failed → configured recovery handler
+    Recovery evidence is recorded.
+
+Unrecoverable or unhandled exception:
+    exception.raised → ticket.open → processing.failed
+```
+
+Ticket rules: one failure one ticket; redact secrets; outbox when no
+provider; ack only after external id; delivery failure preserves outbox.
+
+### Control-flow measurement report
+
+Gauntlets and benchmarks report explicit control-flow counts separately for:
+
+```text
+framework kernel
+generator
+generated runtime (event_runtime, expr_runtime, boundary)
+domain parts
+compose
+tests
+```
+
+Do not claim control flow was eliminated if it was merely relocated.
 
 ## Host-edge model (resolved)
 

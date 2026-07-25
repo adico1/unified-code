@@ -7,6 +7,7 @@ from typing import Any
 
 def render_program(declaration: dict[str, Any]) -> dict[str, str]:
     """Full UC-1 project from a PROGRAM declaration."""
+    from .event_emit import emit_event_compose, emit_event_runtime_module
     from .expr import validate_expression
     from .expr_emit import emit_expr_runtime_module
 
@@ -37,8 +38,9 @@ def render_program(declaration: dict[str, Any]) -> dict[str, str]:
     files[f"{package}/core.py"] = _core(declaration)
     files[f"{package}/features.py"] = _features(features)
     files[f"{package}/parts.py"] = _parts(declaration["features"])
-    files[f"{package}/compose.py"] = _compose(declaration)
+    files[f"{package}/compose.py"] = emit_event_compose(declaration)
     files[f"{package}/expr_runtime.py"] = emit_expr_runtime_module()
+    files[f"{package}/event_runtime.py"] = emit_event_runtime_module()
     if declaration.get("cli"):
         files[f"{package}/cli.py"] = _cli(declaration)
     files["tests/test_signature.py"] = _test_signature(package, features, declaration)
@@ -109,9 +111,7 @@ def _features(features: tuple[str, ...]) -> str:
 
 def _parts(feature_decls: tuple[dict, ...]) -> str:
     chunks = [
-        '"""Generated parts from declarations. One input, one output. No I/O."""',
-        "",
-        "from .boundary import is_thing",
+        '"""Generated domain parts. Thing→Thing. L10: no explicit if/for/while/match."""',
         "",
     ]
     for decl in feature_decls:
@@ -135,134 +135,66 @@ def _render_feature_function(decl: dict) -> str:
     elif kind == "expression":
         body = emit_expression_feature_body(name, transformation)
     elif kind == "text_stats":
-        # Legacy closed kind retained only for older fixtures; prefer expression.
+        # Legacy closed kind: express via string operators in expr runtime.
         body = _text_stats_body(name, transformation)
     else:
         raise ValueError(f"unsupported transformation kind: {kind!r}")
 
+    # L10: domain parts contain no if/for/while — only calls into audited kernels.
     return f'''def {name}(thing):
     """{doc}"""
-    if not is_thing(thing):
-        return {{
-            "value": thing,
-            "depths": (),
-            "axes": (),
-            "evidence": ("part:{name}", "{name}:rejected-non-thing"),
-            "state": "invalid",
-        }}
 {body}
 '''
 
 
 def _identity_body(name: str) -> str:
-    return f'''    return {{
-        **thing,
-        "evidence": (*thing["evidence"], "part:{name}"),
-    }}'''
+    return f'''    from .event_runtime import identity_part
+    return identity_part(thing, {name!r})'''
 
 
 def _require_str_field_body(name: str, transformation: dict) -> str:
     field = transformation.get("field", "text")
     missing_error = transformation.get("missing_error", "missing-text")
     invalid_error = transformation.get("invalid_error", "invalid-text")
-    return f'''    if thing["state"] in {{"invalid", "absent", "false", "unknown"}}:
-        return {{
-            **thing,
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:skipped"),
-            "state": thing["state"],
-        }}
-    value = thing["value"]
-    if value is None:
-        return {{
-            **thing,
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:absent"),
-            "state": "absent",
-        }}
-    if value is False:
-        return {{
-            **thing,
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:false"),
-            "state": "false",
-        }}
-    if not isinstance(value, dict):
-        return {{
-            **thing,
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:not-map"),
-            "state": "invalid",
-        }}
-    if "error" in value and "{field}" not in value:
-        return {{
-            **thing,
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:prior-error"),
-            "state": "invalid",
-        }}
-    if "{field}" not in value:
-        return {{
-            **thing,
-            "value": {{**value, "error": "{missing_error}"}},
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:missing-{field}"),
-            "state": "absent",
-        }}
-    field_value = value["{field}"]
-    if field_value is None:
-        return {{
-            **thing,
-            "value": {{**value, "error": "{missing_error}"}},
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:absent-{field}"),
-            "state": "absent",
-        }}
-    if field_value is False:
-        return {{
-            **thing,
-            "value": {{**value, "error": "false-{field}"}},
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:false-{field}"),
-            "state": "false",
-        }}
-    if not isinstance(field_value, str):
-        return {{
-            **thing,
-            "value": {{**value, "error": "{invalid_error}"}},
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:invalid-{field}"),
-            "state": "invalid",
-        }}
-    return {{
-        **thing,
-        "evidence": (*thing["evidence"], "part:{name}", "{name}:ok"),
-        "state": "formed",
-    }}'''
+    return f'''    from .event_runtime import require_str_field
+    return require_str_field(
+        thing,
+        {name!r},
+        {field!r},
+        {missing_error!r},
+        {invalid_error!r},
+    )'''
 
 
 def _text_stats_body(name: str, transformation: dict) -> str:
+    """Legacy text_stats via expression runtime (no domain loops/branches)."""
     text_field = transformation.get("text_field", "text")
     stats_field = transformation.get("stats_field", "stats")
-    return f'''    if thing["state"] in {{"invalid", "absent", "false", "unknown"}}:
-        return {{
-            **thing,
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:skipped"),
-            "state": thing["state"],
-        }}
-    value = thing["value"]
-    if not isinstance(value, dict) or not isinstance(value.get("{text_field}"), str):
-        return {{
-            **thing,
-            "value": value if isinstance(value, dict) else {{"error": "missing-text"}},
-            "evidence": (*thing["evidence"], "part:{name}", "{name}:missing-text"),
-            "state": "absent",
-        }}
-    text = value["{text_field}"]
-    words = text.split()
-    stats = {{
-        "characters": len(text),
-        "lines": len(text.splitlines()),
-        "words": len(words),
-        "unique_words": len({{word.casefold() for word in words}}),
-    }}
-    return {{
-        **thing,
-        "value": {{**value, "{stats_field}": stats}},
-        "evidence": (*thing["evidence"], "part:{name}", "{name}:ok"),
-        "state": "formed",
-    }}'''
+    # Build a minimal expression program that expr_runtime understands.
+    program = {
+        "op": "object",
+        "fields": {
+            "characters": {"op": "str_len", "of": {"op": "field", "path": (text_field,)}},
+            "lines": {"op": "line_count", "of": {"op": "field", "path": (text_field,)}},
+            "words": {"op": "word_count", "of": {"op": "field", "path": (text_field,)}},
+            "unique_words": {
+                "op": "unique_casefold_word_count",
+                "of": {"op": "field", "path": (text_field,)},
+            },
+        },
+    }
+    from .expr_emit import _py_literal
+
+    program_literal = _py_literal(program)
+    return f'''    from .expr_runtime import run_expression
+    return run_expression(
+        thing,
+        {name!r},
+        {program_literal},
+        {{}},
+        {text_field!r},
+        {stats_field!r},
+    )'''
 
 
 def _append_or_rebuild_parts(

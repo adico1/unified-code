@@ -92,3 +92,78 @@ running the generated program’s complete test suite
 This is a user-originated core rule. Time is read only through a named
 clock boundary (L7). L9 PASS requires both `uc new` and `uc add` p95
 durations ≤ 1 second and every measured generation result `valid`.
+
+## L10 — Event-Driven Flow
+
+Application and generated code contain no explicit loops or branching.
+A Thing changes through named events, declarative routes, and
+compositional handlers. Each handler is `Thing → Thing`.
+
+```python
+EVENTS = {
+    "input.received": validate,
+    "input.valid": calculate,
+    "input.invalid": reject,
+    "calculation.complete": present,
+}
+
+def handle(thing):
+    return EVENTS[thing["event"]](thing)
+```
+
+### Required transformation
+
+| Current construct      | Unified replacement                                         |
+| ---------------------- | ----------------------------------------------------------- |
+| `if / elif / else`     | predicate emits an event → route table selects handler      |
+| `for / while`          | collection emits item events → deterministic fold/reduction |
+| `try / except`         | operation emits success/failure event                       |
+| Boolean control flags  | explicit states or events                                   |
+| Function orchestration | event pipeline                                              |
+| Nested branching       | named route composition                                     |
+| Repeated polling       | external event source                                       |
+
+### Two conformance levels
+
+* **Application conformance:** no explicit loops or conditionals in
+  generated domain/application code (`parts.py`, `compose.py`).
+* **Kernel conformance:** iteration and routing exist only as audited
+  deterministic primitives: `route`, `emit`, `enqueue`, `until_quiet`,
+  `map_event`, `fold_event`, `call_part`.
+
+Hiding `if`/`for` inside another generated helper does **not** remove
+imperative control flow unless that helper is an audited primitive.
+
+### Exception and ticket policy
+
+| Case | Route | Ticket |
+| --- | --- | --- |
+| Expected domain rejection | `validation.failed` → reject | No |
+| Recoverable operational failure | `operation.failed` → recovery handler | No (unless policy says so) |
+| Unrecoverable / unhandled exception | `exception.unhandled` → `ticket.open` → `processing.failed` | Yes |
+
+An exception without a defined recovery route must emit `ticket.open`.
+It must never be swallowed, converted into a generic invalid state, or
+silently terminate processing.
+
+Every `ticket.open` Thing must contain:
+
+```python
+{
+    "event": "ticket.open",
+    "state": "invalid",
+    "ticket": {
+        "kind": "unhandled-exception",
+        "operation": "...",
+        "error_type": "...",
+        "message": "...",
+        "evidence": [...],
+        "correlation_id": "...",
+        "occurred_at": "..."
+    }
+}
+```
+
+Rules: one failure → one ticket; redact secrets; ticket is an outward
+boundary; local outbox when no provider; acknowledge only after external
+id; validation failures do not create tickets.
