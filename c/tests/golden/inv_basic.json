@@ -1,0 +1,51 @@
+{
+  "bytecode": "artifacts/uem/invoice_total/program.uem",
+  "case": "inv_basic.json",
+  "declaration": "examples/declarations/invoice_total.py",
+  "error": null,
+  "evidence_semantic": [
+    "boundary:inward",
+    "id:cf2a87a8219f26e5",
+    "boundary:inward",
+    "source:ok",
+    "outward:request:read_json",
+    "boundary:read_json_source",
+    "read:ok",
+    "letter:distinguished",
+    "part:calculate_totals",
+    "calculate_totals:ok",
+    "merge:ok",
+    "script-law:pass",
+    "present_result:ok"
+  ],
+  "host": {
+    "document": {
+      "items": [
+        {
+          "description": "a",
+          "quantity": 2,
+          "unit_price": "10.00"
+        },
+        {
+          "description": "b",
+          "quantity": 1,
+          "unit_price": "5.50"
+        }
+      ],
+      "tax_rate": "0.10"
+    }
+  },
+  "presentation": {
+    "exit_code": 0,
+    "text": "{\"item_count\":2,\"subtotal\":\"25.50\",\"tax\":\"2.55\",\"total\":\"28.05\"}"
+  },
+  "program_sha256": "cf2a87a8219f26e51bcc78dade1c97cca2540e90cbcf6bc3e9fe283b822270c8",
+  "state": "valid",
+  "stats": {
+    "item_count": 2,
+    "subtotal": "25.50",
+    "tax": "2.55",
+    "total": "28.05"
+  },
+  "ticket": null
+}

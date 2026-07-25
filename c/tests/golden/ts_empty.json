@@ -1,0 +1,37 @@
+{
+  "bytecode": "artifacts/uem/text_stats_v2/program.uem",
+  "case": "ts_empty.json",
+  "declaration": "examples/declarations/text_stats_v2.py",
+  "error": null,
+  "evidence_semantic": [
+    "boundary:inward",
+    "id:b625f4a2104df5a4",
+    "boundary:inward",
+    "source:ok",
+    "outward:request:read_utf8",
+    "boundary:read_text_source",
+    "read:ok",
+    "letter:distinguished",
+    "part:calculate_stats",
+    "calculate_stats:ok",
+    "merge:ok",
+    "script-law:pass",
+    "present_result:ok"
+  ],
+  "host": {
+    "text": ""
+  },
+  "presentation": {
+    "exit_code": 0,
+    "text": "{\"characters\":0,\"lines\":0,\"words\":0,\"unique_words\":0}"
+  },
+  "program_sha256": "b625f4a2104df5a4d33dad0ec4b878449a3168758bc15435f11882264bba8f8c",
+  "state": "valid",
+  "stats": {
+    "characters": 0,
+    "lines": 0,
+    "unique_words": 0,
+    "words": 0
+  },
+  "ticket": null
+}
