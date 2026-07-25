@@ -57,3 +57,38 @@ not print, write, or call the network.
 
 The core uses functions and plain data. It requires no classes or
 inheritance.
+
+## L9 — One-second construction
+
+After a complete declaration is supplied, project or feature generation,
+assembly, structural verification, and filesystem publication must complete
+in at most one second on ordinary local hardware.
+
+```text
+limit = 1_000_000_000 nanoseconds
+```
+
+### Measured interval includes
+
+```text
+validation
+source generation
+composition
+structural verification
+filesystem writes
+result/evidence construction
+```
+
+### Measured interval excludes
+
+```text
+human reasoning
+human input time
+dependency installation
+network operations
+running the generated program’s complete test suite
+```
+
+This is a user-originated core rule. Time is read only through a named
+clock boundary (L7). L9 PASS requires both `uc new` and `uc add` p95
+durations ≤ 1 second and every measured generation result `valid`.

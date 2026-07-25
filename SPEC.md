@@ -114,6 +114,63 @@ A v0.1 implementation conforms when:
    with evidence; kernel parts do not hide I/O side effects (L7).
 7. The core uses functions and plain data without required classes or
    inheritance (L8).
+8. After a complete declaration, generation through filesystem publication
+   completes in ≤ 1 second (1_000_000_000 ns) on ordinary local hardware
+   for both project creation and feature addition, measured at p95 with
+   all results valid (L9).
+
+## L9 — One-second construction
+
+### Measured interval
+
+Includes: validation, source generation, composition, structural
+verification, filesystem writes, and result/evidence construction.
+
+Excludes: human reasoning, human input time, dependency installation,
+network operations, and running the generated program’s complete test suite.
+
+### Clock boundary
+
+Time is a host effect (L7). Public operations:
+
+```python
+def clock_start(thing) -> thing
+def clock_end(thing) -> thing
+```
+
+Duration is recorded as an integer nanosecond count inside the thing.
+Unknown, absent, or failed clock readings must not silently become
+`false` or `valid`.
+
+### Benchmark
+
+```bash
+uc benchmark
+uc benchmark --iterations 20
+```
+
+Reports for each of `new` and `add`:
+
+```text
+iterations
+minimum_ns
+median_ns
+p95_ns
+maximum_ns
+limit_ns = 1_000_000_000
+verdict
+```
+
+L9 PASS only when:
+
+```text
+new p95_ns <= 1_000_000_000
+add p95_ns <= 1_000_000_000
+all generated results are valid
+```
+
+Authoritative L9 measurement is local ordinary hardware. CI verifies
+benchmark logic; cloud-runner wall time is not the authority for L9.
 
 ## Open design points
 

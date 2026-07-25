@@ -1,6 +1,7 @@
 """Unified Code experimental kernel."""
 
 from .boundary import host_render, inward, outward
+from .clock import LIMIT_NS, clock_end, clock_start
 from .depth import (
     above,
     bad,
@@ -18,10 +19,13 @@ from .thing import is_thing, letter, world
 from .verify import verify
 
 __all__ = [
+    "LIMIT_NS",
     "above",
     "bad",
     "beginning",
     "below",
+    "clock_end",
+    "clock_start",
     "east",
     "end",
     "good",

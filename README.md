@@ -39,6 +39,7 @@ These are hypotheses under test, not yet a software standard.
 ```bash
 python -m unified
 python -m pytest
+uc benchmark --iterations 20
 ```
 
 ## Small example
@@ -67,7 +68,17 @@ python -m my_project
 uc add double
 ```
 
+### L9 — One-second construction
+
+After a complete declaration, `uc new` and `uc add` (validation through
+filesystem publication and evidence) must each complete in **≤ 1 second**
+on ordinary local hardware. Measure with:
+
+```bash
+uc benchmark --iterations 20
+```
+
 See [docs/DEVELOPER_WORKFLOW.md](docs/DEVELOPER_WORKFLOW.md) for the full
-sequence, scales (UC-0 through UC-4), and design speed targets.
+sequence, scales (UC-0 through UC-4), and L9 measurement scope.
 
 See [SPEC.md](SPEC.md), [LAW.md](LAW.md), and [ROADMAP.md](ROADMAP.md).

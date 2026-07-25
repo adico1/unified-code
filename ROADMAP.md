@@ -10,6 +10,7 @@
 - Conformance tests
 - Explicit inward/outward boundaries (L7)
 - Distinct unknown / absent / false / invalid states (L6)
+- One-second construction law (L9) with `uc benchmark`
 
 ### Open (not decided in 0.1)
 
@@ -29,7 +30,7 @@
 
 - Files
 - Standard input/output
-- Time
+- Time (clock_start / clock_end; L9 measurement)
 - HTTP
 - Persistence
 

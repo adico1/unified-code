@@ -71,13 +71,24 @@ does not need service deployment scaffolding.
 
 ## Target developer speed
 
-These are design targets, not measured claims:
+**L9 — One-second construction** (user-originated core rule):
 
 ```text
-Generate project: seconds
-Runnable small program: under 5 minutes
-Generate ordinary feature: seconds
-Complete familiar feature: 1–3 minutes
+Generate project (uc new):   ≤ 1 second   (measured: validation → write → evidence)
+Generate feature (uc add):   ≤ 1 second   (same measured interval)
+```
+
+The measured interval includes validation, source generation, composition,
+structural verification, filesystem writes, and result/evidence
+construction. It excludes human reasoning, human input time, dependency
+installation, network operations, and running the generated program’s
+complete test suite.
+
+Additional design targets (not L9):
+
+```text
+Runnable small program after generation: under 5 minutes
+Complete familiar feature (including domain edits): 1–3 minutes
 Unfamiliar domain logic: limited by domain understanding
 ```
 
@@ -90,11 +101,22 @@ by understanding the domain—not by rewriting project scaffolding.
 ```bash
 uc new <project-name>
 uc add <feature-name>
+uc benchmark
+uc benchmark --iterations 20
 ```
 
 `uc new` creates a runnable UC-1 project. `uc add` inserts one new
 one-input/one-output part into the existing nested composition and generates
-its test.
+its test. `uc benchmark` measures real `new` and `add` against L9 on the
+local machine (authoritative for the one-second rule).
+
+Local wall-clock integration command:
+
+```bash
+uc benchmark --iterations 20
+# equivalent:
+python -m unified.generator.benchmark
+```
 
 ## Relation to the laws
 
@@ -106,5 +128,6 @@ its test.
 | Complete dimensions | L4 |
 | Evidence inside the thing | L5 |
 | Distinct unknown / absent / false / invalid | L6 |
-| Named inward / outward / write boundaries | L7 |
+| Named inward / outward / write / clock boundaries | L7 |
 | Functions and plain data only | L8 |
+| Construction ≤ 1 second after declaration | L9 |
