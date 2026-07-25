@@ -59,11 +59,12 @@
 - UEM gauntlet and measurements
 - **Not yet:** replace generator; multi-ISA backends
 
-### Next
+### Next / in progress
 
-- Minimal C interpreter of UEM-16
-- Compile C core for x86-64, ARM64, RISC-V, selected MCUs
+- Minimal C99 interpreter of UEM-16 (`c/`) + golden differential vs Python
+- Target pass only when executable runs golden vectors (not compile-only)
 - Progressive reduction of residual Python control flow
+- Optional: ARM64 / RISC-V / wasm executables after vector pass on-device
 
 ## 1.0 candidate
 

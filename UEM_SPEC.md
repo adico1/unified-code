@@ -285,9 +285,20 @@ Report: bytecode size, compile p95, decode/verify p95, execution p95, peak
 machine state size, instruction count, event count, explicit control-flow
 count by layer (machine core, primitives, compiler, tests, generator residual).
 
+## Independent implementations
+
+A second implementation (e.g. C99 under `c/`) must execute published
+bytecode using **this specification** and golden vectors only — not by
+translating the Python host. `APPLY` is bound to the versioned portable
+registry (`c/REGISTRY.md` / registry version in the C CLI). Unknown
+primitives are rejected.
+
+**Chip support** is not claimed from compilation alone. A target passes
+only when its executable runs the golden vectors with matching results.
+
 ## Explicit non-goals (v0.1)
 
-- Multi-chip ISA backends
+- Claiming multi-chip support without golden-vector execution on that chip
 - Replacing Unified Code generator
 - Network effects
 - Mutable shared global state
