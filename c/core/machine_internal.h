@@ -1,13 +1,14 @@
 #ifndef UEM_MACHINE_INTERNAL_H
 #define UEM_MACHINE_INTERNAL_H
 
-#include "uem.h"
+#include "../include/uem.h"
 #include "../third_party/cJSON.h"
 #include <stdint.h>
 
 typedef struct {
     uint8_t opcode;
-    char *operand; /* NULL if none; heap */
+    char *operand; /* NULL if none; heap; may contain embedded NULs */
+    uint32_t operand_len; /* byte length of operand (not strlen) */
 } uem_instr;
 
 struct uem_machine {

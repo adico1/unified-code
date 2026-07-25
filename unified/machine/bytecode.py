@@ -166,9 +166,7 @@ def _decode(data):
                 operand = chunk.decode("utf-8")
             except UnicodeDecodeError as exc:
                 raise ValueError("invalid-utf8") from exc
-            # reject noncanonical re-encode of string (surrogates already invalid in utf-8)
-            if operand.encode("utf-8") != chunk:
-                raise ValueError("noncanonical-utf8")
+            # Well-formed UTF-8 (RFC 3629) round-trips through encode; no extra check.
         else:
             raise ValueError("bad-tag")
         instructions.append((OPCODES[code], operand))

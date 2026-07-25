@@ -59,6 +59,19 @@
 - UEM gauntlet and measurements
 - **Not yet:** replace generator; multi-ISA backends
 
+### 0.8 — L13 Complete Testing Gauntlet
+
+- Multi-dimension coverage gate
+- coverage.json + GAUNTLET.md
+- Catalogs: opcodes, primitives, tickets, mutations, differential
+
+### 0.7 — L12 Physical targets
+
+- Portable core vs host split (`c/core`, `c/host/*`)
+- Target manifests and golden-on-hardware rule
+- UEM-MCU-1 profile (no family claim without board)
+- Strengthened fuzz corpus (≥100k)
+
 ### Next / in progress
 
 - Minimal C99 interpreter of UEM-16 (`c/`) + golden differential vs Python

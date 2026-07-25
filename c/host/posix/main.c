@@ -1,5 +1,6 @@
+/* POSIX host for UEM-16 — files, stdout, CLI. Portable core is in c/core/. */
 #include "uem.h"
-#include "../third_party/cJSON.h"
+#include "../../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,7 +22,6 @@ static uint8_t *read_file(const char *path, size_t *out_len) {
     return buf;
 }
 
-/* Outward that prefers host inject text/document */
 typedef struct {
     cJSON *host;
 } host_ctx;
@@ -62,7 +62,7 @@ static int host_outward(void *ctx, const char *effect, const char *source_json,
 
 static void usage(const char *argv0) {
     fprintf(stderr,
-            "UEM-16 C99 interpreter (registry v%d)\n"
+            "UEM-16 POSIX host (registry v%d)\n"
             "Usage:\n"
             "  %s version\n"
             "  %s verify <program.uem>\n"
@@ -75,7 +75,8 @@ int main(int argc, char **argv) {
     char err[256];
     if (argc < 2) { usage(argv[0]); return 2; }
     if (strcmp(argv[1], "version") == 0) {
-        printf("uem-c UEM-16 format=%d registry=%d\n", UEM_FORMAT_VERSION, UEM_REGISTRY_VERSION);
+        printf("uem-c UEM-16 format=%d registry=%d host=posix\n",
+               UEM_FORMAT_VERSION, UEM_REGISTRY_VERSION);
         return 0;
     }
     if (argc < 3) { usage(argv[0]); return 2; }
@@ -92,8 +93,6 @@ int main(int argc, char **argv) {
         if (strcmp(argv[1], "verify") == 0 || strcmp(argv[1], "sha") == 0) {
             free(bytes);
             if (st != UEM_OK) {
-                printf("{\"ok\":false,\"error\":%s}\n", err[0] ? err : "decode");
-                /* print JSON-safe */
                 fprintf(stderr, "verify-fail: %s\n", err);
                 return 1;
             }

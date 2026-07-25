@@ -237,7 +237,7 @@ def test_machine_source_has_no_domain_vocabulary():
         "uc_text",
         "uc_invoice",
     )
-    skip = {"l11.py", "gauntlet.py", "measure.py"}
+    skip = {"l11.py", "l13.py", "l13_catalog.py", "gauntlet.py", "measure.py"}
     for path in machine_dir.rglob("*.py"):
         if path.name in skip:
             continue

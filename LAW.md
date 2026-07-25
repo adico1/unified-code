@@ -186,3 +186,31 @@ Canonical fields include state, presentation, evidence (normalized),
 events, tickets, outward_log, limit_hit, and program identity.
 Unicode text ops use frozen profile `UEM-ASCII-1` (ASCII A–Z only).
 A CPU target is supported only after its executable runs golden vectors.
+
+## L12 — Physical-Target Conformance
+
+A processor target is supported only when its **native executable** runs the
+unchanged UEM golden suite and produces **byte-identical** canonical results
+to the reference.
+
+Compile-only or emulator-only execution is evidence, not support.
+
+Target manifests record architecture, OS, compiler, endianness, pointer
+width, UEM/registry versions, artifact SHA-256, and golden-suite SHA-256.
+
+## L13 — Complete Testing Gauntlet
+
+“100% coverage” is multi-dimensional. The build fails unless every required
+dimension is exactly 100%. Dimensions are never averaged into one score:
+
+- Python statements / branches (production machine runtime)
+- C lines / functions / branches (portable core; vendored separate)
+- Opcodes 16/16 with valid and rejection paths
+- Primitive registry complete
+- Specification requirements traced law→spec→impl→test→mutation
+- State transitions, event routes, ticket paths
+- Required mutations detected
+- Python/C differential (canonical bytes)
+- Physical-target goldens for claimed targets
+
+No pragma/no-cover. No empty tests. Unreachable production code is a defect.

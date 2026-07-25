@@ -1,0 +1,18 @@
+[run]
+branch = True
+source =
+    unified/machine
+
+omit =
+    */unified/machine/l11.py
+    */unified/machine/l13.py
+    */unified/machine/l13_catalog.py
+    */unified/machine/gauntlet.py
+    */unified/machine/measure.py
+    */tests/*
+    */__pycache__/*
+
+[report]
+precision = 2
+show_missing = True
+skip_covered = False

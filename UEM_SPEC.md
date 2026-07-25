@@ -347,3 +347,41 @@ equivalence-sensitive ops.
 - Replacing Unified Code generator
 - Network effects
 - Mutable shared global state
+
+## L12 — Physical-Target Conformance
+
+### Support rule
+
+A processor target is **supported** only when:
+
+1. The executable runs on the **actual** target architecture (not QEMU-only for chip claims).
+2. All unchanged golden vectors execute.
+3. Canonical result bytes match the x86-64 reference.
+4. Malformed bytecode is rejected identically.
+5. Ticket and limit paths match.
+6. Execution is deterministic across repeats.
+7. A signed/retained target result manifest is stored under `c/targets/manifests/`.
+
+### Host split
+
+```text
+c/core/        decoding, verification, execution, primitives
+c/host/posix   files, stdout, CLI
+c/host/wasm    Wasm entry (Wasm-host, not chip support)
+c/host/mcu     UEM-MCU-1 bounded profile surface
+```
+
+### UEM-MCU-1
+
+Fixed limits, no filesystem dependency in the intended embedding, OUTWARD
+returns effect records to firmware. No MCU family is claimed without a
+physical board golden pass.
+
+### Status vocabulary
+
+`native-pass` | `emulated-pass` | `compile-only` | `unavailable` | `native-fail`
+
+## L13 — Complete Testing Gauntlet
+
+See LAW.md L13. Emit `coverage.json` and `GAUNTLET.md` from
+`unified.machine.l13.run_l13_gauntlet`. CI must fail on any dimension below 100%.

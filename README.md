@@ -115,6 +115,30 @@ identical external JSON. Spec: [UEM_SPEC.md](UEM_SPEC.md).
 python -c "from unified.machine import compile_declaration_path; ..."
 ```
 
-Not claimed: native interpreters for x86-64 / ARM64 / RISC-V / MCU yet.
+### L12 — Physical-Target Conformance
+
+A target is **supported** only when its native executable runs the unchanged
+golden suite with byte-identical canonical results. See `c/targets/manifests/`.
+
+```bash
+cd c && make l12
+```
+
+Status vocabulary: `native-pass` | `emulated-pass` | `compile-only` | `unavailable`.
+
+Not claimed without hardware golden pass: ARM64, RISC-V, MCU families.
+Wasm goldens in ≥2 runtimes = Wasm-host support (not chip support).
 
 See [SPEC.md](SPEC.md), [LAW.md](LAW.md), and [ROADMAP.md](ROADMAP.md).
+
+
+### L13 — Complete Testing Gauntlet
+
+Multi-dimensional 100% coverage (statements, branches, opcodes, primitives,
+spec traceability, mutations, differential, physical goldens). Never one averaged score.
+
+```bash
+./scripts/run_l13.sh
+```
+
+Emits `coverage.json` and `GAUNTLET.md`. Build fails if any dimension is below 100%.

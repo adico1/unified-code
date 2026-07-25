@@ -1,5 +1,6 @@
 #include "machine_internal.h"
 #include "../third_party/sha256.h"
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -65,7 +66,7 @@ static int reencode_match(const uint8_t *bytes, size_t len, const uem_instr *ins
         if (!instr[i].operand) {
             out[o++] = 0;
         } else {
-            size_t L = strlen(instr[i].operand);
+            size_t L = instr[i].operand_len;
             out[o++] = 1;
             out[o++] = (uint8_t)(L >> 24); out[o++] = (uint8_t)(L >> 16);
             out[o++] = (uint8_t)(L >> 8); out[o++] = (uint8_t)L;
@@ -92,6 +93,128 @@ static void free_partial(uem_machine *m, uint32_t n) {
         free(m->instr);
     }
     free(m);
+}
+
+/* Canonical JSON matching Python json.dumps(..., sort_keys=True, separators=(',',':'), ensure_ascii=False). */
+static int append_str(char **buf, size_t *len, size_t *cap, const char *s, size_t n) {
+    if (*len + n + 1 > *cap) {
+        size_t ncap = (*cap ? *cap * 2 : 256);
+        char *nb;
+        while (ncap < *len + n + 1) ncap *= 2;
+        nb = (char *)realloc(*buf, ncap);
+        if (!nb) return -1;
+        *buf = nb;
+        *cap = ncap;
+    }
+    memcpy(*buf + *len, s, n);
+    *len += n;
+    (*buf)[*len] = 0;
+    return 0;
+}
+
+static int json_escape_append(char **buf, size_t *len, size_t *cap, const char *s) {
+    const unsigned char *p = (const unsigned char *)s;
+    if (append_str(buf, len, cap, "\"", 1)) return -1;
+    while (*p) {
+        unsigned char c = *p;
+        if (c == '"' || c == '\\') {
+            char tmp[2] = {'\\', (char)c};
+            if (append_str(buf, len, cap, tmp, 2)) return -1;
+        } else if (c == '\b') {
+            if (append_str(buf, len, cap, "\\b", 2)) return -1;
+        } else if (c == '\f') {
+            if (append_str(buf, len, cap, "\\f", 2)) return -1;
+        } else if (c == '\n') {
+            if (append_str(buf, len, cap, "\\n", 2)) return -1;
+        } else if (c == '\r') {
+            if (append_str(buf, len, cap, "\\r", 2)) return -1;
+        } else if (c == '\t') {
+            if (append_str(buf, len, cap, "\\t", 2)) return -1;
+        } else if (c < 0x20) {
+            char tmp[8];
+            snprintf(tmp, sizeof tmp, "\\u%04x", c);
+            if (append_str(buf, len, cap, tmp, 6)) return -1;
+        } else {
+            /* UTF-8 passthrough (ensure_ascii=False) */
+            if (append_str(buf, len, cap, (const char *)p, 1)) return -1;
+        }
+        p++;
+    }
+    return append_str(buf, len, cap, "\"", 1);
+}
+
+static int canon_value(const cJSON *v, char **buf, size_t *len, size_t *cap);
+
+static int cmp_cstr(const void *a, const void *b) {
+    const char *const *sa = (const char *const *)a;
+    const char *const *sb = (const char *const *)b;
+    return strcmp(*sa, *sb);
+}
+
+static int canon_value(const cJSON *v, char **buf, size_t *len, size_t *cap) {
+    if (!v || cJSON_IsNull(v)) return append_str(buf, len, cap, "null", 4);
+    if (cJSON_IsTrue(v)) return append_str(buf, len, cap, "true", 4);
+    if (cJSON_IsFalse(v)) return append_str(buf, len, cap, "false", 5);
+    if (cJSON_IsNumber(v)) {
+        char tmp[64];
+        double d = v->valuedouble;
+        /* Match Python: ints without .0 when integral */
+        if (d == (double)(long long)d && d >= (double)LLONG_MIN && d <= (double)LLONG_MAX) {
+            snprintf(tmp, sizeof tmp, "%lld", (long long)d);
+        } else {
+            /* Python json uses shortest representation; cJSON_Print style */
+            snprintf(tmp, sizeof tmp, "%.17g", d);
+        }
+        return append_str(buf, len, cap, tmp, strlen(tmp));
+    }
+    if (cJSON_IsString(v)) return json_escape_append(buf, len, cap, v->valuestring ? v->valuestring : "");
+    if (cJSON_IsArray(v)) {
+        const cJSON *ch;
+        int first = 1;
+        if (append_str(buf, len, cap, "[", 1)) return -1;
+        cJSON_ArrayForEach(ch, v) {
+            if (!first && append_str(buf, len, cap, ",", 1)) return -1;
+            first = 0;
+            if (canon_value(ch, buf, len, cap)) return -1;
+        }
+        return append_str(buf, len, cap, "]", 1);
+    }
+    if (cJSON_IsObject(v)) {
+        /* collect keys, sort, emit */
+        int n = 0, i;
+        const cJSON *ch;
+        const char **keys;
+        cJSON_ArrayForEach(ch, v) n++;
+        keys = (const char **)malloc(sizeof(char *) * (size_t)(n ? n : 1));
+        if (!keys) return -1;
+        i = 0;
+        cJSON_ArrayForEach(ch, v) keys[i++] = ch->string ? ch->string : "";
+        qsort(keys, (size_t)n, sizeof(char *), cmp_cstr);
+        if (append_str(buf, len, cap, "{", 1)) { free(keys); return -1; }
+        for (i = 0; i < n; i++) {
+            cJSON *item = cJSON_GetObjectItemCaseSensitive((cJSON *)v, keys[i]);
+            if (i && append_str(buf, len, cap, ",", 1)) { free(keys); return -1; }
+            if (json_escape_append(buf, len, cap, keys[i])) { free(keys); return -1; }
+            if (append_str(buf, len, cap, ":", 1)) { free(keys); return -1; }
+            if (canon_value(item, buf, len, cap)) { free(keys); return -1; }
+        }
+        free(keys);
+        return append_str(buf, len, cap, "}", 1);
+    }
+    return -1;
+}
+
+static int image_is_canonical(cJSON *image, const uint8_t *img_ptr, uint32_t img_len) {
+    char *buf = NULL;
+    size_t len = 0, cap = 0;
+    int ok;
+    if (canon_value(image, &buf, &len, &cap) != 0) {
+        free(buf);
+        return 0;
+    }
+    ok = (len == img_len && memcmp(buf, img_ptr, img_len) == 0);
+    free(buf);
+    return ok;
 }
 
 uem_status uem_decode_verify(const uint8_t *bytes, size_t len, uem_machine **out, char *err, size_t errlen) {
@@ -141,6 +264,7 @@ uem_status uem_decode_verify(const uint8_t *bytes, size_t len, uem_machine **out
         tag = bytes[off++];
         m->instr[i].opcode = op;
         m->instr[i].operand = NULL;
+        m->instr[i].operand_len = 0;
         if (tag == 0) {
             /* none */
         } else if (tag == 1) {
@@ -155,6 +279,7 @@ uem_status uem_decode_verify(const uint8_t *bytes, size_t len, uem_machine **out
             if (!m->instr[i].operand) { free_partial(m, i); return UEM_ERR_NOMEM; }
             memcpy(m->instr[i].operand, bytes + off, L);
             m->instr[i].operand[L] = 0;
+            m->instr[i].operand_len = L;
             off += L;
         } else {
             free_partial(m, i); if (err) snprintf(err, errlen, "bad-tag"); return UEM_ERR_DECODE;
@@ -182,8 +307,13 @@ uem_status uem_decode_verify(const uint8_t *bytes, size_t len, uem_machine **out
         if (err) snprintf(err, errlen, "bad-image-json");
         return UEM_ERR_DECODE;
     }
-    /* noncanonical image: cJSON PrintUnformatted uses compact form; require exact match via re-print sort?
-       Spec: sort_keys separators. cJSON doesn't sort. Compare re-encode of instructions+original image bytes. */
+    /* Spec: image must be canonical JSON (sort_keys, separators=(',',':'), UTF-8). */
+    if (!image_is_canonical(image, img_ptr, img_len)) {
+        cJSON_Delete(image);
+        free_partial(m, count);
+        if (err) snprintf(err, errlen, "noncanonical-image");
+        return UEM_ERR_DECODE;
+    }
     if (!reencode_match(bytes, len, m->instr, count, img_ptr, img_len)) {
         cJSON_Delete(image);
         free_partial(m, count);

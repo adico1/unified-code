@@ -4,7 +4,7 @@ set -euo pipefail
 CROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$CROOT"
 mkdir -p build/cross
-SRC="src/main.c src/decode.c src/machine.c src/primitives.c src/expr.c src/decimal.c third_party/cJSON.c third_party/sha256.c"
+SRC="host/posix/main.c src/decode.c src/machine.c src/primitives.c src/expr.c src/decimal.c third_party/cJSON.c third_party/sha256.c"
 CFLAGS="-std=c99 -O2 -Iinclude -Ithird_party -Isrc -Wall"
 
 try_build() {

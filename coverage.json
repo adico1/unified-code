@@ -1,0 +1,100 @@
+{
+  "dimensions": {
+    "c_branches": {
+      "actual": null,
+      "ok": false,
+      "required": 100
+    },
+    "c_functions": {
+      "actual": null,
+      "ok": false,
+      "required": 100
+    },
+    "c_lines": {
+      "actual": null,
+      "note": "gcov score pending full instrumented suite",
+      "ok": false,
+      "required": 100
+    },
+    "error_ticket_paths": {
+      "actual": 100.0,
+      "ok": true,
+      "required": 100
+    },
+    "event_routes": {
+      "actual": 100.0,
+      "ok": true,
+      "required": 100
+    },
+    "fuzz_corpus": {
+      "actual": 100.0,
+      "ok": true,
+      "required": 100
+    },
+    "opcode_rejection_paths": {
+      "actual": 100.0,
+      "ok": true,
+      "required": 100
+    },
+    "opcode_valid_paths": {
+      "actual": 100.0,
+      "ok": true,
+      "required": 100
+    },
+    "opcodes": {
+      "actual": 100.0,
+      "ok": true,
+      "required": 100
+    },
+    "physical_target_goldens": {
+      "actual": 100.0,
+      "ok": true,
+      "required": 100
+    },
+    "primitive_registry": {
+      "actual": 100.0,
+      "ok": true,
+      "required": 100
+    },
+    "python_branches": {
+      "actual": 85.5,
+      "ok": false,
+      "required": 100
+    },
+    "python_c_differential": {
+      "actual": 100.0,
+      "ok": true,
+      "required": 100
+    },
+    "python_statements": {
+      "actual": 91.56,
+      "ok": false,
+      "required": 100
+    },
+    "required_mutations": {
+      "actual": 100.0,
+      "ok": true,
+      "required": 100
+    },
+    "specification_requirements": {
+      "actual": 100.0,
+      "ok": true,
+      "required": 100
+    },
+    "state_transitions": {
+      "actual": 100.0,
+      "ok": true,
+      "required": 100
+    }
+  },
+  "duration_s": 22.14,
+  "l13": true,
+  "notes": [
+    "Dimensions never averaged",
+    "Vendored C excluded from primary",
+    "Harness modules omitted from Python production via .coveragerc",
+    "Behavioral catalogs must be 100% before claiming L13 pass",
+    "Code coverage dimensions still incomplete until every production line/branch is closed"
+  ],
+  "verdict": "fail"
+}
