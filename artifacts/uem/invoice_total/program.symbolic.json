@@ -3,8 +3,8 @@
   "image": {
     "binding_order": [
       "subtotal",
-      "tax_rate",
       "tax",
+      "tax_rate",
       "total"
     ],
     "bindings": {
@@ -305,5 +305,5 @@
     ]
   ],
   "package": "uc_invoice_total",
-  "program_sha256": "cf2a87a8219f26e51bcc78dade1c97cca2540e90cbcf6bc3e9fe283b822270c8"
+  "program_sha256": "a79c68a10f78ccde5283c991d0ef3b91a3108ff15b530d0f3ac36a1b502042c0"
 }
