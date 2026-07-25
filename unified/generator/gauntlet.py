@@ -474,8 +474,11 @@ def _g1_law(project_path: str) -> dict:
             "def until_quiet",
             "def map_event",
             "def fold_event",
-            "def open_ticket",
+            "def construct_ticket",
+            "def outward_ticket_store",
+            "def reload_unacked_tickets",
             "def call_part",
+            "DEFAULT_MAX_STEPS",
         ):
             check(f"audited-primitive:{prim.split()[-1]}", prim in ert)
 
@@ -1974,7 +1977,8 @@ def _control_flow_report(project_path: str) -> dict:
     areas["generator"] = gen
     areas["audited_primitives"] = (
         "route,emit,enqueue,dequeue,until_quiet,map_event,fold_event,"
-        "call_part,require_str_field,run_expression,open_ticket"
+        "call_part,construct_ticket,outward_ticket_store,reload_unacked_tickets,"
+        "require_str_field,run_expression"
     )
     return areas
 
@@ -2220,35 +2224,32 @@ def _probe_ticket_mutation(project_path: str, mutation_name: str) -> tuple[bool,
                 "state": "invalid",
             }
             if mutation_name == "missing-redaction":
-                t1 = ert.open_ticket(thing)
+                t1 = ert.construct_ticket(thing)
                 msg = (t1.get("value") or {}).get("ticket", {}).get("message", "")
                 if "secret123" in msg or "password" in msg.lower():
                     return True, "unredacted"
                 return False, "still-redacted"
             if mutation_name == "missing-ticket":
-                t1 = ert.open_ticket(thing)
+                t1 = ert.construct_ticket(thing)
                 if not (t1.get("value") or {}).get("ticket"):
                     return True, "no-ticket"
                 return False, "ticket-present"
             if mutation_name == "duplicate-ticket":
-                t1 = ert.open_ticket(thing)
-                t2 = ert.open_ticket(t1)
-                # second should not create second correlation ticket file count > 1
+                t1 = ert.outward_ticket_store(ert.construct_ticket(thing))
+                t2 = ert.outward_ticket_store(t1)
                 files = list(Path(outbox).glob("*.json")) if Path(outbox).is_dir() else []
                 if len(files) > 1:
                     return True, "dup-files"
-                # or ticket replaced with different id
                 return False, "deduped"
             if mutation_name == "premature-ack":
-                t1 = ert.open_ticket(thing)
+                t1 = ert.construct_ticket(thing)
                 acked = ert.ack_ticket(t1)
                 ticket = (acked.get("value") or {}).get("ticket") or {}
                 if ticket.get("acked") and not ticket.get("external_id"):
                     return True, "acked-without-id"
                 return False, "ack-guarded"
             if mutation_name == "ticket-loss":
-                t1 = ert.open_ticket(thing)
-                # preserve should keep file
+                t1 = ert.outward_ticket_store(ert.construct_ticket(thing))
                 t2 = ert.preserve_for_retry(
                     {
                         **t1,
@@ -2258,7 +2259,13 @@ def _probe_ticket_mutation(project_path: str, mutation_name: str) -> tuple[bool,
                         },
                     }
                 )
+                # re-persist after preserve
+                t3 = ert.outward_ticket_store(t2)
                 files = list(Path(outbox).glob("*.json")) if Path(outbox).is_dir() else []
+                if not files and not (t3.get("value") or {}).get("ticket"):
+                    return True, "lost"
+                if not files and (t3.get("value") or {}).get("event") == "ticket.persist.failed":
+                    return True, "lost"
                 if not files:
                     return True, "lost"
                 return False, "preserved"
@@ -2417,8 +2424,8 @@ def _mut_l10_missing_ticket(root: Path):
     path = pkg / "event_runtime.py"
     text = path.read_text(encoding="utf-8")
     text = text.replace(
-        "def open_ticket(thing):",
-        "def open_ticket(thing):\n    return thing  # MISSING_TICKET_MUTATION\n    #",
+        "def construct_ticket(thing):",
+        "def construct_ticket(thing):\n    return thing  # MISSING_TICKET_MUTATION\n    #",
     )
     path.write_text(text, encoding="utf-8")
 
@@ -2427,14 +2434,14 @@ def _mut_l10_duplicate_ticket(root: Path):
     pkg = _pkg_dir(str(root))
     path = pkg / "event_runtime.py"
     text = path.read_text(encoding="utf-8")
+    # force new correlation each time + always rewrite as distinct files
     text = text.replace(
-        "ticket_out = existing if has_ticket else ticket",
-        "ticket_out = ticket  # DUPLICATE_TICKET_MUTATION",
+        "return hashlib.sha256(raw.encode(\"utf-8\")).hexdigest()[:16]",
+        "return hashlib.sha256((raw + str(id(raw))).encode(\"utf-8\")).hexdigest()[:16]  # DUPLICATE_TICKET_MUTATION",
     )
-    # also force new file each time
     text = text.replace(
-        "if target.exists():\n            return True",
-        "if False and target.exists():  # DUPLICATE_TICKET_MUTATION\n            return True",
+        "if target.exists():",
+        "if False and target.exists():  # DUPLICATE_TICKET_MUTATION",
     )
     path.write_text(text, encoding="utf-8")
 
@@ -2444,8 +2451,13 @@ def _mut_l10_premature_ack(root: Path):
     path = pkg / "event_runtime.py"
     text = path.read_text(encoding="utf-8")
     text = text.replace(
-        "ticket[\"acked\"] = has_id",
-        'ticket["acked"] = True  # PREMATURE_ACK_MUTATION',
+        "has_id = isinstance(external_id, str) and len(external_id.strip()) > 0",
+        "has_id = True  # PREMATURE_ACK_MUTATION",
+    )
+    # avoid AttributeError when external_id is None under forced has_id
+    text = text.replace(
+        'ticket["external_id"] = external_id.strip()',
+        'ticket["external_id"] = (external_id or "")  # PREMATURE_ACK_MUTATION',
     )
     path.write_text(text, encoding="utf-8")
 
@@ -2469,9 +2481,8 @@ def _mut_l10_ticket_loss(root: Path):
         "def preserve_for_retry(thing):",
         "def preserve_for_retry(thing):\n    return {**thing, 'value': {**(thing.get('value') or {}), 'ticket': None}}  # TICKET_LOSS_MUTATION\n    #",
     )
-    # also prevent write
     text = text.replace(
-        "def _write_ticket_outbox(outbox_path, ticket):",
-        "def _write_ticket_outbox(outbox_path, ticket):\n    return False  # TICKET_LOSS_MUTATION\n    #",
+        "def _atomic_write_ticket(outbox_path, ticket):",
+        "def _atomic_write_ticket(outbox_path, ticket):\n    return False  # TICKET_LOSS_MUTATION\n    #",
     )
     path.write_text(text, encoding="utf-8")

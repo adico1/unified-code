@@ -1,40 +1,123 @@
 """Emit audited L10 event-runtime primitives for generated applications.
 
 Control flow (selection/iteration) lives ONLY here and in expr_runtime as
-named, audited primitives. Domain parts and compose must not use if/for/while.
+named, *contract-tested* primitives. Domain parts and compose must not use
+if/for/while.
+
+“Audited” means: formal contract + direct tests for termination, ordering,
+duplication, and failure — not merely a name.
 """
 
 from __future__ import annotations
 
 
+# Formal contracts embedded in generated runtime and mirrored in SPEC.md.
+PRIMITIVE_CONTRACTS = r"""
+L10 KERNEL CONTRACTS (audited = named + specified + tested)
+
+emit(thing, event) -> thing
+  - Sets value.event; appends evidence event:{name} in order.
+  - Pure: no I/O.
+
+enqueue(thing, event, event_id=None) -> thing
+  - Appends {name, id} to value.event_queue (FIFO).
+  - id defaults to deterministic hash(name, queue_len, seq).
+  - Pure: no I/O.
+
+dequeue(thing) -> thing
+  - Pops FIFO head into value.event / value.event_id.
+  - Empty queue => event "quiet" (queue exhaustion signal).
+  - Pure: no I/O.
+
+route(thing, routes) -> thing
+  - handlers[event](thing); missing => unknown_event invalid Thing.
+  - Does not catch handler exceptions (call_part / until_quiet do).
+
+until_quiet(thing, routes, max_steps=DEFAULT_MAX_STEPS) -> thing
+  - Processes queue until quiet OR step limit.
+  - Queue exhaustion evidence: event:until_quiet:queue_exhausted
+  - Limit exhaustion evidence: event:until_quiet:limit_exhausted
+    (distinct; does NOT open a ticket).
+  - Event identity: each event_id routed at most once per invocation;
+    duplicates => event:duplicate-skipped (no re-route).
+  - max_steps is finite and deterministic (default 10000).
+  - No recursion as loop substitute.
+
+map_event / fold_event
+  - Deterministic index order 0..n-1; pure relative to routes.
+  - Item event_id includes index to allow same event name per item.
+
+call_part(thing, part, done_event) -> thing
+  - Success => enqueue done_event.
+  - Unhandled exception => exception payload + exception.unhandled
+    (no domain vocabulary; no I/O).
+
+construct_ticket(thing) -> thing
+  - PURE: builds ticket object; redacts BEFORE ticket fields and evidence.
+  - Ticket identity = correlation_id derived deterministically from failure
+    (operation|error_type|redacted_message|evidence_tail).
+  - One logical ticket: existing ticket with same id kept.
+  - Emits event ticket.persist.requested (no filesystem write).
+
+outward_ticket_store(thing) -> thing
+  - OUTWARD boundary: atomic persist of already-constructed ticket.
+  - Success => ticket.persisted.
+  - Failure => ticket.persist.failed + emergency result;
+    MUST NOT construct/open another ticket (no recursion).
+
+reload_unacked_tickets(thing) -> thing
+  - OUTWARD read: loads outbox entries without acked=true into value.
+  - Restart path for unacknowledged work.
+
+ack_ticket(thing) -> thing
+  - acked=true only if external_id is a non-empty str (real provider id).
+  - Otherwise ticket.ack_pending.
+
+fail_with_ticket(thing) -> thing
+  - Terminal processing.failed carrying ticket; pure.
+
+emergency_persist_result(thing) -> thing
+  - Observable failure of ticket write; no new ticket construction.
+
+Domain vocabulary is forbidden in this module body (no app field names).
+"""
+
+
 def emit_event_runtime_module() -> str:
     """Self-contained event kernel. Functions + plain data. No user classes."""
-    return '''"""L10 event runtime — audited deterministic control primitives.
+    return '''"""L10 event runtime — contract-tested deterministic control primitives.
 
 Application/domain code must not use explicit if/for/while/match/comprehensions.
-Selection and iteration exist only as these named primitives:
+Selection and iteration exist only as these audited primitives (see CONTRACTS).
 
-  route(thing)         — table lookup by event name
-  emit(thing, event)   — set event + append evidence
-  enqueue(thing, event)— append to deterministic queue
-  until_quiet(thing)   — process queue until empty (audited loop)
-  map_event(...)       — deterministic map over a collection via item events
-  fold_event(...)      — deterministic fold/reduction via item events
-  call_part(...)       — invoke a Part; unhandled exceptions → ticket path
-  require_str_field(...)— audited field guard (Thing → Thing)
-  open_ticket(thing)   — outward ticket boundary for unhandled exceptions
-  preserve_for_retry(...)— local outbox when delivery fails
-  ack_ticket(thing)    — acknowledge after external id
+Audited means: formal contract + tests for termination, ordering, duplication,
+and failure — not merely a function name.
 
-L8: no user-defined classes. L7: ticket outbox is an outward boundary.
-L10 exception policy: unhandled → ticket.open; validation failures do not ticket.
+L8: no user-defined classes.
+L7: only outward_ticket_store / reload_unacked_tickets perform ticket I/O.
+L10: construct_ticket is pure; persistence is a separate outward boundary.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
+
+# --- contracts (machine-readable summary) ---
+DEFAULT_MAX_STEPS = 10000
+CONTRACTS = """
+emit enqueue dequeue route until_quiet map_event fold_event call_part
+construct_ticket outward_ticket_store reload_unacked_tickets ack_ticket
+fail_with_ticket emergency_persist_result
+queue_exhausted != limit_exhausted
+event identity prevents duplicate route
+ticket identity = deterministic correlation_id
+redaction before persist and evidence
+persist failure => emergency, not recursive ticket
+ack requires non-empty external_id
+"""
 
 
 def _value(thing):
@@ -46,10 +129,24 @@ def _event_name(thing):
     return v.get("event") or thing.get("event") or "unknown"
 
 
+def _event_id_of(thing):
+    v = _value(thing)
+    return v.get("event_id") or _event_name(thing)
+
+
+def _make_event_id(name, seq, salt=""):
+    raw = f"{name}|{seq}|{salt}"
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
+
+
 def emit(thing, event, **extra):
-    """Set current event and append evidence. Thing → Thing."""
+    """Set current event and append evidence. Pure. Thing → Thing."""
     value = dict(_value(thing))
     value["event"] = event
+    if "event_id" not in extra and "event_id" not in value:
+        seq = int(value.get("event_seq") or 0)
+        value["event_id"] = _make_event_id(event, seq)
+        value["event_seq"] = seq + 1
     value.update(extra)
     evidence = tuple(thing.get("evidence") or ())
     return {
@@ -60,12 +157,15 @@ def emit(thing, event, **extra):
     }
 
 
-def enqueue(thing, event):
-    """Append event name to deterministic queue in the thing."""
+def enqueue(thing, event, event_id=None):
+    """Append named event with identity to deterministic FIFO queue. Pure."""
     value = dict(_value(thing))
     queue = list(value.get("event_queue") or ())
-    queue.append(event)
+    seq = int(value.get("event_seq") or 0)
+    eid = event_id or _make_event_id(event, seq, salt=str(len(queue)))
+    queue.append({"name": event, "id": eid})
     value["event_queue"] = tuple(queue)
+    value["event_seq"] = seq + 1
     evidence = tuple(thing.get("evidence") or ())
     return {
         **thing,
@@ -76,16 +176,27 @@ def enqueue(thing, event):
 
 
 def dequeue(thing):
-    """Pop next queued event into current event field. Empty → quiet."""
+    """Pop next queued event. Empty → quiet (queue exhaustion). Pure."""
     value = dict(_value(thing))
     queue = list(value.get("event_queue") or ())
     empty = len(queue) == 0
-    next_event = (queue or ["quiet"])[0]
-    rest = tuple(queue[1:])
+    if empty:
+        next_name, next_id = "quiet", "quiet"
+        rest = ()
+    else:
+        head = queue[0]
+        rest = tuple(queue[1:])
+        if isinstance(head, dict):
+            next_name = head.get("name") or "unknown"
+            next_id = head.get("id") or next_name
+        else:
+            next_name = str(head)
+            next_id = str(head)
     value["event_queue"] = rest
-    value["event"] = next_event
+    value["event"] = next_name
+    value["event_id"] = next_id
     evidence = tuple(thing.get("evidence") or ())
-    mark = "event:quiet" if empty else f"event:dequeue:{next_event}"
+    mark = "event:quiet" if empty else f"event:dequeue:{next_name}"
     return {
         **thing,
         "value": value,
@@ -95,7 +206,7 @@ def dequeue(thing):
 
 
 def unknown_event(thing):
-    """Explicit invalid for unknown routes."""
+    """Explicit invalid for unknown routes. Pure."""
     value = dict(_value(thing))
     ev = _event_name(thing)
     value["error"] = "unknown-event"
@@ -110,74 +221,103 @@ def unknown_event(thing):
 
 
 def route(thing, routes):
-    """Declarative route table: EVENTS[event](thing). Unknown → invalid Thing."""
+    """Declarative route table. Unknown → invalid Thing. Pure (no catch)."""
     handler = routes.get(_event_name(thing), unknown_event)
     return handler(thing)
 
 
-def until_quiet(thing, routes, *, max_steps=10000):
-    """Process event_queue until quiet or max_steps (audited loop primitive).
+def until_quiet(thing, routes, max_steps=None):
+    """Process event_queue until quiet or step limit (audited loop).
 
-    This is the sole general-purpose iteration over application events.
-    Recursion is not used as a loop substitute.
+    Contracts:
+      - max_steps defaults to DEFAULT_MAX_STEPS (deterministic finite bound).
+      - Queue exhaustion ≠ limit exhaustion (distinct evidence marks).
+      - Each event_id is routed at most once; duplicates are skipped.
+      - Limit exhaustion does not open a ticket.
+      - No recursion.
     """
+    limit = DEFAULT_MAX_STEPS if max_steps is None else int(max_steps)
     steps = 0
     current = thing
     value = dict(_value(current))
     queue = list(value.get("event_queue") or ())
     has_current = value.get("event") not in (None, "quiet", "")
-    seed = (
-        enqueue(current, value["event"])
-        if (len(queue) == 0 and has_current)
-        else current
-    )
-    current = seed
-    while steps < max_steps:
+    if len(queue) == 0 and has_current:
+        current = enqueue(current, value["event"], event_id=value.get("event_id"))
+    processed = set(value.get("processed_event_ids") or ())
+    while steps < limit:
         steps += 1
         current = dequeue(current)
         ev = _event_name(current)
+        eid = _event_id_of(current)
         if ev == "quiet":
+            v = dict(_value(current))
+            v["processed_event_ids"] = tuple(sorted(processed))
+            v["until_quiet_end"] = "queue_exhausted"
+            v["until_quiet_steps"] = steps
             return {
                 **current,
+                "value": v,
                 "evidence": (
                     *tuple(current.get("evidence") or ()),
+                    "event:until_quiet:queue_exhausted",
                     "event:until_quiet:done",
                 ),
             }
+        if eid in processed:
+            current = {
+                **current,
+                "evidence": (
+                    *tuple(current.get("evidence") or ()),
+                    f"event:duplicate-skipped:{eid}",
+                ),
+            }
+            continue
+        processed.add(eid)
         try:
             current = route(current, routes)
-        except Exception as exc:  # noqa: BLE001 — audited boundary
+        except Exception as exc:  # noqa: BLE001 — audited catch
             current = _exception_thing(current, "route", exc)
             current = enqueue(current, "exception.unhandled")
+        # refresh processed into value for observability
+        v = dict(_value(current))
+        v["processed_event_ids"] = tuple(sorted(processed))
+        current = {**current, "value": v}
+    # limit exhaustion — distinct from queue quiet; no ticket
     value = dict(_value(current))
-    value["error"] = "event-overflow"
-    value["event"] = "exception.unhandled"
+    value["error"] = "event-step-limit"
+    value["event"] = "until_quiet.limit_exhausted"
+    value["until_quiet_end"] = "limit_exhausted"
+    value["until_quiet_steps"] = steps
+    value["processed_event_ids"] = tuple(sorted(processed))
     return {
         **current,
         "value": value,
         "evidence": (
             *tuple(current.get("evidence") or ()),
-            "event:until_quiet:overflow",
+            "event:until_quiet:limit_exhausted",
         ),
         "state": "invalid",
     }
 
 
 def map_event(thing, collection_key, item_event, routes):
-    """Deterministic map: for each item emit item_event via routes (audited)."""
+    """Deterministic map over a list under root[collection_key]."""
     value = dict(_value(thing))
-    root = value.get("document") or value.get("root") or value
+    root = value.get("root") if isinstance(value.get("root"), dict) else value
     collection = root.get(collection_key) if isinstance(root, dict) else None
     collection = collection if isinstance(collection, list) else []
     results = []
     index = 0
     while index < len(collection):
         item = collection[index]
+        item_id = _make_event_id(item_event, index, salt="map")
         item_thing = {
             **thing,
             "value": {
                 **value,
                 "event": item_event,
+                "event_id": item_id,
                 "item": item,
                 "item_index": index,
             },
@@ -200,20 +340,22 @@ def map_event(thing, collection_key, item_event, routes):
 
 
 def fold_event(thing, collection_key, item_event, routes, initial):
-    """Deterministic fold over a collection (audited loop primitive)."""
+    """Deterministic fold over a list under root[collection_key]."""
     value = dict(_value(thing))
-    root = value.get("document") or value.get("root") or value
+    root = value.get("root") if isinstance(value.get("root"), dict) else value
     collection = root.get(collection_key) if isinstance(root, dict) else None
     collection = collection if isinstance(collection, list) else []
     acc = initial
     index = 0
     while index < len(collection):
         item = collection[index]
+        item_id = _make_event_id(item_event, index, salt="fold")
         step = {
             **thing,
             "value": {
                 **value,
                 "event": item_event,
+                "event_id": item_id,
                 "item": item,
                 "item_index": index,
                 "fold_acc": acc,
@@ -237,7 +379,7 @@ def fold_event(thing, collection_key, item_event, routes, initial):
 
 
 def call_part(thing, part, done_event):
-    """Invoke a Part; domain validation stays on the thing; unhandled → ticket."""
+    """Invoke a Part; unhandled exception → exception.unhandled (no I/O)."""
     try:
         out = part(thing)
     except Exception as exc:  # noqa: BLE001
@@ -246,8 +388,10 @@ def call_part(thing, part, done_event):
     return enqueue(emit(out, done_event), done_event)
 
 
-def require_str_field(thing, name, field, missing_error="missing-text", invalid_error="invalid-text"):
-    """Audited string-field guard used by generated domain parts (no if in domain)."""
+def require_str_field(
+    thing, name, field, missing_error="missing-field", invalid_error="invalid-field"
+):
+    """Audited string-field guard (generic; callers supply field/errors)."""
     from .boundary import is_thing
 
     if not is_thing(thing):
@@ -344,48 +488,39 @@ def identity_part(thing, name):
 
 
 def _redact(message):
-    """Strip likely secrets from ticket messages (plain data transform)."""
+    """Redact secrets before any ticket field or evidence may record them."""
     text = str(message)
     banned = ("password", "token", "secret", "authorization", "api_key", "apikey")
     lower = text.lower()
     marked = lower
     for word in banned:
         marked = marked.replace(word, "[redacted]")
-    redacted = "[redacted]" in marked
-    return "[redacted-message]" if redacted else text[:500]
+    if "[redacted]" in marked:
+        return "[redacted-message]"
+    return text[:500]
 
 
-def _correlation(evidence):
-    raw = "|".join(str(x) for x in evidence[-8:])
+def _correlation_from_failure(operation, error_type, redacted_message, evidence):
+    """Deterministic ticket identity from failure material (already redacted)."""
+    raw = "|".join(
+        [
+            str(operation),
+            str(error_type),
+            str(redacted_message),
+            "|".join(str(x) for x in (evidence or ())[-8:]),
+        ]
+    )
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
-
-
-def _write_ticket_outbox(outbox_path, ticket):
-    """Deterministic local ticket outbox (outward boundary)."""
-    if not isinstance(ticket, dict):
-        return False
-    try:
-        path = Path(outbox_path)
-        path.mkdir(parents=True, exist_ok=True)
-        cid = ticket.get("correlation_id") or "unknown"
-        target = path / f"{cid}.json"
-        if target.exists():
-            return True
-        target.write_text(
-            json.dumps(ticket, ensure_ascii=False, indent=2, sort_keys=True) + "\\n",
-            encoding="utf-8",
-        )
-        return True
-    except OSError:
-        return False
 
 
 def _exception_thing(thing, operation, exc):
     value = dict(_value(thing))
+    # redact at the moment of capture — before ticket construct/evidence
+    redacted = _redact(str(exc))
     value["exception"] = {
-        "operation": operation,
+        "operation": str(operation),
         "error_type": type(exc).__name__,
-        "message": str(exc),
+        "message": redacted,
         "occurred_at": "static",
     }
     value["event"] = "exception.unhandled"
@@ -398,68 +533,207 @@ def _exception_thing(thing, operation, exc):
     }
 
 
-def open_ticket(thing):
-    """Outward ticket boundary: one ticket for unhandled exception."""
+def construct_ticket(thing):
+    """PURE: build redacted ticket; request persist. No filesystem I/O.
+
+    event chain: exception.unhandled → ticket.persist.requested
+    """
     value = dict(_value(thing))
     existing = value.get("ticket")
-    has_ticket = existing is not None
     evidence = tuple(thing.get("evidence") or ())
     payload = value.get("exception") or {}
-    correlation = value.get("correlation_id") or _correlation(evidence)
+    operation = str(payload.get("operation") or value.get("operation") or "unknown")
+    error_type = str(payload.get("error_type") or "Exception")
+    # redaction BEFORE ticket fields and any further evidence
+    raw_message = payload.get("message") or value.get("error") or "unhandled"
+    redacted_message = _redact(raw_message)
+    correlation = _correlation_from_failure(
+        operation, error_type, redacted_message, evidence
+    )
     ticket = {
         "kind": "unhandled-exception",
-        "operation": str(
-            payload.get("operation") or value.get("operation") or "unknown"
-        ),
-        "error_type": str(payload.get("error_type") or "Exception"),
-        "message": _redact(payload.get("message") or value.get("error") or "unhandled"),
+        "operation": operation,
+        "error_type": error_type,
+        "message": redacted_message,
         "evidence": list(evidence[-20:]),
         "correlation_id": correlation,
+        "ticket_id": correlation,
         "occurred_at": str(payload.get("occurred_at") or "static"),
+        "acked": False,
     }
-    ticket_out = existing if has_ticket else ticket
+    # one failure → one ticket identity
+    if isinstance(existing, dict) and existing.get("correlation_id") == correlation:
+        ticket_out = existing
+    elif isinstance(existing, dict) and existing.get("ticket_id"):
+        ticket_out = existing
+    else:
+        ticket_out = ticket
     value["ticket"] = ticket_out
-    value["event"] = "ticket.opened"
+    value["correlation_id"] = ticket_out.get("correlation_id") or correlation
+    value["event"] = "ticket.persist.requested"
+    built = {
+        **thing,
+        "value": value,
+        "evidence": (
+            *evidence,
+            "event:ticket.construct",
+            "event:ticket.persist.requested",
+        ),
+        "state": "invalid",
+    }
+    # continue pipeline: request persist as next queue event
+    return enqueue(built, "ticket.persist.requested")
+
+
+def outward_ticket_store(thing):
+    """OUTWARD boundary: atomic persist of constructed ticket.
+
+    Success → ticket.persisted.
+    Failure → ticket.persist.failed + emergency (never recursive ticket).
+    """
+    value = dict(_value(thing))
+    ticket = value.get("ticket")
+    evidence = tuple(thing.get("evidence") or ())
+    if not isinstance(ticket, dict):
+        return enqueue(
+            emergency_persist_result(
+                {
+                    **thing,
+                    "value": {
+                        **value,
+                        "event": "ticket.persist.failed",
+                        "emergency": {
+                            "kind": "ticket-persist-failed",
+                            "reason": "missing-ticket",
+                        },
+                    },
+                    "evidence": (*evidence, "boundary:ticket.persist"),
+                    "state": "invalid",
+                }
+            ),
+            "ticket.persist.failed",
+        )
+    # ensure message already redacted (defense in depth)
+    ticket = dict(ticket)
+    ticket["message"] = _redact(ticket.get("message") or "")
+    value["ticket"] = ticket
     outbox_path = value.get("ticket_outbox") or ".uc/tickets"
-    written = _write_ticket_outbox(outbox_path, ticket_out)
-    value["ticket_outbox_written"] = written
+    written = _atomic_write_ticket(outbox_path, ticket)
+    if written:
+        value["event"] = "ticket.persisted"
+        value["ticket_outbox_written"] = True
+        out = {
+            **thing,
+            "value": value,
+            "evidence": (
+                *evidence,
+                "boundary:ticket.persist",
+                "event:ticket.persisted",
+            ),
+            "state": "invalid",
+        }
+        return enqueue(out, "ticket.persisted")
+    # failed write — emergency, do NOT construct another ticket
+    value["event"] = "ticket.persist.failed"
+    value["ticket_outbox_written"] = False
+    value["emergency"] = {
+        "kind": "ticket-persist-failed",
+        "reason": "write-failed",
+        "correlation_id": ticket.get("correlation_id"),
+    }
+    out = {
+        **thing,
+        "value": value,
+        "evidence": (
+            *evidence,
+            "boundary:ticket.persist",
+            "event:ticket.persist.failed",
+            "emergency:ticket-persist-failed",
+        ),
+        "state": "invalid",
+    }
+    return enqueue(out, "ticket.persist.failed")
+
+
+def emergency_persist_result(thing):
+    """Terminal observable emergency for persist failure. No new ticket."""
+    value = dict(_value(thing))
+    value["event"] = "ticket.persist.failed"
+    if "emergency" not in value:
+        value["emergency"] = {
+            "kind": "ticket-persist-failed",
+            "reason": "emergency",
+            "correlation_id": (value.get("ticket") or {}).get("correlation_id"),
+        }
+    evidence = tuple(thing.get("evidence") or ())
     return {
         **thing,
         "value": value,
-        "evidence": (*evidence, "boundary:ticket.open", "event:ticket.opened"),
+        "evidence": (*evidence, "event:emergency:ticket-persist-failed"),
         "state": "invalid",
     }
 
 
 def preserve_for_retry(thing):
-    """Delivery failure: keep ticket in outbox (idempotent)."""
+    """Re-request persist of existing ticket (idempotent; no reconstruct)."""
     value = dict(_value(thing))
-    ticket = value.get("ticket")
+    value["event"] = "ticket.persist.requested"
+    evidence = tuple(thing.get("evidence") or ())
+    out = {
+        **thing,
+        "value": value,
+        "evidence": (
+            *evidence,
+            "event:ticket.delivery_failed",
+            "event:ticket.persist.requested",
+        ),
+        "state": "invalid",
+    }
+    return enqueue(out, "ticket.persist.requested")
+
+
+def reload_unacked_tickets(thing):
+    """OUTWARD read: load unacked tickets from outbox for restart."""
+    value = dict(_value(thing))
     outbox_path = value.get("ticket_outbox") or ".uc/tickets"
-    written = _write_ticket_outbox(outbox_path, ticket) if ticket else False
-    value["event"] = "ticket.delivery_failed"
-    value["ticket_outbox_written"] = written
+    loaded = _load_unacked(outbox_path)
+    value["unacked_tickets"] = loaded
+    value["event"] = "ticket.reload.done"
     evidence = tuple(thing.get("evidence") or ())
     return {
         **thing,
         "value": value,
-        "evidence": (*evidence, "event:ticket.delivery_failed"),
-        "state": "invalid",
+        "evidence": (
+            *evidence,
+            "boundary:ticket.reload",
+            f"event:ticket.reload:{len(loaded)}",
+        ),
+        "state": thing.get("state", "formed"),
     }
 
 
 def ack_ticket(thing):
-    """Acknowledge only after external id is present."""
+    """Acknowledge only when a real non-empty external ticket id is present."""
     value = dict(_value(thing))
     ticket = dict(value.get("ticket") or {})
     external_id = value.get("ticket_external_id") or ticket.get("external_id")
-    has_id = external_id not in (None, "")
-    ticket["external_id"] = external_id if has_id else ticket.get("external_id")
-    ticket["acked"] = has_id
+    # real external id: non-empty string (not bool/int zero masquerading)
+    has_id = isinstance(external_id, str) and len(external_id.strip()) > 0
+    if has_id:
+        ticket["external_id"] = external_id.strip()
+        ticket["acked"] = True
+        value["event"] = "ticket.acked"
+        mark = "event:ticket.acked"
+    else:
+        ticket["acked"] = False
+        value["event"] = "ticket.ack_pending"
+        mark = "event:ticket.ack_pending"
     value["ticket"] = ticket
-    value["event"] = "ticket.acked" if has_id else "ticket.ack_pending"
     evidence = tuple(thing.get("evidence") or ())
-    mark = "event:ticket.acked" if has_id else "event:ticket.ack_pending"
+    # also update outbox ack flag if possible (best-effort outward)
+    outbox_path = value.get("ticket_outbox") or ".uc/tickets"
+    if has_id and ticket.get("correlation_id"):
+        _atomic_write_ticket(outbox_path, ticket)
     return {
         **thing,
         "value": value,
@@ -469,7 +743,7 @@ def ack_ticket(thing):
 
 
 def fail_with_ticket(thing):
-    """Terminal failure carrying ticket."""
+    """Terminal processing.failed carrying ticket. Pure (no further enqueue)."""
     value = dict(_value(thing))
     value["event"] = "processing.failed"
     evidence = tuple(thing.get("evidence") or ())
@@ -479,6 +753,62 @@ def fail_with_ticket(thing):
         "evidence": (*evidence, "event:processing.failed"),
         "state": "invalid",
     }
+
+
+# Back-compat name: pure construct only (does not persist).
+def open_ticket(thing):
+    """Deprecated alias: construct_ticket only. Persistence is separate."""
+    return construct_ticket(thing)
+
+
+def _atomic_write_ticket(outbox_path, ticket):
+    """Atomic persist: write temp file then os.replace. Returns bool.
+
+    Same correlation_id always maps to one file; content is replaced atomically
+    so ack updates are visible to reload_unacked_tickets.
+    """
+    if not isinstance(ticket, dict):
+        return False
+    try:
+        path = Path(outbox_path)
+        path.mkdir(parents=True, exist_ok=True)
+        cid = ticket.get("correlation_id") or ticket.get("ticket_id") or "unknown"
+        target = path / f"{cid}.json"
+        tmp = path / f".{cid}.json.tmp"
+        payload = json.dumps(ticket, ensure_ascii=False, indent=2, sort_keys=True) + "\\n"
+        fd = os.open(str(tmp), os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        try:
+            os.write(fd, payload.encode("utf-8"))
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+        os.replace(str(tmp), str(target))
+        return True
+    except OSError:
+        return False
+
+
+def _load_unacked(outbox_path):
+    """Load tickets from outbox that are not acked."""
+    path = Path(outbox_path)
+    if not path.is_dir():
+        return []
+    loaded = []
+    try:
+        names = sorted(path.glob("*.json"))
+    except OSError:
+        return []
+    index = 0
+    while index < len(names):
+        fpath = names[index]
+        index += 1
+        try:
+            data = json.loads(fpath.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if isinstance(data, dict) and not data.get("acked"):
+            loaded.append(data)
+    return loaded
 '''
 
 
@@ -508,7 +838,6 @@ def emit_event_compose(declaration: dict) -> str:
         else "from . import parts  # noqa: F401"
     )
 
-    # Pipeline events as pure data
     routes: list[tuple[str, str]] = [
         ('"program.start"', "on_program_start"),
         ('"step.inward"', "on_inward"),
@@ -518,7 +847,7 @@ def emit_event_compose(declaration: dict) -> str:
     routes.append(('"step.letter"', "on_letter"))
     if read_name:
         routes.append(('"step.read"', "on_read"))
-    for i, fname in enumerate(features):
+    for fname in features:
         routes.append((f'"step.feature.{fname}"', f"on_feature_{fname}"))
     routes.append(('"step.verify"', "on_verify"))
     if has_present:
@@ -527,8 +856,11 @@ def emit_event_compose(declaration: dict) -> str:
     routes.extend(
         [
             ('"validation.failed"', "on_reject"),
-            ('"exception.unhandled"', "open_ticket"),
-            ('"ticket.opened"', "fail_with_ticket"),
+            # L10 ticket chain: construct (pure) → persist (outward) → failed
+            ('"exception.unhandled"', "construct_ticket"),
+            ('"ticket.persist.requested"', "outward_ticket_store"),
+            ('"ticket.persisted"', "fail_with_ticket"),
+            ('"ticket.persist.failed"', "emergency_persist_result"),
             ('"ticket.delivery_failed"', "preserve_for_retry"),
             ('"ticket.ack_requested"', "ack_ticket"),
             ('"processing.failed"', "on_failed"),
@@ -537,7 +869,6 @@ def emit_event_compose(declaration: dict) -> str:
     )
     routes_lines = ",\n    ".join(f"{k}: {v}" for k, v in routes)
 
-    # Build sequential next-event chain for handlers
     chain = ["step.inward"]
     if has_cli:
         chain.append("step.parse")
@@ -558,7 +889,7 @@ def emit_event_compose(declaration: dict) -> str:
 
     handlers = []
     handlers.append(
-        f'''
+        '''
 def on_program_start(thing):
     return enqueue(emit(thing, "step.inward"), "step.inward")
 '''
@@ -639,10 +970,12 @@ def on_done(thing):
 from .event_runtime import (
     ack_ticket,
     call_part,
+    construct_ticket,
     emit,
+    emergency_persist_result,
     enqueue,
     fail_with_ticket,
-    open_ticket,
+    outward_ticket_store,
     preserve_for_retry,
     until_quiet,
 )

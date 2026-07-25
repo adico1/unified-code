@@ -208,23 +208,45 @@ queue processed by `until_quiet`).
 
 ### Audited primitives (where control flow remains)
 
-| Primitive | Role |
+**Audited** = formal contract + direct tests (termination, ordering,
+duplication, failure). A name alone is insufficient.
+
+| Primitive | Role | I/O |
+| --- | --- | --- |
+| `emit` | set event + ordered evidence | pure |
+| `enqueue` / `dequeue` | FIFO queue with event identity | pure |
+| `route` | table lookup; unknown → invalid | pure |
+| `until_quiet` | process until quiet or step limit | pure |
+| `map_event` / `fold_event` | collection iteration by index | pure |
+| `call_part` | Part invoke; unhandled → event | pure |
+| `construct_ticket` | build redacted ticket Thing | pure |
+| `outward_ticket_store` | atomic ticket persist | outward |
+| `reload_unacked_tickets` | restart load of unacked tickets | outward |
+| `ack_ticket` | ack only with real external id | outward (best-effort) |
+| `fail_with_ticket` | terminal `processing.failed` | pure |
+| `emergency_persist_result` | persist failure without new ticket | pure |
+| `require_str_field` / `identity_part` | generic field guards | pure |
+| `run_expression` | expression evaluation | pure |
+
+Runtime primitives must not embed domain vocabulary (field names and
+error codes are caller-supplied parameters).
+
+Moving an `if` from `parts.py` into a non-audited helper is a
+**conformance failure**.
+
+### `until_quiet` invariants
+
+| Condition | Evidence / result |
 | --- | --- |
-| `emit` | set event + evidence |
-| `enqueue` / `dequeue` | deterministic queue |
-| `route` | table lookup |
-| `until_quiet` | process until queue empty |
-| `map_event` / `fold_event` | collection iteration |
-| `call_part` | Part invoke; unhandled → ticket path |
-| `require_str_field` / `identity_part` | domain guards without domain if |
-| `run_expression` | expression evaluation (expr_runtime) |
-| `open_ticket` / `preserve_for_retry` / `ack_ticket` | ticket boundary |
+| Queue empty | `event:until_quiet:queue_exhausted` (success path end) |
+| Step limit reached | `event:until_quiet:limit_exhausted`, error `event-step-limit` |
+| Duplicate `event_id` | `event:duplicate-skipped:{id}` — not re-routed |
+| Default limit | `DEFAULT_MAX_STEPS = 10000` (deterministic, finite) |
 
-Moving an `if` from `parts.py` into a non-audited generated helper is a
-**conformance failure**. The primitives above are the only permitted homes
-for selection and iteration in generated applications.
+Queue exhaustion and limit exhaustion are **distinct**. Limit exhaustion
+must not open a ticket.
 
-### Exception policy
+### Exception and ticket policy
 
 ```text
 Expected domain rejection:
@@ -233,18 +255,35 @@ Expected domain rejection:
 
 Recoverable operational failure:
     operation.failed → configured recovery handler
-    Recovery evidence is recorded.
 
-Unrecoverable or unhandled exception:
-    exception.raised → ticket.open → processing.failed
+Unrecoverable / unhandled exception:
+    exception.unhandled
+    → ticket.construct              (construct_ticket, pure)
+    → ticket.persist.requested
+    → outward_ticket_store          (atomic write)
+    → ticket.persisted
+    → processing.failed
 ```
 
-Ticket rules: one failure one ticket; redact secrets; outbox when no
-provider; ack only after external id; delivery failure preserves outbox.
+Persist failure:
+
+```text
+ticket.persist.failed → emergency result
+Must not recursively construct another ticket.
+```
+
+| Invariant | Rule |
+| --- | --- |
+| Ticket identity | `correlation_id` / `ticket_id` = hash(operation\|error_type\|redacted_message\|evidence_tail) |
+| One failure one ticket | Same correlation keeps single ticket |
+| Redaction | Before ticket fields, evidence of secrets, and persistence |
+| Atomic persist | temp file + `os.replace` |
+| Restart | `reload_unacked_tickets` loads outbox entries with `acked != true` |
+| Ack | Requires non-empty string external id |
 
 ### Control-flow measurement report
 
-Gauntlets and benchmarks report explicit control-flow counts separately for:
+Gauntlets report explicit control-flow counts separately for:
 
 ```text
 framework kernel
@@ -256,6 +295,18 @@ tests
 ```
 
 Do not claim control flow was eliminated if it was merely relocated.
+Do not claim the full system is event-driven while runtime/generator
+still hold large imperative counts.
+
+### Proof scoreboard (living)
+
+| Proof | Status |
+| --- | --- |
+| Generic cross-domain generation | Pass |
+| Generated domain/application event flow | Pass |
+| Unhandled-error accountability | Pass (construct pure; persist outward) |
+| Fully event-driven runtime | Not yet |
+| Fully event-driven generator | Not yet |
 
 ## Host-edge model (resolved)
 

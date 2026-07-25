@@ -80,23 +80,27 @@ uc benchmark --iterations 20
 
 ### L10 — Event-Driven Flow
 
-Generated applications do not use explicit `if`/`for`/`while`/`match` in
-domain or composition code. Control is data:
+**Precise achievement:** generated domain logic and composition are
+event-driven; imperative control flow is confined to named runtime
+primitives and boundaries. The full runtime and generator are **not**
+yet fully event-driven.
 
 ```python
 ROUTES = {
     "program.start": on_program_start,
-    "step.verify": on_verify,
-    "exception.unhandled": open_ticket,
+    "exception.unhandled": construct_ticket,
+    "ticket.persist.requested": outward_ticket_store,
+    "ticket.persisted": fail_with_ticket,
 }
 
 def program(thing):
     return until_quiet(enqueue(emit(thing, "program.start"), "program.start"), ROUTES)
 ```
 
-Iteration and selection remain only in audited primitives
-(`event_runtime`, `expr_runtime`). Unhandled exceptions open a ticket
-via the outward ticket boundary (local outbox when no provider).
+Audited primitives carry formal contracts and direct tests. Ticket
+construction is pure; persistence is a separate outward boundary
+(`outward_ticket_store`) with atomic write and emergency-on-failure
+(no recursive ticket).
 
 See [docs/DEVELOPER_WORKFLOW.md](docs/DEVELOPER_WORKFLOW.md) for the full
 sequence, scales (UC-0 through UC-4), and L9 measurement scope.

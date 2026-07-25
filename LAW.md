@@ -127,12 +127,23 @@ def handle(thing):
 
 * **Application conformance:** no explicit loops or conditionals in
   generated domain/application code (`parts.py`, `compose.py`).
-* **Kernel conformance:** iteration and routing exist only as audited
-  deterministic primitives: `route`, `emit`, `enqueue`, `until_quiet`,
-  `map_event`, `fold_event`, `call_part`.
+* **Kernel conformance:** iteration and routing exist only as *audited*
+  deterministic primitives. **Audited** means: formal contract + direct
+  tests for termination, ordering, duplication, and failure — not merely
+  a name.
 
 Hiding `if`/`for` inside another generated helper does **not** remove
-imperative control flow unless that helper is an audited primitive.
+imperative control flow unless that helper is contract-tested.
+
+Current achievement (precise):
+
+> Generated domain logic and composition are event-driven, while
+> imperative control flow is confined to named runtime primitives and
+> boundaries.
+
+It is **not** accurate to call the entire system or generator fully
+event-driven while generated runtime and the generator still contain
+large explicit control-flow counts.
 
 ### Exception and ticket policy
 
@@ -140,30 +151,27 @@ imperative control flow unless that helper is an audited primitive.
 | --- | --- | --- |
 | Expected domain rejection | `validation.failed` → reject | No |
 | Recoverable operational failure | `operation.failed` → recovery handler | No (unless policy says so) |
-| Unrecoverable / unhandled exception | `exception.unhandled` → `ticket.open` → `processing.failed` | Yes |
+| Unrecoverable / unhandled exception | see ticket chain below | Yes |
 
-An exception without a defined recovery route must emit `ticket.open`.
-It must never be swallowed, converted into a generic invalid state, or
-silently terminate processing.
+Ticket chain (construct pure; persist outward):
 
-Every `ticket.open` Thing must contain:
-
-```python
-{
-    "event": "ticket.open",
-    "state": "invalid",
-    "ticket": {
-        "kind": "unhandled-exception",
-        "operation": "...",
-        "error_type": "...",
-        "message": "...",
-        "evidence": [...],
-        "correlation_id": "...",
-        "occurred_at": "..."
-    }
-}
+```text
+exception.unhandled
+→ ticket.construct          (construct_ticket — pure, redacts first)
+→ ticket.persist.requested
+→ outward_ticket_store      (atomic write; named outward boundary)
+→ ticket.persisted
+→ processing.failed
 ```
 
-Rules: one failure → one ticket; redact secrets; ticket is an outward
-boundary; local outbox when no provider; acknowledge only after external
-id; validation failures do not create tickets.
+Persist failure:
+
+```text
+ticket.persist.failed → emergency result
+(never recursively constructs another ticket)
+```
+
+Ticket identity is the deterministic `correlation_id` derived from the
+failure material after redaction. One failure → one ticket. Restart
+reloads unacknowledged tickets via `reload_unacked_tickets`.
+Acknowledgement requires a real non-empty external ticket id.
