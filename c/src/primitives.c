@@ -220,8 +220,11 @@ static int prim_eval_expression(uem_machine *m) {
             if (!cJSON_IsString(nm)) continue;
             node = cJSON_GetObjectItemCaseSensitive(bindings_ast, nm->valuestring);
             if (!node) continue;
-            if (uem_expr_eval(m, node, root, bound, &val, err, sizeof err) != 0) {
+            {
+            cJSON *bpath = NULL;
+            if (uem_expr_eval(m, node, root, bound, &val, err, sizeof err, &bpath) != 0) {
                 store_set(m, "error", cJSON_CreateString(err));
+                if (bpath) store_set(m, "path", bpath);
                 uem_set_state(m, "invalid");
                 cJSON_Delete(root);
                 cJSON_Delete(bound);
@@ -230,12 +233,14 @@ static int prim_eval_expression(uem_machine *m) {
                 snprintf(mark, sizeof mark, "%s:error:%s", part, err);
                 return uem_ev_append(m, mark);
             }
+            }
             cJSON_AddItemToObject(bound, nm->valuestring, val);
         }
     }
-    if (uem_expr_eval(m, expr, root, bound, &result, err, sizeof err) != 0) {
+    cJSON *err_path = NULL;
+    if (uem_expr_eval(m, expr, root, bound, &result, err, sizeof err, &err_path) != 0) {
         store_set(m, "error", cJSON_CreateString(err));
-        /* path omitted for simplicity in error object */
+        if (err_path) { store_set(m, "path", err_path); err_path = NULL; }
         uem_set_state(m, "invalid");
         cJSON_Delete(root);
         cJSON_Delete(bound);
@@ -330,8 +335,12 @@ static int prim_present_json(uem_machine *m) {
     if (!text) {
         cJSON *body = cJSON_CreateObject();
         cJSON *er = store_get(m, "error");
+        int include_path = 0;
         cJSON_AddStringToObject(body, "error", er && cJSON_IsString(er) ? er->valuestring : "invalid");
-        if (cJSON_IsTrue(inc) || (cJSON_IsNumber(inc) && inc->valueint)) {
+        if (cJSON_IsTrue(inc) || (cJSON_IsNumber(inc) && inc->valueint)) include_path = 1;
+        /* cJSON may store JSON true as number 1 or as True type */
+        if (inc && inc->type & cJSON_True) include_path = 1;
+        if (include_path) {
             cJSON *path = store_get(m, "path");
             if (path) cJSON_AddItemToObject(body, "path", cJSON_Duplicate(path, 1));
         }

@@ -23,9 +23,34 @@ static cJSON *dig(cJSON *obj, cJSON *path_arr) {
     return cur;
 }
 
+static cJSON *g_err_path = NULL;
+static int g_item_index = -1;
+static cJSON *g_coll_path = NULL;
+
 static int fail(char *err, size_t errlen, const char *msg) {
     if (err && errlen) snprintf(err, errlen, "%s", msg);
     return -1;
+}
+
+static int fail_path(char *err, size_t errlen, const char *msg, cJSON *path) {
+    if (g_err_path) cJSON_Delete(g_err_path);
+    if (g_item_index >= 0) {
+        cJSON *full = cJSON_CreateArray();
+        cJSON *el;
+        if (g_coll_path && cJSON_IsArray(g_coll_path)) {
+            cJSON_ArrayForEach(el, g_coll_path) cJSON_AddItemToArray(full, cJSON_Duplicate(el, 1));
+        } else {
+            cJSON_AddItemToArray(full, cJSON_CreateString("items"));
+        }
+        cJSON_AddItemToArray(full, cJSON_CreateNumber(g_item_index));
+        if (path && cJSON_IsArray(path)) {
+            cJSON_ArrayForEach(el, path) cJSON_AddItemToArray(full, cJSON_Duplicate(el, 1));
+        }
+        g_err_path = full;
+    } else {
+        g_err_path = path ? cJSON_Duplicate(path, 1) : NULL;
+    }
+    return fail(err, errlen, msg);
 }
 
 /* casefold ASCII only; non-ASCII copied */
@@ -193,12 +218,14 @@ static int eval_node(cJSON *node, cJSON *root, cJSON *item, int in_each,
         else if (cJSON_IsNumber(boundj)) b = uem_dec_from_i64(boundj->valueint);
         else { cJSON_Delete(ofn); return fail(err, errlen, "bad-bound"); }
         if (strcmp(op, "min_value") == 0 && uem_dec_cmp(v, b) < 0) {
+            cJSON *pj = cJSON_GetObjectItemCaseSensitive(node, "path");
             cJSON_Delete(ofn);
-            return fail(err, errlen, cJSON_IsString(ej) ? ej->valuestring : "below-minimum");
+            return fail_path(err, errlen, cJSON_IsString(ej) ? ej->valuestring : "below-minimum", pj);
         }
         if (strcmp(op, "max_value") == 0 && uem_dec_cmp(v, b) > 0) {
+            cJSON *pj = cJSON_GetObjectItemCaseSensitive(node, "path");
             cJSON_Delete(ofn);
-            return fail(err, errlen, cJSON_IsString(ej) ? ej->valuestring : "above-maximum");
+            return fail_path(err, errlen, cJSON_IsString(ej) ? ej->valuestring : "above-maximum", pj);
         }
         *out = ofn;
         return 0;
@@ -237,11 +264,17 @@ static int eval_node(cJSON *node, cJSON *root, cJSON *item, int in_each,
         if (eval_node(cJSON_GetObjectItemCaseSensitive(node, "collection"), root, item, in_each, bindings, &coll, err, errlen) != 0)
             return -1;
         if (!cJSON_IsArray(coll)) { cJSON_Delete(coll); return fail(err, errlen, "items-not-a-list"); }
+        {
+        int sidx = 0;
+        cJSON *cpath = cJSON_GetObjectItemCaseSensitive(node, "path");
+        g_coll_path = cpath;
         cJSON_ArrayForEach(el, coll) {
             cJSON *part = NULL;
             uem_dec d;
-            if (!cJSON_IsObject(el)) { cJSON_Delete(coll); return fail(err, errlen, "item-not-an-object"); }
+            g_item_index = sidx;
+            if (!cJSON_IsObject(el)) { g_item_index = -1; g_coll_path = NULL; cJSON_Delete(coll); return fail(err, errlen, "item-not-an-object"); }
             if (eval_node(each, root, el, 1, bindings, &part, err, errlen) != 0) {
+                g_item_index = -1; g_coll_path = NULL;
                 cJSON_Delete(coll);
                 return -1;
             }
@@ -251,7 +284,11 @@ static int eval_node(cJSON *node, cJSON *root, cJSON *item, int in_each,
             } else { cJSON_Delete(part); cJSON_Delete(coll); return fail(err, errlen, "bad-num"); }
             cJSON_Delete(part);
             total = uem_dec_add(total, d);
-            if (!total.ok) { cJSON_Delete(coll); return fail(err, errlen, "num-overflow"); }
+            if (!total.ok) { g_item_index = -1; g_coll_path = NULL; cJSON_Delete(coll); return fail(err, errlen, "num-overflow"); }
+            sidx++;
+        }
+        g_item_index = -1;
+        g_coll_path = NULL;
         }
         cJSON_Delete(coll);
         *out = cJSON_CreateObject();
@@ -395,7 +432,18 @@ static int eval_node(cJSON *node, cJSON *root, cJSON *item, int in_each,
     return fail(err, errlen, "unknown-op");
 }
 
-int uem_expr_eval(uem_machine *m, cJSON *node, cJSON *root, cJSON *bindings, cJSON **out, char *err, size_t errlen) {
+int uem_expr_eval(uem_machine *m, cJSON *node, cJSON *root, cJSON *bindings, cJSON **out,
+                  char *err, size_t errlen, cJSON **err_path) {
+    int rc;
     (void)m;
-    return eval_node(node, root, NULL, 0, bindings, out, err, errlen);
+    if (g_err_path) { cJSON_Delete(g_err_path); g_err_path = NULL; }
+    rc = eval_node(node, root, NULL, 0, bindings, out, err, errlen);
+    if (err_path) {
+        *err_path = g_err_path;
+        g_err_path = NULL;
+    } else if (g_err_path) {
+        cJSON_Delete(g_err_path);
+        g_err_path = NULL;
+    }
+    return rc;
 }

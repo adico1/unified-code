@@ -296,6 +296,51 @@ primitives are rejected.
 **Chip support** is not claimed from compilation alone. A target passes
 only when its executable runs the golden vectors with matching results.
 
+## L11 — Cross-Host Equivalence
+
+Conforming hosts produce identical **canonical observable results** for
+valid programs and identical **rejections** for invalid encodings.
+
+### Canonical result fields
+
+| Field | Meaning |
+| --- | --- |
+| `canonical_version` | `1` |
+| `registry_version` | portable primitive registry version |
+| `unicode_profile` | e.g. `UEM-ASCII-1` |
+| `program_sha256` | identity of bytecode |
+| `state` | machine state |
+| `stop_reason` | `stop` or `limit:*` or fault reason |
+| `presentation` | `{text, exit_code}` or null |
+| `stats` / `error` / `path` | domain-neutral outputs |
+| `ticket` | redacted ticket object or null |
+| `outward_log` | ordered outward requests |
+| `events_emitted` / `events_dequeued` | ordered event names |
+| `evidence` | ordered normalized marks (`op:NAME` not numeric) |
+| `limit_hit` | null or limit kind |
+| `steps` / `instruction_count` | counters |
+| `reject` | decode/verify reject code when applicable |
+
+### Unicode freeze (`UEM-ASCII-1`)
+
+Until a later registry embeds full Unicode casefold data, case folding
+maps only ASCII A–Z → a–z. Non-ASCII bytes/codepoints are unchanged.
+Hosts MUST NOT use libc/`str.casefold` locale or OS Unicode for
+equivalence-sensitive ops.
+
+### Gauntlet requirements
+
+1. Positive and negative vectors per opcode  
+2. Combined program exercising all 16 opcodes  
+3. Every registered primitive  
+4. Full canonical output comparison (not selected fields only)  
+5. Unknown primitives, bad routes, after-STOP, all resource limits  
+6. Tickets: construct, redaction, dedupe, persistence boundary  
+7. ASan and UBSan on the current tree  
+8. Mutation/fuzz of bytecode  
+9. Frozen Unicode profile  
+10. Hardware execution before claiming x86-64/ARM64/RISC-V support
+
 ## Explicit non-goals (v0.1)
 
 - Claiming multi-chip support without golden-vector execution on that chip

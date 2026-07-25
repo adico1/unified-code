@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from .bytecode import decode_program
 from .opcodes import NAME_TO_BYTE
+from .primitives import registry
 from .thing import blank_thing, with_evidence, with_state
 
 
@@ -14,6 +15,7 @@ def validate_symbolic(thing):
     if not isinstance(instructions, (list, tuple)) or len(instructions) == 0:
         return with_state(with_evidence(thing, "validate:empty-program"), "invalid")
     has_stop = False
+    reg = registry()
     index = 0
     while index < len(instructions):
         item = instructions[index]
@@ -28,6 +30,12 @@ def validate_symbolic(thing):
             )
         if operand is not None and not isinstance(operand, str):
             return with_state(with_evidence(thing, "validate:operand-type"), "invalid")
+        # L11: APPLY with explicit primitive name must be in registry
+        if name == "APPLY" and operand is not None and operand not in reg:
+            return with_state(
+                with_evidence(thing, f"validate:unknown-primitive:{operand}"),
+                "invalid",
+            )
         if name == "STOP":
             has_stop = True
     if not has_stop:

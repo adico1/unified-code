@@ -45,9 +45,17 @@ def run_program(thing):
         result = _fulfill(req, v)
         nv = dict(v)
         nv["outward_result"] = result
+        log = list(nv.get("outward_log") or ())
+        log.append(
+            {
+                "effect": req.get("effect"),
+                "source": req.get("source"),
+            }
+        )
+        nv["outward_log"] = log
         # keep request until accept_outward clears it
         current = {**current, "value": nv}
-        current = with_evidence(current, f"host:fulfill:{req.get('effect')}")
+        current = with_evidence(current, "host:fulfill")
     return with_state(with_evidence(current, "host:guard-limit"), "invalid")
 
 
@@ -131,6 +139,11 @@ def _finalize(thing):
         "error": store.get("error"),
         "path": store.get("path"),
         "ticket": v.get("ticket"),
+        "steps": (v.get("limits") or {}).get("steps"),
+        "instruction_count": v.get("instruction_count"),
+        "outward_log": v.get("outward_log") or [],
+        "events_emitted": v.get("events_emitted") or [],
+        "events_dequeued": v.get("events_dequeued") or [],
     }
     return {
         **thing,
@@ -139,8 +152,10 @@ def _finalize(thing):
     }
 
 
-def run_compiled(compiled_thing, host_input):
+def run_compiled(compiled_thing, host_input, limits=None):
     """Convenience: compiled program Thing + host_input → result Thing."""
     value = dict(value_of(compiled_thing))
     value["host_input"] = host_input
+    if limits:
+        value["limits"] = {**(value.get("limits") or {}), **limits}
     return run_program({**compiled_thing, "value": value, "state": "formed"})

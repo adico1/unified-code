@@ -3,6 +3,12 @@
 **Registry version:** `1`  
 **Machine:** UEM-16  
 **Spec:** UEM_SPEC.md 0.1  
+**Unicode profile:** `UEM-ASCII-1` (frozen)
+
+Case folding for `unique_casefold_word_count` is **not** host-native
+Unicode. Under `UEM-ASCII-1`, only ASCII `A`–`Z` map to `a`–`z`. All other
+UTF-8 code units are left unchanged. This freezes cross-host equivalence
+until a later registry version embeds a full Unicode casefold table.
 
 Bytecode `APPLY` operands and `routes` values MUST name a primitive listed
 here. Implementations MUST reject or fail unknown names as

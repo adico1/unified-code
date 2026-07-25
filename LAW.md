@@ -175,3 +175,14 @@ Ticket identity is the deterministic `correlation_id` derived from the
 failure material after redaction. One failure → one ticket. Restart
 reloads unacknowledged tickets via `reload_unacked_tickets`.
 Acknowledgement requires a real non-empty external ticket id.
+
+## L11 — Cross-Host Equivalence
+
+Every conforming UEM host must produce the same canonical observable
+result for every valid program/input pair and the same canonical
+rejection for every invalid byte sequence.
+
+Canonical fields include state, presentation, evidence (normalized),
+events, tickets, outward_log, limit_hit, and program identity.
+Unicode text ops use frozen profile `UEM-ASCII-1` (ASCII A–Z only).
+A CPU target is supported only after its executable runs golden vectors.

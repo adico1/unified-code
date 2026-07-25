@@ -48,12 +48,16 @@ struct uem_machine {
     uint32_t event_seq;
     cJSON *machine_fault;
     int invalid_soft; /* validation invalid but continue to STOP */
+    cJSON *outward_log; /* array of {effect, source} */
+    cJSON *events_emitted;
+    cJSON *events_dequeued;
 };
 
 int uem_ev_append(uem_machine *m, const char *mark);
 int uem_set_state(uem_machine *m, const char *st);
 int uem_prim_apply(uem_machine *m, const char *name, char *err, size_t errlen);
-int uem_expr_eval(uem_machine *m, cJSON *node, cJSON *root, cJSON *bindings, cJSON **out, char *err, size_t errlen);
+int uem_expr_eval(uem_machine *m, cJSON *node, cJSON *root, cJSON *bindings, cJSON **out,
+                  char *err, size_t errlen, cJSON **err_path);
 void uem_ticket_construct(uem_machine *m);
 
 /* registry */

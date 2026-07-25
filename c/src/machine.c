@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 
 int uem_ev_append(uem_machine *m, const char *mark) {
     if (!m || !mark) return -1;
@@ -42,6 +43,9 @@ void uem_free(uem_machine *m) {
     cJSON_Delete(m->ticket);
     cJSON_Delete(m->presentation);
     cJSON_Delete(m->machine_fault);
+    cJSON_Delete(m->outward_log);
+    cJSON_Delete(m->events_emitted);
+    cJSON_Delete(m->events_dequeued);
     for (j = 0; j < m->n_evidence; j++) free(m->evidence[j]);
     free(m->evidence);
     free(m->pending_primitive);
@@ -93,6 +97,14 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
     uint8_t op;
     char *operand;
     char emark[192];
+    /* env override for resource-limit vectors */
+    {
+        const char *ms = getenv("UEM_MAX_STEPS");
+        if (ms && *ms) {
+            unsigned long v = strtoul(ms, NULL, 10);
+            if (v > 0 && v < m->max_steps) m->max_steps = (uint32_t)v;
+        }
+    }
     if (m->halted) {
         uem_ev_append(m, "execution-after-stop");
         uem_set_state(m, "invalid");
@@ -115,8 +127,15 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
     m->steps++;
     op = in->opcode;
     operand = in->operand;
-    if (operand) snprintf(emark, sizeof emark, "op:%u:%s", op, operand);
-    else snprintf(emark, sizeof emark, "op:%u", op);
+    {
+        static const char *OPN[] = {
+            "?", "LOAD", "READ", "WRITE", "DELETE", "EMIT", "ENQUEUE", "DEQUEUE",
+            "ROUTE", "APPLY", "MAP", "FOLD", "VERIFY", "TICKET", "OUTWARD", "ACK", "STOP"
+        };
+        const char *on = (op >= 1 && op <= 16) ? OPN[op] : "?";
+        if (operand) snprintf(emark, sizeof emark, "op:%s:%s", on, operand);
+        else snprintf(emark, sizeof emark, "op:%s", on);
+    }
 
     switch (op) {
     case 0x01: /* LOAD */
@@ -135,9 +154,24 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
             m->acc = v ? cJSON_Duplicate(v, 1) : cJSON_CreateNull();
         }
         break;
-    case 0x02: /* READ */
-    case 0x03: /* WRITE */
-    case 0x04: /* DELETE — minimal path ops */
+    case 0x02: /* READ path into _acc */
+        if (operand) {
+            cJSON *v = cJSON_GetObjectItemCaseSensitive(m->store, operand);
+            if (m->acc) cJSON_Delete(m->acc);
+            m->acc = v ? cJSON_Duplicate(v, 1) : cJSON_CreateNull();
+        }
+        break;
+    case 0x03: /* WRITE _acc into path */
+        if (operand) {
+            cJSON *v = m->acc ? cJSON_Duplicate(m->acc, 1) : cJSON_CreateNull();
+            if (cJSON_GetObjectItemCaseSensitive(m->store, operand))
+                cJSON_ReplaceItemInObjectCaseSensitive(m->store, operand, v);
+            else
+                cJSON_AddItemToObject(m->store, operand, v);
+        }
+        break;
+    case 0x04: /* DELETE */
+        if (operand) cJSON_DeleteItemFromObjectCaseSensitive(m->store, operand);
         break;
     case 0x05: { /* EMIT */
         char id[17];
@@ -149,6 +183,8 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
         m->event_id = strdup(id);
         m->event_seq++;
         m->event_count++;
+        if (!m->events_emitted) m->events_emitted = cJSON_CreateArray();
+        cJSON_AddItemToArray(m->events_emitted, cJSON_CreateString(name));
         {
             char mk[128];
             snprintf(mk, sizeof mk, "event:%s", name);
@@ -190,6 +226,8 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
             memmove(m->q_name, m->q_name + 1, (m->q_len - 1) * sizeof(char *));
             memmove(m->q_id, m->q_id + 1, (m->q_len - 1) * sizeof(char *));
             m->q_len--;
+            if (!m->events_dequeued) m->events_dequeued = cJSON_CreateArray();
+            cJSON_AddItemToArray(m->events_dequeued, cJSON_CreateString(m->event_name));
             {
                 char mk[128];
                 snprintf(mk, sizeof mk, "event:dequeue:%s", m->event_name);
@@ -239,7 +277,7 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
     case 0x0D: /* TICKET */
         uem_ticket_construct(m);
         break;
-    case 0x0E: { /* OUTWARD */
+    case 0x0E: { /* OUTWARD — request only; host fulfills between steps */
         const char *effect = operand ? operand : "effect";
         cJSON *b = cJSON_GetObjectItemCaseSensitive(m->image, "boundary");
         cJSON *req = cJSON_CreateObject();
@@ -255,27 +293,10 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
         if (src) cJSON_AddItemToObject(req, "source", cJSON_Duplicate(src, 1));
         if (m->outward_request) cJSON_Delete(m->outward_request);
         m->outward_request = req;
+        /* clear prior result so host must supply */
+        if (m->outward_result) { cJSON_Delete(m->outward_result); m->outward_result = NULL; }
         snprintf(mk, sizeof mk, "outward:request:%s", effect);
         uem_ev_append(m, mk);
-        /* fulfill immediately if handler present */
-        if (m->outward) {
-            char resbuf[UEM_MAX_OUT];
-            char ebuf[256];
-            char *srcjson = src ? cJSON_PrintUnformatted(src) : strdup("null");
-            int rc = m->outward(m->outward_ctx, effect, srcjson, resbuf, sizeof resbuf, ebuf, sizeof ebuf);
-            free(srcjson);
-            if (rc == 0) {
-                cJSON *rj = cJSON_Parse(resbuf);
-                if (m->outward_result) cJSON_Delete(m->outward_result);
-                m->outward_result = rj;
-                uem_ev_append(m, "host:fulfill");
-            } else {
-                cJSON *rj = cJSON_CreateObject();
-                cJSON_AddStringToObject(rj, "error", ebuf[0] ? ebuf : "outward-fail");
-                if (m->outward_result) cJSON_Delete(m->outward_result);
-                m->outward_result = rj;
-            }
-        }
         break;
     }
     case 0x0F: /* ACK */
@@ -303,13 +324,52 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
     return 0;
 }
 
+static void fulfill_outward(uem_machine *m) {
+    cJSON *req, *src;
+    const char *effect;
+    char resbuf[UEM_MAX_OUT];
+    char ebuf[256];
+    char *srcjson;
+    int rc;
+    if (!m || !m->outward_request || m->outward_result || !m->outward) return;
+    req = m->outward_request;
+    effect = cJSON_GetObjectItemCaseSensitive(req, "effect")
+                 ? cJSON_GetObjectItemCaseSensitive(req, "effect")->valuestring
+                 : "effect";
+    src = cJSON_GetObjectItemCaseSensitive(req, "source");
+    srcjson = src ? cJSON_PrintUnformatted(src) : strdup("null");
+    ebuf[0] = 0;
+    rc = m->outward(m->outward_ctx, effect, srcjson, resbuf, sizeof resbuf, ebuf, sizeof ebuf);
+    free(srcjson);
+    {
+        cJSON *ent = cJSON_CreateObject();
+        cJSON_AddStringToObject(ent, "effect", effect);
+        if (src) cJSON_AddItemToObject(ent, "source", cJSON_Duplicate(src, 1));
+        if (!m->outward_log) m->outward_log = cJSON_CreateArray();
+        cJSON_AddItemToArray(m->outward_log, ent);
+    }
+    if (rc == 0) {
+        if (m->outward_result) cJSON_Delete(m->outward_result);
+        m->outward_result = cJSON_Parse(resbuf);
+        uem_ev_append(m, "host:fulfill");
+    } else {
+        cJSON *rj = cJSON_CreateObject();
+        cJSON_AddStringToObject(rj, "error", ebuf[0] ? ebuf : "outward-fail");
+        if (m->outward_result) cJSON_Delete(m->outward_result);
+        m->outward_result = rj;
+        uem_ev_append(m, "host:fulfill");
+    }
+}
+
 uem_status uem_run(uem_machine *m, char *err, size_t errlen) {
     if (!m) return UEM_ERR_ARGS;
     while (!m->halted && m->pc < m->n_instr) {
         if (step_one(m, err, errlen) != 0) {
             if (m->halted) return UEM_OK;
-            /* continue on soft invalid to allow present/stop */
         }
+        /* After OUTWARD, fulfill before next instruction (Python host order). */
+        if (m->outward_request && !m->outward_result)
+            fulfill_outward(m);
     }
     if (!m->halted) {
         m->halted = 1;
@@ -323,24 +383,48 @@ char *uem_result_json(const uem_machine *m) {
     cJSON *ev;
     size_t i;
     char *s;
+    const char *limit_hit = NULL;
     if (!m) return NULL;
     root = cJSON_CreateObject();
+    /* L11 canonical fields (Python host normalizes identically) */
+    cJSON_AddNumberToObject(root, "canonical_version", 1);
+    cJSON_AddNumberToObject(root, "registry_version", UEM_REGISTRY_VERSION);
+    cJSON_AddStringToObject(root, "unicode_profile", "UEM-ASCII-1");
     cJSON_AddStringToObject(root, "state", m->state);
-    cJSON_AddStringToObject(root, "stop_reason", m->stop_reason);
+    cJSON_AddStringToObject(root, "stop_reason", m->stop_reason[0] ? m->stop_reason : "stop");
     cJSON_AddStringToObject(root, "program_sha256", m->program_sha256);
     cJSON_AddNumberToObject(root, "steps", m->steps);
     cJSON_AddNumberToObject(root, "instruction_count", m->n_instr);
+    if (strncmp(m->stop_reason, "limit:", 6) == 0) limit_hit = m->stop_reason + 6;
+    if (limit_hit) cJSON_AddStringToObject(root, "limit_hit", limit_hit);
+    else cJSON_AddNullToObject(root, "limit_hit");
     if (m->presentation)
         cJSON_AddItemToObject(root, "presentation", cJSON_Duplicate(m->presentation, 1));
+    else cJSON_AddNullToObject(root, "presentation");
     {
         cJSON *st = cJSON_GetObjectItemCaseSensitive(m->store, "stats");
         if (st) cJSON_AddItemToObject(root, "stats", cJSON_Duplicate(st, 1));
+        else cJSON_AddNullToObject(root, "stats");
     }
     {
         cJSON *er = cJSON_GetObjectItemCaseSensitive(m->store, "error");
         if (er) cJSON_AddItemToObject(root, "error", cJSON_Duplicate(er, 1));
+        else cJSON_AddNullToObject(root, "error");
+    }
+    {
+        cJSON *path = cJSON_GetObjectItemCaseSensitive(m->store, "path");
+        if (path) cJSON_AddItemToObject(root, "path", cJSON_Duplicate(path, 1));
+        else cJSON_AddNullToObject(root, "path");
     }
     if (m->ticket) cJSON_AddItemToObject(root, "ticket", cJSON_Duplicate(m->ticket, 1));
+    else cJSON_AddNullToObject(root, "ticket");
+    cJSON_AddItemToObject(root, "outward_log",
+        m->outward_log ? cJSON_Duplicate(m->outward_log, 1) : cJSON_CreateArray());
+    cJSON_AddItemToObject(root, "events_emitted",
+        m->events_emitted ? cJSON_Duplicate(m->events_emitted, 1) : cJSON_CreateArray());
+    cJSON_AddItemToObject(root, "events_dequeued",
+        m->events_dequeued ? cJSON_Duplicate(m->events_dequeued, 1) : cJSON_CreateArray());
+    cJSON_AddNullToObject(root, "reject");
     ev = cJSON_CreateArray();
     for (i = 0; i < m->n_evidence; i++) cJSON_AddItemToArray(ev, cJSON_CreateString(m->evidence[i]));
     cJSON_AddItemToObject(root, "evidence", ev);

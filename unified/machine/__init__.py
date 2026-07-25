@@ -7,7 +7,8 @@ from .bytecode import decode_program, encode_program, program_identity
 from .compile_decl import compile_declaration
 from .gauntlet import run_uem_gauntlet
 from .host import run_program
-from .interpreter import machine_load, machine_step, machine_run
+from .interpreter import machine_load, machine_run, machine_step
+from .l11 import run_l11_gauntlet
 from .measure import measure_uem
 from .validate import validate_bytecode, validate_symbolic
 
@@ -20,6 +21,7 @@ __all__ = [
     "machine_step",
     "measure_uem",
     "program_identity",
+    "run_l11_gauntlet",
     "run_program",
     "run_uem_gauntlet",
     "validate_bytecode",

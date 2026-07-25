@@ -47,15 +47,17 @@ def machine_load(thing):
         "_acc": None,
         "instruction_count": len(instructions),
         "event_count": 0,
+        "outward_log": [],
+        "events_emitted": [],
+        "events_dequeued": [],
     }
-    return with_evidence(
-        {
-            **thing,
-            "value": machine,
-            "state": "formed",
-        },
-        "machine:load",
-    )
+    # Fresh evidence for a run — compile/encode marks are not execution evidence.
+    return {
+        **thing,
+        "value": machine,
+        "evidence": ("machine:load",),
+        "state": "formed",
+    }
 
 
 def machine_step(thing):
@@ -210,6 +212,9 @@ def _op_emit(thing, operand):
     v["event_id"] = eid
     v["event_seq"] = seq + 1
     v["event_count"] = int(v.get("event_count") or 0) + 1
+    emitted = list(v.get("events_emitted") or ())
+    emitted.append(name)
+    v["events_emitted"] = emitted
     return with_evidence({**thing, "value": v}, f"event:{name}")
 
 
@@ -244,6 +249,9 @@ def _op_dequeue(thing, operand):
     v["event_queue"] = rest
     v["event"] = name
     v["event_id"] = eid
+    deq = list(v.get("events_dequeued") or ())
+    deq.append(name)
+    v["events_dequeued"] = deq
     return with_evidence({**thing, "value": v}, f"event:dequeue:{name}")
 
 
@@ -409,7 +417,8 @@ def _op_stop(thing, operand):
     state = thing.get("state")
     if state not in {"valid", "invalid", "absent", "false"}:
         state = "formed"
-    return with_state(with_evidence({**thing, "value": v}, "op:STOP"), state)
+    # step wrapper appends op:STOP once
+    return with_state({**thing, "value": v}, state)
 
 
 def _limit_stop(thing, v, kind):
