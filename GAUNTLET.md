@@ -11,6 +11,7 @@ Each dimension is scored separately. Never combined into one average.
 | `c_lines` | 100.0 | 100.00 | yes |
 | `error_ticket_paths` | 100.0 | 100.00 | yes |
 | `event_routes` | 100.0 | 100.00 | yes |
+| `fuzz_100k` | 100.0 | 100.00 | yes |
 | `opcode_rejection_paths` | 100.0 | 100.00 | yes |
 | `opcode_valid_paths` | 100.0 | 100.00 | yes |
 | `opcodes` | 100.0 | 100.00 | yes |
@@ -30,4 +31,4 @@ Each dimension is scored separately. Never combined into one average.
 - Tests/build scripts cannot inflate production coverage
 - Assertions verify state, output, evidence, events, effects
 
-Generated in 5.4s.
+Generated in 8.8s.

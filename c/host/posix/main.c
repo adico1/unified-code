@@ -66,9 +66,52 @@ static void usage(const char *argv0) {
             "Usage:\n"
             "  %s version\n"
             "  %s verify <program.uem>\n"
+            "  %s verify-batch   # stdin: [u32be len][bytes]...  stdout: '0'|'1' per case\n"
             "  %s run <program.uem> --host '<json>'\n"
             "  %s sha <program.uem>\n",
-            UEM_REGISTRY_VERSION, argv0, argv0, argv0, argv0);
+            UEM_REGISTRY_VERSION, argv0, argv0, argv0, argv0, argv0);
+}
+
+/* Fast path for 100k fuzz: one process, many verify cases. */
+static int verify_batch(void) {
+    char err[256];
+    for (;;) {
+        unsigned char hdr[4];
+        size_t nread;
+        uint32_t len;
+        uint8_t *buf;
+        uem_machine *m = NULL;
+        uem_status st;
+        size_t got = 0;
+        nread = fread(hdr, 1, 4, stdin);
+        if (nread == 0) return 0; /* clean EOF */
+        if (nread != 4) return 1;
+        len = ((uint32_t)hdr[0] << 24) | ((uint32_t)hdr[1] << 16) |
+              ((uint32_t)hdr[2] << 8) | (uint32_t)hdr[3];
+        if (len > UEM_MAX_IMAGE + 65536u) {
+            fputc('1', stdout);
+            /* drain remaining length if possible, else stop */
+            return 1;
+        }
+        buf = (uint8_t *)malloc(len ? len : 1);
+        if (!buf) return 1;
+        while (got < len) {
+            size_t r = fread(buf + got, 1, len - got, stdin);
+            if (r == 0) {
+                free(buf);
+                return 1;
+            }
+            got += r;
+        }
+        st = uem_decode_verify(buf, len, &m, err, sizeof err);
+        free(buf);
+        if (st == UEM_OK) {
+            uem_free(m);
+            fputc('0', stdout); /* accept */
+        } else {
+            fputc('1', stdout); /* reject */
+        }
+    }
 }
 
 int main(int argc, char **argv) {
@@ -78,6 +121,9 @@ int main(int argc, char **argv) {
         printf("uem-c UEM-16 format=%d registry=%d host=posix\n",
                UEM_FORMAT_VERSION, UEM_REGISTRY_VERSION);
         return 0;
+    }
+    if (strcmp(argv[1], "verify-batch") == 0) {
+        return verify_batch();
     }
     if (argc < 3) { usage(argv[0]); return 2; }
     {

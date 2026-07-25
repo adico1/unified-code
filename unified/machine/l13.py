@@ -34,6 +34,7 @@ DIMENSIONS = (
     "required_mutations",
     "python_c_differential",
     "physical_target_goldens",
+    "fuzz_100k",
 )
 
 
@@ -307,6 +308,45 @@ def catalog_scores() -> dict:
     return run_all_catalogs()
 
 
+def measure_fuzz_100k() -> dict:
+    """≥100k deterministic py/C verify agreement. Failures must be zero."""
+    env = os.environ.copy()
+    env["UEM_C"] = str(CROOT / "build" / "uem-c")
+    env["UEM_FUZZ_N"] = os.environ.get("UEM_FUZZ_N", "100000")
+    env["UEM_FUZZ_SEED"] = os.environ.get("UEM_FUZZ_SEED", "12")
+    r = _run(
+        [str(ROOT / ".venv" / "bin" / "python"), str(CROOT / "scripts" / "fuzz_l12.py")],
+        cwd=str(ROOT),
+        env=env,
+        timeout=600,
+    )
+    text = (r.stdout or "") + "\n" + (r.stderr or "")
+    # last JSON line is report
+    report = {}
+    for line in reversed(text.splitlines()):
+        line = line.strip()
+        if line.startswith("{") and "mutations" in line:
+            try:
+                report = json.loads(line)
+            except json.JSONDecodeError:
+                pass
+            break
+    fails = int(report.get("failures", 1 if r.returncode != 0 else 0))
+    mutations = int(report.get("mutations", 0))
+    ok = r.returncode == 0 and fails == 0 and mutations >= 100_000
+    return {
+        "required": 100.0,
+        "actual": 100.0 if ok else (0.0 if mutations < 100_000 else 100.0 * (1.0 - fails / max(mutations, 1))),
+        "ok": ok,
+        "detail": {
+            "mutations": mutations,
+            "failures": fails,
+            "returncode": r.returncode,
+            "mode": report.get("mode"),
+        },
+    }
+
+
 def run_l13_gauntlet(thing=None):
     """Full L13 gate. Returns Thing with coverage.json payload."""
     from .thing import blank_thing, with_state
@@ -334,6 +374,7 @@ def run_l13_gauntlet(thing=None):
             and c_cov.get("functions", 0) >= 100.0 - 1e-6
             and c_cov.get("branches", 0) >= 100.0 - 1e-6
         )
+    fuzz = measure_fuzz_100k()
 
     dimensions = {
         "python_statements": {
@@ -363,6 +404,7 @@ def run_l13_gauntlet(thing=None):
             "actual": c_cov.get("branches", 0.0),
             "ok": c_cov.get("branches", 0) >= 100.0 - 1e-6,
         },
+        "fuzz_100k": fuzz,
     }
     for k, v in catalogs.items():
         dimensions[k] = v

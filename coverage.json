@@ -40,6 +40,17 @@
       "ok": true,
       "required": 100.0
     },
+    "fuzz_100k": {
+      "actual": 100.0,
+      "detail": {
+        "failures": 0,
+        "mode": "verify-batch",
+        "mutations": 100000,
+        "returncode": 0
+      },
+      "ok": true,
+      "required": 100.0
+    },
     "opcode_rejection_paths": {
       "actual": 100.0,
       "ok": true,
@@ -275,6 +286,42 @@
       "ok": true,
       "permitted_catalog": [
         [
+          "absent",
+          "absent"
+        ],
+        [
+          "formed",
+          "invalid"
+        ],
+        [
+          "unknown",
+          "invalid"
+        ],
+        [
+          "invalid",
+          "invalid"
+        ],
+        [
+          "formed",
+          "valid"
+        ],
+        [
+          "formed",
+          "absent"
+        ],
+        [
+          "formed",
+          "false"
+        ],
+        [
+          "valid",
+          "valid"
+        ],
+        [
+          "unknown",
+          "absent"
+        ],
+        [
           "false",
           "false"
         ],
@@ -284,50 +331,14 @@
         ],
         [
           "unknown",
-          "absent"
-        ],
-        [
-          "invalid",
-          "invalid"
-        ],
-        [
-          "formed",
-          "absent"
-        ],
-        [
-          "unknown",
           "false"
-        ],
-        [
-          "unknown",
-          "invalid"
-        ],
-        [
-          "absent",
-          "absent"
-        ],
-        [
-          "valid",
-          "valid"
-        ],
-        [
-          "formed",
-          "false"
-        ],
-        [
-          "formed",
-          "valid"
-        ],
-        [
-          "formed",
-          "invalid"
         ]
       ],
       "prohibited_exercised": true,
       "required": 100.0
     }
   },
-  "duration_s": 5.430037021636963,
+  "duration_s": 8.776791095733643,
   "l13": true,
   "rules": {
     "no_pragma_no_cover": true,

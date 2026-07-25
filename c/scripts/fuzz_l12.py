@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""L12 strengthened fuzz: saved corpus, structural generation, ≥100k mutations.
+"""L12/L13 fuzz: ≥100k deterministic mutations, one C process (verify-batch).
 
-Every failure becomes a permanent regression under tests/regressions/.
+Every real py/C disagreement becomes a permanent regression under tests/regressions/.
 """
 
 from __future__ import annotations
@@ -13,25 +13,24 @@ import random
 import struct
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from unified.machine.opcodes import FORMAT_VERSION, MAGIC, NAME_TO_BYTE, OPCODES  # noqa: E402
+from unified.machine.opcodes import NAME_TO_BYTE  # noqa: E402
 from unified.machine.thing import blank_thing  # noqa: E402
 from unified.machine.validate import validate_bytecode  # noqa: E402
 
 CORPUS = CROOT / "tests" / "fuzz_corpus"
 REGRESSION = CROOT / "tests" / "regressions"
 SEED_BASE = ROOT / "artifacts" / "uem" / "text_stats_v2" / "program.uem"
+BATCH = 2000  # cases per C process chunk (still one process reused via pipe)
 
 
 def encode_simple(instrs: list[tuple[str, str | None]], image: dict) -> bytes:
     from unified.machine.bytecode import encode_program
-    from unified.machine.thing import blank_thing
 
     t = encode_program(blank_thing({"instructions": tuple(instrs), "image": image}))
     raw = t.get("value", {}).get("bytecode")
@@ -41,7 +40,6 @@ def encode_simple(instrs: list[tuple[str, str | None]], image: dict) -> bytes:
 
 
 def structural_program(rng: random.Random) -> bytes:
-    """Generate a minimal well-formed or near-well-formed program."""
     ops = list(NAME_TO_BYTE.keys())
     n = rng.randint(1, 12)
     instrs = []
@@ -49,17 +47,28 @@ def structural_program(rng: random.Random) -> bytes:
         name = rng.choice(ops)
         if name == "STOP":
             name = "LOAD"
-        if name in {"LOAD", "APPLY", "EMIT", "OUTWARD", "WRITE", "READ", "DELETE", "ROUTE", "MAP", "FOLD", "VERIFY"}:
-            instrs.append((name, rng.choice([None, "host_input", "identity", "x", "routes"][0:4])))
+        if name in {
+            "LOAD",
+            "APPLY",
+            "EMIT",
+            "OUTWARD",
+            "WRITE",
+            "READ",
+            "DELETE",
+            "ROUTE",
+            "MAP",
+            "FOLD",
+            "VERIFY",
+        }:
+            instrs.append(
+                (name, rng.choice([None, "host_input", "identity", "x", "routes"]))
+            )
         else:
             instrs.append((name, None))
     instrs.append(("STOP", None))
-    # Sometimes use valid APPLY identity only
     if rng.random() < 0.3:
         instrs = [("APPLY", "identity"), ("STOP", None)]
-    image = {}
-    if rng.random() < 0.5:
-        image = {"routes": {"e": "identity"}}
+    image = {"routes": {"e": "identity"}} if rng.random() < 0.5 else {}
     try:
         return encode_simple(instrs, image)
     except Exception:
@@ -80,7 +89,6 @@ def mutate(blob: bytes, rng: random.Random) -> bytes:
     elif mode == 4:
         b[0:4] = b"XXXX"
     elif mode == 5 and len(b) > 20:
-        # boundary operand length corruption
         b[rng.randrange(12, min(len(b), 40))] = rng.randrange(256)
     elif mode == 6:
         return structural_program(rng)
@@ -91,27 +99,8 @@ def mutate(blob: bytes, rng: random.Random) -> bytes:
     return bytes(b)
 
 
-def both_reject_or_accept(blob: bytes, uem_c: Path) -> tuple[bool, str]:
-    py = validate_bytecode(blank_thing({"bytecode": blob}))
-    py_bad = py.get("state") == "invalid"
-    with tempfile.NamedTemporaryFile(suffix=".uem", delete=False) as f:
-        f.write(blob)
-        path = f.name
-    try:
-        r = subprocess.run(
-            [str(uem_c), "verify", path],
-            capture_output=True,
-            text=True,
-            timeout=5,
-        )
-        c_bad = r.returncode != 0
-    except Exception as exc:
-        return False, f"c-exception:{exc}"
-    finally:
-        Path(path).unlink(missing_ok=True)
-    if py_bad == c_bad:
-        return True, "agree"
-    return False, f"disagree py_bad={py_bad} c_bad={c_bad}"
+def py_reject(blob: bytes) -> bool:
+    return validate_bytecode(blank_thing({"bytecode": blob})).get("state") == "invalid"
 
 
 def save_regression(blob: bytes, detail: str) -> Path:
@@ -123,19 +112,58 @@ def save_regression(blob: bytes, detail: str) -> Path:
     return path
 
 
+def ensure_binary(uem_c: Path) -> bool:
+    if uem_c.is_file():
+        return True
+    subprocess.run(
+        [
+            "make",
+            "-C",
+            str(CROOT),
+            "posix",
+            "CFLAGS=-std=c99 -Wall -O2 -Iinclude -Ithird_party -Icore -Ihost/mcu",
+        ],
+        check=False,
+        capture_output=True,
+    )
+    return uem_c.is_file()
+
+
+def c_batch_verify(uem_c: Path, blobs: list[bytes]) -> list[bool]:
+    """Return list of reject-bool (True = C rejected) for each blob. One process."""
+    if not blobs:
+        return []
+    payload = bytearray()
+    for b in blobs:
+        payload += struct.pack(">I", len(b))
+        payload += b
+    r = subprocess.run(
+        [str(uem_c), "verify-batch"],
+        input=bytes(payload),
+        capture_output=True,
+        timeout=max(30, len(blobs) // 50 + 10),
+    )
+    out = r.stdout
+    if len(out) != len(blobs):
+        # Partial or crash — treat missing as reject for remainder only if stderr empty;
+        # any shortfall is a harness defect → raise
+        raise RuntimeError(
+            f"verify-batch length mismatch got={len(out)} want={len(blobs)} "
+            f"rc={r.returncode} err={(r.stderr or b'')[:200]!r}"
+        )
+    return [ch != ord("0") for ch in out]
+
+
 def main():
     seed = int(os.environ.get("UEM_FUZZ_SEED", "12"))
     n = int(os.environ.get("UEM_FUZZ_N", "100000"))
     rng = random.Random(seed)
     uem_c = Path(os.environ.get("UEM_C", CROOT / "build" / "uem-c"))
-    if not uem_c.is_file():
-        subprocess.run(["make", "-C", str(CROOT), "posix"], check=False)
-    if not uem_c.is_file():
+    if not ensure_binary(uem_c):
         print("no uem-c", file=sys.stderr)
         return 2
 
     CORPUS.mkdir(parents=True, exist_ok=True)
-    # seed corpus from goldens + structural samples
     seeds = [SEED_BASE.read_bytes()]
     for p in (ROOT / "artifacts" / "uem").rglob("*.uem"):
         seeds.append(p.read_bytes())
@@ -144,31 +172,47 @@ def main():
     for i, s in enumerate(seeds):
         (CORPUS / f"seed_{i:04d}.uem").write_bytes(s)
 
-    corpus = list(CORPUS.glob("*.uem"))
+    corpus_files = list(CORPUS.glob("*.uem"))
+    corpus_bytes = [p.read_bytes() for p in corpus_files] or [SEED_BASE.read_bytes()]
+
     fail = 0
-    for i in range(n):
-        base = rng.choice(corpus).read_bytes() if corpus else SEED_BASE.read_bytes()
-        blob = mutate(base, rng)
-        ok, detail = both_reject_or_accept(blob, uem_c)
-        if not ok:
-            # identical to original may still agree; only count real disagreement
-            if hashlib.sha256(blob).digest() == hashlib.sha256(SEED_BASE.read_bytes()).digest():
+    done = 0
+    while done < n:
+        chunk_n = min(BATCH, n - done)
+        blobs = []
+        for _ in range(chunk_n):
+            base = corpus_bytes[rng.randrange(len(corpus_bytes))]
+            blobs.append(mutate(base, rng))
+        py_bad = [py_reject(b) for b in blobs]
+        try:
+            c_bad = c_batch_verify(uem_c, blobs)
+        except Exception as exc:
+            print("BATCH_FAIL", exc, file=sys.stderr)
+            return 2
+        for i, blob in enumerate(blobs):
+            if py_bad[i] == c_bad[i]:
                 continue
-            path = save_regression(blob, f"i={i} {detail}")
-            print("REGRESSION", path, detail)
+            path = save_regression(
+                blob, f"i={done + i} disagree py_bad={py_bad[i]} c_bad={c_bad[i]}"
+            )
+            print("REGRESSION", path, f"py_bad={py_bad[i]} c_bad={c_bad[i]}")
             fail += 1
             if fail >= 50:
+                done = n
                 break
-        if (i + 1) % 10000 == 0:
-            print(f"progress {i+1}/{n} fail={fail}")
-    # coverage-ish report: unique first-byte / opcode diversities in corpus
-    print(json.dumps({
+        done += chunk_n
+        if done % 10000 == 0 or done >= n:
+            print(f"progress {done}/{n} fail={fail}", flush=True)
+
+    report = {
         "seed": seed,
         "mutations": n,
         "failures": fail,
-        "corpus_size": len(list(CORPUS.glob('*.uem'))),
-        "regressions": len(list(REGRESSION.glob('*.uem'))),
-    }))
+        "corpus_size": len(corpus_bytes),
+        "regressions": len(list(REGRESSION.glob("*.uem"))),
+        "mode": "verify-batch",
+    }
+    print(json.dumps(report))
     return 1 if fail else 0
 
 
