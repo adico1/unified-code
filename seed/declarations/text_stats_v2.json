@@ -1,0 +1,237 @@
+{
+  "boundaries": [
+    {
+      "kind": "read_utf8_source",
+      "name": "read_text_source",
+      "source_field": "source",
+      "text_field": "text"
+    }
+  ],
+  "cli": {
+    "argv": {
+      "arity": 1,
+      "errors": {
+        "extra": "extra-source",
+        "missing": "missing-source"
+      },
+      "field": "source",
+      "stdin_token": "-"
+    },
+    "script": "uc-text-stats-v2"
+  },
+  "composition": [
+    "inward",
+    "letter",
+    "read_text_source",
+    "calculate_stats",
+    "verify",
+    "outward"
+  ],
+  "description": "Read UTF-8 text from a file or stdin; emit deterministic JSON text statistics.",
+  "errors": [],
+  "features": [
+    {
+      "boundaries": [],
+      "doc": "Compute text statistics via generic string expressions.",
+      "errors": [],
+      "input_shape": {
+        "type": "any"
+      },
+      "invariants": [],
+      "name": "calculate_stats",
+      "role": "transform",
+      "tests": [],
+      "transformation": {
+        "input_key": "text",
+        "kind": "expression",
+        "merge": "stats",
+        "program": {
+          "fields": {
+            "characters": {
+              "of": {
+                "op": "field",
+                "path": [
+                  "text"
+                ]
+              },
+              "op": "str_len"
+            },
+            "lines": {
+              "of": {
+                "op": "field",
+                "path": [
+                  "text"
+                ]
+              },
+              "op": "line_count"
+            },
+            "unique_words": {
+              "of": {
+                "op": "field",
+                "path": [
+                  "text"
+                ]
+              },
+              "op": "unique_casefold_word_count"
+            },
+            "words": {
+              "of": {
+                "op": "field",
+                "path": [
+                  "text"
+                ]
+              },
+              "op": "word_count"
+            }
+          },
+          "op": "object"
+        }
+      }
+    }
+  ],
+  "inputs": {
+    "cli": {
+      "argv": {
+        "arity": 1,
+        "errors": {
+          "extra": "extra-source",
+          "missing": "missing-source"
+        },
+        "field": "source",
+        "stdin_token": "-"
+      },
+      "script": "uc-text-stats-v2"
+    }
+  },
+  "name": "uc-text-stats-v2",
+  "package": "uc_text_stats_v2",
+  "presentation": {
+    "success_from": "stats",
+    "success_keys": [
+      "characters",
+      "lines",
+      "words",
+      "unique_words"
+    ]
+  },
+  "tests": [
+    {
+      "expect_stats": {
+        "characters": 0,
+        "lines": 0,
+        "unique_words": 0,
+        "words": 0
+      },
+      "kind": "file_text",
+      "name": "empty",
+      "text": ""
+    },
+    {
+      "expect_stats": {
+        "characters": 11,
+        "lines": 1,
+        "unique_words": 2,
+        "words": 2
+      },
+      "kind": "file_text",
+      "name": "one_line",
+      "text": "hello world"
+    },
+    {
+      "expect_stats": {
+        "characters": 8,
+        "lines": 1,
+        "unique_words": 1,
+        "words": 3
+      },
+      "kind": "file_text",
+      "name": "casefold",
+      "text": "Go go GO"
+    },
+    {
+      "expect_stats": {
+        "characters": 9,
+        "lines": 1,
+        "unique_words": 2,
+        "words": 2
+      },
+      "kind": "file_text",
+      "name": "unicode",
+      "text": "שלום עולם"
+    },
+    {
+      "expect_stats": {
+        "characters": 16,
+        "lines": 1,
+        "unique_words": 3,
+        "words": 3
+      },
+      "kind": "stdin_text",
+      "name": "stdin_words",
+      "text": "stdin words here"
+    },
+    {
+      "argv": [],
+      "error": "missing-source",
+      "kind": "cli_error",
+      "name": "missing_arg"
+    },
+    {
+      "argv": [
+        "a",
+        "b"
+      ],
+      "error": "extra-source",
+      "kind": "cli_error",
+      "name": "extra_arg"
+    },
+    {
+      "kind": "missing_file",
+      "name": "missing_file"
+    },
+    {
+      "kind": "directory",
+      "name": "directory"
+    },
+    {
+      "kind": "invalid_utf8",
+      "name": "invalid_utf8"
+    },
+    {
+      "expect_json": "{\"characters\":1,\"lines\":1,\"words\":1,\"unique_words\":1}",
+      "kind": "stable_json",
+      "name": "stable_json",
+      "text": "x"
+    },
+    {
+      "kind": "idempotent_output",
+      "name": "idempotent"
+    },
+    {
+      "kind": "evidence_order",
+      "name": "evidence_order",
+      "required": [
+        "boundary:inward",
+        "letter:distinguished",
+        "boundary:read_text_source",
+        "read:ok",
+        "part:calculate_stats",
+        "calculate_stats:ok",
+        "script-law:pass",
+        "present_result:ok",
+        "boundary:outward"
+      ]
+    }
+  ],
+  "verify": {
+    "require_evidence_contains": [
+      "boundary:inward",
+      "letter:distinguished",
+      "boundary:read_text_source",
+      "read:ok",
+      "part:calculate_stats",
+      "calculate_stats:ok"
+    ],
+    "require_value_field": "stats"
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "uc-seed-schema-ten-1",
+  "title": "Unified Code Canonical Seed TEN-1",
+  "type": "object",
+  "required": [
+    "standard_version",
+    "uem_version",
+    "seed_id",
+    "packages",
+    "declarations",
+    "hosts",
+    "vendored",
+    "laws",
+    "standard_ten",
+    "gaps"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "standard_version": { "const": "TEN-1" },
+    "uem_version": { "const": "UEM-16-v0.1" },
+    "seed_id": { "type": "string", "minLength": 1 },
+    "packages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "role", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "role": {
+            "type": "string",
+            "enum": [
+              "framework",
+              "generator",
+              "machine",
+              "tests",
+              "docs",
+              "scripts"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["seed-expressed", "standard.gap", "generated"]
+          },
+          "path": { "type": "string" },
+          "gap_id": { "type": "string" }
+        }
+      }
+    },
+    "declarations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "path"],
+        "properties": {
+          "id": { "type": "string" },
+          "path": { "type": "string" }
+        }
+      }
+    },
+    "hosts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "path"],
+        "properties": {
+          "id": { "type": "string" },
+          "kind": {
+            "type": "string",
+            "enum": ["posix", "wasm", "mcu"]
+          },
+          "path": { "type": "string" }
+        }
+      }
+    },
+    "vendored": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "license"],
+        "properties": {
+          "id": { "type": "string" },
+          "path": { "type": "string" },
+          "license": { "type": "string" }
+        }
+      }
+    },
+    "laws": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "standard_ten": { "const": true },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "rule", "summary", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "rule": { "type": "string" },
+          "summary": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["open", "design-ticket", "closed"]
+          },
+          "paths": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "kind"],
+        "properties": {
+          "path": { "type": "string" },
+          "kind": {
+            "type": "string",
+            "enum": ["uem", "symbolic", "app", "doc", "test", "manifest"]
+          },
+          "declaration_id": { "type": "string" }
+        }
+      }
+    }
+  }
+}

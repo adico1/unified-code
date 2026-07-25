@@ -1,0 +1,747 @@
+{
+  "boundaries": [
+    {
+      "document_field": "document",
+      "kind": "read_json_source",
+      "name": "read_json_source",
+      "source_field": "source"
+    }
+  ],
+  "cli": {
+    "argv": {
+      "arity": 1,
+      "errors": {
+        "extra": "extra-source",
+        "missing": "missing-source"
+      },
+      "field": "source",
+      "stdin_token": "-"
+    },
+    "script": "uc-invoice-total"
+  },
+  "composition": [
+    "inward",
+    "letter",
+    "read_json_source",
+    "calculate_totals",
+    "verify",
+    "outward"
+  ],
+  "description": "Deterministic invoice totals via generic expression composition.",
+  "errors": [],
+  "features": [
+    {
+      "boundaries": [],
+      "doc": "Validate document and compute totals via expression tree + bindings.",
+      "errors": [],
+      "input_shape": {
+        "type": "any"
+      },
+      "invariants": [
+        "subtotal quantized to 0.01",
+        "tax ROUND_HALF_UP to 0.01",
+        "total = subtotal + tax",
+        "unit_price and tax_rate are decimal strings only"
+      ],
+      "name": "calculate_totals",
+      "role": "transform",
+      "tests": [],
+      "transformation": {
+        "bindings": {
+          "subtotal": {
+            "exp": "0.01",
+            "of": {
+              "collection": {
+                "error": "missing-items",
+                "of": {
+                  "op": "field",
+                  "path": [
+                    "items"
+                  ]
+                },
+                "op": "require",
+                "path": [
+                  "items"
+                ]
+              },
+              "each": {
+                "op": "mul",
+                "values": [
+                  {
+                    "bound": 1,
+                    "error": "quantity-below-minimum",
+                    "of": {
+                      "missing_error": "missing-quantity",
+                      "of": {
+                        "error": "missing-quantity",
+                        "of": {
+                          "op": "field",
+                          "path": [
+                            "quantity"
+                          ]
+                        },
+                        "op": "require",
+                        "path": [
+                          "quantity"
+                        ]
+                      },
+                      "op": "as_int",
+                      "path": [
+                        "quantity"
+                      ],
+                      "type_error": "quantity-not-integer"
+                    },
+                    "op": "min_value",
+                    "path": [
+                      "quantity"
+                    ]
+                  },
+                  {
+                    "bound": "0",
+                    "error": "unit_price-below-minimum",
+                    "of": {
+                      "missing_error": "missing-unit_price",
+                      "of": {
+                        "error": "missing-unit_price",
+                        "of": {
+                          "op": "field",
+                          "path": [
+                            "unit_price"
+                          ]
+                        },
+                        "op": "require",
+                        "path": [
+                          "unit_price"
+                        ]
+                      },
+                      "op": "as_decimal",
+                      "path": [
+                        "unit_price"
+                      ],
+                      "type_error": "unit_price-not-decimal-string"
+                    },
+                    "op": "min_value",
+                    "path": [
+                      "unit_price"
+                    ]
+                  }
+                ]
+              },
+              "item_key": "item",
+              "op": "sum_each",
+              "path": [
+                "items"
+              ]
+            },
+            "op": "quantize",
+            "rounding": "ROUND_HALF_UP"
+          },
+          "tax": {
+            "exp": "0.01",
+            "of": {
+              "op": "mul",
+              "values": [
+                {
+                  "name": "subtotal",
+                  "op": "ref"
+                },
+                {
+                  "name": "tax_rate",
+                  "op": "ref"
+                }
+              ]
+            },
+            "op": "quantize",
+            "rounding": "ROUND_HALF_UP"
+          },
+          "tax_rate": {
+            "bound": "1",
+            "error": "tax_rate-above-1",
+            "of": {
+              "bound": "0",
+              "error": "tax_rate-below-0",
+              "of": {
+                "missing_error": "missing-tax_rate",
+                "of": {
+                  "error": "missing-tax_rate",
+                  "of": {
+                    "op": "field",
+                    "path": [
+                      "tax_rate"
+                    ]
+                  },
+                  "op": "require",
+                  "path": [
+                    "tax_rate"
+                  ]
+                },
+                "op": "as_decimal",
+                "path": [
+                  "tax_rate"
+                ],
+                "type_error": "tax_rate-not-decimal-string"
+              },
+              "op": "min_value",
+              "path": [
+                "tax_rate"
+              ]
+            },
+            "op": "max_value",
+            "path": [
+              "tax_rate"
+            ]
+          },
+          "total": {
+            "exp": "0.01",
+            "of": {
+              "op": "add",
+              "values": [
+                {
+                  "name": "subtotal",
+                  "op": "ref"
+                },
+                {
+                  "name": "tax",
+                  "op": "ref"
+                }
+              ]
+            },
+            "op": "quantize",
+            "rounding": "ROUND_HALF_UP"
+          }
+        },
+        "input_key": "document",
+        "kind": "expression",
+        "merge": "stats",
+        "program": {
+          "fields": {
+            "item_count": {
+              "of": {
+                "error": "missing-items",
+                "of": {
+                  "op": "field",
+                  "path": [
+                    "items"
+                  ]
+                },
+                "op": "require",
+                "path": [
+                  "items"
+                ]
+              },
+              "op": "count"
+            },
+            "subtotal": {
+              "of": {
+                "name": "subtotal",
+                "op": "ref"
+              },
+              "op": "decimal_str",
+              "places": 2
+            },
+            "tax": {
+              "of": {
+                "name": "tax",
+                "op": "ref"
+              },
+              "op": "decimal_str",
+              "places": 2
+            },
+            "total": {
+              "of": {
+                "name": "total",
+                "op": "ref"
+              },
+              "op": "decimal_str",
+              "places": 2
+            }
+          },
+          "op": "object"
+        }
+      }
+    }
+  ],
+  "inputs": {
+    "cli": {
+      "argv": {
+        "arity": 1,
+        "errors": {
+          "extra": "extra-source",
+          "missing": "missing-source"
+        },
+        "field": "source",
+        "stdin_token": "-"
+      },
+      "script": "uc-invoice-total"
+    }
+  },
+  "name": "uc-invoice-total",
+  "package": "uc_invoice_total",
+  "presentation": {
+    "include_error_path": true,
+    "success_from": "stats",
+    "success_keys": [
+      "item_count",
+      "subtotal",
+      "tax",
+      "total"
+    ]
+  },
+  "tests": [
+    {
+      "document": {
+        "items": [],
+        "tax_rate": "0.20"
+      },
+      "expect_stats": {
+        "item_count": 0,
+        "subtotal": "0.00",
+        "tax": "0.00",
+        "total": "0.00"
+      },
+      "kind": "json_document",
+      "name": "empty_items"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1,
+            "unit_price": "10.00"
+          }
+        ],
+        "tax_rate": "0.10"
+      },
+      "expect_stats": {
+        "item_count": 1,
+        "subtotal": "10.00",
+        "tax": "1.00",
+        "total": "11.00"
+      },
+      "kind": "json_document",
+      "name": "one_item"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 2,
+            "unit_price": "3.50"
+          },
+          {
+            "quantity": 1,
+            "unit_price": "4.00"
+          }
+        ],
+        "tax_rate": "0.20"
+      },
+      "expect_stats": {
+        "item_count": 2,
+        "subtotal": "11.00",
+        "tax": "2.20",
+        "total": "13.20"
+      },
+      "kind": "json_document",
+      "name": "multiple_items"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1,
+            "unit_price": "0.10"
+          },
+          {
+            "quantity": 1,
+            "unit_price": "0.20"
+          }
+        ],
+        "tax_rate": "0.00"
+      },
+      "expect_stats": {
+        "item_count": 2,
+        "subtotal": "0.30",
+        "tax": "0.00",
+        "total": "0.30"
+      },
+      "kind": "json_document",
+      "name": "exact_decimal_add"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1,
+            "unit_price": "0.05"
+          }
+        ],
+        "tax_rate": "0.10"
+      },
+      "expect_stats": {
+        "item_count": 1,
+        "subtotal": "0.05",
+        "tax": "0.01",
+        "total": "0.06"
+      },
+      "kind": "json_document",
+      "name": "round_half_up_half_cent"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 2,
+            "unit_price": "5.00"
+          }
+        ],
+        "tax_rate": "0"
+      },
+      "expect_stats": {
+        "item_count": 1,
+        "subtotal": "10.00",
+        "tax": "0.00",
+        "total": "10.00"
+      },
+      "kind": "json_document",
+      "name": "zero_tax"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1,
+            "unit_price": "3.00"
+          }
+        ],
+        "tax_rate": "1"
+      },
+      "expect_stats": {
+        "item_count": 1,
+        "subtotal": "3.00",
+        "tax": "3.00",
+        "total": "6.00"
+      },
+      "kind": "json_document",
+      "name": "tax_one"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "label": "פריט",
+            "quantity": 1,
+            "unit_price": "1.00"
+          }
+        ],
+        "note": "חשבונית",
+        "tax_rate": "0.00"
+      },
+      "expect_stats": {
+        "item_count": 1,
+        "subtotal": "1.00",
+        "tax": "0.00",
+        "total": "1.00"
+      },
+      "kind": "json_document",
+      "name": "unicode_json"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1,
+            "unit_price": "5.00"
+          }
+        ],
+        "tax_rate": "0.20"
+      },
+      "expect_stats": {
+        "item_count": 1,
+        "subtotal": "5.00",
+        "tax": "1.00",
+        "total": "6.00"
+      },
+      "kind": "json_stdin",
+      "name": "stdin_json"
+    },
+    {
+      "argv": [],
+      "error": "missing-source",
+      "kind": "cli_error",
+      "name": "missing_arg"
+    },
+    {
+      "argv": [
+        "a",
+        "b"
+      ],
+      "error": "extra-source",
+      "kind": "cli_error",
+      "name": "extra_arg"
+    },
+    {
+      "kind": "missing_file",
+      "name": "missing_file"
+    },
+    {
+      "kind": "directory",
+      "name": "directory"
+    },
+    {
+      "kind": "invalid_utf8",
+      "name": "invalid_utf8"
+    },
+    {
+      "error": "invalid-json",
+      "kind": "raw_file_error",
+      "name": "invalid_json",
+      "raw": "{not json"
+    },
+    {
+      "error": "input-not-an-object",
+      "kind": "raw_file_error",
+      "name": "not_object",
+      "raw": "[1,2,3]"
+    },
+    {
+      "document": {
+        "tax_rate": "0.1"
+      },
+      "error": "missing-items",
+      "kind": "json_error",
+      "name": "error_missing_items"
+    },
+    {
+      "document": {
+        "items": {},
+        "tax_rate": "0.1"
+      },
+      "error": "items-not-a-list",
+      "kind": "json_error",
+      "name": "error_items_not_list"
+    },
+    {
+      "document": {
+        "items": [
+          1
+        ],
+        "tax_rate": "0.1"
+      },
+      "error": "item-not-an-object",
+      "kind": "json_error",
+      "name": "error_item_not_object"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "unit_price": "1.00"
+          }
+        ],
+        "tax_rate": "0.1"
+      },
+      "error": "missing-quantity",
+      "kind": "json_error",
+      "name": "error_missing_quantity"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": "2",
+            "unit_price": "1.00"
+          }
+        ],
+        "tax_rate": "0.1"
+      },
+      "error": "quantity-not-integer",
+      "kind": "json_error",
+      "name": "error_qty_not_int"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 0,
+            "unit_price": "1.00"
+          }
+        ],
+        "tax_rate": "0.1"
+      },
+      "error": "quantity-below-minimum",
+      "kind": "json_error",
+      "name": "error_qty_below_min"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1
+          }
+        ],
+        "tax_rate": "0.1"
+      },
+      "error": "missing-unit_price",
+      "kind": "json_error",
+      "name": "error_missing_unit_price"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1,
+            "unit_price": 1.5
+          }
+        ],
+        "tax_rate": "0.1"
+      },
+      "error": "unit_price-not-decimal-string",
+      "kind": "json_error",
+      "name": "error_unit_price_not_string"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1,
+            "unit_price": 2
+          }
+        ],
+        "tax_rate": "0.1"
+      },
+      "error": "unit_price-not-decimal-string",
+      "kind": "json_error",
+      "name": "error_unit_price_int_rejected"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1,
+            "unit_price": "-0.01"
+          }
+        ],
+        "tax_rate": "0.1"
+      },
+      "error": "unit_price-below-minimum",
+      "kind": "json_error",
+      "name": "error_unit_price_below_min"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1,
+            "unit_price": "1.00"
+          }
+        ]
+      },
+      "error": "missing-tax_rate",
+      "kind": "json_error",
+      "name": "error_missing_tax_rate"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1,
+            "unit_price": "1.00"
+          }
+        ],
+        "tax_rate": 0.2
+      },
+      "error": "tax_rate-not-decimal-string",
+      "kind": "json_error",
+      "name": "error_tax_rate_not_string"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1,
+            "unit_price": "1.00"
+          }
+        ],
+        "tax_rate": "-0.1"
+      },
+      "error": "tax_rate-below-0",
+      "kind": "json_error",
+      "name": "error_tax_rate_below_0"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1,
+            "unit_price": "1.00"
+          }
+        ],
+        "tax_rate": "1.5"
+      },
+      "error": "tax_rate-above-1",
+      "kind": "json_error",
+      "name": "error_tax_high"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 2,
+            "unit_price": "3.50"
+          },
+          {
+            "quantity": 1,
+            "unit_price": "4.00"
+          }
+        ],
+        "tax_rate": "0.20"
+      },
+      "expect_json": "{\"item_count\":2,\"subtotal\":\"11.00\",\"tax\":\"2.20\",\"total\":\"13.20\"}",
+      "kind": "json_stable",
+      "name": "stable_json"
+    },
+    {
+      "document": {
+        "items": [
+          {
+            "quantity": 1,
+            "unit_price": "1.00"
+          }
+        ],
+        "tax_rate": "0.20"
+      },
+      "kind": "json_idempotent",
+      "name": "idempotent"
+    },
+    {
+      "document": {
+        "items": [],
+        "tax_rate": "0.0"
+      },
+      "kind": "json_evidence_order",
+      "name": "evidence_order",
+      "required": [
+        "boundary:inward",
+        "letter:distinguished",
+        "boundary:read_json_source",
+        "read:ok",
+        "part:calculate_totals",
+        "calculate_totals:ok",
+        "script-law:pass",
+        "present_result:ok",
+        "boundary:outward"
+      ]
+    }
+  ],
+  "verify": {
+    "require_evidence_contains": [
+      "boundary:inward",
+      "letter:distinguished",
+      "boundary:read_json_source",
+      "read:ok",
+      "part:calculate_totals",
+      "calculate_totals:ok"
+    ],
+    "require_value_field": "stats"
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "artifacts": [
+    {
+      "declaration_id": "text_stats_v2",
+      "kind": "uem",
+      "path": "artifacts/uem/text_stats_v2/program.uem"
+    },
+    {
+      "declaration_id": "text_stats_v2",
+      "kind": "symbolic",
+      "path": "artifacts/uem/text_stats_v2/program.symbolic.json"
+    },
+    {
+      "declaration_id": "invoice_total",
+      "kind": "uem",
+      "path": "artifacts/uem/invoice_total/program.uem"
+    },
+    {
+      "declaration_id": "invoice_total",
+      "kind": "symbolic",
+      "path": "artifacts/uem/invoice_total/program.symbolic.json"
+    },
+    {
+      "kind": "manifest",
+      "path": "PROVENANCE_MANIFEST.json"
+    },
+    {
+      "kind": "doc",
+      "path": "AUDIT_STANDARD_TEN.md"
+    }
+  ],
+  "declarations": [
+    {
+      "id": "text_stats_v2",
+      "path": "seed/declarations/text_stats_v2.json"
+    },
+    {
+      "id": "invoice_total",
+      "path": "seed/declarations/invoice_total.json"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "gap.seed-expresses-full-framework",
+      "paths": [
+        "unified/",
+        "tests/",
+        "scripts/"
+      ],
+      "rule": "3",
+      "status": "open",
+      "summary": "UEM machine, generator, and framework modules are not yet fully expressed as seed package bodies; currently handwritten under unified/."
+    },
+    {
+      "id": "gap.no-app-control-flow-in-host",
+      "paths": [
+        "unified/machine/",
+        "c/core/",
+        "c/host/"
+      ],
+      "rule": "6",
+      "status": "open",
+      "summary": "Python/C UEM hosts still use imperative control flow (required for physical boundary execution until seed can emit hosts)."
+    },
+    {
+      "id": "gap.oop-exprfail",
+      "paths": [
+        "unified/machine/primitives.py"
+      ],
+      "rule": "5",
+      "status": "open",
+      "summary": "unified/machine/primitives.py defines class _ExprFail — forbidden OOP; must become plain-data fault path."
+    },
+    {
+      "id": "gap.declarations-as-python",
+      "paths": [
+        "examples/declarations/"
+      ],
+      "rule": "4",
+      "status": "open",
+      "summary": "Application declarations live as .py modules with Python syntax; must be pure JSON under seed/declarations/."
+    },
+    {
+      "id": "gap.dual-host-not-single-machine-surface",
+      "paths": [
+        "unified/machine/",
+        "c/core/"
+      ],
+      "rule": "7",
+      "status": "design-ticket",
+      "summary": "Python and C interpreters are parallel implementations; Standard Ten requires one UEM with hosts as boundaries only. Semantic parity is proven (L11) but structure is dual-impl."
+    },
+    {
+      "id": "gap.generated-tests-and-docs",
+      "paths": [
+        "tests/",
+        "docs/",
+        "LAW.md",
+        "SPEC.md",
+        "README.md"
+      ],
+      "rule": "10",
+      "status": "open",
+      "summary": "Tests and documentation are handwritten, not generated from seed/declaration."
+    },
+    {
+      "id": "gap.clean-room-full-tree",
+      "paths": [
+        "."
+      ],
+      "rule": "3",
+      "status": "open",
+      "summary": "Clean-room regeneration cannot yet emit the full repository from seed alone."
+    }
+  ],
+  "hosts": [
+    {
+      "id": "posix",
+      "kind": "posix",
+      "path": "c/host/posix/"
+    },
+    {
+      "id": "wasm",
+      "kind": "wasm",
+      "path": "c/host/wasm/"
+    },
+    {
+      "id": "mcu",
+      "kind": "mcu",
+      "path": "c/host/mcu/"
+    },
+    {
+      "id": "python-host",
+      "kind": "posix",
+      "path": "unified/machine/host.py"
+    }
+  ],
+  "laws": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5",
+    "L6",
+    "L7",
+    "L8",
+    "L9",
+    "L10",
+    "L11",
+    "L12",
+    "L13"
+  ],
+  "packages": [
+    {
+      "gap_id": "gap.seed-expresses-full-framework",
+      "id": "unified",
+      "path": "unified/",
+      "role": "framework",
+      "status": "standard.gap"
+    },
+    {
+      "gap_id": "gap.seed-expresses-full-framework",
+      "id": "unified.generator",
+      "path": "unified/generator/",
+      "role": "generator",
+      "status": "standard.gap"
+    },
+    {
+      "gap_id": "gap.seed-expresses-full-framework",
+      "id": "unified.machine",
+      "path": "unified/machine/",
+      "role": "machine",
+      "status": "standard.gap"
+    },
+    {
+      "gap_id": "gap.generated-tests-and-docs",
+      "id": "tests",
+      "path": "tests/",
+      "role": "tests",
+      "status": "standard.gap"
+    },
+    {
+      "gap_id": "gap.generated-tests-and-docs",
+      "id": "docs",
+      "path": "docs/",
+      "role": "docs",
+      "status": "standard.gap"
+    },
+    {
+      "gap_id": "gap.seed-expresses-full-framework",
+      "id": "scripts",
+      "path": "scripts/",
+      "role": "scripts",
+      "status": "standard.gap"
+    }
+  ],
+  "seed_id": "uc-canonical",
+  "standard_ten": true,
+  "standard_version": "TEN-1",
+  "uem_version": "UEM-16-v0.1",
+  "vendored": [
+    {
+      "id": "cJSON",
+      "license": "MIT",
+      "path": "c/third_party/cJSON.c"
+    },
+    {
+      "id": "cJSON-h",
+      "license": "MIT",
+      "path": "c/third_party/cJSON.h"
+    },
+    {
+      "id": "sha256",
+      "license": "public-domain-or-project",
+      "path": "c/third_party/sha256.c"
+    },
+    {
+      "id": "sha256-h",
+      "license": "public-domain-or-project",
+      "path": "c/third_party/sha256.h"
+    }
+  ]
+}
