@@ -98,6 +98,7 @@ def _generate_add(thing, value):
         f"{package}/__main__.py",
     )
     current: dict[str, str] = {}
+    file_mtimes: dict[str, int] = {}
     for rel in required:
         path = project_path / rel
         if not path.is_file():
@@ -108,6 +109,7 @@ def _generate_add(thing, value):
             }
         try:
             current[rel] = path.read_text(encoding="utf-8")
+            file_mtimes[rel] = path.stat().st_mtime_ns
         except OSError:
             return {
                 **thing,
@@ -144,6 +146,8 @@ def _generate_add(thing, value):
         "value": {
             **value,
             "files": files,
+            "file_baselines": dict(current),
+            "file_mtimes": file_mtimes,
             "write_mode": "update_project",
             "features": (*existing, feature),
             "written": (),
