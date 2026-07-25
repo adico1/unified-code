@@ -185,15 +185,22 @@ all generated results are valid
 Authoritative L9 measurement is local ordinary hardware. CI verifies
 benchmark logic; cloud-runner wall time is not the authority for L9.
 
+## Host-edge model (resolved)
+
+**Model 2 — fewer exceptions:**
+
+1. `parse_host_argv` and `present_result` are public Parts: one thing in,
+   one thing out. Presentation text and exit code live inside
+   `thing["value"]["presentation"]`.
+2. `host_main` is **not** a Unified Code operation. It is the OS process
+   edge only: it writes stdout and sets the process exit status from the
+   thing after `program(...)`.
+3. `host_main` must never appear in nested domain composition or in the
+   discovered public Part surface for L1 checks.
+
+Kernel/domain Parts remain strictly Thing→Thing with no pair returns.
+
 ## Open design points
-
-### Host-edge presentation and L1
-
-Process-edge adapters such as `host_present(thing) -> (text, exit_code)` return
-a pair for the OS host, not a canonical thing. They are not public kernel
-Parts and must not appear inside nested domain composition. Whether such
-host-edge adapters are formally L1-exempt is unresolved. Kernel and domain
-parts remain strictly Thing→Thing.
 
 ### `world()` and invalid things
 

@@ -1,12 +1,6 @@
 """Host CLI for the Unified Code generator.
 
-Composition (L2):
-
-    outward(write_project(verify_plan(generate(validate(inward(host_input))))))
-
-Benchmark (L9):
-
-    run_benchmark(inward({command: benchmark, ...}))
+Process edge only for argv/stdout. Kernel pipelines are Thing→Thing.
 """
 
 from __future__ import annotations
@@ -14,7 +8,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from ..boundary import host_render, inward, outward
+from ..boundary import host_render, inward
 from ..clock import LIMIT_NS
 from .generate import generate
 from .validate import validate
@@ -23,51 +17,64 @@ from .write_fs import write_project
 
 
 def run_command(thing):
-    """Run the full generator pipeline. One thing in, one thing out."""
+    """Generator pipeline for new/add. One thing in, one thing out."""
+    from ..boundary import outward
+
     return outward(write_project(verify_plan(generate(validate(thing)))))
 
 
 def host_main(argv=None):
-    """Process entry for the `uc` console script.
-
-    When invoked by the console script (argv is None), exits with a status
-    code. When invoked from tests with an explicit argv list, returns the
-    code without raising SystemExit.
-    """
+    """OS process edge for `uc` — not a kernel Part."""
     explicit = argv is not None
     argv = list(sys.argv[1:] if argv is None else argv)
     payload = _parse_argv(argv)
+    command = payload.get("command")
 
-    if payload.get("command") == "benchmark":
+    if command == "benchmark":
         from .benchmark import run_benchmark
 
         result = run_benchmark(inward(payload))
+    elif command == "build":
+        from .build import run_build
+
+        result = run_build(inward(payload))
+    elif command == "gauntlet":
+        from .gauntlet import run_gauntlet
+
+        result = run_gauntlet(inward(payload))
     else:
         result = run_command(inward(payload))
 
     code = 0 if result.get("state") == "valid" else 1
-    # Host-edge rendering only after outward has marked the result.
     sys.stdout.write(host_render(result))
     sys.stdout.write("\n")
-    if code == 0 or payload.get("command") == "benchmark":
-        value = result.get("value")
-        if isinstance(value, dict):
-            mode = value.get("write_mode")
+
+    if isinstance(result.get("value"), dict):
+        value = result["value"]
+        if command == "benchmark":
+            new = value.get("new") or {}
+            add = value.get("add") or {}
+            sys.stderr.write(
+                f"L9 {str(value.get('l9_verdict', 'fail')).upper()}: "
+                f"new p95={new.get('p95_ns')} ns, "
+                f"add p95={add.get('p95_ns')} ns, "
+                f"limit={LIMIT_NS} ns\n"
+            )
+        elif command == "gauntlet":
+            sys.stderr.write(
+                f"GAUNTLET {str(value.get('verdict', 'fail')).upper()}: "
+                f"passed={value.get('checks_passed')}/"
+                f"{value.get('checks_executed')} "
+                f"failed={value.get('checks_failed')} "
+                f"duration_ns={value.get('duration_ns')}\n"
+            )
+        elif code == 0:
             path = value.get("project_path")
-            if mode == "create_project" and path:
+            if value.get("write_mode") == "create_project" and path:
                 sys.stderr.write(f"uc: created {path}\n")
-            elif mode == "update_project" and path:
-                feature = value.get("feature")
-                sys.stderr.write(f"uc: added {feature!r} to {path}\n")
-            if payload.get("command") == "benchmark":
-                new = value.get("new") or {}
-                add = value.get("add") or {}
-                sys.stderr.write(
-                    f"L9 {str(value.get('l9_verdict', 'fail')).upper()}: "
-                    f"new p95={new.get('p95_ns')} ns, "
-                    f"add p95={add.get('p95_ns')} ns, "
-                    f"limit={LIMIT_NS} ns\n"
-                )
+            elif value.get("write_mode") == "update_project" and path:
+                sys.stderr.write(f"uc: added {value.get('feature')!r} to {path}\n")
+
     if explicit:
         return code
     raise SystemExit(code)
@@ -77,15 +84,10 @@ def _parse_argv(argv: list[str]) -> dict:
     if not argv:
         return {"command": None, "error": "missing-command"}
     command = argv[0]
+
     if command == "new":
-        # uc new <name> [--declaration path]
         if len(argv) < 2:
-            return {
-                "command": "new",
-                "name": None,
-                "parent": None,
-                "error": "usage-new",
-            }
+            return {"command": "new", "name": None, "parent": None, "error": "usage-new"}
         name = argv[1]
         declaration = None
         i = 2
@@ -106,8 +108,8 @@ def _parse_argv(argv: list[str]) -> dict:
             "parent": str(Path.cwd()),
             "declaration": declaration,
         }
+
     if command == "add":
-        # uc add <feature> [--declaration path]
         if len(argv) < 2:
             return {
                 "command": "add",
@@ -135,6 +137,61 @@ def _parse_argv(argv: list[str]) -> dict:
             "project_root": str(Path.cwd()),
             "declaration": declaration,
         }
+
+    if command == "build":
+        # uc build path/to/declaration.py [--parent DIR] [--name NAME]
+        if len(argv) < 2:
+            return {"command": "build", "error": "usage-build"}
+        declaration_path = argv[1]
+        parent = str(Path.cwd())
+        project_name = None
+        i = 2
+        while i < len(argv):
+            if argv[i] == "--parent" and i + 1 < len(argv):
+                parent = argv[i + 1]
+                i += 2
+                continue
+            if argv[i] == "--name" and i + 1 < len(argv):
+                project_name = argv[i + 1]
+                i += 2
+                continue
+            return {
+                "command": "build",
+                "declaration_path": declaration_path,
+                "error": f"unknown-flag:{argv[i]}",
+            }
+        return {
+            "command": "build",
+            "declaration_path": declaration_path,
+            "parent": parent,
+            "project_name": project_name,
+        }
+
+    if command == "gauntlet":
+        # uc gauntlet [declaration.py|project_dir]
+        target = argv[1] if len(argv) > 1 else None
+        payload = {"command": "gauntlet", "mode": "framework"}
+        if target:
+            path = Path(target).expanduser().resolve()
+            if path.is_file() and path.suffix == ".py":
+                payload["mode"] = "declaration"
+                payload["declaration_path"] = str(path)
+            elif path.is_dir():
+                payload["mode"] = "project"
+                payload["project_path"] = str(path)
+            else:
+                payload["error"] = "gauntlet-target-not-found"
+                payload["target"] = target
+        else:
+            # default: framework declaration
+            root = Path(__file__).resolve().parents[2]
+            decl = root / "examples" / "declarations" / "text_stats_v2.py"
+            if not decl.is_file():
+                decl = root / "examples" / "declarations" / "text_stats_program.py"
+            payload["mode"] = "declaration"
+            payload["declaration_path"] = str(decl)
+        return payload
+
     if command == "benchmark":
         iterations = 10
         i = 1
@@ -162,6 +219,7 @@ def _parse_argv(argv: list[str]) -> dict:
                 "error": f"unknown-flag:{argv[i]}",
             }
         return {"command": "benchmark", "iterations": iterations}
+
     return {"command": command, "error": "unknown-command"}
 
 

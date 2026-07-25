@@ -275,13 +275,33 @@ def _append_or_rebuild_parts(
 
 
 def _compose(declaration: dict) -> str:
-    package = declaration["package"]
-    composition = declaration["composition"]
+    composition = list(declaration["composition"])
     feature_names = [f["name"] for f in declaration["features"]]
     boundary_names = []
     for b in declaration.get("boundaries") or ():
         if isinstance(b, dict) and "name" in b:
             boundary_names.append(b["name"])
+
+    # Never inject undeclared identity transform.
+    feature_set = set(feature_names)
+    composition = [s for s in composition if s != "transform" or "transform" in feature_set]
+
+    # Ensure parse_host_argv after inward and present_result before outward when CLI/presentation.
+    if declaration.get("cli"):
+        if "parse_host_argv" not in composition:
+            if "inward" in composition:
+                i = composition.index("inward")
+                composition.insert(i + 1, "parse_host_argv")
+            else:
+                composition.insert(0, "parse_host_argv")
+        boundary_names = list(dict.fromkeys([*boundary_names, "parse_host_argv"]))
+    if declaration.get("presentation"):
+        if "present_result" not in composition:
+            if "outward" in composition:
+                composition.insert(composition.index("outward"), "present_result")
+            else:
+                composition.append("present_result")
+        boundary_names = list(dict.fromkeys([*boundary_names, "present_result"]))
 
     imports = [
         "from .boundary import inward, outward",
@@ -289,42 +309,26 @@ def _compose(declaration: dict) -> str:
     ]
     if boundary_names:
         imports[0] = (
-            "from .boundary import inward, outward, "
-            + ", ".join(boundary_names)
+            "from .boundary import inward, outward, " + ", ".join(boundary_names)
         )
     if feature_names:
         imports.append("from .parts import " + ", ".join(feature_names))
 
-    # Build nested call from composition list (outermost last in list typically)
-    # composition is outward(...(inward)) order: first element is innermost or outer?
-    # We define composition as outer-to-inner reading of the onion names:
-    # ("outward", "verify", "calculate_stats", "validate_text", "read_text_source", "letter", "inward")
-    # OR inner-to-outer. Prefer inner-to-outer matching nested write order:
-    # ("inward", "letter", "read", "validate", "calculate", "verify", "outward")
     steps = list(composition)
-    # if starts with outward, reverse to inner-first
     if steps and steps[0] == "outward":
         steps = list(reversed(steps))
 
     expr = "host_value"
     for step in steps:
-        if step == "inward":
-            expr = f"inward({expr})"
-        elif step == "letter":
-            expr = f"letter({expr})"
-        elif step == "verify":
-            expr = f"verify({expr})"
-        elif step == "outward":
-            expr = f"outward({expr})"
-        else:
-            expr = f"{step}({expr})"
+        expr = f"{step}({expr})"
 
     return f'''"""Nested composition from declaration (L2)."""
 
 {chr(10).join(imports)}
 
 
-def program(host_value):
+def program(thing):
+    host_value = thing
     return {expr}
 '''
 
@@ -344,7 +348,8 @@ from .core import letter, verify
 from .parts import {names}
 
 
-def program(host_value):
+def program(thing):
+    host_value = thing
     return {expr}
 '''
 
@@ -375,18 +380,18 @@ THING_FIELDS = ("value", "depths", "axes", "evidence", "state")
 STATES = frozenset({"unknown", "absent", "false", "formed", "valid", "invalid"})
 
 
-def is_thing(obj):
-    if not isinstance(obj, dict):
+def is_thing(thing):
+    if not isinstance(thing, dict):
         return False
-    if any(field not in obj for field in THING_FIELDS):
+    if any(field not in thing for field in THING_FIELDS):
         return False
-    if not isinstance(obj["depths"], tuple):
+    if not isinstance(thing["depths"], tuple):
         return False
-    if not isinstance(obj["axes"], tuple):
+    if not isinstance(thing["axes"], tuple):
         return False
-    if not isinstance(obj["evidence"], tuple):
+    if not isinstance(thing["evidence"], tuple):
         return False
-    if obj["state"] not in STATES:
+    if thing["state"] not in STATES:
         return False
     return True
 
@@ -561,43 +566,125 @@ def _read_utf8_source_fn(spec: dict) -> str:
 
 
 def _host_present_fn(presentation: dict) -> str:
+    """Model 2: present_result is a Part — returns a canonical thing (L1).
+
+    The OS process edge (host_main) alone extracts text/exit_code for the host.
+    present_result must not print or call SystemExit.
+    """
     keys = presentation.get("success_keys") or ()
     success_from = presentation.get("success_from", "stats")
     keys_tuple = ", ".join(f'"{k}"' for k in keys)
-    return f'''def host_present(thing):
-    """Host-edge presentation after outward. Returns (text, exit_code).
-
-    Open design (L1): process-edge adapter returns a pair for the OS host,
-    not a canonical thing. Not a public kernel Part.
-    """
+    return f'''def present_result(thing):
+    """Pack presentation text and exit_code into the thing (L1 Part)."""
     from json import dumps
 
     def dump(obj):
         return dumps(obj, ensure_ascii=False, separators=(",", ":"))
 
     if not is_thing(thing):
-        return dump({{"error": "invalid-thing", "state": "invalid"}}), 1
+        return {{
+            "value": {{
+                "presentation": {{
+                    "text": dump({{"error": "invalid-thing", "state": "invalid"}}),
+                    "exit_code": 1,
+                }}
+            }},
+            "depths": (),
+            "axes": (),
+            "evidence": ("present_result:rejected-non-thing",),
+            "state": "invalid",
+        }}
 
-    value = thing["value"]
+    value = thing["value"] if isinstance(thing["value"], dict) else {{}}
     state = thing["state"]
     keys = ({keys_tuple})
 
-    if state == "valid" and isinstance(value, dict) and isinstance(value.get("{success_from}"), dict):
+    if state == "valid" and isinstance(value.get("{success_from}"), dict):
         payload = value["{success_from}"]
         ordered = {{key: payload[key] for key in keys}}
-        return dump(ordered), 0
+        text = dump(ordered)
+        code = 0
+    else:
+        error = "invalid"
+        if isinstance(value.get("error"), str):
+            error = value["error"]
+        elif state == "absent":
+            error = "missing-text"
+        elif state == "false":
+            error = "false"
+        elif state == "unknown":
+            error = "unknown"
+        text = dump({{"error": error, "state": state}})
+        code = 1
 
-    error = "invalid"
-    if isinstance(value, dict) and isinstance(value.get("error"), str):
-        error = value["error"]
-    elif state == "absent":
-        error = "missing-text"
-    elif state == "false":
-        error = "false"
-    elif state == "unknown":
-        error = "unknown"
+    return {{
+        **thing,
+        "value": {{
+            **value,
+            "presentation": {{"text": text, "exit_code": code}},
+        }},
+        "evidence": (*thing["evidence"], "present_result:ok"),
+        "state": state,
+    }}
 
-    return dump({{"error": error, "state": state}}), 1
+
+def parse_host_argv(thing):
+    """Map host argv payload into source/error fields (L1 Part)."""
+    if not is_thing(thing):
+        return {{
+            "value": thing,
+            "depths": (),
+            "axes": (),
+            "evidence": ("parse_host_argv:rejected-non-thing",),
+            "state": "invalid",
+        }}
+    value = thing["value"]
+    # Already shaped as source/error map from tests.
+    if isinstance(value, dict) and ("source" in value or "error" in value) and "argv" not in value:
+        return {{
+            **thing,
+            "evidence": (*thing["evidence"], "parse_host_argv:passthrough"),
+            "state": thing["state"] if thing["state"] != "unknown" else "formed",
+        }}
+    argv = None
+    if isinstance(value, dict) and "argv" in value:
+        argv = value["argv"]
+    elif isinstance(value, (list, tuple)):
+        argv = list(value)
+    if argv is None:
+        return {{
+            **thing,
+            "value": {{"error": "missing-source"}},
+            "evidence": (*thing["evidence"], "parse_host_argv:missing"),
+            "state": "invalid",
+        }}
+    if not isinstance(argv, (list, tuple)):
+        return {{
+            **thing,
+            "value": {{"error": "invalid-argv"}},
+            "evidence": (*thing["evidence"], "parse_host_argv:invalid"),
+            "state": "invalid",
+        }}
+    if len(argv) == 0:
+        return {{
+            **thing,
+            "value": {{"error": "missing-source"}},
+            "evidence": (*thing["evidence"], "parse_host_argv:missing-source"),
+            "state": "invalid",
+        }}
+    if len(argv) > 1:
+        return {{
+            **thing,
+            "value": {{"error": "extra-source"}},
+            "evidence": (*thing["evidence"], "parse_host_argv:extra-source"),
+            "state": "invalid",
+        }}
+    return {{
+        **thing,
+        "value": {{"source": argv[0]}},
+        "evidence": (*thing["evidence"], "parse_host_argv:ok"),
+        "state": "formed",
+    }}
 '''
 
 
@@ -737,52 +824,59 @@ def verify(thing):
 
 
 def _cli(declaration: dict) -> str:
-    cli = declaration["cli"] or {}
-    field = (cli.get("argv") or {}).get("field", "source")
-    missing = (cli.get("argv") or {}).get("errors", {}).get("missing", "missing-source")
-    extra = (cli.get("argv") or {}).get("errors", {}).get("extra", "extra-source")
+    """Process edge only: host_main is NOT a kernel Part (Model 2).
+
+    Canonical Parts (parse_host_argv, present_result, program) all return things.
+    host_main alone writes to stdout and sets the process exit status.
+    """
     use_present = bool(declaration.get("presentation"))
-    present_import = "from .boundary import host_present" if use_present else "from .boundary import host_render"
-    present_body = (
-        "    text, code = host_present(result)\n"
-        "    sys.stdout.write(text)\n"
-        "    sys.stdout.write(\"\\n\")\n"
-        "    if explicit:\n"
-        "        return code\n"
-        "    raise SystemExit(code)\n"
+    if use_present:
+        body = '''    result = program({"argv": list(args)})
+    value = result.get("value") if isinstance(result, dict) else None
+    presentation = value.get("presentation") if isinstance(value, dict) else None
+    if not isinstance(presentation, dict):
+        text, code = '{"error":"missing-presentation","state":"invalid"}', 1
+    else:
+        text = presentation.get("text", "")
+        code = int(presentation.get("exit_code", 1))
+    sys.stdout.write(text)
+    if not str(text).endswith("\\n"):
+        sys.stdout.write("\\n")
+    if explicit:
+        return code
+    raise SystemExit(code)
+'''
+    else:
+        body = '''    result = program({"argv": list(args)})
+    sys.stdout.write(host_render(result))
+    sys.stdout.write("\\n")
+    code = 0 if result.get("state") == "valid" else 1
+    if explicit:
+        return code
+    raise SystemExit(code)
+'''
+    render_import = (
+        "from .compose import program\n"
         if use_present
-        else
-        "    sys.stdout.write(host_render(result))\n"
-        "    sys.stdout.write(\"\\n\")\n"
-        "    code = 0 if result.get(\"state\") == \"valid\" else 1\n"
-        "    if explicit:\n"
-        "        return code\n"
-        "    raise SystemExit(code)\n"
+        else "from .boundary import host_render\nfrom .compose import program\n"
     )
-    return f'''"""Host CLI. Parse argv; domain runs only on things."""
+    return f'''"""Process-edge CLI (not a kernel Part).
+
+Host model (L1): parse_host_argv and present_result are Thing→Thing Parts.
+host_main is the OS process edge only: stdout write + exit status.
+"""
 
 from __future__ import annotations
 
 import sys
 
-{present_import}
-from .compose import program
-
-
-def parse_argv(argv):
-    if len(argv) == 0:
-        return {{"error": "{missing}"}}
-    if len(argv) > 1:
-        return {{"error": "{extra}"}}
-    return {{"{field}": argv[0]}}
-
+{render_import}
 
 def host_main(argv=None):
+    """OS process edge — not a Unified Code public operation."""
     explicit = argv is not None
     args = list(sys.argv[1:] if argv is None else argv)
-    host_value = parse_argv(args)
-    result = program(host_value)
-{present_body}
+{body}
 
 if __name__ == "__main__":
     host_main()
@@ -983,11 +1077,16 @@ def _test_declared(package: str, declaration: dict) -> str:
         "from __future__ import annotations",
         "",
         "import json",
-        "from pathlib import Path",
         "",
-        f"from {package}.boundary import host_present",
-        f"from {package}.cli import host_main, parse_argv",
+        f"from {package}.cli import host_main",
         f"from {package}.compose import program",
+        "",
+        "def _presentation(result):",
+        "    value = result.get('value') if isinstance(result, dict) else None",
+        "    pres = value.get('presentation') if isinstance(value, dict) else None",
+        "    if not isinstance(pres, dict):",
+        "        return '', 1",
+        "    return pres.get('text', ''), int(pres.get('exit_code', 1))",
         "",
     ]
     for i, case in enumerate(declaration.get("tests") or ()):
@@ -1003,7 +1102,7 @@ def _test_declared(package: str, declaration: dict) -> str:
             lines.append(f"    path.write_text({text!r}, encoding='utf-8')")
             lines.append(f"    result = program({{'source': str(path)}})")
             if expect is not None:
-                lines.append(f"    assert result['state'] == 'valid'")
+                lines.append("    assert result['state'] == 'valid'")
                 lines.append(f"    assert result['value']['stats'] == {expect!r}")
             lines.append("")
         elif kind == "stdin_text":
@@ -1011,18 +1110,18 @@ def _test_declared(package: str, declaration: dict) -> str:
             expect = case.get("expect_stats")
             lines.append(f"def test_declared_{name}(monkeypatch):")
             lines.append(f"    monkeypatch.setattr('sys.stdin', __import__('io').StringIO({text!r}))")
-            lines.append(f"    result = program({{'source': '-'}})")
+            lines.append("    result = program({'source': '-'})")
             if expect is not None:
-                lines.append(f"    assert result['state'] == 'valid'")
+                lines.append("    assert result['state'] == 'valid'")
                 lines.append(f"    assert result['value']['stats'] == {expect!r}")
             lines.append("")
         elif kind == "cli_error":
             argv = case.get("argv", [])
             error = case.get("error")
             lines.append(f"def test_declared_{name}():")
-            lines.append(f"    result = program(parse_argv({argv!r}))")
-            lines.append(f"    text, code = host_present(result)")
-            lines.append(f"    assert code == 1")
+            lines.append(f"    result = program({{'argv': {argv!r}}})")
+            lines.append("    text, code = _presentation(result)")
+            lines.append("    assert code == 1")
             lines.append(f"    assert json.loads(text)['error'] == {error!r}")
             lines.append("")
         elif kind == "stable_json":
@@ -1031,9 +1130,62 @@ def _test_declared(package: str, declaration: dict) -> str:
             lines.append(f"def test_declared_{name}(tmp_path, capsys):")
             lines.append(f"    path = tmp_path / '{name}.txt'")
             lines.append(f"    path.write_text({text!r}, encoding='utf-8')")
-            lines.append(f"    assert host_main([str(path)]) == 0")
-            lines.append(f"    out = capsys.readouterr().out.strip()")
+            lines.append("    assert host_main([str(path)]) == 0")
+            lines.append("    out = capsys.readouterr().out.strip()")
             lines.append(f"    assert out == {expect_json!r}")
+            lines.append("")
+        elif kind == "missing_file":
+            lines.append(f"def test_declared_{name}(tmp_path):")
+            lines.append(f"    result = program({{'source': str(tmp_path / 'missing.txt')}})")
+            lines.append("    text, code = _presentation(result)")
+            lines.append("    assert code == 1")
+            lines.append("    assert json.loads(text)['error'] == 'file-not-found'")
+            lines.append("")
+        elif kind == "directory":
+            lines.append(f"def test_declared_{name}(tmp_path):")
+            lines.append(f"    result = program({{'source': str(tmp_path)}})")
+            lines.append("    text, code = _presentation(result)")
+            lines.append("    assert code == 1")
+            lines.append("    assert json.loads(text)['error'] == 'not-a-file'")
+            lines.append("")
+        elif kind == "invalid_utf8":
+            lines.append(f"def test_declared_{name}(tmp_path):")
+            lines.append(f"    path = tmp_path / 'bad.bin'")
+            lines.append("    path.write_bytes(b'\\xff\\xfe not utf8')")
+            lines.append("    result = program({'source': str(path)})")
+            lines.append("    text, code = _presentation(result)")
+            lines.append("    assert code == 1")
+            lines.append("    assert json.loads(text)['error'] == 'invalid-utf8'")
+            lines.append("")
+        elif kind == "evidence_order":
+            lines.append(f"def test_declared_{name}(tmp_path):")
+            lines.append(f"    path = tmp_path / 'e.txt'")
+            lines.append("    path.write_text('hi', encoding='utf-8')")
+            lines.append("    evidence = program({'source': str(path)})['evidence']")
+            required = case.get("required") or (
+                "boundary:inward",
+                "letter:distinguished",
+                "boundary:read_text_source",
+                "read:ok",
+                "part:validate_text",
+                "validate_text:ok",
+                "part:calculate_stats",
+                "calculate_stats:ok",
+                "script-law:pass",
+                "present_result:ok",
+                "boundary:outward",
+            )
+            lines.append(f"    required = {required!r}")
+            lines.append("    positions = [evidence.index(item) for item in required]")
+            lines.append("    assert positions == sorted(positions)")
+            lines.append("")
+        elif kind == "idempotent_output":
+            lines.append(f"def test_declared_{name}(tmp_path):")
+            lines.append(f"    path = tmp_path / 'twice.txt'")
+            lines.append("    path.write_text('Same Text\\n', encoding='utf-8')")
+            lines.append("    a = _presentation(program({'source': str(path)}))")
+            lines.append("    b = _presentation(program({'source': str(path)}))")
+            lines.append("    assert a == b")
             lines.append("")
     return "\n".join(lines)
 

@@ -103,6 +103,10 @@ uc new <project-name>
 uc new <project-name> --declaration path/to/program.py
 uc add <feature-name>
 uc add <feature-name> --declaration path/to/feature.py
+uc build path/to/declaration.py
+uc gauntlet
+uc gauntlet path/to/declaration.py
+uc gauntlet path/to/generated/project
 uc benchmark
 uc benchmark --iterations 20
 ```
