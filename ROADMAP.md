@@ -41,6 +41,8 @@
 - Project assembly
 - Generated tests
 - `uc new` / `uc add` generator (started in v0.1)
+- Code-based `PROGRAM` / `FEATURE` declarations → runtime generation
+  (not evidence-only stubs when `--declaration` is supplied)
 
 ## 0.5 — Translation
 
