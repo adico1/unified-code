@@ -11,6 +11,9 @@ from pathlib import Path
 from .interpreter import machine_load, machine_run, machine_step
 from .thing import value_of, with_evidence, with_state
 
+# Host loop bound (steps of machine_run). Exposed for tests that assert limit path.
+HOST_GUARD_LIMIT = 200_000
+
 
 def run_program(thing):
     """Execute compiled program with host_input; fulfill outward reads.
@@ -26,7 +29,7 @@ def run_program(thing):
         return loaded
     current = loaded
     guard = 0
-    while guard < 200_000:
+    while guard < HOST_GUARD_LIMIT:
         guard += 1
         current = machine_run(current)
         v = value_of(current)
@@ -81,8 +84,6 @@ def _fulfill(req, machine_value):
 
 
 def _read_utf8(source, cfg):
-    stdin_token = (cfg.get("stdin_token") if False else None)
-    # token from image source config lives on machine; use "-" default
     if source is None:
         return {"error": "missing-source"}
     if source == "-":

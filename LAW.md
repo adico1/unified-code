@@ -1,5 +1,10 @@
 # Laws
 
+Governing meta-law: **[STANDARD_TEN.md](STANDARD_TEN.md)** (TEN-1).
+Standard Ten is non-bypassable and sits above L1–L13. Conventional
+development is not an authorized fallback. Unsupported expression →
+`standard.gap` only.
+
 ## L1 — One shape
 
 Every public operation accepts one thing and returns one thing.

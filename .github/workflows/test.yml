@@ -63,3 +63,134 @@ jobs:
       # CI verifies benchmark *logic* via deterministic unit tests above.
       # Cloud-runner wall-clock time is NOT the authority for L9.
       # Authoritative L9 measurement: local `uc benchmark --iterations 20`.
+
+  l13:
+    name: L13 Complete Testing Gauntlet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+          sudo apt-get update -qq && sudo apt-get install -y -qq gcc gcovr || true
+
+      - name: Build C host
+        run: make -C c posix CFLAGS="-std=c99 -Wall -O2 -Iinclude -Ithird_party -Icore -Ihost/mcu"
+
+      - name: L13 gauntlet (fail on any dimension below 100%)
+        run: |
+          set -euo pipefail
+          chmod +x scripts/run_l13.sh
+          export UEM_C="$PWD/c/build/uem-c"
+          ./scripts/run_l13.sh
+
+      - name: Assert coverage.json all dimensions OK
+        run: |
+          python - <<'PY'
+          import json, sys
+          rep = json.load(open("coverage.json", encoding="utf-8"))
+          dims = rep.get("dimensions") or {}
+          bad = []
+          for k, d in sorted(dims.items()):
+              if not d.get("ok"):
+                  bad.append(f"{k}: actual={d.get('actual')} required={d.get('required')}")
+          if rep.get("verdict") != "pass" or bad:
+              print("FAIL dimensions:", bad or rep)
+              raise SystemExit(1)
+          print("L13 PASS — all", len(dims), "dimensions at 100%")
+          PY
+
+  standard_ten:
+    name: Standard Ten (governing contract)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+
+      - name: STANDARD_TEN.md present
+        run: test -f STANDARD_TEN.md && test -f seed/ROOT.seed.json
+
+      - name: standard.gap is only fallback refusal
+        run: |
+          python - <<'PY'
+          from unified.standard import standard_gap, refuse_conventional
+          g = standard_gap({"value": {"gap_id": "gap.ci", "rule": "3", "summary": "ci"}, "depths": (), "axes": (), "evidence": (), "state": "formed"})
+          assert g["state"] == "invalid" and "standard.gap" in g["evidence"]
+          r = refuse_conventional({"value": {"summary": "oop"}, "depths": (), "axes": (), "evidence": (), "state": "formed"})
+          assert r["state"] == "invalid"
+          print("standard.gap OK")
+          PY
+
+      - name: Generate UEM from seed declarations
+        run: |
+          python - <<'PY'
+          from unified.standard_generate import generate_all_seed_declarations
+          r = generate_all_seed_declarations()
+          assert r.get("state") == "formed", r
+          print(r["value"]["generated"])
+          PY
+
+      - name: Provenance audit
+        run: python scripts/audit_standard_ten.py audit
+
+      - name: Clean-room partial (UEM artifacts)
+        run: |
+          chmod +x scripts/clean_room_ten.sh
+          ROOT="$PWD" bash scripts/clean_room_ten.sh
+
+      - name: Reject conventional claim of TEN completion
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          m = json.loads(Path("PROVENANCE_MANIFEST.json").read_text(encoding="utf-8"))
+          # While gaps open, verdict must not be silently pass
+          open_gaps = m.get("open_gaps") or []
+          illegal = m.get("illegal_provenance_count") or 0
+          if open_gaps or illegal:
+              assert m.get("verdict") == "fail", m.get("verdict")
+              print("honest fail while migration open:", len(open_gaps), "gaps,", illegal, "illegal files")
+          else:
+              # Only when fully migrated
+              assert m.get("verdict") == "pass"
+              print("TEN complete")
+          PY
+
+      - name: Enforcement must not greenwash gaps
+        run: |
+          set +e
+          python scripts/audit_standard_ten.py enforce
+          code=$?
+          set -e
+          python - <<PY
+          import json
+          from pathlib import Path
+          m = json.loads(Path("PROVENANCE_MANIFEST.json").read_text(encoding="utf-8"))
+          open_gaps = m.get("open_gaps") or []
+          illegal = int(m.get("illegal_provenance_count") or 0)
+          code = $code
+          if open_gaps or illegal:
+              assert code != 0, (code, "enforce must fail while gaps/illegal provenance exist")
+              print("enforce non-zero OK under open migration")
+          else:
+              assert code == 0, code
+              print("enforce pass — TEN complete")
+          PY

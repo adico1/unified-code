@@ -117,11 +117,15 @@ def machine_step(thing):
     return with_evidence(nxt, evidence_mark)
 
 
+# Machine run loop bound. Exposed for tests that assert the steps-limit path.
+MACHINE_RUN_GUARD = 200_000
+
+
 def machine_run(thing):
     """Run until halt, outward wait, or invalid terminal. Does not fulfill outward."""
     current = thing
     guard = 0
-    max_guard = 200_000
+    max_guard = MACHINE_RUN_GUARD
     while guard < max_guard:
         guard += 1
         v = value_of(current)

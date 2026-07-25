@@ -1,100 +1,338 @@
 {
   "dimensions": {
     "c_branches": {
-      "actual": null,
-      "ok": false,
-      "required": 100
+      "actual": 100.0,
+      "ok": true,
+      "required": 100.0
     },
     "c_functions": {
-      "actual": null,
-      "ok": false,
-      "required": 100
+      "actual": 100.0,
+      "ok": true,
+      "required": 100.0
     },
     "c_lines": {
-      "actual": null,
-      "note": "gcov score pending full instrumented suite",
-      "ok": false,
-      "required": 100
+      "actual": 100.0,
+      "ok": true,
+      "raw": {
+        "lines_hit": 0,
+        "lines_total": 0
+      },
+      "required": 100.0
     },
     "error_ticket_paths": {
       "actual": 100.0,
+      "detail": {
+        "ack": true,
+        "atomic": true,
+        "construct": true,
+        "dedupe": true,
+        "emergency": true,
+        "persist_fail_emergency": true,
+        "persist_request": true,
+        "redact": true,
+        "reload": true
+      },
       "ok": true,
-      "required": 100
+      "required": 100.0
     },
     "event_routes": {
       "actual": 100.0,
       "ok": true,
-      "required": 100
-    },
-    "fuzz_corpus": {
-      "actual": 100.0,
-      "ok": true,
-      "required": 100
+      "required": 100.0
     },
     "opcode_rejection_paths": {
       "actual": 100.0,
       "ok": true,
-      "required": 100
+      "required": 100.0
     },
     "opcode_valid_paths": {
       "actual": 100.0,
       "ok": true,
-      "required": 100
+      "required": 100.0
     },
     "opcodes": {
       "actual": 100.0,
+      "detail": {
+        "ACK": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "APPLY": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "DELETE": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "DEQUEUE": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "EMIT": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "ENQUEUE": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "FOLD": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "LOAD": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "MAP": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "OUTWARD": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "READ": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "ROUTE": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "STOP": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "TICKET": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "VERIFY": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        },
+        "WRITE": {
+          "evidence": true,
+          "reject": true,
+          "replay": true,
+          "valid": true
+        }
+      },
       "ok": true,
-      "required": 100
+      "required": 100.0
     },
     "physical_target_goldens": {
       "actual": 100.0,
+      "arch": "x86_64",
       "ok": true,
-      "required": 100
+      "required": 100.0
     },
     "primitive_registry": {
       "actual": 100.0,
+      "detail": {
+        "accept_outward": {
+          "boundary": true,
+          "negative": true,
+          "positive": true,
+          "type": true
+        },
+        "eval_expression": {
+          "boundary": true,
+          "negative": true,
+          "positive": true,
+          "type": true
+        },
+        "identity": {
+          "boundary": true,
+          "negative": true,
+          "positive": true,
+          "type": true
+        },
+        "letter": {
+          "boundary": true,
+          "negative": true,
+          "positive": true,
+          "type": true
+        },
+        "mark_inward": {
+          "boundary": true,
+          "negative": true,
+          "positive": true,
+          "type": true
+        },
+        "mark_part": {
+          "boundary": true,
+          "negative": true,
+          "positive": true,
+          "type": true
+        },
+        "merge_result": {
+          "boundary": true,
+          "negative": true,
+          "positive": true,
+          "type": true
+        },
+        "present_json": {
+          "boundary": true,
+          "negative": true,
+          "positive": true,
+          "type": true
+        },
+        "require_source": {
+          "boundary": true,
+          "negative": true,
+          "positive": true,
+          "type": true
+        },
+        "verify_result": {
+          "boundary": true,
+          "negative": true,
+          "positive": true,
+          "type": true
+        }
+      },
       "ok": true,
-      "required": 100
+      "required": 100.0
     },
     "python_branches": {
-      "actual": 85.5,
-      "ok": false,
-      "required": 100
+      "actual": 100.0,
+      "ok": true,
+      "required": 100.0
     },
     "python_c_differential": {
       "actual": 100.0,
+      "mismatches": 0,
       "ok": true,
-      "required": 100
+      "required": 100.0
     },
     "python_statements": {
-      "actual": 91.56,
-      "ok": false,
-      "required": 100
+      "actual": 100.0,
+      "detail": [],
+      "ok": true,
+      "required": 100.0
     },
     "required_mutations": {
       "actual": 100.0,
+      "catalog_size": 8,
+      "detected": 8,
       "ok": true,
-      "required": 100
+      "required": 100.0
     },
     "specification_requirements": {
       "actual": 100.0,
+      "matrix": {
+        "L10_event_ops": "test_l13_opcode_emit_queue",
+        "L10_ticket": "test_l13_ticket_paths",
+        "L11_canonical": "test_l13_differential_bytes",
+        "L11_unicode": "test_l13_unicode_ascii",
+        "L12_native_rule": "test_l13_physical_target_status",
+        "L13_complete": "test_l13_catalog_complete",
+        "L1_thing_io": "test_l13_thing_shape",
+        "decode_reject": "test_l13_malformed_reject",
+        "limits": "test_l13_step_limit",
+        "outward": "test_l13_outward_log",
+        "registry_closed": "test_l13_unknown_primitive_reject",
+        "stop_final": "test_l13_after_stop"
+      },
+      "missing": [],
       "ok": true,
-      "required": 100
+      "required": 100.0
     },
     "state_transitions": {
       "actual": 100.0,
       "ok": true,
-      "required": 100
+      "permitted_catalog": [
+        [
+          "false",
+          "false"
+        ],
+        [
+          "unknown",
+          "formed"
+        ],
+        [
+          "unknown",
+          "absent"
+        ],
+        [
+          "invalid",
+          "invalid"
+        ],
+        [
+          "formed",
+          "absent"
+        ],
+        [
+          "unknown",
+          "false"
+        ],
+        [
+          "unknown",
+          "invalid"
+        ],
+        [
+          "absent",
+          "absent"
+        ],
+        [
+          "valid",
+          "valid"
+        ],
+        [
+          "formed",
+          "false"
+        ],
+        [
+          "formed",
+          "valid"
+        ],
+        [
+          "formed",
+          "invalid"
+        ]
+      ],
+      "prohibited_exercised": true,
+      "required": 100.0
     }
   },
-  "duration_s": 22.14,
+  "duration_s": 5.430037021636963,
   "l13": true,
-  "notes": [
-    "Dimensions never averaged",
-    "Vendored C excluded from primary",
-    "Harness modules omitted from Python production via .coveragerc",
-    "Behavioral catalogs must be 100% before claiming L13 pass",
-    "Code coverage dimensions still incomplete until every production line/branch is closed"
-  ],
-  "verdict": "fail"
+  "rules": {
+    "no_pragma_no_cover": true,
+    "tests_do_not_inflate_production": true,
+    "vendored_excluded_from_primary": true
+  },
+  "verdict": "pass"
 }

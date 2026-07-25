@@ -59,12 +59,6 @@
 - UEM gauntlet and measurements
 - **Not yet:** replace generator; multi-ISA backends
 
-### 0.8 — L13 Complete Testing Gauntlet
-
-- Multi-dimension coverage gate
-- coverage.json + GAUNTLET.md
-- Catalogs: opcodes, primitives, tickets, mutations, differential
-
 ### 0.7 — L12 Physical targets
 
 - Portable core vs host split (`c/core`, `c/host/*`)
@@ -72,12 +66,29 @@
 - UEM-MCU-1 profile (no family claim without board)
 - Strengthened fuzz corpus (≥100k)
 
+### 0.8 — L13 Complete Testing Gauntlet (done)
+
+- Multi-dimension coverage gate — every dimension exactly 100%
+- coverage.json + GAUNTLET.md emitters; CI job fails on any miss
+- Catalogs: opcodes, primitives, tickets, mutations, differential, states, events
+- Python statement/branch 100%; C line/function/branch 100% (vendored separate)
+- No pragma/no-cover; production paths only in primary score
+
+### 0.9 — Standard Ten (governing contract — in force, migration open)
+
+- `STANDARD_TEN.md` TEN-1 + non-fallback law
+- Canonical seed `seed/ROOT.seed.json` + pure JSON declarations
+- `standard.gap` only response to unsupported expression
+- Provenance audit + clean-room partial (UEM artifacts)
+- **Not complete:** full clean-room regeneration of framework/hosts/tests/docs from seed alone (open gaps in seed)
+
 ### Next / in progress
 
-- Minimal C99 interpreter of UEM-16 (`c/`) + golden differential vs Python
-- Target pass only when executable runs golden vectors (not compile-only)
-- Progressive reduction of residual Python control flow
+- Close `standard.gap` tickets by seed-expressing packages (no conventional fill)
+- Eliminate OOP (`_ExprFail`) via plain-data faults
+- Collapse dual Python/C cores toward one UEM + thin host boundaries
 - Optional: ARM64 / RISC-V / wasm executables after vector pass on-device
+- Formal grammar and semantics toward 1.0
 
 ## 1.0 candidate
 

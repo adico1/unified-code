@@ -1,0 +1,1 @@
+i=14120 c-exception:Command '['/Users/adicohen/Projects/unified-code/c/build/uem-c', 'verify', '/var/folders/w_/46kg436n2g127pk1f7ljctjh0000gn/T/tmpg3qjzeok.uem']' timed out after 5 seconds

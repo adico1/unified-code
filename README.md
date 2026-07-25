@@ -1,5 +1,8 @@
 # Unified Code
 
+**Governing contract: [STANDARD_TEN.md](STANDARD_TEN.md) (TEN-1).**  
+Conventional development is not an authorized fallback. Unsupported work stops at `standard.gap`.
+
 Unified Code is an experimental functional construction grammar for writing
 software from one repeatedly practised form.
 
@@ -144,3 +147,20 @@ spec traceability, mutations, differential, physical goldens). Never one average
 ```
 
 Emits `coverage.json` and `GAUNTLET.md`. Build fails if any dimension is below 100%.
+
+### Standard Ten (governing contract)
+
+```bash
+./scripts/run_standard_ten.sh
+```
+
+| Artifact | Role |
+| --- | --- |
+| `STANDARD_TEN.md` | Ten rules + non-fallback law |
+| `seed/ROOT.seed.json` | Canonical seed |
+| `seed/declarations/*.json` | Pure-data app declarations |
+| `PROVENANCE_MANIFEST.json` | Every file classified |
+| `AUDIT_STANDARD_TEN.md` | Human audit + open `standard.gap` |
+
+Partial clean-room: UEM artifacts regenerate byte-identical from seed declarations.  
+**Full-tree clean-room is not claimed** while open gaps remain. Enforcement fails until every file is one of: `seed` | `generated` | `external-vendored` | `physical-host-boundary` | `evidence`.

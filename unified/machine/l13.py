@@ -58,6 +58,8 @@ def measure_python_coverage() -> dict:
             "-m",
             "pytest",
             "tests/test_l13.py",
+            "tests/test_l13_deep.py",
+            "tests/test_l13_coverage.py",
             "tests/test_l11.py",
             "tests/test_uem.py",
             "-q",
@@ -86,9 +88,12 @@ def measure_python_coverage() -> dict:
     )
     data = json.loads((ROOT / "coverage_py.json").read_text(encoding="utf-8"))
     totals = data.get("totals") or {}
-    stmts = float(totals.get("percent_covered", 0))
-    nb = totals.get("num_branches") or 0
-    cb = totals.get("covered_branches") or 0
+    # Statement and branch coverage are scored separately — never combined.
+    ns = int(totals.get("num_statements") or 0)
+    cs = int(totals.get("covered_lines") or 0)
+    stmts = 100.0 if ns == 0 else 100.0 * cs / ns
+    nb = int(totals.get("num_branches") or 0)
+    cb = int(totals.get("covered_branches") or 0)
     br = 100.0 if nb == 0 else 100.0 * cb / nb
     gaps = []
     for f, info in (data.get("files") or {}).items():
@@ -138,7 +143,8 @@ def measure_c_coverage() -> dict:
     # Exercise C heavily via pytest + direct runs
     _run(
         [str(ROOT / ".venv" / "bin" / "python"), "-m", "pytest",
-         "tests/test_l13.py", "tests/test_l11.py", "tests/test_uem.py", "-q", "--tb=no"],
+         "tests/test_l13.py", "tests/test_l13_deep.py", "tests/test_l13_coverage.py",
+         "tests/test_l11.py", "tests/test_uem.py", "-q", "--tb=no"],
         cwd=str(ROOT),
         env=env,
         timeout=600,

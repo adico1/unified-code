@@ -12,7 +12,8 @@ echo "=== L12 native report (physical target) ==="
 
 echo "=== pytest production tests ==="
 UEM_C="$ROOT/c/build/uem-c" .venv/bin/python -m pytest \
-  tests/test_l13.py tests/test_l13_deep.py tests/test_l11.py tests/test_uem.py -q --tb=line
+  tests/test_l13.py tests/test_l13_deep.py tests/test_l13_coverage.py \
+  tests/test_l11.py tests/test_uem.py -q --tb=line
 
 echo "=== L13 gauntlet (all dimensions) ==="
 UEM_C="$ROOT/c/build/uem-c" .venv/bin/python - <<'PY'

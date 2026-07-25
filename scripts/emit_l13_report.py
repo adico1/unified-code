@@ -47,6 +47,7 @@ def main():
             "pytest",
             "tests/test_l13.py",
             "tests/test_l13_deep.py",
+            "tests/test_l13_coverage.py",
             "tests/test_l11.py",
             "tests/test_uem.py",
             "-q",
@@ -73,9 +74,12 @@ def main():
     if (ROOT / "coverage_py.json").is_file():
         py_data = json.loads((ROOT / "coverage_py.json").read_text(encoding="utf-8"))
     totals = py_data.get("totals") or {}
-    py_stmt = float(totals.get("percent_covered") or 0)
-    nb = totals.get("num_branches") or 0
-    cb = totals.get("covered_branches") or 0
+    # Statement and branch coverage scored separately — never combined.
+    ns = int(totals.get("num_statements") or 0)
+    cs = int(totals.get("covered_lines") or 0)
+    py_stmt = 100.0 if ns == 0 else 100.0 * cs / ns
+    nb = int(totals.get("num_branches") or 0)
+    cb = int(totals.get("covered_branches") or 0)
     py_br = 100.0 if nb == 0 else 100.0 * cb / nb
 
     # C coverage via gcov (core only)
@@ -100,7 +104,9 @@ def main():
             "pytest",
             "tests/test_l13.py",
             "tests/test_l13_deep.py",
+            "tests/test_l13_coverage.py",
             "tests/test_l11.py",
+            "tests/test_uem.py",
             "-q",
             "--tb=no",
         ],
