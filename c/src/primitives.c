@@ -422,11 +422,8 @@ void uem_ticket_construct(uem_machine *m) {
             red[n] = 0;
         }
     }
-    snprintf(raw, sizeof raw, "%s|%s|%s|", op, et, red);
-    for (i = (m->n_evidence > 8 ? m->n_evidence - 8 : 0); i < m->n_evidence; i++) {
-        strncat(raw, m->evidence[i], sizeof raw - strlen(raw) - 1);
-        strncat(raw, "|", sizeof raw - strlen(raw) - 1);
-    }
+    /* Ticket identity: failure material only (cross-host stable). */
+    snprintf(raw, sizeof raw, "%s|%s|%s", op, et, red);
     {
         extern void uem_sha256_hex(const uint8_t *, size_t, char *);
         uem_sha256_hex((const uint8_t *)raw, strlen(raw), cid);

@@ -245,8 +245,11 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
             free(m->pending_primitive);
             m->pending_primitive = NULL;
             if (!cJSON_IsString(p)) {
+                char mk[160];
                 uem_set_state(m, "invalid");
-                uem_ev_append(m, "event:unknown");
+                snprintf(mk, sizeof mk, "event:unknown:%s",
+                         m->event_name ? m->event_name : "unknown");
+                uem_ev_append(m, mk);
             } else {
                 m->pending_primitive = strdup(p->valuestring);
             }
@@ -310,10 +313,9 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
             }
         }
         break;
-    case 0x10: /* STOP */
+    case 0x10: /* STOP — evidence mark appended once via emark below */
         m->halted = 1;
         snprintf(m->stop_reason, sizeof m->stop_reason, "%s", operand ? operand : "stop");
-        uem_ev_append(m, "op:STOP");
         break;
     default:
         uem_set_state(m, "invalid");
@@ -344,7 +346,9 @@ static void fulfill_outward(uem_machine *m) {
     {
         cJSON *ent = cJSON_CreateObject();
         cJSON_AddStringToObject(ent, "effect", effect);
+        /* always include source key for canonical cross-host equality */
         if (src) cJSON_AddItemToObject(ent, "source", cJSON_Duplicate(src, 1));
+        else cJSON_AddNullToObject(ent, "source");
         if (!m->outward_log) m->outward_log = cJSON_CreateArray();
         cJSON_AddItemToArray(m->outward_log, ent);
     }

@@ -580,7 +580,8 @@ def construct_ticket_from_fault(thing):
     operation = str(fault.get("operation") or "machine")
     error_type = str(fault.get("error_type") or "Fault")
     message = _redact(fault.get("message") or "unhandled")
-    raw = "|".join([operation, error_type, message, "|".join(str(x) for x in evidence[-8:])])
+    # Ticket identity from failure material only (cross-host stable).
+    raw = "|".join([operation, error_type, message])
     cid = hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
     ticket = {
         "kind": "unhandled-exception",

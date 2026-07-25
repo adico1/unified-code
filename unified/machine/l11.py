@@ -17,6 +17,7 @@ from .canonical import (
     from_c_json,
     from_python_run,
 )
+from .compile_decl import compile_declaration_path
 from .host import run_compiled
 from .thing import blank_thing, value_of
 
@@ -339,8 +340,7 @@ def compare_canonical(a: dict, b: dict) -> list[str]:
 
 def run_l11_gauntlet(thing=None):
     """Full L11 gauntlet. Returns a Thing with report."""
-    from .thing import blank_thing, with_evidence, with_state
-    from .compile_decl import compile_declaration_path
+    from .thing import blank_thing, with_state
 
     failed = []
     passed = []
@@ -405,29 +405,12 @@ def run_l11_gauntlet(thing=None):
                     f"no_ticket:{name}",
                     py_c.get("ticket") is None and c_c.get("ticket") is None,
                 )
-            core = (
-                py_c.get("state") == c_c.get("state")
-                and py_c.get("presentation") == c_c.get("presentation")
-                and py_c.get("stats") == c_c.get("stats")
-                and py_c.get("error") == c_c.get("error")
-                and py_c.get("path") == c_c.get("path")
-                and py_c.get("program_sha256") == c_c.get("program_sha256")
-                and (py_c.get("ticket") is None) == (c_c.get("ticket") is None)
-            )
-            # L11 full: prefer byte equality; accept core+events if only evidence noise
+            # L11 strict: full canonical byte equality required
             full = not diffs
-            events_ok = (
-                py_c.get("events_emitted") == c_c.get("events_emitted")
-                and py_c.get("events_dequeued") == c_c.get("events_dequeued")
-            )
             ok(
                 f"diff:{name}",
-                full or (core and events_ok),
-                (
-                    f"full:{canonical_sha256(py_c)[:16]}"
-                    if full
-                    else (f"core+events residual={diffs[:6]}" if core else diffs[:8])
-                ),
+                full,
+                f"full:{canonical_sha256(py_c)[:16]}" if full else diffs[:12],
             )
 
     # Opcode vectors
@@ -450,24 +433,11 @@ def run_l11_gauntlet(thing=None):
             ok(f"opcode_diff:{name}", False, err)
             continue
         diffs = compare_canonical(py_c, c_c)
-        if not diffs:
-            ok(f"opcode_diff:{name}", True, "full")
-        else:
-            # Core equivalence: state, presentation, error, ticket presence
-            core = (
-                py_c.get("state") == c_c.get("state")
-                and py_c.get("presentation") == c_c.get("presentation")
-                and py_c.get("error") == c_c.get("error")
-                and (py_c.get("ticket") is None) == (c_c.get("ticket") is None)
-                and py_c.get("stats") == c_c.get("stats")
-            )
-            ok(
-                f"opcode_diff:{name}",
-                core,
-                "core-equal" if core else diffs[:8],
-            )
-            if core and diffs:
-                details[f"opcode_diff:{name}"]["residual_diffs"] = diffs[:6]
+        ok(
+            f"opcode_diff:{name}",
+            not diffs,
+            "full" if not diffs else diffs[:12],
+        )
 
     for name, instr, image, host, limits in primitive_vectors():
         py_c, compiled, _ = run_python_vector(instr, image, host, limits)
@@ -476,8 +446,7 @@ def run_l11_gauntlet(thing=None):
             ok(f"prim_diff:{name}", False, err)
         else:
             diffs = compare_canonical(py_c, c_c)
-            soft = py_c.get("state") == c_c.get("state")
-            ok(f"prim_diff:{name}", not diffs or soft, diffs[:5] if diffs else "full")
+            ok(f"prim_diff:{name}", not diffs, diffs[:12] if diffs else "full")
 
     # Decode rejections — both reject
     from .validate import validate_bytecode
@@ -533,6 +502,75 @@ def run_l11_gauntlet(thing=None):
         "execution_after_stop",
         after.get("state") == "invalid"
         or "execution-after-stop" in (after.get("evidence") or ()),
+    )
+
+    # --- Ticket suite: construct, redaction, dedupe, identity ---
+    from .primitives import construct_ticket_from_fault
+
+    secret_thing = {
+        "value": {
+            "machine_fault": {
+                "operation": "apply",
+                "error_type": "RuntimeError",
+                "message": "password=hunter2 token=abc",
+            },
+            "store": {},
+        },
+        "depths": (),
+        "axes": (),
+        "evidence": ("probe",),
+        "state": "invalid",
+    }
+    t1 = construct_ticket_from_fault(secret_thing)
+    ticket = value_of(t1).get("ticket") or {}
+    ok(
+        "ticket_redaction",
+        "hunter2" not in ticket.get("message", "")
+        and "password" not in ticket.get("message", "").lower(),
+        ticket.get("message"),
+    )
+    t2 = construct_ticket_from_fault(t1)
+    ok(
+        "ticket_dedupe_same_id",
+        value_of(t2).get("ticket", {}).get("correlation_id")
+        == ticket.get("correlation_id"),
+    )
+    # Cross-host ticket identity for empty fault
+    py_t, compiled_t, _ = run_python_vector((("TICKET", None), ("STOP", None)), {}, {})
+    c_t, err_t = run_c_vector(compiled_t, {})
+    if c_t is None:
+        ok("ticket_cross_host_identity", False, err_t)
+    else:
+        ok(
+            "ticket_cross_host_identity",
+            (py_t.get("ticket") or {}).get("correlation_id")
+            == (c_t.get("ticket") or {}).get("correlation_id")
+            and (py_t.get("ticket") or {}).get("message")
+            == (c_t.get("ticket") or {}).get("message"),
+            {
+                "py": py_t.get("ticket"),
+                "c": c_t.get("ticket"),
+            },
+        )
+        ok(
+            "ticket_full_canonical",
+            not compare_canonical(py_t, c_t),
+            compare_canonical(py_t, c_t)[:6],
+        )
+
+    # Validation path must never ticket
+    inv = compile_declaration_path(str(ROOT / "examples/declarations/invoice_total.py"))
+    bad_host = {
+        "document": {
+            "tax_rate": "0.10",
+            "items": [{"quantity": 0, "unit_price": "1.00"}],
+        }
+    }
+    py_bad = from_python_run(inv, run_compiled(inv, bad_host))
+    c_bad, _ = run_c_vector(inv, bad_host)
+    ok(
+        "validation_no_ticket_both",
+        py_bad.get("ticket") is None and (c_bad or {}).get("ticket") is None,
     )
 
     verdict = "pass" if not failed else "fail"
