@@ -1,0 +1,138 @@
+{
+  "bytecode_size": 1183,
+  "image": {
+    "binding_order": [],
+    "bindings": {},
+    "boundary": {
+      "effect": "read_utf8",
+      "kind": "read_utf8_source",
+      "name": "read_text_source",
+      "source_field": "source",
+      "target_field": "text"
+    },
+    "expression": {
+      "fields": {
+        "characters": {
+          "of": {
+            "op": "field",
+            "path": [
+              "text"
+            ]
+          },
+          "op": "str_len"
+        },
+        "lines": {
+          "of": {
+            "op": "field",
+            "path": [
+              "text"
+            ]
+          },
+          "op": "line_count"
+        },
+        "unique_words": {
+          "of": {
+            "op": "field",
+            "path": [
+              "text"
+            ]
+          },
+          "op": "unique_casefold_word_count"
+        },
+        "words": {
+          "of": {
+            "op": "field",
+            "path": [
+              "text"
+            ]
+          },
+          "op": "word_count"
+        }
+      },
+      "op": "object"
+    },
+    "input_key": "text",
+    "merge_key": "stats",
+    "part_name": "calculate_stats",
+    "presentation": {
+      "include_error_path": false,
+      "success_from": "stats",
+      "success_keys": [
+        "characters",
+        "lines",
+        "words",
+        "unique_words"
+      ]
+    },
+    "routes": {},
+    "source": {
+      "extra": "extra-source",
+      "field": "source",
+      "missing": "missing-source",
+      "stdin_token": "-"
+    },
+    "verify": {
+      "require_evidence_contains": [
+        "boundary:inward",
+        "letter:distinguished",
+        "boundary:read_text_source",
+        "read:ok",
+        "part:calculate_stats",
+        "calculate_stats:ok"
+      ],
+      "require_value_field": "stats"
+    }
+  },
+  "instructions": [
+    [
+      "LOAD",
+      "host_input"
+    ],
+    [
+      "WRITE",
+      "host"
+    ],
+    [
+      "APPLY",
+      "mark_inward"
+    ],
+    [
+      "APPLY",
+      "require_source"
+    ],
+    [
+      "OUTWARD",
+      "read_utf8"
+    ],
+    [
+      "APPLY",
+      "accept_outward"
+    ],
+    [
+      "APPLY",
+      "letter"
+    ],
+    [
+      "APPLY",
+      "eval_expression"
+    ],
+    [
+      "APPLY",
+      "merge_result"
+    ],
+    [
+      "VERIFY",
+      "result"
+    ],
+    [
+      "APPLY",
+      "present_json"
+    ],
+    [
+      "STOP",
+      null
+    ]
+  ],
+  "package": "uc_text_stats_v2",
+  "program_sha256": "b625f4a2104df5a4d33dad0ec4b878449a3168758bc15435f11882264bba8f8c"
+}
