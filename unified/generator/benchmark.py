@@ -164,7 +164,10 @@ def prepare_benchmark(thing):
 
 
 def measure_all(thing):
-    """Warm up once, then measure new and add for each iteration."""
+    """Warm up once, then measure new and add for each iteration.
+
+    Iteration index and operation live inside the canonical thing (L1).
+    """
     if not is_thing(thing):
         return {
             "value": thing,
@@ -187,12 +190,37 @@ def measure_all(thing):
 
     iterations = thing["value"]["iterations"]
     for index in range(iterations):
-        thing = measure_new_iteration(thing, index)
+        value = thing["value"]
+        thing = measure_new_iteration(
+            {
+                **thing,
+                "value": {
+                    **value,
+                    "measure_op": "new",
+                    "measure_index": index,
+                    "project_name": f"n{index:04d}",
+                },
+                "state": "formed",
+            }
+        )
         if thing["state"] in {"invalid", "absent", "false", "unknown"} and _hard_stop(
             thing
         ):
             return thing
-        thing = measure_add_iteration(thing, index)
+        value = thing["value"]
+        thing = measure_add_iteration(
+            {
+                **thing,
+                "value": {
+                    **value,
+                    "measure_op": "add",
+                    "measure_index": index,
+                    "feature_name": f"f{index:04d}",
+                    "project_name": f"n{index:04d}",
+                },
+                "state": "formed",
+            }
+        )
         if thing["state"] in {"invalid", "absent", "false", "unknown"} and _hard_stop(
             thing
         ):
@@ -209,8 +237,13 @@ def measure_all(thing):
     }
 
 
-def measure_new_iteration(thing, index: int):
-    """Time one full uc new pipeline (validation through write + evidence)."""
+def measure_new_iteration(thing):
+    """Time one full uc new: generation through structural verdict and evidence.
+
+    One input, one output (L1). Iteration state is read from thing["value"].
+    clock_end runs only after structural verification and evidence construction
+    for this iteration (L9 measured interval).
+    """
     if not is_thing(thing) or not isinstance(thing.get("value"), dict):
         return {
             "value": thing,
@@ -221,27 +254,37 @@ def measure_new_iteration(thing, index: int):
         }
 
     value = thing["value"]
+    index = value.get("measure_index")
+    if not isinstance(index, int) or isinstance(index, bool):
+        return {
+            **thing,
+            "evidence": (*thing["evidence"], "measure_new:absent-index"),
+            "state": "invalid",
+        }
+
     parent = value["parent"]
-    name = f"n{index:04d}"
-    # Preserve clock_feed across the measurement carrier.
-    carrier = {
-        **thing,
-        "value": {
-            **value,
-            "measure_op": "new",
-            "measure_index": index,
-            "project_name": name,
-        },
-        "evidence": thing["evidence"],
-        "state": "formed",
-    }
-    started = clock_start(carrier)
+    name = value.get("project_name") or f"n{index:04d}"
+
+    started = clock_start(
+        {
+            **thing,
+            "value": {
+                **value,
+                "measure_op": "new",
+                "measure_index": index,
+                "project_name": name,
+            },
+            "evidence": thing["evidence"],
+            "state": "formed",
+        }
+    )
     if started["state"] in {"unknown", "absent", "false", "invalid"}:
         return {
             **started,
             "evidence": (*started["evidence"], "measure_new:clock-failed"),
         }
 
+    # --- measured work: generation (validate→write→evidence) ---
     generated = run_command(
         inward(
             {
@@ -251,11 +294,18 @@ def measure_new_iteration(thing, index: int):
             }
         )
     )
-    # Re-attach generation result onto the clock carrier (clock fields in value).
-    carrier_value = started["value"]
-    if not isinstance(carrier_value, dict):
-        carrier_value = {}
-    mid = {
+
+    # --- measured work: structural verification + verdict/evidence construction ---
+    carrier_value = started["value"] if isinstance(started["value"], dict) else {}
+    valid = generated.get("state") == "valid" and _structurally_complete_new(generated)
+    samples = tuple(carrier_value.get("new_samples_ns") or ())
+    valids = tuple(carrier_value.get("new_results_valid") or ())
+    failures = tuple(carrier_value.get("failures") or ())
+    valids = (*valids, valid)
+    if not valid:
+        failures = (*failures, f"new[{index}]:invalid-or-incomplete")
+
+    constructed = {
         **started,
         "value": {
             **carrier_value,
@@ -264,43 +314,53 @@ def measure_new_iteration(thing, index: int):
                 "evidence": generated.get("evidence"),
                 "project_path": _project_path(generated),
             },
-        },
-    }
-    ended = clock_end(mid)
-    duration = _duration_ns(ended)
-    valid = generated.get("state") == "valid" and _structurally_complete_new(generated)
-    samples = tuple(ended["value"].get("new_samples_ns", ())) if isinstance(ended.get("value"), dict) else ()
-    valids = tuple(ended["value"].get("new_results_valid", ())) if isinstance(ended.get("value"), dict) else ()
-    failures = tuple(ended["value"].get("failures", ())) if isinstance(ended.get("value"), dict) else ()
-
-    if duration is None:
-        failures = (*failures, f"new[{index}]:missing-duration")
-    else:
-        samples = (*samples, duration)
-    valids = (*valids, valid)
-    if not valid:
-        failures = (*failures, f"new[{index}]:invalid-or-incomplete")
-
-    new_value = ended["value"] if isinstance(ended["value"], dict) else {}
-    return {
-        **ended,
-        "value": {
-            **new_value,
-            "new_samples_ns": samples,
+            "iteration_valid": valid,
             "new_results_valid": valids,
             "failures": failures,
-            # keep clock_feed if present
+            "pending_sample_bucket": "new",
         },
         "evidence": (
-            *ended["evidence"],
-            f"measure_new:{index}:{'ok' if valid and duration is not None else 'fail'}",
+            *started["evidence"],
+            f"measure_new:{index}:structure:{'pass' if valid else 'fail'}",
+            f"measure_new:{index}:verdict:{'valid' if valid else 'invalid'}",
         ),
         "state": "formed",
     }
 
+    # Clock ends only after generation, structural check, and evidence above.
+    ended = clock_end(constructed)
+    duration = _duration_ns(ended)
+    end_value = ended["value"] if isinstance(ended.get("value"), dict) else {}
+    failures = tuple(end_value.get("failures") or ())
+    samples = tuple(end_value.get("new_samples_ns") or ())
 
-def measure_add_iteration(thing, index: int):
-    """Time one full uc add pipeline against the project created for this index."""
+    if duration is None:
+        failures = (*failures, f"new[{index}]:missing-duration")
+        mark = f"measure_new:{index}:fail"
+    else:
+        samples = (*samples, duration)
+        mark = f"measure_new:{index}:{'ok' if valid else 'fail'}"
+
+    return {
+        **ended,
+        "value": {
+            **end_value,
+            "new_samples_ns": samples,
+            "failures": failures,
+            "pending_sample_bucket": None,
+        },
+        "evidence": (*ended["evidence"], mark),
+        "state": "formed",
+    }
+
+
+def measure_add_iteration(thing):
+    """Time one full uc add: generation through structural verdict and evidence.
+
+    One input, one output (L1). Iteration state is read from thing["value"].
+    clock_end runs only after structural verification and evidence construction
+    for this iteration (L9 measured interval).
+    """
     if not is_thing(thing) or not isinstance(thing.get("value"), dict):
         return {
             "value": thing,
@@ -311,28 +371,40 @@ def measure_add_iteration(thing, index: int):
         }
 
     value = thing["value"]
-    parent = value["parent"]
-    project_path = str(Path(parent) / f"n{index:04d}")
-    feature = f"f{index:04d}"
+    index = value.get("measure_index")
+    if not isinstance(index, int) or isinstance(index, bool):
+        return {
+            **thing,
+            "evidence": (*thing["evidence"], "measure_add:absent-index"),
+            "state": "invalid",
+        }
 
-    carrier = {
-        **thing,
-        "value": {
-            **value,
-            "measure_op": "add",
-            "measure_index": index,
-            "feature_name": feature,
-        },
-        "evidence": thing["evidence"],
-        "state": "formed",
-    }
-    started = clock_start(carrier)
+    parent = value["parent"]
+    project_name = value.get("project_name") or f"n{index:04d}"
+    project_path = str(Path(parent) / project_name)
+    feature = value.get("feature_name") or f"f{index:04d}"
+
+    started = clock_start(
+        {
+            **thing,
+            "value": {
+                **value,
+                "measure_op": "add",
+                "measure_index": index,
+                "feature_name": feature,
+                "project_name": project_name,
+            },
+            "evidence": thing["evidence"],
+            "state": "formed",
+        }
+    )
     if started["state"] in {"unknown", "absent", "false", "invalid"}:
         return {
             **started,
             "evidence": (*started["evidence"], "measure_add:clock-failed"),
         }
 
+    # --- measured work: generation (validate→write→evidence) ---
     generated = run_command(
         inward(
             {
@@ -342,8 +414,18 @@ def measure_add_iteration(thing, index: int):
             }
         )
     )
+
+    # --- measured work: structural verification + verdict/evidence construction ---
     carrier_value = started["value"] if isinstance(started["value"], dict) else {}
-    mid = {
+    valid = generated.get("state") == "valid" and _structurally_complete_add(generated)
+    samples = tuple(carrier_value.get("add_samples_ns") or ())
+    valids = tuple(carrier_value.get("add_results_valid") or ())
+    failures = tuple(carrier_value.get("failures") or ())
+    valids = (*valids, valid)
+    if not valid:
+        failures = (*failures, f"add[{index}]:invalid-or-incomplete")
+
+    constructed = {
         **started,
         "value": {
             **carrier_value,
@@ -352,36 +434,42 @@ def measure_add_iteration(thing, index: int):
                 "evidence": generated.get("evidence"),
                 "project_path": project_path,
             },
+            "iteration_valid": valid,
+            "add_results_valid": valids,
+            "failures": failures,
+            "pending_sample_bucket": "add",
         },
+        "evidence": (
+            *started["evidence"],
+            f"measure_add:{index}:structure:{'pass' if valid else 'fail'}",
+            f"measure_add:{index}:verdict:{'valid' if valid else 'invalid'}",
+        ),
+        "state": "formed",
     }
-    ended = clock_end(mid)
+
+    # Clock ends only after generation, structural check, and evidence above.
+    ended = clock_end(constructed)
     duration = _duration_ns(ended)
-    valid = generated.get("state") == "valid" and _structurally_complete_add(generated, feature)
-    samples = tuple(ended["value"].get("add_samples_ns", ())) if isinstance(ended.get("value"), dict) else ()
-    valids = tuple(ended["value"].get("add_results_valid", ())) if isinstance(ended.get("value"), dict) else ()
-    failures = tuple(ended["value"].get("failures", ())) if isinstance(ended.get("value"), dict) else ()
+    end_value = ended["value"] if isinstance(ended.get("value"), dict) else {}
+    failures = tuple(end_value.get("failures") or ())
+    samples = tuple(end_value.get("add_samples_ns") or ())
 
     if duration is None:
         failures = (*failures, f"add[{index}]:missing-duration")
+        mark = f"measure_add:{index}:fail"
     else:
         samples = (*samples, duration)
-    valids = (*valids, valid)
-    if not valid:
-        failures = (*failures, f"add[{index}]:invalid-or-incomplete")
+        mark = f"measure_add:{index}:{'ok' if valid else 'fail'}"
 
-    new_value = ended["value"] if isinstance(ended["value"], dict) else {}
     return {
         **ended,
         "value": {
-            **new_value,
+            **end_value,
             "add_samples_ns": samples,
-            "add_results_valid": valids,
             "failures": failures,
+            "pending_sample_bucket": None,
         },
-        "evidence": (
-            *ended["evidence"],
-            f"measure_add:{index}:{'ok' if valid and duration is not None else 'fail'}",
-        ),
+        "evidence": (*ended["evidence"], mark),
         "state": "formed",
     }
 
@@ -653,13 +741,17 @@ def _structurally_complete_new(generated) -> bool:
     return True
 
 
-def _structurally_complete_add(generated, feature: str) -> bool:
+def _structurally_complete_add(generated) -> bool:
+    """Private helper: feature name is taken from the generation result thing."""
     value = generated.get("value")
     if not isinstance(value, dict):
         return False
     if generated.get("state") != "valid":
         return False
+    feature = value.get("feature")
     features = value.get("features")
+    if not isinstance(feature, str):
+        return False
     if not isinstance(features, tuple) or feature not in features:
         return False
     path = value.get("project_path")

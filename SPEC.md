@@ -142,6 +142,19 @@ Duration is recorded as an integer nanosecond count inside the thing.
 Unknown, absent, or failed clock readings must not silently become
 `false` or `valid`.
 
+For L9 measurement of `uc new` / `uc add`, the closed interval is:
+
+```text
+clock_start
+→ generation (validate → generate → verify_plan → write → outward evidence)
+→ structural verification of the published project
+→ iteration verdict and evidence construction
+→ clock_end
+```
+
+Iteration index and operation name are fields of the canonical thing, not
+extra function parameters (L1).
+
 ### Benchmark
 
 ```bash

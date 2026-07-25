@@ -12,7 +12,9 @@ from unified import LIMIT_NS, clock_end, clock_start, inward, is_thing
 from unified.generator.benchmark import (
     cleanup_benchmark,
     evaluate_l9,
+    measure_add_iteration,
     measure_all,
+    measure_new_iteration,
     prepare_benchmark,
     run_benchmark,
     validate_benchmark,
@@ -45,6 +47,8 @@ def test_benchmark_public_ops_one_input():
         validate_benchmark,
         prepare_benchmark,
         measure_all,
+        measure_new_iteration,
+        measure_add_iteration,
         evaluate_l9,
         cleanup_benchmark,
         run_benchmark,
@@ -54,6 +58,29 @@ def test_benchmark_public_ops_one_input():
     for operation in ops:
         parameters = tuple(signature(operation).parameters.values())
         assert len(parameters) == 1
+        assert parameters[0].name == "thing"
+
+
+def test_clock_end_after_structure_and_verdict_evidence(tmp_path):
+    """L9: structural check and iteration verdict evidence precede clock_end."""
+    iterations = 1
+    payload = _benchmark_payload(tmp_path, iterations, [1_000], [1_000])
+    result = run_benchmark(inward(payload))
+    evidence = result["evidence"]
+    # First measured new iteration markers
+    structure = evidence.index("measure_new:0:structure:pass")
+    verdict = evidence.index("measure_new:0:verdict:valid")
+    clock_ends = [i for i, e in enumerate(evidence) if e == "boundary:clock_end"]
+    assert clock_ends, "expected clock_end boundary evidence"
+    first_clock_end = clock_ends[0]
+    assert structure < first_clock_end
+    assert verdict < first_clock_end
+    # Same for add
+    add_structure = evidence.index("measure_add:0:structure:pass")
+    add_verdict = evidence.index("measure_add:0:verdict:valid")
+    second_clock_end = clock_ends[1]
+    assert add_structure < second_clock_end
+    assert add_verdict < second_clock_end
 
 
 def test_benchmark_result_schema_separate_new_and_add(tmp_path):
