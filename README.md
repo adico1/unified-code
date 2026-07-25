@@ -105,4 +105,16 @@ construction is pure; persistence is a separate outward boundary
 See [docs/DEVELOPER_WORKFLOW.md](docs/DEVELOPER_WORKFLOW.md) for the full
 sequence, scales (UC-0 through UC-4), and L9 measurement scope.
 
+### UEM-16 v0.1 — Unified Event Machine (foundation)
+
+Chip-neutral 16-opcode machine beneath Unified Code. The existing generator
+is **not** replaced; both domains compile and execute through UEM with
+identical external JSON. Spec: [UEM_SPEC.md](UEM_SPEC.md).
+
+```bash
+python -c "from unified.machine import compile_declaration_path; ..."
+```
+
+Not claimed: native interpreters for x86-64 / ARM64 / RISC-V / MCU yet.
+
 See [SPEC.md](SPEC.md), [LAW.md](LAW.md), and [ROADMAP.md](ROADMAP.md).

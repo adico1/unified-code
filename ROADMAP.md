@@ -51,6 +51,20 @@
 - Comparison with functional composition, pipes, Unix filters, and
   dataflow systems
 
+## 0.6 — Unified Event Machine (UEM-16)
+
+- UEM-16 v0.1 spec + reference Python interpreter (`unified/machine/`)
+- Canonical bytecode + SHA-256 program identity
+- Declaration → symbolic → bytecode → execute (both proof domains)
+- UEM gauntlet and measurements
+- **Not yet:** replace generator; multi-ISA backends
+
+### Next
+
+- Minimal C interpreter of UEM-16
+- Compile C core for x86-64, ARM64, RISC-V, selected MCUs
+- Progressive reduction of residual Python control flow
+
 ## 1.0 candidate
 
 - Formal grammar and semantics
