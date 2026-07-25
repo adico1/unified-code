@@ -16,6 +16,7 @@ OPS = frozenset(
     {
         "literal",
         "field",
+        "ref",
         "object",
         "count",
         "as_int",
@@ -115,6 +116,16 @@ def field(thing):
     return _expr_result({"op": "field", "path": path_t}, "field", thing)
 
 
+def ref(thing):
+    """ref({"name": "subtotal"}) — reference a named binding (CSE)."""
+    thing = _wrap(thing)
+    cfg = _cfg(thing)
+    name = cfg.get("name")
+    if not isinstance(name, str) or not name.isidentifier():
+        return _reject("ref-bad-name", cfg)
+    return _expr_result({"op": "ref", "name": name}, "ref", thing)
+
+
 def object_expr(thing):
     """object_expr({"fields": {name: expr_node_or_thing, ...}})"""
     thing = _wrap(thing)
@@ -144,7 +155,7 @@ def count(thing):
 
 
 def as_int(thing):
-    """as_int({"of": expr, "path": optional path for errors})"""
+    """as_int({"of": expr, "path": optional, "type_error": ..., "missing_error": ...})"""
     thing = _wrap(thing)
     cfg = _cfg(thing)
     of = _node_from(cfg.get("of"))
@@ -153,15 +164,16 @@ def as_int(thing):
     path = cfg.get("path", ())
     if not isinstance(path, (list, tuple)):
         return _reject("as_int-bad-path", cfg)
-    return _expr_result(
-        {"op": "as_int", "of": of, "path": tuple(path)},
-        "as_int",
-        thing,
-    )
+    node = {"op": "as_int", "of": of, "path": tuple(path)}
+    if isinstance(cfg.get("type_error"), str):
+        node["type_error"] = cfg["type_error"]
+    if isinstance(cfg.get("missing_error"), str):
+        node["missing_error"] = cfg["missing_error"]
+    return _expr_result(node, "as_int", thing)
 
 
 def as_decimal(thing):
-    """as_decimal({"of": expr, "path": optional}) — Decimal from str/int/Decimal."""
+    """as_decimal({"of": expr, "path": ...}) — Decimal from decimal *string* only."""
     thing = _wrap(thing)
     cfg = _cfg(thing)
     of = _node_from(cfg.get("of"))
@@ -170,11 +182,12 @@ def as_decimal(thing):
     path = cfg.get("path", ())
     if not isinstance(path, (list, tuple)):
         return _reject("as_decimal-bad-path", cfg)
-    return _expr_result(
-        {"op": "as_decimal", "of": of, "path": tuple(path)},
-        "as_decimal",
-        thing,
-    )
+    node = {"op": "as_decimal", "of": of, "path": tuple(path)}
+    if isinstance(cfg.get("type_error"), str):
+        node["type_error"] = cfg["type_error"]
+    if isinstance(cfg.get("missing_error"), str):
+        node["missing_error"] = cfg["missing_error"]
+    return _expr_result(node, "as_decimal", thing)
 
 
 def require(thing):
@@ -420,6 +433,10 @@ def validate_expression(node: Any, *, path: tuple = ()) -> tuple[str, ...]:
         p = node.get("path")
         if not isinstance(p, tuple) or not p:
             errors.append(f"expr-field-path:{path}")
+    elif op == "ref":
+        name = node.get("name")
+        if not isinstance(name, str) or not name.isidentifier():
+            errors.append(f"expr-ref-name:{path}")
     elif op == "object":
         fields = node.get("fields")
         if not isinstance(fields, dict) or not fields:

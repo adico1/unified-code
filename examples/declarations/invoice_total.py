@@ -1,7 +1,6 @@
-"""Invoice totals — generic expression composition only.
+"""Invoice totals — generic expression composition with bindings (CSE).
 
-No invoice-specific renderer kinds. Behavior is declared by composing
-domain-neutral expression operators.
+No invoice-specific renderer kinds. Monetary fields are decimal *strings*.
 """
 
 from unified.generator.expr import (
@@ -16,6 +15,7 @@ from unified.generator.expr import (
     mul,
     object_expr,
     quantize,
+    ref,
     require,
     sum_each,
     unwrap_expr,
@@ -43,6 +43,8 @@ def declaration(thing):
                         }
                     ),
                     "path": ("quantity",),
+                    "type_error": "quantity-not-integer",
+                    "missing_error": "missing-quantity",
                 }
             ),
             "bound": 1,
@@ -51,7 +53,7 @@ def declaration(thing):
         }
     )
 
-    # --- per-item unit_price: required decimal string >= 0 ---
+    # --- per-item unit_price: required decimal *string* >= 0 ---
     unit_price = min_value(
         {
             "of": as_decimal(
@@ -64,6 +66,8 @@ def declaration(thing):
                         }
                     ),
                     "path": ("unit_price",),
+                    "type_error": "unit_price-not-decimal-string",
+                    "missing_error": "missing-unit_price",
                 }
             ),
             "bound": "0",
@@ -82,70 +86,95 @@ def declaration(thing):
         }
     )
 
-    subtotal = quantize(
-        {
-            "of": sum_each(
+    # Bindings: compute once (CSE) — subtotal, tax_rate, tax, total
+    bindings = {
+        "subtotal": _node(
+            quantize(
                 {
-                    "collection": items,
-                    "each": line_amount,
-                    "path": ("items",),
-                }
-            ),
-            "exp": "0.01",
-            "rounding": "ROUND_HALF_UP",
-        }
-    )
-
-    tax_rate = max_value(
-        {
-            "of": min_value(
-                {
-                    "of": as_decimal(
+                    "of": sum_each(
                         {
-                            "of": require(
-                                {
-                                    "of": field({"path": ("tax_rate",)}),
-                                    "path": ("tax_rate",),
-                                    "error": "missing-tax_rate",
-                                }
-                            ),
-                            "path": ("tax_rate",),
+                            "collection": items,
+                            "each": line_amount,
+                            "path": ("items",),
                         }
                     ),
-                    "bound": "0",
-                    "path": ("tax_rate",),
-                    "error": "tax_rate-below-0",
+                    "exp": "0.01",
+                    "rounding": "ROUND_HALF_UP",
                 }
-            ),
-            "bound": "1",
-            "path": ("tax_rate",),
-            "error": "tax_rate-above-1",
-        }
+            )
+        ),
+        "tax_rate": _node(
+            max_value(
+                {
+                    "of": min_value(
+                        {
+                            "of": as_decimal(
+                                {
+                                    "of": require(
+                                        {
+                                            "of": field({"path": ("tax_rate",)}),
+                                            "path": ("tax_rate",),
+                                            "error": "missing-tax_rate",
+                                        }
+                                    ),
+                                    "path": ("tax_rate",),
+                                    "type_error": "tax_rate-not-decimal-string",
+                                    "missing_error": "missing-tax_rate",
+                                }
+                            ),
+                            "bound": "0",
+                            "path": ("tax_rate",),
+                            "error": "tax_rate-below-0",
+                        }
+                    ),
+                    "bound": "1",
+                    "path": ("tax_rate",),
+                    "error": "tax_rate-above-1",
+                }
+            )
+        ),
+    }
+    # tax depends on subtotal + tax_rate bindings
+    bindings["tax"] = _node(
+        quantize(
+            {
+                "of": mul(
+                    {
+                        "values": (
+                            ref({"name": "subtotal"}),
+                            ref({"name": "tax_rate"}),
+                        )
+                    }
+                ),
+                "exp": "0.01",
+                "rounding": "ROUND_HALF_UP",
+            }
+        )
     )
-
-    tax = quantize(
-        {
-            "of": mul({"values": (subtotal, tax_rate)}),
-            "exp": "0.01",
-            "rounding": "ROUND_HALF_UP",
-        }
-    )
-
-    total = quantize(
-        {
-            "of": add({"values": (subtotal, tax)}),
-            "exp": "0.01",
-            "rounding": "ROUND_HALF_UP",
-        }
+    bindings["total"] = _node(
+        quantize(
+            {
+                "of": add(
+                    {
+                        "values": (
+                            ref({"name": "subtotal"}),
+                            ref({"name": "tax"}),
+                        )
+                    }
+                ),
+                "exp": "0.01",
+                "rounding": "ROUND_HALF_UP",
+            }
+        )
     )
 
     result = object_expr(
         {
             "fields": {
                 "item_count": count({"of": items}),
-                "subtotal": decimal_str({"of": subtotal, "places": 2}),
-                "tax": decimal_str({"of": tax, "places": 2}),
-                "total": decimal_str({"of": total, "places": 2}),
+                "subtotal": decimal_str({"of": ref({"name": "subtotal"}), "places": 2}),
+                "tax": decimal_str({"of": ref({"name": "tax"}), "places": 2}),
+                "total": decimal_str({"of": ref({"name": "total"}), "places": 2}),
             }
         }
     )
@@ -184,17 +213,19 @@ def declaration(thing):
                 {
                     "name": "calculate_totals",
                     "role": "transform",
-                    "doc": "Validate document and compute invoice totals via expression tree.",
+                    "doc": "Validate document and compute totals via expression tree + bindings.",
                     "transformation": {
                         "kind": "expression",
                         "input_key": "document",
                         "merge": "stats",
+                        "bindings": bindings,
                         "program": _node(result),
                     },
                     "invariants": (
                         "subtotal quantized to 0.01",
                         "tax ROUND_HALF_UP to 0.01",
                         "total = subtotal + tax",
+                        "unit_price and tax_rate are decimal strings only",
                     ),
                     "errors": (),
                     "boundaries": (),
@@ -269,17 +300,35 @@ def declaration(thing):
                     },
                 },
                 {
-                    "name": "round_half_up",
+                    "name": "exact_decimal_add",
                     "kind": "json_document",
                     "document": {
-                        "tax_rate": "0.15",
-                        "items": [{"quantity": 1, "unit_price": "1.00"}],
+                        "tax_rate": "0.00",
+                        "items": [
+                            {"quantity": 1, "unit_price": "0.10"},
+                            {"quantity": 1, "unit_price": "0.20"},
+                        ],
+                    },
+                    "expect_stats": {
+                        "item_count": 2,
+                        "subtotal": "0.30",
+                        "tax": "0.00",
+                        "total": "0.30",
+                    },
+                },
+                {
+                    # 0.05 * 0.10 = 0.005 → ROUND_HALF_UP → 0.01
+                    "name": "round_half_up_half_cent",
+                    "kind": "json_document",
+                    "document": {
+                        "tax_rate": "0.10",
+                        "items": [{"quantity": 1, "unit_price": "0.05"}],
                     },
                     "expect_stats": {
                         "item_count": 1,
-                        "subtotal": "1.00",
-                        "tax": "0.15",
-                        "total": "1.15",
+                        "subtotal": "0.05",
+                        "tax": "0.01",
+                        "total": "0.06",
                     },
                 },
                 {
@@ -311,6 +360,35 @@ def declaration(thing):
                     },
                 },
                 {
+                    "name": "unicode_json",
+                    "kind": "json_document",
+                    "document": {
+                        "tax_rate": "0.00",
+                        "note": "חשבונית",
+                        "items": [{"quantity": 1, "unit_price": "1.00", "label": "פריט"}],
+                    },
+                    "expect_stats": {
+                        "item_count": 1,
+                        "subtotal": "1.00",
+                        "tax": "0.00",
+                        "total": "1.00",
+                    },
+                },
+                {
+                    "name": "stdin_json",
+                    "kind": "json_stdin",
+                    "document": {
+                        "tax_rate": "0.20",
+                        "items": [{"quantity": 1, "unit_price": "5.00"}],
+                    },
+                    "expect_stats": {
+                        "item_count": 1,
+                        "subtotal": "5.00",
+                        "tax": "1.00",
+                        "total": "6.00",
+                    },
+                },
+                {
                     "name": "missing_arg",
                     "kind": "cli_error",
                     "argv": [],
@@ -335,6 +413,134 @@ def declaration(thing):
                     "kind": "invalid_utf8",
                 },
                 {
+                    "name": "invalid_json",
+                    "kind": "raw_file_error",
+                    "raw": "{not json",
+                    "error": "invalid-json",
+                },
+                {
+                    "name": "not_object",
+                    "kind": "raw_file_error",
+                    "raw": "[1,2,3]",
+                    "error": "input-not-an-object",
+                },
+                {
+                    "name": "error_missing_items",
+                    "kind": "json_error",
+                    "document": {"tax_rate": "0.1"},
+                    "error": "missing-items",
+                },
+                {
+                    "name": "error_items_not_list",
+                    "kind": "json_error",
+                    "document": {"tax_rate": "0.1", "items": {}},
+                    "error": "items-not-a-list",
+                },
+                {
+                    "name": "error_item_not_object",
+                    "kind": "json_error",
+                    "document": {"tax_rate": "0.1", "items": [1]},
+                    "error": "item-not-an-object",
+                },
+                {
+                    "name": "error_missing_quantity",
+                    "kind": "json_error",
+                    "document": {
+                        "tax_rate": "0.1",
+                        "items": [{"unit_price": "1.00"}],
+                    },
+                    "error": "missing-quantity",
+                },
+                {
+                    "name": "error_qty_not_int",
+                    "kind": "json_error",
+                    "document": {
+                        "tax_rate": "0.1",
+                        "items": [{"quantity": "2", "unit_price": "1.00"}],
+                    },
+                    "error": "quantity-not-integer",
+                },
+                {
+                    "name": "error_qty_below_min",
+                    "kind": "json_error",
+                    "document": {
+                        "tax_rate": "0.1",
+                        "items": [{"quantity": 0, "unit_price": "1.00"}],
+                    },
+                    "error": "quantity-below-minimum",
+                },
+                {
+                    "name": "error_missing_unit_price",
+                    "kind": "json_error",
+                    "document": {
+                        "tax_rate": "0.1",
+                        "items": [{"quantity": 1}],
+                    },
+                    "error": "missing-unit_price",
+                },
+                {
+                    "name": "error_unit_price_not_string",
+                    "kind": "json_error",
+                    "document": {
+                        "tax_rate": "0.1",
+                        "items": [{"quantity": 1, "unit_price": 1.5}],
+                    },
+                    "error": "unit_price-not-decimal-string",
+                },
+                {
+                    "name": "error_unit_price_int_rejected",
+                    "kind": "json_error",
+                    "document": {
+                        "tax_rate": "0.1",
+                        "items": [{"quantity": 1, "unit_price": 2}],
+                    },
+                    "error": "unit_price-not-decimal-string",
+                },
+                {
+                    "name": "error_unit_price_below_min",
+                    "kind": "json_error",
+                    "document": {
+                        "tax_rate": "0.1",
+                        "items": [{"quantity": 1, "unit_price": "-0.01"}],
+                    },
+                    "error": "unit_price-below-minimum",
+                },
+                {
+                    "name": "error_missing_tax_rate",
+                    "kind": "json_error",
+                    "document": {
+                        "items": [{"quantity": 1, "unit_price": "1.00"}],
+                    },
+                    "error": "missing-tax_rate",
+                },
+                {
+                    "name": "error_tax_rate_not_string",
+                    "kind": "json_error",
+                    "document": {
+                        "tax_rate": 0.2,
+                        "items": [{"quantity": 1, "unit_price": "1.00"}],
+                    },
+                    "error": "tax_rate-not-decimal-string",
+                },
+                {
+                    "name": "error_tax_rate_below_0",
+                    "kind": "json_error",
+                    "document": {
+                        "tax_rate": "-0.1",
+                        "items": [{"quantity": 1, "unit_price": "1.00"}],
+                    },
+                    "error": "tax_rate-below-0",
+                },
+                {
+                    "name": "error_tax_high",
+                    "kind": "json_error",
+                    "document": {
+                        "tax_rate": "1.5",
+                        "items": [{"quantity": 1, "unit_price": "1.00"}],
+                    },
+                    "error": "tax_rate-above-1",
+                },
+                {
                     "name": "stable_json",
                     "kind": "json_stable",
                     "document": {
@@ -353,30 +559,6 @@ def declaration(thing):
                         "tax_rate": "0.20",
                         "items": [{"quantity": 1, "unit_price": "1.00"}],
                     },
-                },
-                {
-                    "name": "error_missing_items",
-                    "kind": "json_error",
-                    "document": {"tax_rate": "0.1"},
-                    "error": "missing-items",
-                },
-                {
-                    "name": "error_qty_type",
-                    "kind": "json_error",
-                    "document": {
-                        "tax_rate": "0.1",
-                        "items": [{"quantity": "2", "unit_price": "1.00"}],
-                    },
-                    "error": "invalid-integer",
-                },
-                {
-                    "name": "error_tax_high",
-                    "kind": "json_error",
-                    "document": {
-                        "tax_rate": "1.5",
-                        "items": [{"quantity": 1, "unit_price": "1.00"}],
-                    },
-                    "error": "tax_rate-above-1",
                 },
                 {
                     "name": "evidence_order",

@@ -387,7 +387,7 @@ def _g1_law(project_path: str) -> dict:
         }
 
     public_ops = []
-    for mod_name in ("boundary", "core", "parts", "compose"):
+    for mod_name in ("boundary", "core", "parts", "compose", "expr_runtime"):
         path = pkg / f"{mod_name}.py"
         if not path.is_file():
             continue
@@ -398,6 +398,11 @@ def _g1_law(project_path: str) -> dict:
             continue
         for node in tree.body:
             if isinstance(node, ast.FunctionDef) and not node.name.startswith("_"):
+                # expr_runtime helpers are not all Parts
+                if mod_name == "expr_runtime":
+                    if isinstance(node, ast.ClassDef):
+                        check(f"no-class:{mod_name}.{node.name}", False)
+                    continue
                 public_ops.append((mod_name, node))
             if isinstance(node, ast.ClassDef):
                 check(f"no-class:{mod_name}.{node.name}", False)

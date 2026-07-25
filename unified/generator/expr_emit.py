@@ -9,8 +9,14 @@ from .expr import validate_expression
 
 
 def emit_expr_runtime_module() -> str:
-    """Self-contained evaluator for generated applications (no unified import)."""
-    return '''"""Generated expression runtime — domain-neutral. No Unified Code dependency."""
+    """Self-contained evaluator for generated applications (no unified import).
+
+    L8: no user-defined classes. Errors use ValueError with plain attributes.
+    """
+    return '''"""Generated expression runtime — domain-neutral. No Unified Code dependency.
+
+L8: functions and plain data only — no user-defined classes.
+"""
 
 from __future__ import annotations
 
@@ -25,11 +31,16 @@ _ROUNDING = {
 }
 
 
-class ExprError(Exception):
-    def __init__(self, error: str, path=()):
-        self.error = error
-        self.path = tuple(path)
-        super().__init__(error)
+def expr_fail(error, path=()):
+    """Raise a structured expression failure without defining a custom class."""
+    err = ValueError(error)
+    err.uc_expr_error = error
+    err.uc_expr_path = tuple(path)
+    raise err
+
+
+def is_expr_fail(exc):
+    return isinstance(exc, ValueError) and getattr(exc, "uc_expr_error", None) is not None
 
 
 def eval_expr(node, ctx):
@@ -39,12 +50,20 @@ def eval_expr(node, ctx):
       root: document root
       item: current item (for sum_each), optional
       path: current error path prefix
+      bindings: named precomputed values (CSE)
     """
     op = node["op"]
     path = list(ctx.get("path") or ())
 
     if op == "literal":
         return node["value"]
+
+    if op == "ref":
+        bindings = ctx.get("bindings") or {}
+        name = node["name"]
+        if name not in bindings:
+            expr_fail("missing-binding", path + [name])
+        return bindings[name]
 
     if op == "field":
         return _get_path(ctx, node["path"])
@@ -65,43 +84,40 @@ def eval_expr(node, ctx):
         value = eval_expr(node["of"], ctx)
         err_path = list(path) + list(node.get("path") or ())
         if value is None:
-            raise ExprError(node.get("error", "missing"), err_path)
+            expr_fail(node.get("error", "missing"), err_path)
         return value
 
     if op == "as_int":
         value = eval_expr(node["of"], ctx)
         err_path = list(path) + list(node.get("path") or ())
+        if value is None:
+            expr_fail(node.get("missing_error", "missing"), err_path)
         if isinstance(value, bool) or not isinstance(value, int):
-            # distinguish missing vs wrong type when possible
-            if value is None:
-                raise ExprError("missing-quantity" if err_path and err_path[-1] == "quantity" else "missing", err_path)
-            raise ExprError("invalid-integer", err_path)
+            expr_fail(node.get("type_error", "invalid-integer"), err_path)
         return value
 
     if op == "as_decimal":
+        # Strict: only decimal *strings* (and Decimal already formed by prior ops).
+        # JSON integers/floats are rejected — declared money fields are strings.
         value = eval_expr(node["of"], ctx)
         err_path = list(path) + list(node.get("path") or ())
         if value is None:
-            raise ExprError("missing", err_path)
-        if isinstance(value, bool):
-            raise ExprError("invalid-decimal", err_path)
-        if isinstance(value, int):
-            return Decimal(value)
+            expr_fail(node.get("missing_error", "missing"), err_path)
         if isinstance(value, Decimal):
             return value
-        if isinstance(value, str):
-            try:
-                return Decimal(value)
-            except InvalidOperation:
-                raise ExprError("invalid-decimal", err_path) from None
-        raise ExprError("invalid-decimal", err_path)
+        if not isinstance(value, str):
+            expr_fail(node.get("type_error", "not-decimal-string"), err_path)
+        try:
+            return Decimal(value)
+        except InvalidOperation:
+            expr_fail(node.get("type_error", "not-decimal-string"), err_path)
 
     if op == "min_value":
         value = eval_expr(node["of"], ctx)
         bound = _bound(node["bound"])
         err_path = list(path) + list(node.get("path") or ())
         if value < bound:
-            raise ExprError(node.get("error", "below-minimum"), err_path)
+            expr_fail(node.get("error", "below-minimum"), err_path)
         return value
 
     if op == "max_value":
@@ -109,7 +125,7 @@ def eval_expr(node, ctx):
         bound = _bound(node["bound"])
         err_path = list(path) + list(node.get("path") or ())
         if value > bound:
-            raise ExprError(node.get("error", "above-maximum"), err_path)
+            expr_fail(node.get("error", "above-maximum"), err_path)
         return value
 
     if op == "mul":
@@ -134,12 +150,12 @@ def eval_expr(node, ctx):
         collection = eval_expr(node["collection"], ctx)
         coll_path = list(node.get("path") or path) or ["items"]
         if not isinstance(collection, list):
-            raise ExprError("items-not-a-list", coll_path)
+            expr_fail("items-not-a-list", coll_path)
         item_key = node.get("item_key", "item")
         total = Decimal(0)
         for index, item in enumerate(collection):
             if not isinstance(item, dict):
-                raise ExprError("item-not-an-object", coll_path + [index])
+                expr_fail("item-not-an-object", coll_path + [index])
             child_ctx = {
                 **ctx,
                 item_key: item,
@@ -173,28 +189,28 @@ def eval_expr(node, ctx):
     if op == "str_len":
         value = eval_expr(node["of"], ctx)
         if not isinstance(value, str):
-            raise ExprError("invalid-text", path)
+            expr_fail("invalid-text", path)
         return len(value)
 
     if op == "line_count":
         value = eval_expr(node["of"], ctx)
         if not isinstance(value, str):
-            raise ExprError("invalid-text", path)
+            expr_fail("invalid-text", path)
         return len(value.splitlines())
 
     if op == "word_count":
         value = eval_expr(node["of"], ctx)
         if not isinstance(value, str):
-            raise ExprError("invalid-text", path)
+            expr_fail("invalid-text", path)
         return len(value.split())
 
     if op == "unique_casefold_word_count":
         value = eval_expr(node["of"], ctx)
         if not isinstance(value, str):
-            raise ExprError("invalid-text", path)
+            expr_fail("invalid-text", path)
         return len({w.casefold() for w in value.split()})
 
-    raise ExprError("unknown-op", path)
+    expr_fail("unknown-op", path)
 
 
 def _bound(raw):
@@ -319,7 +335,7 @@ def emit_expression_feature_body(name: str, transformation: dict) -> str:
     else:
         root = value
 
-    from .expr_runtime import ExprError, eval_expr
+    from .expr_runtime import eval_expr, is_expr_fail
 
     program = {program_literal}
     bindings = {bindings_literal}
@@ -328,15 +344,22 @@ def emit_expression_feature_body(name: str, transformation: dict) -> str:
         bound = {{}}
         for bname, bnode in bindings.items():
             bound[bname] = eval_expr(bnode, ctx)
-        # expose bindings on root for field access under ("__bind__", name) if needed
+            # later bindings may ref earlier ones
+            ctx = {{**ctx, "bindings": bound}}
         ctx = {{**ctx, "bindings": bound}}
         result = eval_expr(program, ctx)
-    except ExprError as exc:
-        err_value = {{**value, "error": exc.error, "path": list(exc.path)}}
+    except ValueError as exc:
+        if not is_expr_fail(exc):
+            raise
+        err_value = {{
+            **value,
+            "error": exc.uc_expr_error,
+            "path": list(exc.uc_expr_path),
+        }}
         return {{
             **thing,
             "value": err_value,
-            "evidence": (*thing["evidence"], "part:{name}", f"{name}:error:{{exc.error}}"),
+            "evidence": (*thing["evidence"], "part:{name}", f"{name}:error:{{exc.uc_expr_error}}"),
             "state": "invalid",
         }}
 

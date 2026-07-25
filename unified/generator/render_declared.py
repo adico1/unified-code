@@ -1319,6 +1319,29 @@ def _test_declared(package: str, declaration: dict) -> str:
                 lines.append("    assert result['state'] == 'valid'")
                 lines.append(f"    assert result['value']['stats'] == {expect!r}")
             lines.append("")
+        elif kind == "json_stdin":
+            doc = case.get("document", {})
+            expect = case.get("expect_stats")
+            lines.append(f"def test_declared_{name}(monkeypatch):")
+            lines.append(
+                f"    monkeypatch.setattr('sys.stdin', __import__('io').StringIO(json.dumps({doc!r})))"
+            )
+            lines.append("    result = program({'source': '-'})")
+            if expect is not None:
+                lines.append("    assert result['state'] == 'valid'")
+                lines.append(f"    assert result['value']['stats'] == {expect!r}")
+            lines.append("")
+        elif kind == "raw_file_error":
+            raw = case.get("raw", "")
+            error = case.get("error")
+            lines.append(f"def test_declared_{name}(tmp_path):")
+            lines.append(f"    path = tmp_path / '{name}.raw'")
+            lines.append(f"    path.write_text({raw!r}, encoding='utf-8')")
+            lines.append(f"    result = program({{'source': str(path)}})")
+            lines.append("    text, code = _presentation(result)")
+            lines.append("    assert code == 1")
+            lines.append(f"    assert json.loads(text)['error'] == {error!r}")
+            lines.append("")
         elif kind == "json_error":
             doc = case.get("document", {})
             error = case.get("error")
