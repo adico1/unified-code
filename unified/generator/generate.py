@@ -57,7 +57,19 @@ def _generate_new(thing, value):
     features = tuple(value["features"])
     program_declaration = value.get("program_declaration")
     if program_declaration is not None:
-        files = render_program(program_declaration)
+        try:
+            files = render_program(program_declaration)
+        except ValueError as exc:
+            return {
+                **thing,
+                "value": {**value, "error": "expression-invalid", "detail": str(exc)},
+                "evidence": (
+                    *thing["evidence"],
+                    "generate:expression-invalid",
+                    f"generate:detail:{exc}",
+                ),
+                "state": "invalid",
+            }
         mark = "generate:new-plan-from-declaration"
     else:
         files = render_new_project(package, name, features)

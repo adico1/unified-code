@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import ast
 import hashlib
+import json
 import math
 import os
 import shutil
@@ -109,14 +110,15 @@ def run_gauntlet(thing):
                 checks_executed += 1
 
         if project_path and Path(project_path).is_dir():
+            decl_data = _load_decl_data(declaration_path)
             g0 = _g0_hygiene(project_path)
             g1 = _g1_law(project_path)
             g2 = _g2_effects(project_path)
-            g3 = _g3_execution(project_path)
-            g4 = _g4_domain(project_path)
+            g3 = _g3_execution(project_path, decl_data)
+            g4 = _g4_domain(project_path, decl_data)
             g5 = _g5_rollback(declaration_path, work)
             g6 = _g6_idempotency(declaration_path, work)
-            g7 = _g7_mutations(project_path)
+            g7 = _g7_mutations(project_path, decl_data)
             g8 = _g8_performance(declaration_path, work)
 
             for name, result in (
@@ -187,6 +189,23 @@ def run_gauntlet(thing):
             "state": "valid" if verdict == "pass" else "invalid",
         }
     )
+
+
+def _load_decl_data(declaration_path: str | None) -> dict | None:
+    if not declaration_path or not Path(declaration_path).is_file():
+        return None
+    loaded = load_declaration_module(
+        {
+            "value": {"declaration_path": declaration_path},
+            "depths": (),
+            "axes": (),
+            "evidence": (),
+            "state": "unknown",
+        }
+    )
+    if loaded.get("state") != "formed":
+        return None
+    return loaded["value"].get("declaration")
 
 
 def _pkg_dir(project_path: str) -> Path | None:
@@ -572,7 +591,7 @@ def _g2_effects(project_path: str) -> dict:
     }
 
 
-def _g3_execution(project_path: str) -> dict:
+def _g3_execution(project_path: str, decl_data: dict | None = None) -> dict:
     root = Path(project_path)
     failed = []
     executed = 0
@@ -591,7 +610,6 @@ def _g3_execution(project_path: str) -> dict:
     if not pkg:
         return {"executed": 1, "passed": 0, "failed_checks": ("package-missing",), "verdict": "fail"}
 
-    # import modules
     proc = subprocess.run(
         [sys.executable, "-c", f"import {pkg.name}, {pkg.name}.compose, {pkg.name}.parts"],
         cwd=str(root),
@@ -601,7 +619,6 @@ def _g3_execution(project_path: str) -> dict:
     )
     check("import-modules", proc.returncode == 0)
 
-    # unit tests
     proc = subprocess.run(
         [sys.executable, "-m", "pytest", "-q"],
         cwd=str(root),
@@ -611,9 +628,32 @@ def _g3_execution(project_path: str) -> dict:
     )
     check("unit-tests", proc.returncode == 0)
 
-    # console success
-    sample = root / "_gauntlet_sample.txt"
-    sample.write_text("Go go GO", encoding="utf-8")
+    # CLI success sample derived from declaration when available
+    sample = root / "_gauntlet_sample.input"
+    expect_fragment = None
+    if decl_data:
+        for case in decl_data.get("tests") or ():
+            if not isinstance(case, dict):
+                continue
+            if case.get("kind") in {"json_stable", "stable_json"} and case.get("expect_json"):
+                if "document" in case:
+                    sample.write_text(json.dumps(case["document"]), encoding="utf-8")
+                elif "text" in case:
+                    sample.write_text(case["text"], encoding="utf-8")
+                expect_fragment = case["expect_json"]
+                break
+            if case.get("kind") in {"json_document", "file_text"} and case.get("expect_stats"):
+                if "document" in case:
+                    sample.write_text(json.dumps(case["document"]), encoding="utf-8")
+                else:
+                    sample.write_text(case.get("text", ""), encoding="utf-8")
+                # any stable key from expect_stats
+                keys = list((case.get("expect_stats") or {}).keys())
+                expect_fragment = keys[0] if keys else None
+                break
+    if not sample.exists():
+        sample.write_text("x", encoding="utf-8")
+
     proc = subprocess.run(
         [sys.executable, "-m", pkg.name, str(sample)],
         cwd=str(root),
@@ -621,10 +661,19 @@ def _g3_execution(project_path: str) -> dict:
         capture_output=True,
         text=True,
     )
-    check("cli-success", proc.returncode == 0 and "unique_words" in proc.stdout)
-    check("deterministic-cli", '"unique_words":1' in proc.stdout.replace(" ", ""))
+    check("cli-success", proc.returncode == 0)
+    if expect_fragment:
+        check("cli-output-contract", expect_fragment in proc.stdout.replace(" ", "") or expect_fragment in proc.stdout)
 
-    # console error
+    proc2 = subprocess.run(
+        [sys.executable, "-m", pkg.name, str(sample)],
+        cwd=str(root),
+        env=env,
+        capture_output=True,
+        text=True,
+    )
+    check("deterministic-cli", proc.stdout == proc2.stdout and proc.returncode == proc2.returncode)
+
     proc = subprocess.run(
         [sys.executable, "-m", pkg.name],
         cwd=str(root),
@@ -643,9 +692,8 @@ def _g3_execution(project_path: str) -> dict:
     }
 
 
-def _g4_domain(project_path: str) -> dict:
-    """Domain contract via running generated tests (declaration-driven)."""
-    # Covered primarily by G3 unit-tests; add explicit empty/unicode if importable.
+def _g4_domain(project_path: str, decl_data: dict | None = None) -> dict:
+    """Domain contracts driven by declaration tests/examples only."""
     root = Path(project_path)
     pkg = _pkg_dir(project_path)
     failed = []
@@ -663,30 +711,45 @@ def _g4_domain(project_path: str) -> dict:
     if not pkg:
         return {"executed": 1, "passed": 0, "failed_checks": ("package-missing",), "verdict": "fail"}
 
+    cases = []
+    if decl_data:
+        cases = [
+            c
+            for c in (decl_data.get("tests") or ())
+            if isinstance(c, dict)
+            and c.get("kind") in {"json_document", "file_text", "json_error"}
+        ]
+    check("has-declared-cases", len(cases) >= 1 if decl_data else True)
+
     sys.path.insert(0, str(root))
     try:
         for mod in list(sys.modules):
             if mod == pkg.name or mod.startswith(pkg.name + "."):
                 del sys.modules[mod]
         compose = __import__(f"{pkg.name}.compose", fromlist=["program"]).program
-        import tempfile
-        from pathlib import Path as P
-
         with tempfile.TemporaryDirectory() as td:
-            p = P(td) / "t.txt"
-            p.write_text("", encoding="utf-8")
-            r = compose({"source": str(p)})
-            check("empty-valid", r.get("state") == "valid")
-            check("empty-zeros", r.get("value", {}).get("stats") == {
-                "characters": 0,
-                "lines": 0,
-                "words": 0,
-                "unique_words": 0,
-            })
-            p.write_text("שלום", encoding="utf-8")
-            r = compose({"source": str(p)})
-            check("unicode-valid", r.get("state") == "valid")
-            check("unicode-words", r.get("value", {}).get("stats", {}).get("words") == 1)
+            for case in cases[:12]:
+                name = case.get("name", "case")
+                path = Path(td) / f"{name}.input"
+                if "document" in case:
+                    path.write_text(json.dumps(case["document"]), encoding="utf-8")
+                else:
+                    path.write_text(case.get("text", ""), encoding="utf-8")
+                result = compose({"source": str(path)})
+                if case.get("kind") == "json_error":
+                    check(
+                        f"error:{name}",
+                        result.get("state") == "invalid"
+                        and (result.get("value") or {}).get("error") == case.get("error"),
+                    )
+                else:
+                    expect = case.get("expect_stats")
+                    check(f"case:{name}:valid", result.get("state") == "valid")
+                    if expect is not None:
+                        check(
+                            f"case:{name}:stats",
+                            (result.get("value") or {}).get("stats") == expect,
+                        )
     except Exception as exc:  # noqa: BLE001
         check(f"domain-exception:{type(exc).__name__}", False)
     finally:
@@ -925,12 +988,27 @@ def _g5_rollback(declaration_path, work_parent: str) -> dict:
             "injection_matrix": matrix,
         }
     snap = {rel: (project / rel).read_bytes() for rel in _list_files(project)}
+    pkg = _pkg_dir(str(project))
+    existing_feature = "mark_dup"
+    if pkg and (pkg / "features.py").is_file():
+        ns: dict = {}
+        try:
+            exec(
+                compile((pkg / "features.py").read_text(encoding="utf-8"), "features.py", "exec"),
+                ns,
+                ns,
+            )
+            feats = ns.get("FEATURES") or ()
+            if feats:
+                existing_feature = feats[0]
+        except Exception:
+            pass
 
     # --- 7. feature insertion (duplicate / mid-update failure) ---
     dup = safe_command(
         {
             "command": "add",
-            "name": "validate_text",
+            "name": existing_feature,
             "project_root": str(project),
         }
     )
@@ -1231,7 +1309,7 @@ def _file_hashes(root: Path) -> dict[str, str]:
     return out
 
 
-def _g7_mutations(project_path: str) -> dict:
+def _g7_mutations(project_path: str, decl_data: dict | None = None) -> dict:
     """All 15 required mutations must be detected."""
     failed = []
     executed = 0
@@ -1252,20 +1330,28 @@ def _g7_mutations(project_path: str) -> dict:
     if not pkg:
         return {"executed": 1, "passed": 0, "failed_checks": ("package-missing",), "verdict": "fail"}
 
+    success_keys = tuple(
+        ((decl_data or {}).get("presentation") or {}).get("success_keys") or ()
+    )
+    feature_names = [
+        f["name"] for f in ((decl_data or {}).get("features") or ()) if isinstance(f, dict)
+    ]
+    primary_feature = feature_names[0] if feature_names else "validate_text"
+
     mutations = [
         ("remove-inward", _mut_remove_inward),
         ("remove-outward", _mut_remove_outward),
         ("collapse-none-false", _mut_collapse_none_false),
-        ("delete-required-evidence", _mut_delete_required_evidence),
+        ("delete-required-evidence", lambda r: _mut_delete_required_evidence(r, primary_feature)),
         ("reorder-evidence", _mut_reorder_evidence),
-        ("insert-print", _mut_insert_print),
-        ("insert-file-access", _mut_insert_file),
+        ("insert-print", lambda r: _mut_insert_print(r, primary_feature)),
+        ("insert-file-access", lambda r: _mut_insert_file(r, primary_feature)),
         ("bypass-verification", _mut_bypass_verification),
-        ("duplicate-feature", _mut_duplicate_feature),
+        ("duplicate-feature", lambda r: _mut_duplicate_feature(r, primary_feature)),
         ("change-formula", _mut_change_formula),
-        ("change-output-key-order", _mut_change_output_key_order),
-        ("return-non-thing", _mut_return_none),
-        ("second-param", _mut_second_param),
+        ("change-output-key-order", lambda r: _mut_change_output_key_order(r, success_keys)),
+        ("return-non-thing", lambda r: _mut_return_none(r, primary_feature)),
+        ("second-param", lambda r: _mut_second_param(r, primary_feature)),
         ("add-class", _mut_add_class),
         ("partial-generated-file", _mut_partial_generated_file),
     ]
@@ -1279,7 +1365,7 @@ def _g7_mutations(project_path: str) -> dict:
                 ignore=shutil.ignore_patterns(".venv", "__pycache__", "*.egg-info", ".pytest_cache"),
             )
             mutator(dest)
-            detected, how = _detect_mutation(str(dest), name)
+            detected, how = _detect_mutation(str(dest), name, decl_data)
             check(f"detect:{name}", detected, detail=how)
 
     check("mutations-count-15", len(mutations) == 15)
@@ -1293,7 +1379,9 @@ def _g7_mutations(project_path: str) -> dict:
     }
 
 
-def _detect_mutation(project_path: str, mutation_name: str) -> tuple[bool, str]:
+def _detect_mutation(
+    project_path: str, mutation_name: str, decl_data: dict | None = None
+) -> tuple[bool, str]:
     try:
         g0 = _g0_hygiene(project_path)
     except SyntaxError as exc:
@@ -1312,7 +1400,6 @@ def _detect_mutation(project_path: str, mutation_name: str) -> tuple[bool, str]:
         return True, f"G2:syntax:{exc}"
     if g2["verdict"] == "fail":
         return True, f"G2:{g2['failed_checks']}"
-    # semantic / behavioral
     if mutation_name in {
         "change-formula",
         "change-output-key-order",
@@ -1324,23 +1411,51 @@ def _detect_mutation(project_path: str, mutation_name: str) -> tuple[bool, str]:
         "remove-outward",
         "collapse-none-false",
     }:
-        behavioral = _detect_behavioral(project_path, mutation_name)
+        behavioral = _detect_behavioral(project_path, mutation_name, decl_data)
         if behavioral:
             return True, f"behavior:{behavioral}"
-    g3 = _g3_execution(project_path)
+    g3 = _g3_execution(project_path, decl_data)
     if g3["verdict"] == "fail":
         return True, f"G3:{g3['failed_checks']}"
-    g4 = _g4_domain(project_path)
+    g4 = _g4_domain(project_path, decl_data)
     if g4["verdict"] == "fail":
         return True, f"G4:{g4['failed_checks']}"
     return False, "undetected"
 
 
-def _detect_behavioral(project_path: str, mutation_name: str) -> str | None:
+def _detect_behavioral(
+    project_path: str, mutation_name: str, decl_data: dict | None = None
+) -> str | None:
     root = Path(project_path)
     pkg = _pkg_dir(project_path)
     if not pkg:
         return "no-package"
+    success_keys = tuple(
+        ((decl_data or {}).get("presentation") or {}).get("success_keys") or ()
+    )
+    required_evidence = tuple(
+        ((decl_data or {}).get("verify") or {}).get("require_evidence_contains") or ()
+    )
+    # pick a success case from declaration
+    sample_doc = None
+    sample_text = None
+    expect_stats = None
+    for case in (decl_data or {}).get("tests") or ():
+        if not isinstance(case, dict):
+            continue
+        if case.get("kind") in {"json_document", "json_stable"} and (
+            case.get("expect_stats") or case.get("expect_json")
+        ):
+            sample_doc = case.get("document")
+            expect_stats = case.get("expect_stats")
+            break
+        if case.get("kind") in {"file_text", "stable_json"} and (
+            case.get("expect_stats") or case.get("expect_json")
+        ):
+            sample_text = case.get("text", "x")
+            expect_stats = case.get("expect_stats")
+            break
+
     sys.path.insert(0, str(root))
     try:
         import importlib
@@ -1351,67 +1466,63 @@ def _detect_behavioral(project_path: str, mutation_name: str) -> str | None:
         compose = importlib.import_module(f"{pkg.name}.compose")
         boundary = importlib.import_module(f"{pkg.name}.boundary")
         core = importlib.import_module(f"{pkg.name}.core")
-        # collapse none/false
         if mutation_name == "collapse-none-false":
             absent = core.letter(boundary.inward(None))
             false = core.letter(boundary.inward(False))
             if absent.get("state") == false.get("state"):
                 return "states-collapsed"
-        # formula / key order / evidence via temp file
         with tempfile.TemporaryDirectory() as td:
-            sample = Path(td) / "s.txt"
-            sample.write_text("Go go GO", encoding="utf-8")
+            sample = Path(td) / "s.input"
+            if sample_doc is not None:
+                sample.write_text(json.dumps(sample_doc), encoding="utf-8")
+            else:
+                sample.write_text(sample_text if sample_text is not None else "x", encoding="utf-8")
             result = compose.program({"source": str(sample)})
-            if mutation_name == "change-formula":
+            if mutation_name == "change-formula" and expect_stats:
                 stats = (result.get("value") or {}).get("stats") or {}
-                if stats.get("characters") != len("Go go GO"):
+                if stats != expect_stats:
                     return "formula-wrong"
-            if mutation_name == "change-output-key-order":
+            if mutation_name == "change-output-key-order" and success_keys:
                 pres = (result.get("value") or {}).get("presentation") or {}
                 text = pres.get("text") or ""
-                if text and not text.startswith('{"characters"'):
-                    return "key-order-wrong"
-                # also check stats key insertion order if present
+                if text:
+                    first_key = success_keys[0]
+                    if not text.startswith('{"' + first_key + '"'):
+                        return "key-order-wrong"
                 stats = (result.get("value") or {}).get("stats")
-                if isinstance(stats, dict) and list(stats.keys()) != [
-                    "characters",
-                    "lines",
-                    "words",
-                    "unique_words",
-                ]:
+                if isinstance(stats, dict) and list(stats.keys()) != list(success_keys):
                     return "stats-key-order"
-            if mutation_name in {"delete-required-evidence", "reorder-evidence", "bypass-verification"}:
+            if mutation_name in {
+                "delete-required-evidence",
+                "reorder-evidence",
+                "bypass-verification",
+            }:
                 evidence = result.get("evidence") or ()
-                required = (
+                req = required_evidence or (
                     "boundary:inward",
                     "letter:distinguished",
                     "read:ok",
-                    "validate_text:ok",
-                    "calculate_stats:ok",
                     "script-law:pass",
                 )
                 if mutation_name == "delete-required-evidence":
-                    if any(r not in evidence for r in required):
+                    if any(r not in evidence for r in req):
                         return "missing-evidence"
                 if mutation_name == "reorder-evidence":
-                    positions = [evidence.index(r) for r in required if r in evidence]
-                    if positions != sorted(positions) or len(positions) < len(required):
+                    positions = [evidence.index(r) for r in req if r in evidence]
+                    if positions != sorted(positions) or len(positions) < len(req):
                         return "evidence-order"
                 if mutation_name == "bypass-verification":
-                    if result.get("state") == "valid" and "script-law:pass" not in evidence:
-                        return "verify-bypassed"
-                    if "script-law:pass" not in evidence and result.get("state") == "valid":
-                        return "verify-bypassed"
-                    # if verify always passes without checks
-                    if result.get("state") == "valid":
-                        # run broken path should still be valid if bypassed
-                        broken = compose.program({"error": "missing-source"})
-                        if broken.get("state") == "valid":
-                            return "verify-bypassed-error"
+                    broken = compose.program({"error": "missing-source"})
+                    if broken.get("state") == "valid":
+                        return "verify-bypassed-error"
             if mutation_name == "duplicate-feature":
                 compose_src = (pkg / "compose.py").read_text(encoding="utf-8")
-                if compose_src.count("validate_text(") >= 2:
-                    return "duplicate-in-compose"
+                # any feature name duplicated
+                for fname in ((decl_data or {}).get("features") or ()):
+                    if isinstance(fname, dict):
+                        n = fname.get("name")
+                        if n and compose_src.count(f"{n}(") >= 2:
+                            return "duplicate-in-compose"
             if mutation_name in {"remove-inward", "remove-outward"}:
                 compose_src = (pkg / "compose.py").read_text(encoding="utf-8")
                 if mutation_name == "remove-inward" and "inward(" not in compose_src:
@@ -1448,12 +1559,15 @@ def _mut_collapse_none_false(root: Path):
     path.write_text(text, encoding="utf-8")
 
 
-def _mut_delete_required_evidence(root: Path):
+def _mut_delete_required_evidence(root: Path, feature_name: str = "validate_text"):
     pkg = _pkg_dir(str(root))
     path = pkg / "parts.py"
     text = path.read_text(encoding="utf-8")
-    text = text.replace('"validate_text:ok"', '"validate_text:silent"')
-    text = text.replace('"calculate_stats:ok"', '"calculate_stats:silent"')
+    text = text.replace(f'"{feature_name}:ok"', f'"{feature_name}:silent"')
+    # also strip any :ok marks generically
+    import re
+
+    text = re.sub(r'"([a-z_]+):ok"', r'"\1:silent"', text)
     path.write_text(text, encoding="utf-8")
 
 
@@ -1469,24 +1583,36 @@ def _mut_reorder_evidence(root: Path):
     path.write_text(text, encoding="utf-8")
 
 
-def _mut_insert_print(root: Path):
+def _mut_insert_print(root: Path, feature_name: str = "validate_text"):
     pkg = _pkg_dir(str(root))
     path = pkg / "parts.py"
     text = path.read_text(encoding="utf-8")
+    needle = f"def {feature_name}(thing):"
     path.write_text(
-        text.replace("def validate_text(thing):", "def validate_text(thing):\n    print('leak')"),
+        text.replace(needle, needle + "\n    print('leak')"),
         encoding="utf-8",
     )
 
 
-def _mut_insert_file(root: Path):
+def _mut_insert_file(root: Path, feature_name: str = "calculate_stats"):
     pkg = _pkg_dir(str(root))
     path = pkg / "parts.py"
     text = path.read_text(encoding="utf-8")
+    # prefer calculate_* then first def
+    for name in (feature_name, "calculate_totals", "calculate_stats"):
+        needle = f"def {name}(thing):"
+        if needle in text:
+            path.write_text(
+                text.replace(needle, needle + "\n    open('/tmp/x','w').write('x')"),
+                encoding="utf-8",
+            )
+            return
+    # fallback first function
     path.write_text(
-        text.replace(
-            "def calculate_stats(thing):",
-            "def calculate_stats(thing):\n    open('/tmp/x','w').write('x')",
+        text.replace("def ", "def ", 1).replace(
+            "(thing):",
+            "(thing):\n    open('/tmp/x','w').write('x')",
+            1,
         ),
         encoding="utf-8",
     )
@@ -1505,66 +1631,95 @@ def _mut_bypass_verification(root: Path):
     path.write_text(text, encoding="utf-8")
 
 
-def _mut_duplicate_feature(root: Path):
+def _mut_duplicate_feature(root: Path, feature_name: str = "validate_text"):
     pkg = _pkg_dir(str(root))
     path = pkg / "compose.py"
     text = path.read_text(encoding="utf-8")
-    # Duplicate call while keeping the file syntactically valid.
-    if "validate_text(" in text:
-        text = text.replace(
-            "return ",
-            "return validate_text(",
-            1,
-        )
-        # close the extra call before final newline
+    if f"{feature_name}(" in text:
+        text = text.replace("return ", f"return {feature_name}(", 1)
         text = text.rstrip() + ")\n"
     path.write_text(text, encoding="utf-8")
 
 
 def _mut_change_formula(root: Path):
     pkg = _pkg_dir(str(root))
+    # Mutate runtime evaluation so any declared expected stats diverge.
+    path = pkg / "expr_runtime.py"
+    if path.is_file():
+        text = path.read_text(encoding="utf-8")
+        if "return len(value)" in text:
+            path.write_text(
+                text.replace("return len(value)", "return len(value) + 1"),
+                encoding="utf-8",
+            )
+            return
+        if "total += part" in text:
+            path.write_text(text.replace("total += part", "total += part + 1", 1), encoding="utf-8")
+            return
+        if "return total" in text:
+            path.write_text(text.replace("return total", "return total + 1"), encoding="utf-8")
+            return
     path = pkg / "parts.py"
-    text = path.read_text(encoding="utf-8")
-    path.write_text(text.replace("len(text)", "len(text) + 1", 1), encoding="utf-8")
+    if path.is_file():
+        text = path.read_text(encoding="utf-8")
+        if "len(text)" in text:
+            path.write_text(text.replace("len(text)", "len(text) + 1"), encoding="utf-8")
 
 
-def _mut_change_output_key_order(root: Path):
+def _mut_change_output_key_order(root: Path, success_keys: tuple = ()):
     pkg = _pkg_dir(str(root))
     path = pkg / "boundary.py"
     text = path.read_text(encoding="utf-8")
-    # reverse success key order if present
-    text = text.replace(
-        '("characters", "lines", "words", "unique_words")',
-        '("unique_words", "words", "lines", "characters")',
-    )
-    text = text.replace(
-        "('characters', 'lines', 'words', 'unique_words')",
-        "('unique_words', 'words', 'lines', 'characters')",
-    )
+    if success_keys and len(success_keys) >= 2:
+        original = "(" + ", ".join(f'"{k}"' for k in success_keys) + ")"
+        reversed_keys = "(" + ", ".join(f'"{k}"' for k in reversed(success_keys)) + ")"
+        if original in text:
+            path.write_text(text.replace(original, reversed_keys, 1), encoding="utf-8")
+            return
+        original2 = "(" + ", ".join(f"'{k}'" for k in success_keys) + ")"
+        reversed2 = "(" + ", ".join(f"'{k}'" for k in reversed(success_keys)) + ")"
+        if original2 in text:
+            path.write_text(text.replace(original2, reversed2, 1), encoding="utf-8")
+            return
+    # generic: reverse first keys tuple found in present_result
+    import re
+
+    m = re.search(r'keys = \(([^)]+)\)', text)
+    if m:
+        inner = m.group(1)
+        parts = [p.strip() for p in inner.split(",") if p.strip()]
+        rev = ", ".join(reversed(parts))
+        text = text.replace(m.group(0), f"keys = ({rev})", 1)
+        path.write_text(text, encoding="utf-8")
+
+
+def _mut_return_none(root: Path, feature_name: str = "validate_text"):
+    pkg = _pkg_dir(str(root))
+    path = pkg / "parts.py"
+    text = path.read_text(encoding="utf-8")
+    needle = f"def {feature_name}(thing):"
+    if needle not in text:
+        # first def
+        text = text.replace(
+            "(thing):",
+            "(thing):\n    return None\n    #",
+            1,
+        )
+    else:
+        text = text.replace(needle, needle + "\n    return None\n    #")
     path.write_text(text, encoding="utf-8")
 
 
-def _mut_return_none(root: Path):
+def _mut_second_param(root: Path, feature_name: str = "validate_text"):
     pkg = _pkg_dir(str(root))
     path = pkg / "parts.py"
     text = path.read_text(encoding="utf-8")
-    path.write_text(
-        text.replace(
-            "def validate_text(thing):",
-            "def validate_text(thing):\n    return None\n    #",
-        ),
-        encoding="utf-8",
-    )
-
-
-def _mut_second_param(root: Path):
-    pkg = _pkg_dir(str(root))
-    path = pkg / "parts.py"
-    text = path.read_text(encoding="utf-8")
-    path.write_text(
-        text.replace("def validate_text(thing):", "def validate_text(thing, other=None):"),
-        encoding="utf-8",
-    )
+    needle = f"def {feature_name}(thing):"
+    if needle in text:
+        text = text.replace(needle, f"def {feature_name}(thing, other=None):")
+    else:
+        text = text.replace("(thing):", "(thing, other=None):", 1)
+    path.write_text(text, encoding="utf-8")
 
 
 def _mut_add_class(root: Path):

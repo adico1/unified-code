@@ -7,9 +7,26 @@ from typing import Any
 
 def render_program(declaration: dict[str, Any]) -> dict[str, str]:
     """Full UC-1 project from a PROGRAM declaration."""
+    from .expr import validate_expression
+    from .expr_emit import emit_expr_runtime_module
+
     package = declaration["package"]
-    project_name = declaration["name"]
     features = tuple(f["name"] for f in declaration["features"])
+    # Validate any expression transformations before emit
+    for feat in declaration["features"]:
+        tr = feat.get("transformation") or {}
+        if tr.get("kind") == "expression":
+            program = tr.get("program") or tr.get("result")
+            if program is None:
+                raise ValueError(f"feature {feat['name']}: expression missing program")
+            errs = validate_expression(program)
+            if errs:
+                raise ValueError(f"feature {feat['name']}: {errs}")
+            for bname, bnode in (tr.get("bindings") or {}).items():
+                berrs = validate_expression(bnode)
+                if berrs:
+                    raise ValueError(f"feature {feat['name']} binding {bname}: {berrs}")
+
     files: dict[str, str] = {}
     files["pyproject.toml"] = _pyproject(declaration)
     files["README.md"] = _readme(declaration)
@@ -21,6 +38,7 @@ def render_program(declaration: dict[str, Any]) -> dict[str, str]:
     files[f"{package}/features.py"] = _features(features)
     files[f"{package}/parts.py"] = _parts(declaration["features"])
     files[f"{package}/compose.py"] = _compose(declaration)
+    files[f"{package}/expr_runtime.py"] = emit_expr_runtime_module()
     if declaration.get("cli"):
         files[f"{package}/cli.py"] = _cli(declaration)
     files["tests/test_signature.py"] = _test_signature(package, features, declaration)
@@ -103,8 +121,9 @@ def _parts(feature_decls: tuple[dict, ...]) -> str:
 
 
 def _render_feature_function(decl: dict) -> str:
+    from .expr_emit import emit_expression_feature_body
+
     name = decl["name"]
-    role = decl.get("role", "transform")
     doc = decl.get("doc", name).replace('"""', "'")
     transformation = decl.get("transformation") or {}
     kind = transformation.get("kind", "identity")
@@ -113,10 +132,13 @@ def _render_feature_function(decl: dict) -> str:
         body = _identity_body(name)
     elif kind == "require_str_field":
         body = _require_str_field_body(name, transformation)
+    elif kind == "expression":
+        body = emit_expression_feature_body(name, transformation)
     elif kind == "text_stats":
+        # Legacy closed kind retained only for older fixtures; prefer expression.
         body = _text_stats_body(name, transformation)
     else:
-        body = _identity_body(name)
+        raise ValueError(f"unsupported transformation kind: {kind!r}")
 
     return f'''def {name}(thing):
     """{doc}"""
@@ -362,6 +384,8 @@ def _boundary(declaration: dict) -> str:
         kind = b.get("kind")
         if kind == "read_utf8_source":
             base += "\n\n" + _read_utf8_source_fn(b)
+        elif kind == "read_json_source":
+            base += "\n\n" + _read_json_source_fn(b)
     presentation = declaration.get("presentation")
     if presentation:
         base += "\n\n" + _host_present_fn(presentation)
@@ -566,14 +590,11 @@ def _read_utf8_source_fn(spec: dict) -> str:
 
 
 def _host_present_fn(presentation: dict) -> str:
-    """Model 2: present_result is a Part — returns a canonical thing (L1).
-
-    The OS process edge (host_main) alone extracts text/exit_code for the host.
-    present_result must not print or call SystemExit.
-    """
+    """Model 2: present_result is a Part — returns a canonical thing (L1)."""
     keys = presentation.get("success_keys") or ()
     success_from = presentation.get("success_from", "stats")
     keys_tuple = ", ".join(f'"{k}"' for k in keys)
+    include_path = bool(presentation.get("include_error_path", True))
     return f'''def present_result(thing):
     """Pack presentation text and exit_code into the thing (L1 Part)."""
     from json import dumps
@@ -599,8 +620,16 @@ def _host_present_fn(presentation: dict) -> str:
     state = thing["state"]
     keys = ({keys_tuple})
 
-    if state == "valid" and isinstance(value.get("{success_from}"), dict):
-        payload = value["{success_from}"]
+    payload = None
+    if state == "valid":
+        if {success_from!r} in ("", "value"):
+            if all(k in value for k in keys):
+                payload = value
+        elif isinstance(value.get("{success_from}"), dict):
+            payload = value["{success_from}"]
+        elif all(k in value for k in keys):
+            payload = value
+    if payload is not None:
         ordered = {{key: payload[key] for key in keys}}
         text = dump(ordered)
         code = 0
@@ -609,12 +638,15 @@ def _host_present_fn(presentation: dict) -> str:
         if isinstance(value.get("error"), str):
             error = value["error"]
         elif state == "absent":
-            error = "missing-text"
+            error = "missing"
         elif state == "false":
             error = "false"
         elif state == "unknown":
             error = "unknown"
-        text = dump({{"error": error, "state": state}})
+        err_obj = {{"error": error, "state": state}}
+        if {include_path} and isinstance(value.get("path"), (list, tuple)):
+            err_obj["path"] = list(value["path"])
+        text = dump(err_obj)
         code = 1
 
     return {{
@@ -683,6 +715,125 @@ def parse_host_argv(thing):
         **thing,
         "value": {{"source": argv[0]}},
         "evidence": (*thing["evidence"], "parse_host_argv:ok"),
+        "state": "formed",
+    }}
+'''
+
+
+def _read_json_source_fn(spec: dict) -> str:
+    name = spec.get("name", "read_json_source")
+    source_field = spec.get("source_field", "source")
+    document_field = spec.get("document_field", "document")
+    return f'''def {name}(thing):
+    """Named boundary: read UTF-8 JSON object from file path or stdin (`-`)."""
+    from json import JSONDecodeError, loads
+
+    if not is_thing(thing):
+        return {{
+            "value": thing,
+            "depths": (),
+            "axes": (),
+            "evidence": ("boundary:{name}", "read:rejected-non-thing"),
+            "state": "invalid",
+        }}
+    if thing["state"] in {{"invalid", "absent", "false"}}:
+        return {{
+            **thing,
+            "evidence": (*thing["evidence"], "boundary:{name}", "read:skipped"),
+            "state": thing["state"],
+        }}
+    value = thing["value"]
+    if not isinstance(value, dict):
+        return {{
+            **thing,
+            "evidence": (*thing["evidence"], "boundary:{name}", "read:value-not-map"),
+            "state": "invalid",
+        }}
+    if "error" in value and value.get("{source_field}") is None:
+        code = value.get("error")
+        return {{
+            **thing,
+            "value": value,
+            "evidence": (*thing["evidence"], "boundary:{name}", f"read:host-error:{{code}}"),
+            "state": "invalid",
+        }}
+    source = value.get("{source_field}")
+    if source is None:
+        return {{
+            **thing,
+            "evidence": (*thing["evidence"], "boundary:{name}", "read:absent-source"),
+            "state": "absent",
+        }}
+    if not isinstance(source, str):
+        return {{
+            **thing,
+            "evidence": (*thing["evidence"], "boundary:{name}", "read:invalid-source"),
+            "state": "invalid",
+        }}
+    if source == "-":
+        try:
+            raw = sys.stdin.read()
+        except OSError:
+            return {{
+                **thing,
+                "value": {{**value, "error": "read-failure"}},
+                "evidence": (*thing["evidence"], "boundary:{name}", "boundary:read_stdin", "read:failure"),
+                "state": "invalid",
+            }}
+        channel = "boundary:read_stdin"
+    else:
+        path = Path(source)
+        if not path.exists():
+            return {{
+                **thing,
+                "value": {{**value, "error": "file-not-found"}},
+                "evidence": (*thing["evidence"], "boundary:{name}", "boundary:read_file", "read:file-not-found"),
+                "state": "invalid",
+            }}
+        if not path.is_file():
+            return {{
+                **thing,
+                "value": {{**value, "error": "not-a-file"}},
+                "evidence": (*thing["evidence"], "boundary:{name}", "boundary:read_file", "read:not-a-file"),
+                "state": "invalid",
+            }}
+        try:
+            raw = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            return {{
+                **thing,
+                "value": {{**value, "error": "invalid-utf8"}},
+                "evidence": (*thing["evidence"], "boundary:{name}", "boundary:read_file", "read:invalid-utf8"),
+                "state": "invalid",
+            }}
+        except OSError:
+            return {{
+                **thing,
+                "value": {{**value, "error": "read-failure"}},
+                "evidence": (*thing["evidence"], "boundary:{name}", "boundary:read_file", "read:failure"),
+                "state": "invalid",
+            }}
+        channel = "boundary:read_file"
+    try:
+        document = loads(raw)
+    except JSONDecodeError:
+        return {{
+            **thing,
+            "value": {{**value, "error": "invalid-json"}},
+            "evidence": (*thing["evidence"], "boundary:{name}", channel, "read:invalid-json"),
+            "state": "invalid",
+        }}
+    if not isinstance(document, dict):
+        return {{
+            **thing,
+            "value": {{**value, "error": "input-not-an-object", "path": []}},
+            "evidence": (*thing["evidence"], "boundary:{name}", channel, "read:not-object"),
+            "state": "invalid",
+        }}
+    return {{
+        **thing,
+        "value": {{**value, "{document_field}": document}},
+        "evidence": (*thing["evidence"], "boundary:{name}", channel, "read:ok"),
         "state": "formed",
     }}
 '''
@@ -1156,6 +1307,58 @@ def _test_declared(package: str, declaration: dict) -> str:
             lines.append("    text, code = _presentation(result)")
             lines.append("    assert code == 1")
             lines.append("    assert json.loads(text)['error'] == 'invalid-utf8'")
+            lines.append("")
+        elif kind == "json_document":
+            doc = case.get("document", {})
+            expect = case.get("expect_stats")
+            lines.append(f"def test_declared_{name}(tmp_path):")
+            lines.append(f"    path = tmp_path / '{name}.json'")
+            lines.append(f"    path.write_text(json.dumps({doc!r}), encoding='utf-8')")
+            lines.append(f"    result = program({{'source': str(path)}})")
+            if expect is not None:
+                lines.append("    assert result['state'] == 'valid'")
+                lines.append(f"    assert result['value']['stats'] == {expect!r}")
+            lines.append("")
+        elif kind == "json_error":
+            doc = case.get("document", {})
+            error = case.get("error")
+            lines.append(f"def test_declared_{name}(tmp_path):")
+            lines.append(f"    path = tmp_path / '{name}.json'")
+            lines.append(f"    path.write_text(json.dumps({doc!r}), encoding='utf-8')")
+            lines.append(f"    result = program({{'source': str(path)}})")
+            lines.append("    text, code = _presentation(result)")
+            lines.append("    assert code == 1")
+            lines.append(f"    assert json.loads(text)['error'] == {error!r}")
+            lines.append("")
+        elif kind == "json_stable":
+            doc = case.get("document", {})
+            expect_json = case.get("expect_json")
+            lines.append(f"def test_declared_{name}(tmp_path, capsys):")
+            lines.append(f"    path = tmp_path / '{name}.json'")
+            lines.append(f"    path.write_text(json.dumps({doc!r}), encoding='utf-8')")
+            lines.append("    assert host_main([str(path)]) == 0")
+            lines.append("    out = capsys.readouterr().out.strip()")
+            lines.append(f"    assert out == {expect_json!r}")
+            lines.append("")
+        elif kind == "json_idempotent":
+            doc = case.get("document", {})
+            lines.append(f"def test_declared_{name}(tmp_path):")
+            lines.append(f"    path = tmp_path / '{name}.json'")
+            lines.append(f"    path.write_text(json.dumps({doc!r}), encoding='utf-8')")
+            lines.append("    a = _presentation(program({'source': str(path)}))")
+            lines.append("    b = _presentation(program({'source': str(path)}))")
+            lines.append("    assert a == b")
+            lines.append("")
+        elif kind == "json_evidence_order":
+            doc = case.get("document", {})
+            required = case.get("required") or ()
+            lines.append(f"def test_declared_{name}(tmp_path):")
+            lines.append(f"    path = tmp_path / '{name}.json'")
+            lines.append(f"    path.write_text(json.dumps({doc!r}), encoding='utf-8')")
+            lines.append("    evidence = program({'source': str(path)})['evidence']")
+            lines.append(f"    required = {required!r}")
+            lines.append("    positions = [evidence.index(item) for item in required]")
+            lines.append("    assert positions == sorted(positions)")
             lines.append("")
         elif kind == "evidence_order":
             lines.append(f"def test_declared_{name}(tmp_path):")

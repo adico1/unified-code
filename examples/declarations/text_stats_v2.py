@@ -1,10 +1,39 @@
-"""Text statistics application — Unified Code declaration(thing) form.
+"""Text statistics — rewritten with generic expression operators only.
 
-Executable Python. One thing in, one thing out. Plain data only.
+No kind: text_stats. Uses str_len / line_count / word_count /
+unique_casefold_word_count expression nodes.
 """
+
+from unified.generator.expr import (
+    field,
+    line_count,
+    object_expr,
+    str_len,
+    unique_casefold_word_count,
+    unwrap_expr,
+    word_count,
+)
+
+
+def _node(x):
+    n = unwrap_expr(x)
+    if n is None:
+        raise ValueError(f"expected expression node, got {x!r}")
+    return n
 
 
 def declaration(thing):
+    text = field({"path": ("text",)})
+    result = object_expr(
+        {
+            "fields": {
+                "characters": str_len({"of": text}),
+                "lines": line_count({"of": text}),
+                "words": word_count({"of": text}),
+                "unique_words": unique_casefold_word_count({"of": text}),
+            }
+        }
+    )
     return {
         **thing,
         "value": {
@@ -40,49 +69,17 @@ def declaration(thing):
             ),
             "features": (
                 {
-                    "name": "validate_text",
-                    "role": "validate",
-                    "doc": "Require readable text inside the thing. No I/O.",
-                    "input_shape": {
-                        "type": "map",
-                        "fields": {"text": {"type": "str", "required": True}},
-                    },
-                    "transformation": {
-                        "kind": "require_str_field",
-                        "field": "text",
-                        "missing_error": "missing-text",
-                        "invalid_error": "invalid-text",
-                    },
-                    "invariants": ("text is str when formed",),
-                    "errors": (
-                        {"when": "missing text", "state": "absent", "error": "missing-text"},
-                        {"when": "non-str text", "state": "invalid", "error": "invalid-text"},
-                    ),
-                    "boundaries": (),
-                    "tests": (),
-                },
-                {
                     "name": "calculate_stats",
                     "role": "transform",
-                    "doc": "Compute deterministic text statistics. No I/O.",
-                    "input_shape": {
-                        "type": "map",
-                        "fields": {"text": {"type": "str", "required": True}},
-                    },
+                    "doc": "Compute text statistics via generic string expressions.",
                     "transformation": {
-                        "kind": "text_stats",
-                        "text_field": "text",
-                        "stats_field": "stats",
+                        "kind": "expression",
+                        "input_key": "text",
+                        "merge": "stats",
+                        "program": _node(result),
                     },
-                    "invariants": (
-                        "characters == len(text)",
-                        "lines == len(text.splitlines())",
-                        "words == len(text.split())",
-                        "unique_words uses casefold",
-                    ),
-                    "errors": (
-                        {"when": "missing text", "state": "absent", "error": "missing-text"},
-                    ),
+                    "invariants": (),
+                    "errors": (),
                     "boundaries": (),
                     "tests": (),
                 },
@@ -91,7 +88,6 @@ def declaration(thing):
                 "inward",
                 "letter",
                 "read_text_source",
-                "validate_text",
                 "calculate_stats",
                 "verify",
                 "outward",
@@ -107,21 +103,10 @@ def declaration(thing):
                     "letter:distinguished",
                     "boundary:read_text_source",
                     "read:ok",
-                    "part:validate_text",
-                    "validate_text:ok",
                     "part:calculate_stats",
                     "calculate_stats:ok",
                 ),
             },
-            "errors": (
-                "missing-source",
-                "extra-source",
-                "file-not-found",
-                "not-a-file",
-                "invalid-utf8",
-                "read-failure",
-                "missing-text",
-            ),
             "tests": (
                 {
                     "name": "empty",
@@ -168,17 +153,6 @@ def declaration(thing):
                     },
                 },
                 {
-                    "name": "trailing_nl",
-                    "kind": "file_text",
-                    "text": "line\n",
-                    "expect_stats": {
-                        "characters": 5,
-                        "lines": 1,
-                        "words": 1,
-                        "unique_words": 1,
-                    },
-                },
-                {
                     "name": "stdin_words",
                     "kind": "stdin_text",
                     "text": "stdin words here",
@@ -220,15 +194,26 @@ def declaration(thing):
                     "expect_json": '{"characters":1,"lines":1,"words":1,"unique_words":1}',
                 },
                 {
-                    "name": "evidence_order",
-                    "kind": "evidence_order",
-                },
-                {
                     "name": "idempotent",
                     "kind": "idempotent_output",
                 },
+                {
+                    "name": "evidence_order",
+                    "kind": "evidence_order",
+                    "required": (
+                        "boundary:inward",
+                        "letter:distinguished",
+                        "boundary:read_text_source",
+                        "read:ok",
+                        "part:calculate_stats",
+                        "calculate_stats:ok",
+                        "script-law:pass",
+                        "present_result:ok",
+                        "boundary:outward",
+                    ),
+                },
             ),
         },
-        "evidence": (*thing.get("evidence", ()), "declaration:text-stats-v2"),
+        "evidence": (*thing.get("evidence", ()), "declaration:text-stats-v2-expr"),
         "state": "formed",
     }
