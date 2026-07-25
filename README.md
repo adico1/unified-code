@@ -3,6 +3,8 @@
 Unified Code is an experimental functional construction grammar for writing
 software from one repeatedly practised form.
 
+[Read: The Age of AI Requires Standard Ten — One Unified Code for All Software](https://adico.tech/blog/2026/07/25/the-age-of-ai-requires-standard-ten-one-unified-code-for-all-software/)
+
 ```python
 def part(thing):
     return thing
