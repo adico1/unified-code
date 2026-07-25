@@ -84,7 +84,7 @@ def test_present_result_returns_thing(tmp_path):
 
 
 def test_gauntlet_on_declaration(tmp_path):
-    # Faster path: build once then gauntlet project mode
+    """Full gauntlet PASS is mandatory — a green unit suite must not hide failure."""
     built = run_build(
         inward(
             {
@@ -94,7 +94,7 @@ def test_gauntlet_on_declaration(tmp_path):
             }
         )
     )
-    assert built["state"] == "valid"
+    assert built["state"] == "valid", built.get("evidence")
     result = run_gauntlet(
         inward(
             {
@@ -104,8 +104,28 @@ def test_gauntlet_on_declaration(tmp_path):
             }
         )
     )
-    # Gauntlet may be strict; report structure always
-    assert "levels" in result["value"]
-    assert "verdict" in result["value"]
-    assert "checks_executed" in result["value"]
-    assert result["value"]["checks_executed"] >= 1
+    value = result["value"]
+    assert result["state"] == "valid", (
+        f"gauntlet state={result.get('state')} "
+        f"verdict={value.get('verdict')} "
+        f"failed={value.get('failed_checks')}"
+    )
+    assert value["verdict"] == "pass", value.get("failed_checks")
+    assert value["checks_failed"] == 0, value.get("failed_checks")
+    assert value["checks_passed"] == value["checks_executed"]
+    assert value["checks_executed"] >= 1
+    assert "levels" in value
+    for level_name in ("G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8"):
+        level = value["levels"].get(level_name)
+        assert isinstance(level, dict), f"missing level {level_name}"
+        assert level.get("verdict") == "pass", (
+            f"{level_name} failed: {level.get('failed_checks')}"
+        )
+    # G7 must cover all 15 required mutations
+    mutation_matrix = value["levels"]["G7"].get("mutation_matrix") or {}
+    detected = [
+        key
+        for key, info in mutation_matrix.items()
+        if key.startswith("detect:") and info.get("detected")
+    ]
+    assert len(detected) == 15, detected
