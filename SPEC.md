@@ -187,6 +187,14 @@ benchmark logic; cloud-runner wall time is not the authority for L9.
 
 ## Open design points
 
+### Host-edge presentation and L1
+
+Process-edge adapters such as `host_present(thing) -> (text, exit_code)` return
+a pair for the OS host, not a canonical thing. They are not public kernel
+Parts and must not appear inside nested domain composition. Whether such
+host-edge adapters are formally L1-exempt is unresolved. Kernel and domain
+parts remain strictly Thing→Thing.
+
 ### `world()` and invalid things
 
 `world()` currently appends `world:composed` even when the input thing has

@@ -100,14 +100,39 @@ by understanding the domain—not by rewriting project scaffolding.
 
 ```bash
 uc new <project-name>
+uc new <project-name> --declaration path/to/program.py
 uc add <feature-name>
+uc add <feature-name> --declaration path/to/feature.py
 uc benchmark
 uc benchmark --iterations 20
 ```
 
-`uc new` creates a runnable UC-1 project. `uc add` inserts one new
-one-input/one-output part into the existing nested composition and generates
-its test. `uc benchmark` measures real `new` and `add` against L9 on the
+`uc new` without a declaration creates a scaffold (architectural shape).
+`uc new --declaration` loads a code-based `PROGRAM` dict and generates
+runtime parts, boundaries, CLI, presentation, verify rules, and tests from
+that plain-data declaration.
+
+`uc add` without a declaration inserts an evidence-only stub (historical
+behavior). `uc add --declaration` loads a `FEATURE` dict with:
+
+```text
+input shape
+transformation
+invariants
+boundaries
+errors
+presentation (via program)
+tests
+```
+
+Declarations are Python modules defining `PROGRAM` or `FEATURE` as dicts.
+No YAML. No classes.
+
+See `examples/declarations/text_stats_program.py` for a full program that
+regenerates the text-statistics application with near-zero manual runtime
+code.
+
+`uc benchmark` measures real `new` and `add` against L9 on the
 local machine (authoritative for the one-second rule).
 
 Local wall-clock integration command:

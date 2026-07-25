@@ -1,0 +1,170 @@
+"""Code-based PROGRAM declaration for deterministic text statistics.
+
+Plain data only. No YAML. Loaded by:
+  uc new uc-text-stats --declaration examples/declarations/text_stats_program.py
+"""
+
+PROGRAM = {
+    "name": "uc-text-stats",
+    "package": "uc_text_stats",
+    "description": "Read UTF-8 text from a file or stdin; emit deterministic JSON stats.",
+    "composition": (
+        "inward",
+        "letter",
+        "read_text_source",
+        "validate_text",
+        "calculate_stats",
+        "verify",
+        "outward",
+    ),
+    "boundaries": (
+        {
+            "kind": "read_utf8_source",
+            "name": "read_text_source",
+            "source_field": "source",
+            "text_field": "text",
+        },
+    ),
+    "cli": {
+        "script": "uc-text-stats",
+        "argv": {
+            "field": "source",
+            "arity": 1,
+            "stdin_token": "-",
+            "errors": {
+                "missing": "missing-source",
+                "extra": "extra-source",
+            },
+        },
+    },
+    "presentation": {
+        "success_from": "stats",
+        "success_keys": ("characters", "lines", "words", "unique_words"),
+    },
+    "verify": {
+        "require_value_field": "stats",
+        "require_evidence_contains": (
+            "boundary:inward",
+            "letter:distinguished",
+            "boundary:read_text_source",
+            "read:ok",
+            "part:validate_text",
+            "validate_text:ok",
+            "part:calculate_stats",
+            "calculate_stats:ok",
+        ),
+    },
+    "features": (
+        {
+            "name": "validate_text",
+            "role": "validate",
+            "doc": "Require readable text inside the thing. No I/O.",
+            "input_shape": {
+                "type": "map",
+                "fields": {"text": {"type": "str", "required": True}},
+            },
+            "transformation": {
+                "kind": "require_str_field",
+                "field": "text",
+                "missing_error": "missing-text",
+                "invalid_error": "invalid-text",
+            },
+            "invariants": ("text is str when state is formed",),
+            "errors": (
+                {"when": "missing text", "state": "absent", "error": "missing-text"},
+                {"when": "non-str text", "state": "invalid", "error": "invalid-text"},
+            ),
+            "boundaries": (),
+            "tests": (),
+        },
+        {
+            "name": "calculate_stats",
+            "role": "transform",
+            "doc": "Compute deterministic text statistics. No I/O.",
+            "input_shape": {
+                "type": "map",
+                "fields": {"text": {"type": "str", "required": True}},
+            },
+            "transformation": {
+                "kind": "text_stats",
+                "text_field": "text",
+                "stats_field": "stats",
+            },
+            "invariants": (
+                "characters == len(text)",
+                "lines == len(text.splitlines())",
+                "words == len(text.split())",
+                "unique_words uses casefold",
+            ),
+            "errors": (
+                {"when": "missing text", "state": "absent", "error": "missing-text"},
+            ),
+            "boundaries": (),
+            "tests": (),
+        },
+    ),
+    "tests": (
+        {
+            "name": "empty",
+            "kind": "file_text",
+            "text": "",
+            "expect_stats": {
+                "characters": 0,
+                "lines": 0,
+                "words": 0,
+                "unique_words": 0,
+            },
+        },
+        {
+            "name": "one_line",
+            "kind": "file_text",
+            "text": "hello world",
+            "expect_stats": {
+                "characters": 11,
+                "lines": 1,
+                "words": 2,
+                "unique_words": 2,
+            },
+        },
+        {
+            "name": "casefold",
+            "kind": "file_text",
+            "text": "Go go GO",
+            "expect_stats": {
+                "characters": 8,
+                "lines": 1,
+                "words": 3,
+                "unique_words": 1,
+            },
+        },
+        {
+            "name": "stdin_words",
+            "kind": "stdin_text",
+            "text": "stdin words here",
+            "expect_stats": {
+                "characters": 16,
+                "lines": 1,
+                "words": 3,
+                "unique_words": 3,
+            },
+        },
+        {
+            "name": "missing_arg",
+            "kind": "cli_error",
+            "argv": [],
+            "error": "missing-source",
+        },
+        {
+            "name": "extra_arg",
+            "kind": "cli_error",
+            "argv": ["a", "b"],
+            "error": "extra-source",
+        },
+        {
+            "name": "stable_json",
+            "kind": "stable_json",
+            "text": "x",
+            "expect_json": '{"characters":1,"lines":1,"words":1,"unique_words":1}',
+        },
+    ),
+}

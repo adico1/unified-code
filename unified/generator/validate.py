@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from ..thing import is_thing
+from .declaration import load_declaration_file
 from .names import is_valid_feature_name, is_valid_project_name, package_name_from_project
 
 
@@ -90,15 +91,53 @@ def _validate_new(thing, value):
             "state": "invalid",
         }
 
+    declaration = None
+    decl_path = value.get("declaration")
+    if decl_path is not None:
+        loaded = load_declaration_file(decl_path)
+        if not loaded.get("ok"):
+            return {
+                **thing,
+                "evidence": (
+                    *thing["evidence"],
+                    "validate:declaration-failed",
+                    f"validate:{loaded.get('error')}",
+                ),
+                "state": "invalid",
+            }
+        if loaded.get("kind") != "program":
+            return {
+                **thing,
+                "evidence": (*thing["evidence"], "validate:declaration-not-program"),
+                "state": "invalid",
+            }
+        declaration = loaded["declaration"]
+        # Program declaration owns package/features when provided.
+        package = declaration["package"]
+        if declaration["name"] != name and declaration["name"] != package:
+            # allow project folder name to differ slightly only if package matches
+            pass
+
+    features = (
+        tuple(f["name"] for f in declaration["features"])
+        if declaration is not None
+        else ("transform",)
+    )
+
     return {
         **thing,
         "value": {
             **value,
             "package": package,
             "project_path": str(project_path),
-            "features": ("transform",),
+            "features": features,
+            "program_declaration": declaration,
         },
-        "evidence": (*thing["evidence"], "validate:new-ok"),
+        "evidence": (
+            *thing["evidence"],
+            "validate:new-ok",
+            *(("validate:program-declaration",) if declaration is not None else ()),
+        ),
         "state": "formed",
     }
 
@@ -179,6 +218,34 @@ def _validate_add(thing, value):
             "state": "invalid",
         }
 
+    feature_declaration = None
+    decl_path = value.get("declaration")
+    if decl_path is not None:
+        loaded = load_declaration_file(decl_path)
+        if not loaded.get("ok"):
+            return {
+                **thing,
+                "evidence": (
+                    *thing["evidence"],
+                    "validate:declaration-failed",
+                    f"validate:{loaded.get('error')}",
+                ),
+                "state": "invalid",
+            }
+        if loaded.get("kind") != "feature":
+            return {
+                **thing,
+                "evidence": (*thing["evidence"], "validate:declaration-not-feature"),
+                "state": "invalid",
+            }
+        feature_declaration = loaded["declaration"]
+        if feature_declaration["name"] != name:
+            return {
+                **thing,
+                "evidence": (*thing["evidence"], "validate:declaration-name-mismatch"),
+                "state": "invalid",
+            }
+
     return {
         **thing,
         "value": {
@@ -187,8 +254,13 @@ def _validate_add(thing, value):
             "project_path": str(project_root),
             "features": features,
             "feature": name,
+            "feature_declaration": feature_declaration,
         },
-        "evidence": (*thing["evidence"], "validate:add-ok"),
+        "evidence": (
+            *thing["evidence"],
+            "validate:add-ok",
+            *(("validate:feature-declaration",) if feature_declaration is not None else ()),
+        ),
         "state": "formed",
     }
 

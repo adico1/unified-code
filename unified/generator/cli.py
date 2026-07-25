@@ -78,28 +78,62 @@ def _parse_argv(argv: list[str]) -> dict:
         return {"command": None, "error": "missing-command"}
     command = argv[0]
     if command == "new":
-        if len(argv) != 2:
+        # uc new <name> [--declaration path]
+        if len(argv) < 2:
             return {
                 "command": "new",
-                "name": argv[1] if len(argv) > 1 else None,
+                "name": None,
                 "parent": None,
                 "error": "usage-new",
             }
         name = argv[1]
-        parent = str(Path.cwd())
-        return {"command": "new", "name": name, "parent": parent}
+        declaration = None
+        i = 2
+        while i < len(argv):
+            if argv[i] == "--declaration" and i + 1 < len(argv):
+                declaration = argv[i + 1]
+                i += 2
+                continue
+            return {
+                "command": "new",
+                "name": name,
+                "parent": str(Path.cwd()),
+                "error": f"unknown-flag:{argv[i]}",
+            }
+        return {
+            "command": "new",
+            "name": name,
+            "parent": str(Path.cwd()),
+            "declaration": declaration,
+        }
     if command == "add":
-        if len(argv) != 2:
+        # uc add <feature> [--declaration path]
+        if len(argv) < 2:
             return {
                 "command": "add",
-                "name": argv[1] if len(argv) > 1 else None,
+                "name": None,
                 "project_root": str(Path.cwd()),
                 "error": "usage-add",
             }
+        name = argv[1]
+        declaration = None
+        i = 2
+        while i < len(argv):
+            if argv[i] == "--declaration" and i + 1 < len(argv):
+                declaration = argv[i + 1]
+                i += 2
+                continue
+            return {
+                "command": "add",
+                "name": name,
+                "project_root": str(Path.cwd()),
+                "error": f"unknown-flag:{argv[i]}",
+            }
         return {
             "command": "add",
-            "name": argv[1],
+            "name": name,
             "project_root": str(Path.cwd()),
+            "declaration": declaration,
         }
     if command == "benchmark":
         iterations = 10

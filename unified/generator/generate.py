@@ -6,6 +6,7 @@ from pathlib import Path
 
 from ..thing import is_thing
 from .render import render_add_feature, render_new_project
+from .render_declared import render_feature_into_project, render_program
 
 
 def generate(thing):
@@ -54,7 +55,13 @@ def _generate_new(thing, value):
     package = value["package"]
     name = value["name"]
     features = tuple(value["features"])
-    files = render_new_project(package, name, features)
+    program_declaration = value.get("program_declaration")
+    if program_declaration is not None:
+        files = render_program(program_declaration)
+        mark = "generate:new-plan-from-declaration"
+    else:
+        files = render_new_project(package, name, features)
+        mark = "generate:new-plan"
     return {
         **thing,
         "value": {
@@ -66,7 +73,7 @@ def _generate_new(thing, value):
         "evidence": (
             *thing["evidence"],
             f"generate:files:{len(files)}",
-            "generate:new-plan",
+            mark,
         ),
         "state": "formed",
     }
@@ -118,7 +125,20 @@ def _generate_add(thing, value):
         }
 
     project_name = project_path.name
-    files = render_add_feature(package, project_name, existing, feature, current)
+    feature_declaration = value.get("feature_declaration")
+    if feature_declaration is not None:
+        files = render_feature_into_project(
+            package,
+            project_name,
+            existing,
+            feature_declaration,
+            current,
+            stub_only=False,
+        )
+        mark = f"generate:add-declared:{feature}"
+    else:
+        files = render_add_feature(package, project_name, existing, feature, current)
+        mark = f"generate:add:{feature}"
     return {
         **thing,
         "value": {
@@ -131,7 +151,7 @@ def _generate_add(thing, value):
         "evidence": (
             *thing["evidence"],
             f"generate:files:{len(files)}",
-            f"generate:add:{feature}",
+            mark,
         ),
         "state": "formed",
     }
