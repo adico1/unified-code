@@ -1,5 +1,6 @@
 # UEM-16 C99 — portable core + host adapters
 # L12: a target is supported only after native hardware golden pass.
+# Coverage objects live in build/*.o so harness and uem-c share .gcda.
 
 CC ?= cc
 CFLAGS ?= -std=c99 -Wall -Wextra -Werror=implicit-function-declaration -O2
@@ -15,15 +16,24 @@ CORE_SRC = \
   third_party/cJSON.c \
   third_party/sha256.c
 
-POSIX_SRC = host/posix/main.c $(CORE_SRC)
-WASM_SRC  = host/wasm/main.c $(CORE_SRC)
-MCU_SRC   = host/mcu/mcu_host.c $(CORE_SRC)
+CORE_OBJ = \
+  build/decode.o \
+  build/machine.o \
+  build/primitives.o \
+  build/expr.o \
+  build/decimal.o \
+  build/cJSON.o \
+  build/sha256.o
+
+POSIX_OBJ = build/main.o $(CORE_OBJ)
+COV_HARNESS_OBJ = build/core_coverage_harness.o $(CORE_OBJ)
 
 BUILD = build
 POSIX_BIN = $(BUILD)/uem-c
-MCU_BIN   = $(BUILD)/uem-mcu-demo
+COV_BIN = $(BUILD)/core-coverage
+MCU_BIN = $(BUILD)/uem-mcu-demo
 
-.PHONY: all clean test asan ubsan posix mcu wasm-compile report l12
+.PHONY: all clean test asan ubsan posix mcu wasm-compile report l12 coverage-bin
 
 all: posix
 
@@ -31,16 +41,42 @@ posix: $(POSIX_BIN)
 
 mcu: $(MCU_BIN)
 
+coverage-bin: $(POSIX_BIN) $(COV_BIN)
+
 $(BUILD):
 	mkdir -p $(BUILD)
 
-$(POSIX_BIN): $(POSIX_SRC) include/uem.h | $(BUILD)
-	$(CC) $(CFLAGS) -o $@ $(POSIX_SRC) $(LDFLAGS)
+build/decode.o: core/decode.c include/uem.h | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ core/decode.c
+build/machine.o: core/machine.c include/uem.h | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ core/machine.c
+build/primitives.o: core/primitives.c include/uem.h | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ core/primitives.c
+build/expr.o: core/expr.c include/uem.h | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ core/expr.c
+build/decimal.o: core/decimal.c | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ core/decimal.c
+build/cJSON.o: third_party/cJSON.c | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ third_party/cJSON.c
+build/sha256.o: third_party/sha256.c | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ third_party/sha256.c
+build/main.o: host/posix/main.c include/uem.h | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ host/posix/main.c
+build/core_coverage_harness.o: tests/core_coverage_harness.c include/uem.h | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ tests/core_coverage_harness.c
+
+$(POSIX_BIN): $(POSIX_OBJ)
+	$(CC) $(CFLAGS) -o $@ $(POSIX_OBJ) $(LDFLAGS)
+
+$(COV_BIN): $(COV_HARNESS_OBJ)
+	$(CC) $(CFLAGS) -o $@ $(COV_HARNESS_OBJ) $(LDFLAGS)
 
 $(MCU_BIN): $(MCU_SRC) include/uem.h host/mcu/uem_mcu.h | $(BUILD)
-	$(CC) $(CFLAGS) -DUEM_MCU_1 -o $@ $(MCU_SRC) $(LDFLAGS)
+	$(CC) $(CFLAGS) -DUEM_MCU_1 -o $@ host/mcu/mcu_host.c $(CORE_SRC) $(LDFLAGS)
 
-# Wasm: compile-only unless WASI toolchain present
+MCU_SRC = host/mcu/mcu_host.c $(CORE_SRC)
+WASM_SRC = host/wasm/main.c $(CORE_SRC)
+
 wasm-compile: | $(BUILD)
 	@if command -v clang >/dev/null 2>&1; then \
 	  clang $(CFLAGS) -DUEM_HOST_WASM -target wasm32-wasi \
@@ -51,6 +87,7 @@ wasm-compile: | $(BUILD)
 
 clean:
 	rm -rf $(BUILD)
+	rm -f *.gcov core/*.gcov
 
 asan: CFLAGS += -g -O1 -fsanitize=address -fno-omit-frame-pointer
 asan: LDFLAGS += -fsanitize=address

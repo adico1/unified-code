@@ -128,17 +128,20 @@ def _pct(hit: int, total: int) -> float:
 
 
 def _gcno_for_core(stem: str) -> Path | None:
-    """Locate note file for a core translation unit (Apple clang: uem-c-<stem>.gcno)."""
+    """Locate note file for a core translation unit.
+
+    Preferred (object build): build/<stem>.gcno
+    Legacy single-link (Apple): build/uem-c-<stem>.gcno
+    """
     build = CROOT / "build"
     candidates = [
-        build / f"uem-c-{stem}.gcno",
         build / f"{stem}.gcno",
+        build / f"uem-c-{stem}.gcno",
         CROOT / "core" / f"{stem}.gcno",
     ]
     for p in candidates:
         if p.is_file():
             return p
-    # last resort: any *-{stem}.gcno under build
     for p in sorted(build.glob(f"*-{stem}.gcno")):
         return p
     return None
@@ -154,18 +157,22 @@ def measure_c_coverage() -> dict:
     """
     import re
 
+    cov_flags = (
+        "CFLAGS=-std=c99 -Wall -O0 -g --coverage "
+        "-Iinclude -Ithird_party -Icore -Ihost/mcu"
+    )
     _run(["make", "-C", str(CROOT), "clean"], cwd=str(ROOT))
     r = _run(
         [
             "make",
             "-C",
             str(CROOT),
-            "posix",
-            "CFLAGS=-std=c99 -Wall -O0 -g --coverage -Iinclude -Ithird_party -Icore -Ihost/mcu",
+            "coverage-bin",
+            cov_flags,
             "LDFLAGS=--coverage",
         ],
         cwd=str(ROOT),
-        timeout=120,
+        timeout=180,
     )
     if r.returncode != 0:
         return {
@@ -186,6 +193,7 @@ def measure_c_coverage() -> dict:
         }
 
     bin_path = CROOT / "build" / "uem-c"
+    harness = CROOT / "build" / "core-coverage"
     if not bin_path.is_file():
         return {
             "ok": False,
@@ -205,7 +213,11 @@ def measure_c_coverage() -> dict:
 
     env = os.environ.copy()
     env["UEM_C"] = str(bin_path)
-    # Exercise portable core via public host only (no third_party scoring).
+    # 1) Dedicated core harness (shares .o/.gcda with uem-c)
+    if harness.is_file():
+        _run([str(harness)], cwd=str(CROOT), timeout=120)
+        _run([str(harness)], cwd=str(ROOT), timeout=120)
+    # 2) Public host exercise via pytest + catalogs + goldens
     _run(
         [
             str(ROOT / ".venv" / "bin" / "python"),
@@ -247,9 +259,12 @@ def measure_c_coverage() -> dict:
         )
     for v in (CROOT / "tests/vectors").glob("*.uem"):
         _run([str(bin_path), "verify", str(v)])
-    for g in (CROOT / "tests/golden").glob("*.json"):
-        # golden host payloads if paired .uem exists
-        pass
+    for v in (CROOT / "tests" / "coverage_vectors").glob("*.uem"):
+        _run([str(bin_path), "verify", str(v)])
+        _run([str(bin_path), "run", str(v), "--host", '{"text":"cov path\\nwords"}'])
+    # 3) Re-run harness after host traffic so shared gcda accumulate
+    if harness.is_file():
+        _run([str(harness)], cwd=str(CROOT), timeout=120)
 
     # Collect gcov for core/*.c only
     lines_hit = lines_total = 0

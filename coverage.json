@@ -1,92 +1,92 @@
 {
   "dimensions": {
     "c_branches": {
-      "actual": 53.5919540229885,
+      "actual": 69.79768786127168,
       "ok": false,
       "raw": {
-        "hit": 746,
-        "total": 1392
+        "hit": 966,
+        "total": 1384
       },
       "required": 100.0
     },
     "c_functions": {
-      "actual": 95.0,
-      "ok": false,
+      "actual": 100.0,
+      "ok": true,
       "raw": {
-        "hit": 57,
+        "hit": 60,
         "total": 60
       },
       "required": 100.0
     },
     "c_lines": {
-      "actual": 80.55190538764784,
+      "actual": 92.8336620644313,
       "ok": false,
       "raw": {
         "error": null,
         "files": [
           {
-            "branches_hit": 80,
-            "branches_pct": 43.48,
-            "branches_total": 184,
+            "branches_hit": 130,
+            "branches_pct": 73.86,
+            "branches_total": 176,
             "functions_hit": 11,
             "functions_total": 11,
-            "gcno": "uem-c-decimal.gcno",
-            "lines_hit": 137,
-            "lines_pct": 88.39,
-            "lines_total": 155,
+            "gcno": "decimal.gcno",
+            "lines_hit": 153,
+            "lines_pct": 99.35,
+            "lines_total": 154,
             "source": "core/decimal.c"
           },
           {
-            "branches_hit": 141,
-            "branches_pct": 46.38,
+            "branches_hit": 190,
+            "branches_pct": 62.5,
             "branches_total": 304,
             "functions_hit": 12,
             "functions_total": 12,
-            "gcno": "uem-c-decode.gcno",
-            "lines_hit": 211,
-            "lines_pct": 77.57,
+            "gcno": "decode.gcno",
+            "lines_hit": 249,
+            "lines_pct": 91.54,
             "lines_total": 272,
             "source": "core/decode.c"
           },
           {
-            "branches_hit": 219,
-            "branches_pct": 61.86,
+            "branches_hit": 256,
+            "branches_pct": 72.32,
             "branches_total": 354,
             "functions_hit": 6,
             "functions_total": 6,
-            "gcno": "uem-c-expr.gcno",
-            "lines_hit": 301,
-            "lines_pct": 85.51,
+            "gcno": "expr.gcno",
+            "lines_hit": 326,
+            "lines_pct": 92.61,
             "lines_total": 352,
             "source": "core/expr.c"
           },
           {
-            "branches_hit": 157,
-            "branches_pct": 54.51,
+            "branches_hit": 207,
+            "branches_pct": 71.88,
             "branches_total": 288,
-            "functions_hit": 13,
+            "functions_hit": 16,
             "functions_total": 16,
-            "gcno": "uem-c-machine.gcno",
-            "lines_hit": 306,
-            "lines_pct": 78.46,
+            "gcno": "machine.gcno",
+            "lines_hit": 369,
+            "lines_pct": 94.62,
             "lines_total": 390,
             "source": "core/machine.c"
           },
           {
-            "branches_hit": 149,
-            "branches_pct": 56.87,
+            "branches_hit": 183,
+            "branches_pct": 69.85,
             "branches_total": 262,
             "functions_hit": 15,
             "functions_total": 15,
-            "gcno": "uem-c-primitives.gcno",
-            "lines_hit": 271,
-            "lines_pct": 76.77,
+            "gcno": "primitives.gcno",
+            "lines_hit": 315,
+            "lines_pct": 89.24,
             "lines_total": 353,
             "source": "core/primitives.c"
           }
         ],
-        "hit": 1226,
-        "total": 1522
+        "hit": 1412,
+        "total": 1521
       },
       "required": 100.0
     },
@@ -361,6 +361,14 @@
           "false"
         ],
         [
+          "formed",
+          "absent"
+        ],
+        [
+          "valid",
+          "valid"
+        ],
+        [
           "unknown",
           "absent"
         ],
@@ -369,20 +377,16 @@
           "false"
         ],
         [
-          "formed",
-          "false"
-        ],
-        [
-          "absent",
-          "absent"
-        ],
-        [
           "unknown",
           "formed"
         ],
         [
-          "unknown",
+          "formed",
           "invalid"
+        ],
+        [
+          "absent",
+          "absent"
         ],
         [
           "invalid",
@@ -390,18 +394,14 @@
         ],
         [
           "formed",
-          "absent"
+          "false"
         ],
         [
-          "formed",
-          "valid"
-        ],
-        [
-          "formed",
+          "unknown",
           "invalid"
         ],
         [
-          "valid",
+          "formed",
           "valid"
         ]
       ],
@@ -409,7 +409,7 @@
       "required": 100.0
     }
   },
-  "duration_s": 129.4605302810669,
+  "duration_s": 22.551445960998535,
   "l13": true,
   "rules": {
     "no_pragma_no_cover": true,

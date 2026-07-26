@@ -136,34 +136,35 @@ uem_dec uem_dec_quantize(uem_dec a, const char *exp, const char *rounding) {
     uem_dec r;
     int places = exp_places(exp);
     int64_t unit, q, rem;
-    int half_up = 1;
+    const char *mode = rounding ? rounding : "ROUND_HALF_UP";
     r.ok = 0;
     if (!a.ok) return r;
-    if (rounding && strcmp(rounding, "ROUND_HALF_UP") != 0 &&
-        strcmp(rounding, "ROUND_DOWN") != 0 &&
-        strcmp(rounding, "ROUND_UP") != 0 &&
-        strcmp(rounding, "ROUND_HALF_EVEN") != 0) {
+    if (strcmp(mode, "ROUND_HALF_UP") != 0 &&
+        strcmp(mode, "ROUND_DOWN") != 0 &&
+        strcmp(mode, "ROUND_UP") != 0 &&
+        strcmp(mode, "ROUND_HALF_EVEN") != 0) {
         return r;
     }
-    if (rounding && strcmp(rounding, "ROUND_DOWN") == 0) half_up = 0;
     unit = pow10i(UEM_DEC_SCALE - places);
     if (unit <= 0) return r;
     q = a.coeff / unit;
     rem = a.coeff % unit;
     if (rem < 0) rem = -rem;
-    if (half_up) {
-        if (rem * 2 >= unit) {
-            /* ROUND_HALF_UP: away from zero on ties for positive; match Decimal */
-            if (a.coeff >= 0) q += 1;
-            else q -= 1;
-        }
-    } else if (rounding && strcmp(rounding, "ROUND_UP") == 0) {
+    if (strcmp(mode, "ROUND_DOWN") == 0) {
+        /* truncate toward zero: keep q */
+    } else if (strcmp(mode, "ROUND_UP") == 0) {
         if (rem != 0) {
             if (a.coeff >= 0) q += 1;
             else q -= 1;
         }
-    } else if (rounding && strcmp(rounding, "ROUND_HALF_EVEN") == 0) {
+    } else if (strcmp(mode, "ROUND_HALF_EVEN") == 0) {
         if (rem * 2 > unit || (rem * 2 == unit && (q & 1))) {
+            if (a.coeff >= 0) q += 1;
+            else q -= 1;
+        }
+    } else {
+        /* ROUND_HALF_UP */
+        if (rem * 2 >= unit) {
             if (a.coeff >= 0) q += 1;
             else q -= 1;
         }
