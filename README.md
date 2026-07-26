@@ -29,11 +29,12 @@ result = outer(middle(inner(thing)))
 > is **not** claimed (open migration gaps in [AUDIT_STANDARD_TEN.md](AUDIT_STANDARD_TEN.md)).
 >
 > **Current verification:** functional suites and behavioral gauntlets
-> **pass**. L13 complete multi-dimension coverage is **not closed**: Python
-> statements/branches, opcodes, primitives, differential, physical goldens,
-> and fuzz 100k report 100%, but **C core coverage is incomplete** (lines
-> ~99.6% 1484/1490, functions 100% 60/60, branches ~75.5% 1036/1372). Zero-total
-> C coverage is treated as failure, not 100%. See [GAUNTLET.md](GAUNTLET.md)
+> **pass**, including full invoice Python/C differential (basic, empty,
+> half-cent, reject paths). L13 multi-dimension coverage is **not closed**:
+> **C lines 100% (1567/1567), C functions 100% (76/76), C branches incomplete
+> ~76.86% (1096/1426).** Branch ledger: `c/tests/BRANCH_LEDGER.md`
+> (`missing_arcs` 313, `unclassified_arcs` 0 — classified ≠ resolved).
+> Zero-total C coverage is failure, not 100%. See [GAUNTLET.md](GAUNTLET.md)
 > and [coverage.json](coverage.json).
 >
 > **Hardware claim:** only targets with `native-pass` in
@@ -181,10 +182,13 @@ Never one averaged score. The build **must** fail if any dimension is below 100%
 Emits `coverage.json` and `GAUNTLET.md`.
 
 **Current result: FAIL.** Behavioral dimensions and Python code coverage
-pass; **C lines / functions / branches do not** (published hit/total in
-`coverage.json`). Zero denominators fail the gate—they never count as
-100%. See [GAUNTLET.md](GAUNTLET.md) and [coverage.json](coverage.json).
-If a local run differs, trust the files that `run_l13.sh` just wrote.
+pass (invoice Py/C differential restored). **C lines and functions pass**;
+**C branches do not** (1096/1426). Allocator fault injection is in place
+(`uem_allocator` / `fail_after`); branch work is tracked in
+`c/tests/BRANCH_LEDGER.md` (`missing_arcs` vs `unclassified_arcs`). Zero
+denominators fail the gate—they never count as 100%. See
+[GAUNTLET.md](GAUNTLET.md) and [coverage.json](coverage.json). If a local
+run differs, trust the files that `run_l13.sh` just wrote.
 
 ### Standard Ten (governing contract)
 

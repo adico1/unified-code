@@ -1,11 +1,22 @@
 {
+  "branch_ledger": {
+    "by_class": {
+      "reachable": 300,
+      "short-circuit": 13
+    },
+    "missing_arcs": 313,
+    "note": "classified\u2260resolved; L13 branch FAIL until missing_arcs==0",
+    "path": "c/tests/BRANCH_LEDGER.md",
+    "resolved_arcs": 0,
+    "unclassified_arcs": 0
+  },
   "dimensions": {
     "c_branches": {
-      "actual": 75.51020408163265,
+      "actual": 76.85834502103786,
       "ok": false,
       "raw": {
-        "hit": 1036,
-        "total": 1372
+        "hit": 1096,
+        "total": 1426
       },
       "required": 100.0
     },
@@ -13,17 +24,29 @@
       "actual": 100.0,
       "ok": true,
       "raw": {
-        "hit": 60,
-        "total": 60
+        "hit": 76,
+        "total": 76
       },
       "required": 100.0
     },
     "c_lines": {
-      "actual": 99.59731543624162,
-      "ok": false,
+      "actual": 100.0,
+      "ok": true,
       "raw": {
         "error": null,
         "files": [
+          {
+            "branches_hit": 42,
+            "branches_pct": 100.0,
+            "branches_total": 42,
+            "functions_hit": 16,
+            "functions_total": 16,
+            "gcno": "alloc.gcno",
+            "lines_hit": 72,
+            "lines_pct": 100.0,
+            "lines_total": 72,
+            "source": "core/alloc.c"
+          },
           {
             "branches_hit": 131,
             "branches_pct": 74.43,
@@ -37,27 +60,27 @@
             "source": "core/decimal.c"
           },
           {
-            "branches_hit": 201,
-            "branches_pct": 68.84,
-            "branches_total": 292,
+            "branches_hit": 216,
+            "branches_pct": 72.0,
+            "branches_total": 300,
             "functions_hit": 11,
             "functions_total": 11,
             "gcno": "decode.gcno",
-            "lines_hit": 231,
-            "lines_pct": 97.47,
-            "lines_total": 237,
+            "lines_hit": 236,
+            "lines_pct": 100.0,
+            "lines_total": 236,
             "source": "core/decode.c"
           },
           {
-            "branches_hit": 286,
-            "branches_pct": 80.79,
+            "branches_hit": 287,
+            "branches_pct": 81.07,
             "branches_total": 354,
             "functions_hit": 6,
             "functions_total": 6,
             "gcno": "expr.gcno",
-            "lines_hit": 352,
+            "lines_hit": 355,
             "lines_pct": 100.0,
-            "lines_total": 352,
+            "lines_total": 355,
             "source": "core/expr.c"
           },
           {
@@ -73,20 +96,20 @@
             "source": "core/machine.c"
           },
           {
-            "branches_hit": 194,
-            "branches_pct": 75.19,
-            "branches_total": 258,
+            "branches_hit": 196,
+            "branches_pct": 74.81,
+            "branches_total": 262,
             "functions_hit": 15,
             "functions_total": 15,
             "gcno": "primitives.gcno",
-            "lines_hit": 351,
+            "lines_hit": 354,
             "lines_pct": 100.0,
-            "lines_total": 351,
+            "lines_total": 354,
             "source": "core/primitives.c"
           }
         ],
-        "hit": 1484,
-        "total": 1490
+        "hit": 1567,
+        "total": 1567
       },
       "required": 100.0
     },
@@ -357,12 +380,20 @@
       "ok": true,
       "permitted_catalog": [
         [
-          "invalid",
+          "unknown",
           "invalid"
         ],
         [
-          "unknown",
-          "formed"
+          "absent",
+          "absent"
+        ],
+        [
+          "formed",
+          "invalid"
+        ],
+        [
+          "invalid",
+          "invalid"
         ],
         [
           "unknown",
@@ -373,8 +404,8 @@
           "valid"
         ],
         [
-          "absent",
-          "absent"
+          "unknown",
+          "formed"
         ],
         [
           "formed",
@@ -387,18 +418,10 @@
         [
           "formed",
           "false"
-        ],
-        [
-          "unknown",
-          "invalid"
         ],
         [
           "false",
           "false"
-        ],
-        [
-          "formed",
-          "invalid"
         ],
         [
           "valid",
@@ -409,7 +432,7 @@
       "required": 100.0
     }
   },
-  "duration_s": 16.46029281616211,
+  "duration_s": 97.11733913421631,
   "l13": true,
   "rules": {
     "no_pragma_no_cover": true,
