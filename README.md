@@ -1,8 +1,5 @@
 # Unified Code
 
-**Governing contract: [STANDARD_TEN.md](STANDARD_TEN.md) (TEN-1).**  
-Conventional development is not an authorized fallback. Unsupported work stops at `standard.gap`.
-
 Unified Code is an experimental functional construction grammar for writing
 software from one repeatedly practised form.
 
@@ -19,6 +16,28 @@ Parts are assembled directly inside other parts:
 result = outer(middle(inner(thing)))
 ```
 
+> **Status: experimental research prototype**
+>
+> Unified Code currently demonstrates generated applications, event-driven
+> domain composition, deterministic UEM-16 bytecode, and equivalent Python/C
+> execution for published golden vectors.
+>
+> **Governing contract:** [STANDARD_TEN.md](STANDARD_TEN.md) (TEN-1) — one
+> Thing, one seed, no handwritten application code, UEM-only execution.
+> Conventional development is not an authorized fallback; unsupported work
+> stops at `standard.gap`. Full-tree clean-room regeneration from seed alone
+> is **not** claimed (open migration gaps in [AUDIT_STANDARD_TEN.md](AUDIT_STANDARD_TEN.md)).
+>
+> **Current verification:** functional suites, behavioral gauntlets, and L13
+> complete multi-dimension coverage report **pass** (Python statements/
+> branches, C lines/functions/branches, opcodes, primitives, differential,
+> physical goldens, fuzz 100k — each 100% separately). See
+> [GAUNTLET.md](GAUNTLET.md) and [coverage.json](coverage.json).
+>
+> **Hardware claim:** only targets with `native-pass` in
+> `c/targets/manifests/` (today: host `x86_64`). ARM64 / RISC-V / MCU are
+> not claimed without golden pass on real hardware.
+
 The initial vocabulary is inspired by an engineering reading of *Sefer
 Yetzirah*. This repository does not claim that the historical text is a
 programming specification. It tests whether the following vocabulary can
@@ -31,20 +50,30 @@ letter → depth → axis → dimension → thing → world
 
 ## v0.1 claim
 
+Hypotheses under test (not a finished product standard). The machine and
+gauntlets below are real implementation layers of the same prototype.
+
 1. Every public operation has one input and one output.
 2. A depth is an oriented interface.
 3. An axis is a pair of opposing depths.
 4. An `n`-dimensional interface contains `2n` oriented depths.
 5. Larger programs are code-based recursive compositions of smaller parts.
 
-These are hypotheses under test, not yet a software standard.
+## Run in 60 seconds
 
-## Run
+Requires Python 3.11 or newer.
 
 ```bash
-python -m unified
-python -m pytest
-uc benchmark --iterations 20
+git clone https://github.com/adico1/unified-code.git
+cd unified-code
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ".[test]"
+pytest
+uc new generated-demo
+cd generated-demo
+pytest
+python -m generated_demo
 ```
 
 ## Small example
@@ -117,7 +146,7 @@ is **not** replaced; both domains compile and execute through UEM with
 identical external JSON. Spec: [UEM_SPEC.md](UEM_SPEC.md).
 
 ```bash
-python -c "from unified.machine import compile_declaration_path; ..."
+python -c "from unified.machine.compile_decl import compile_declaration_path; from unified.machine.thing import value_of; t=compile_declaration_path('examples/declarations/text_stats_v2.py'); print(value_of(t).get('program_sha256','')[:16], t.get('state'))"
 ```
 
 ### L12 — Physical-Target Conformance
@@ -140,15 +169,24 @@ See [SPEC.md](SPEC.md), [LAW.md](LAW.md), and [ROADMAP.md](ROADMAP.md).
 ### L13 — Complete Testing Gauntlet
 
 Multi-dimensional 100% coverage (statements, branches, opcodes, primitives,
-spec traceability, mutations, differential, physical goldens). Never one averaged score.
+spec traceability, mutations, differential, physical goldens, fuzz 100k).
+Never one averaged score. The build **must** fail if any dimension is below 100%.
 
 ```bash
 ./scripts/run_l13.sh
 ```
 
-Emits `coverage.json` and `GAUNTLET.md`. Build fails if any dimension is below 100%.
+Emits `coverage.json` and `GAUNTLET.md`.
+
+**Current result: PASS.** All required dimensions report 100% in the
+published gauntlet (including Python statements/branches, C
+lines/functions/branches, and fuzz_100k). See [GAUNTLET.md](GAUNTLET.md)
+and [coverage.json](coverage.json) for exact measurements. If a local run
+differs, trust the files that `run_l13.sh` just wrote.
 
 ### Standard Ten (governing contract)
+
+Compact rules live in [STANDARD_TEN.md](STANDARD_TEN.md). Run:
 
 ```bash
 ./scripts/run_standard_ten.sh
