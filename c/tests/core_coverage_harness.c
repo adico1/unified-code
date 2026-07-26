@@ -1503,11 +1503,197 @@ static void assert_oom_paths(void) {
     free(buf);
 }
 
+/* Batch 1 — decode public rejection contract (test-only; no production C changes).
+ * Targets: decode.c:10, free_partial, uem_decode_verify args, err-buffer arms. */
+static size_t alloc_attempts(void) {
+    uem_allocator snap;
+    memset(&snap, 0, sizeof snap);
+    uem_allocator_get(&snap);
+    return snap.allocations;
+}
+
+static void assert_decode_public_contract(void) {
+    uem_machine *m = (uem_machine *)0x1; /* poison: must not survive */
+    char err[64];
+    char err_sentinel[8];
+    uem_status st;
+    size_t a0, a1;
+    int pass;
+    uint8_t trunc_hdr[] = {
+        'U', 'E', 'M', 0x16, 0, 1 /* magic + 2 of version — short of full header */
+    };
+    /* Full magic/version/flags then truncated mid-instruction stream (after machine alloc). */
+    uint8_t trunc_mid[] = {
+        'U', 'E', 'M', 0x16,
+        0, 1,       /* version */
+        0, 0,       /* flags */
+        0, 0, 0, 2, /* count = 2 */
+        0x10        /* only first opcode byte — truncated two-byte instr frame */
+    };
+    /* Valid 1-instr STOP + empty image for determinism checks. */
+    uint8_t ok_stop[] = {
+        'U', 'E', 'M', 0x16,
+        0, 1, 0, 0,
+        0, 0, 0, 1,
+        0x10, 0x00, /* STOP, tag none */
+        0, 0, 0, 2, '{', '}'
+    };
+
+    uem_allocator_reset(1);
+    a0 = alloc_attempts();
+
+    /* --- uem_free(NULL): safe no-op --- */
+    uem_free(NULL);
+    expect(1, "uem_free(NULL) returns");
+
+    /* --- null byte buffer --- */
+    m = (uem_machine *)0x1;
+    memset(err, 0xA5, sizeof err);
+    st = uem_decode_verify(NULL, 16, &m, err, sizeof err);
+    expect(st == UEM_ERR_ARGS, "null bytes → ARGS");
+    expect(m == (uem_machine *)0x1, "null bytes leaves *out untouched (no write)");
+    /* err must not be written on ARGS before *out=NULL path — code returns before *out */
+    /* Actual code: if (!bytes || !out) return ARGS; — err untouched */
+    expect((unsigned char)err[0] == 0xA5, "null bytes: err buffer untouched");
+
+    /* --- null output pointer --- */
+    m = (uem_machine *)0x1;
+    memset(err, 0xA5, sizeof err);
+    st = uem_decode_verify(ok_stop, sizeof ok_stop, NULL, err, sizeof err);
+    expect(st == UEM_ERR_ARGS, "null out → ARGS");
+    expect((unsigned char)err[0] == 0xA5, "null out: err buffer untouched");
+
+    /* --- both null --- */
+    st = uem_decode_verify(NULL, 0, NULL, err, sizeof err);
+    expect(st == UEM_ERR_ARGS, "null bytes and out → ARGS");
+
+    /* --- truncated header (len < 12): exact error text --- */
+    m = (uem_machine *)0x1;
+    memset(err, 0, sizeof err);
+    st = uem_decode_verify(trunc_hdr, sizeof trunc_hdr, &m, err, sizeof err);
+    expect(st == UEM_ERR_DECODE, "trunc hdr → DECODE");
+    expect(m == NULL, "trunc hdr *out = NULL");
+    expect(strcmp(err, "truncated") == 0, "trunc hdr exact error text");
+
+    /* --- truncated mid-instruction (machine may be allocated then free_partial) --- */
+    m = (uem_machine *)0x1;
+    memset(err, 0, sizeof err);
+    st = uem_decode_verify(trunc_mid, sizeof trunc_mid, &m, err, sizeof err);
+    expect(st == UEM_ERR_DECODE, "trunc mid → DECODE");
+    expect(m == NULL, "trunc mid no live machine");
+    expect(strcmp(err, "truncated") == 0, "trunc mid exact error text");
+
+    /* --- null error buffer: must still reject, no crash --- */
+    m = (uem_machine *)0x1;
+    st = uem_decode_verify(trunc_hdr, sizeof trunc_hdr, &m, NULL, 64);
+    expect(st == UEM_ERR_DECODE, "null err → DECODE");
+    expect(m == NULL, "null err *out = NULL");
+
+    /* --- zero-length error buffer: memory untouched --- */
+    m = (uem_machine *)0x1;
+    memset(err_sentinel, 0x5A, sizeof err_sentinel);
+    st = uem_decode_verify(trunc_hdr, sizeof trunc_hdr, &m, err_sentinel, 0);
+    expect(st == UEM_ERR_DECODE, "zero errlen → DECODE");
+    expect(m == NULL, "zero errlen *out = NULL");
+    expect((unsigned char)err_sentinel[0] == 0x5A &&
+           (unsigned char)err_sentinel[1] == 0x5A &&
+           (unsigned char)err_sentinel[7] == 0x5A,
+           "zero errlen leaves buffer untouched");
+
+    /* --- writable err + trunc with exact message (repeated = deterministic) --- */
+    for (pass = 0; pass < 3; pass++) {
+        m = (uem_machine *)0x1;
+        memset(err, 0xFF, sizeof err);
+        st = uem_decode_verify(trunc_hdr, sizeof trunc_hdr, &m, err, sizeof err);
+        expect(st == UEM_ERR_DECODE, "repeat trunc DECODE");
+        expect(m == NULL, "repeat trunc no machine");
+        expect(strcmp(err, "truncated") == 0, "repeat trunc exact text");
+    }
+
+    /* --- OOM after machine calloc, before instr array: no free_partial(NULL),
+     *     but no partial machine survives (public contract). --- */
+    m = (uem_machine *)0x1;
+    memset(err, 0, sizeof err);
+    uem_allocator_fail_after(1); /* first alloc is machine */
+    st = uem_decode_verify(ok_stop, sizeof ok_stop, &m, err, sizeof err);
+    uem_allocator_reset(1);
+    expect(st == UEM_ERR_NOMEM, "fail machine alloc → NOMEM");
+    expect(m == (uem_machine *)0x1 || m == NULL, "fail machine: no live machine");
+
+    m = (uem_machine *)0x1;
+    uem_allocator_fail_after(2); /* machine ok, instr fails */
+    st = uem_decode_verify(ok_stop, sizeof ok_stop, &m, err, sizeof err);
+    uem_allocator_reset(1);
+    expect(st == UEM_ERR_NOMEM, "fail instr alloc → NOMEM");
+    expect(m == (uem_machine *)0x1 || m == NULL, "fail instr: no live machine");
+
+    /* --- allocator balance: after resets, production path works; attempts finite --- */
+    a1 = alloc_attempts();
+    expect(a1 >= a0, "allocation counter advanced or stable");
+    uem_allocator_reset(1);
+    m = NULL;
+    memset(err, 0, sizeof err);
+    st = uem_decode_verify(ok_stop, sizeof ok_stop, &m, err, sizeof err);
+    expect(st == UEM_OK && m != NULL, "contract recovery decode ok");
+    if (m) {
+        /* free twice pattern not allowed; single free */
+        uem_free(m);
+        m = NULL;
+    }
+    /* second identical decode → deterministic status */
+    st = uem_decode_verify(ok_stop, sizeof ok_stop, &m, err, sizeof err);
+    expect(st == UEM_OK && m != NULL, "deterministic second decode");
+    if (m) uem_free(m);
+
+    /* --- empty/zero length buffer as truncated --- */
+    m = (uem_machine *)0x1;
+    memset(err, 0, sizeof err);
+    st = uem_decode_verify(ok_stop, 0, &m, err, sizeof err);
+    expect(st == UEM_ERR_DECODE, "len=0 → DECODE");
+    expect(m == NULL, "len=0 *out NULL");
+    expect(strcmp(err, "truncated") == 0, "len=0 exact truncated");
+
+    /* Stabilize line_count empty/non-empty arms (avoid flaky new_arcs vs baseline). */
+    {
+        uem_machine mm;
+        cJSON *root, *bindings, *node, *outn = NULL, *ep = NULL;
+        char e2[64];
+        memset(&mm, 0, sizeof mm);
+        snprintf(mm.state, sizeof mm.state, "formed");
+        root = cJSON_Parse("{\"text\":\"\"}");
+        bindings = cJSON_CreateObject();
+        node = cJSON_Parse(
+            "{\"op\":\"line_count\",\"of\":{\"op\":\"field\",\"path\":[\"text\"]}}");
+        expect(node && root, "line_count empty setup");
+        expect(uem_expr_eval(&mm, node, root, bindings, &outn, e2, sizeof e2, &ep) == 0,
+               "line_count empty eval");
+        expect(outn && cJSON_IsNumber(outn) && outn->valueint == 0, "line_count empty = 0");
+        if (outn) cJSON_Delete(outn);
+        if (ep) cJSON_Delete(ep);
+        cJSON_Delete(node);
+        cJSON_Delete(root);
+        root = cJSON_Parse("{\"text\":\"a\\nb\"}");
+        node = cJSON_Parse(
+            "{\"op\":\"line_count\",\"of\":{\"op\":\"field\",\"path\":[\"text\"]}}");
+        outn = NULL;
+        ep = NULL;
+        expect(uem_expr_eval(&mm, node, root, bindings, &outn, e2, sizeof e2, &ep) == 0,
+               "line_count non-empty eval");
+        expect(outn && cJSON_IsNumber(outn) && outn->valueint >= 1, "line_count non-empty");
+        if (outn) cJSON_Delete(outn);
+        if (ep) cJSON_Delete(ep);
+        cJSON_Delete(node);
+        cJSON_Delete(root);
+        cJSON_Delete(bindings);
+    }
+}
+
 int main(void) {
     fails = 0;
     test_decimal();
     test_expr_nodes();
     test_decode_rejects();
+    assert_decode_public_contract();
     test_host_errors();
     test_primitives_direct();
     test_host_json_limits();

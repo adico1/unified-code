@@ -1,71 +1,76 @@
 {
   "branch_ledger": {
     "ambiguous_arcs": 0,
-    "baseline": "c/tests/branch_baseline.json",
     "baseline_commit": "3a0bf81",
     "baseline_open": 311,
-    "branches_hit": 1115,
+    "batch1": {
+      "closed": [
+        "decode.c:235:b1",
+        "decode.c:235:b2",
+        "decode.c:238:b1",
+        "decode.c:238:b2",
+        "machine.c:33:b1"
+      ],
+      "method": "test",
+      "note": "rd_u16 truncate and free_partial(NULL)/instr-null arms unreachable via public API without production change",
+      "production_c_modified": false,
+      "remaining_targets": [
+        "decode.c:10:b0",
+        "decode.c:93:b1",
+        "decode.c:94:b1"
+      ]
+    },
+    "branches_hit": 1120,
     "branches_total": 1426,
     "conservation_holds": true,
-    "current_open": 311,
-    "equation_holds": true,
-    "l13_branch_eligible": false,
-    "missing_arcs_in_ledger": 311,
-    "missing_arcs_measured": 311,
+    "current_open": 306,
+    "missing_arcs_measured": 306,
     "new_arcs": 0,
-    "path": "c/tests/BRANCH_LEDGER.md",
     "remapped_arcs": 0,
     "removed_by_refactor": 0,
-    "resolved_by_test": 0,
-    "still_baseline_open": 311,
+    "resolved_by_test": 5,
+    "resolved_by_test_ids": [
+      "decode.c:235:b1",
+      "decode.c:235:b2",
+      "decode.c:238:b1",
+      "decode.c:238:b2",
+      "machine.c:33:b1"
+    ],
+    "still_baseline_open": 306,
     "unclassified_arcs": 0,
     "unmapped_arcs": 0
   },
   "dimensions": {
     "c_branches": {
-      "actual": 78.19074333800842,
+      "actual": 78.5413744740533,
+      "ledger": {
+        "ambiguous_arcs": 0,
+        "baseline": "c/tests/branch_baseline.json",
+        "baseline_commit": "3a0bf81",
+        "baseline_open": 311,
+        "branches_hit": 1120,
+        "branches_total": 1426,
+        "conservation_holds": true,
+        "current_open": 306,
+        "equation_holds": true,
+        "identity_scheme": "{file}:{line}:b{branch_id}",
+        "json": "c/tests/branch_ledger.json",
+        "l13_branch_eligible": false,
+        "missing_arcs_in_ledger": 306,
+        "missing_arcs_measured": 306,
+        "new_arcs": 0,
+        "path": "c/tests/BRANCH_LEDGER.md",
+        "remapped_arcs": 0,
+        "removed_by_refactor": 0,
+        "resolved_arcs": 5,
+        "resolved_by_test": 5,
+        "still_baseline_open": 306,
+        "unclassified_arcs": 0,
+        "unmapped_arcs": 0
+      },
       "ok": false,
       "raw": {
-        "files": [
-          {
-            "branches_hit": 42,
-            "branches_total": 42,
-            "file": "alloc.c",
-            "missing_arcs": 0
-          },
-          {
-            "branches_hit": 131,
-            "branches_total": 176,
-            "file": "decimal.c",
-            "missing_arcs": 45
-          },
-          {
-            "branches_hit": 233,
-            "branches_total": 300,
-            "file": "decode.c",
-            "missing_arcs": 67
-          },
-          {
-            "branches_hit": 289,
-            "branches_total": 354,
-            "file": "expr.c",
-            "missing_arcs": 65
-          },
-          {
-            "branches_hit": 224,
-            "branches_total": 292,
-            "file": "machine.c",
-            "missing_arcs": 68
-          },
-          {
-            "branches_hit": 196,
-            "branches_total": 262,
-            "file": "primitives.c",
-            "missing_arcs": 66
-          }
-        ],
-        "hit": 1115,
-        "metric": "gcov-arc-enumeration",
+        "hit": 1120,
         "total": 1426
       },
       "required": 100.0
@@ -86,6 +91,7 @@
         "error": null,
         "files": [
           {
+            "branch_metric": "gcov-arc-enumeration",
             "branches_hit": 42,
             "branches_pct": 100.0,
             "branches_total": 42,
@@ -98,8 +104,9 @@
             "source": "core/alloc.c"
           },
           {
+            "branch_metric": "gcov-arc-enumeration",
             "branches_hit": 131,
-            "branches_pct": 74.43,
+            "branches_pct": 74.43181818181819,
             "branches_total": 176,
             "functions_hit": 11,
             "functions_total": 11,
@@ -110,8 +117,9 @@
             "source": "core/decimal.c"
           },
           {
-            "branches_hit": 216,
-            "branches_pct": 72.0,
+            "branch_metric": "gcov-arc-enumeration",
+            "branches_hit": 222,
+            "branches_pct": 74.0,
             "branches_total": 300,
             "functions_hit": 11,
             "functions_total": 11,
@@ -122,8 +130,9 @@
             "source": "core/decode.c"
           },
           {
-            "branches_hit": 287,
-            "branches_pct": 81.07,
+            "branch_metric": "gcov-arc-enumeration",
+            "branches_hit": 289,
+            "branches_pct": 81.63841807909604,
             "branches_total": 354,
             "functions_hit": 6,
             "functions_total": 6,
@@ -134,8 +143,9 @@
             "source": "core/expr.c"
           },
           {
-            "branches_hit": 224,
-            "branches_pct": 76.71,
+            "branch_metric": "gcov-arc-enumeration",
+            "branches_hit": 225,
+            "branches_pct": 77.05479452054794,
             "branches_total": 292,
             "functions_hit": 17,
             "functions_total": 17,
@@ -146,8 +156,9 @@
             "source": "core/machine.c"
           },
           {
+            "branch_metric": "gcov-arc-enumeration",
             "branches_hit": 196,
-            "branches_pct": 74.81,
+            "branches_pct": 74.80916030534351,
             "branches_total": 262,
             "functions_hit": 15,
             "functions_total": 15,
@@ -434,12 +445,24 @@
           "invalid"
         ],
         [
+          "unknown",
+          "absent"
+        ],
+        [
+          "valid",
+          "valid"
+        ],
+        [
           "absent",
           "absent"
         ],
         [
+          "false",
+          "false"
+        ],
+        [
           "formed",
-          "invalid"
+          "valid"
         ],
         [
           "invalid",
@@ -447,45 +470,33 @@
         ],
         [
           "unknown",
-          "absent"
+          "false"
         ],
         [
           "formed",
-          "valid"
+          "false"
+        ],
+        [
+          "formed",
+          "invalid"
+        ],
+        [
+          "formed",
+          "absent"
         ],
         [
           "unknown",
           "formed"
-        ],
-        [
-          "formed",
-          "absent"
-        ],
-        [
-          "unknown",
-          "false"
-        ],
-        [
-          "formed",
-          "false"
-        ],
-        [
-          "false",
-          "false"
-        ],
-        [
-          "valid",
-          "valid"
         ]
       ],
       "prohibited_exercised": true,
       "required": 100.0
     }
   },
-  "duration_s": 97.11733913421631,
+  "duration_s": 53.91904902458191,
   "l13": true,
-  "ok": false,
   "rules": {
+    "branch_ledger_must_reconcile": true,
     "no_pragma_no_cover": true,
     "tests_do_not_inflate_production": true,
     "vendored_excluded_from_primary": true

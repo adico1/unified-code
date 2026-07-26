@@ -17,29 +17,29 @@ still_baseline_open == 0 && new_arcs == 0
 
 ## Measurement reconciliation
 
-- **branches_hit:** 1115
+- **branches_hit:** 1120
 - **branches_total:** 1426
-- **missing_arcs_measured:** 311
-- **missing_arcs_in_ledger:** 311
+- **missing_arcs_measured:** 306
+- **missing_arcs_in_ledger:** 306
 - **unmapped_arcs:** 0
 - **unclassified_arcs:** 0
-- Equation: `311 == 311 + 0` → **True**
+- Equation: `306 == 306 + 0` → **True**
 
 ## Baseline conservation (vs frozen open set)
 
 - **baseline_open:** 311
-- **resolved_by_test:** 0
+- **resolved_by_test:** 5
 - **removed_by_refactor:** 0
 - **new_arcs:** 0
 - **remapped_arcs:** 0 (informational)
 - **ambiguous_arcs:** 0 (must be 0)
-- **current_open:** 311
-- **still_baseline_open:** 311
+- **current_open:** 306
+- **still_baseline_open:** 306
 - Conservation: `311 == 311` (`baseline_open + new_arcs == resolved_by_test + removed_by_refactor + current_open`) → **True**
 - L13 branch eligible: **False**
 - Identity: `{file}:{line}:b{branch_id}` (stable only while source layout unchanged)
-- By class: `{"reachable": 298, "short-circuit": 13}`
-- By file: `{"decimal.c": 45, "decode.c": 67, "expr.c": 65, "machine.c": 68, "primitives.c": 66}`
+- By class: `{"reachable": 293, "short-circuit": 13}`
+- By file: `{"decimal.c": 45, "decode.c": 63, "expr.c": 65, "machine.c": 67, "primitives.c": 66}`
 
 ## Per-file hit/total
 
@@ -47,10 +47,18 @@ still_baseline_open == 0 && new_arcs == 0
 | --- | ---: | ---: | ---: |
 | `alloc.c` | 42 | 42 | 0 |
 | `decimal.c` | 131 | 176 | 45 |
-| `decode.c` | 233 | 300 | 67 |
+| `decode.c` | 237 | 300 | 63 |
 | `expr.c` | 289 | 354 | 65 |
-| `machine.c` | 224 | 292 | 68 |
+| `machine.c` | 225 | 292 | 67 |
 | `primitives.c` | 196 | 262 | 66 |
+
+## Resolved by test (baseline open → taken)
+
+- `decode.c:235:b1`
+- `decode.c:235:b2`
+- `decode.c:238:b1`
+- `decode.c:238:b2`
+- `machine.c:33:b1`
 
 ## Open ledger (current)
 
@@ -137,10 +145,6 @@ still_baseline_open == 0 && new_arcs == 0
 | `decode.c:199:b2` | taken-0% | `if (i && append_str(buf, len, cap, ",", 1)) { uem_mem_free(keys); retu` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
 | `decode.c:200:b1` | taken-0% | `if (json_escape_append(buf, len, cap, keys[i])) { uem_mem_free(keys); ` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
 | `decode.c:201:b0` | taken-0% | `if (append_str(buf, len, cap, ":", 1)) { uem_mem_free(keys); return -1` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
-| `decode.c:235:b1` | taken-0% | `if (!bytes \|\| !out) return UEM_ERR_ARGS;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `decode.c:235:b2` | taken-0% | `if (!bytes \|\| !out) return UEM_ERR_ARGS;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `decode.c:238:b1` | taken-0% | `if (err && errlen) snprintf(err, errlen, "truncated");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `decode.c:238:b2` | taken-0% | `if (err && errlen) snprintf(err, errlen, "truncated");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
 | `decode.c:241:b5` | taken-0% | `if (bytes[0] != UEM_MAGIC0 \|\| bytes[1] != UEM_MAGIC1 \|\| bytes[2] !` | **reachable** | decode state that flips: if (bytes[0] != UEM_MAGIC | decode reject / canon vector |
 | `decode.c:241:b6` | taken-0% | `if (bytes[0] != UEM_MAGIC0 \|\| bytes[1] != UEM_MAGIC1 \|\| bytes[2] !` | **reachable** | decode state that flips: if (bytes[0] != UEM_MAGIC | decode reject / canon vector |
 | `decode.c:242:b1` | taken-0% | `if (err && errlen) snprintf(err, errlen, "bad-magic");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
@@ -240,7 +244,6 @@ still_baseline_open == 0 && new_arcs == 0
 | `machine.c:19:b1` | taken-0% | `if (!m->evidence[m->n_evidence]) return -1;` | **reachable** | fill evidence/event queue to force growth and OOM | queue-pressure + fail_after vectors |
 | `machine.c:25:b1` | taken-0% | `if (!m \|\| !st) return -1;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
 | `machine.c:25:b2` | taken-0% | `if (!m \|\| !st) return -1;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:33:b1` | taken-0% | `if (!m) return;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
 | `machine.c:34:b0` | taken-0% | `if (m->instr) {` | **reachable** | machine field state for: if (m->instr) { | load/store/emit/accessors with null machine a |
 | `machine.c:58:b0` | taken-0% | `for (j = 0; j < m->n_processed; j++) uem_mem_free(m->processed_ids[j])` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
 | `machine.c:65:b1` | taken-0% | `if (!m \|\| !json) return UEM_ERR_ARGS;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |

@@ -9,20 +9,20 @@
     "right": 311
   },
   "baseline_open": 311,
-  "branches_hit": 1115,
+  "branches_hit": 1120,
   "branches_total": 1426,
   "by_class": {
-    "reachable": 298,
+    "reachable": 293,
     "short-circuit": 13
   },
   "by_file_missing": {
     "decimal.c": 45,
-    "decode.c": 67,
+    "decode.c": 63,
     "expr.c": 65,
-    "machine.c": 68,
+    "machine.c": 67,
     "primitives.c": 66
   },
-  "current_open": 311,
+  "current_open": 306,
   "entries": [
     {
       "arc_id": "decimal.c:10:b0",
@@ -1319,70 +1319,6 @@
       "source_line": "decode.c:201",
       "status": "open",
       "test_or_refactor": "assert_oom_paths / fail_after sweep"
-    },
-    {
-      "arc_id": "decode.c:235:b1",
-      "branch_id": 1,
-      "class": "reachable",
-      "expression": "if (!bytes || !out) return UEM_ERR_ARGS;",
-      "file": "decode.c",
-      "key": "decode.c:235:b1",
-      "line": 235,
-      "missing": "taken-0%",
-      "missing_arc": "taken-0%",
-      "pct": 0,
-      "required_input_state": "NULL / invalid-arg public API call",
-      "source_line": "decode.c:235",
-      "status": "open",
-      "test_or_refactor": "null-arg and invalid-arg vectors with exact status asserts"
-    },
-    {
-      "arc_id": "decode.c:235:b2",
-      "branch_id": 2,
-      "class": "reachable",
-      "expression": "if (!bytes || !out) return UEM_ERR_ARGS;",
-      "file": "decode.c",
-      "key": "decode.c:235:b2",
-      "line": 235,
-      "missing": "taken-0%",
-      "missing_arc": "taken-0%",
-      "pct": 0,
-      "required_input_state": "NULL / invalid-arg public API call",
-      "source_line": "decode.c:235",
-      "status": "open",
-      "test_or_refactor": "null-arg and invalid-arg vectors with exact status asserts"
-    },
-    {
-      "arc_id": "decode.c:238:b1",
-      "branch_id": 1,
-      "class": "reachable",
-      "expression": "if (err && errlen) snprintf(err, errlen, \"truncated\");",
-      "file": "decode.c",
-      "key": "decode.c:238:b1",
-      "line": 238,
-      "missing": "taken-0%",
-      "missing_arc": "taken-0%",
-      "pct": 0,
-      "required_input_state": "NULL / invalid-arg public API call",
-      "source_line": "decode.c:238",
-      "status": "open",
-      "test_or_refactor": "null-arg and invalid-arg vectors with exact status asserts"
-    },
-    {
-      "arc_id": "decode.c:238:b2",
-      "branch_id": 2,
-      "class": "reachable",
-      "expression": "if (err && errlen) snprintf(err, errlen, \"truncated\");",
-      "file": "decode.c",
-      "key": "decode.c:238:b2",
-      "line": 238,
-      "missing": "taken-0%",
-      "missing_arc": "taken-0%",
-      "pct": 0,
-      "required_input_state": "NULL / invalid-arg public API call",
-      "source_line": "decode.c:238",
-      "status": "open",
-      "test_or_refactor": "null-arg and invalid-arg vectors with exact status asserts"
     },
     {
       "arc_id": "decode.c:241:b5",
@@ -2965,22 +2901,6 @@
       "pct": 0,
       "required_input_state": "NULL / invalid-arg public API call",
       "source_line": "machine.c:25",
-      "status": "open",
-      "test_or_refactor": "null-arg and invalid-arg vectors with exact status asserts"
-    },
-    {
-      "arc_id": "machine.c:33:b1",
-      "branch_id": 1,
-      "class": "reachable",
-      "expression": "if (!m) return;",
-      "file": "machine.c",
-      "key": "machine.c:33:b1",
-      "line": 33,
-      "missing": "taken-0%",
-      "missing_arc": "taken-0%",
-      "pct": 0,
-      "required_input_state": "NULL / invalid-arg public API call",
-      "source_line": "machine.c:33",
       "status": "open",
       "test_or_refactor": "null-arg and invalid-arg vectors with exact status asserts"
     },
@@ -5004,9 +4924,9 @@
   "identity_scheme": "{file}:{line}:b{branch_id}",
   "l13_branch_eligible": false,
   "l13_branch_gate": "FAIL until missing_arcs_measured==0, unmapped_arcs==0, unclassified_arcs==0, ambiguous_arcs==0, and baseline fully accounted (still_baseline_open==0, new_arcs==0); baseline=3a0bf81",
-  "missing_arcs": 311,
-  "missing_arcs_in_ledger": 311,
-  "missing_arcs_measured": 311,
+  "missing_arcs": 306,
+  "missing_arcs_in_ledger": 306,
+  "missing_arcs_measured": 306,
   "new_arc_ids": [],
   "new_arcs": 0,
   "open_arc_ids": [
@@ -5085,10 +5005,6 @@
     "decode.c:199:b2",
     "decode.c:200:b1",
     "decode.c:201:b0",
-    "decode.c:235:b1",
-    "decode.c:235:b2",
-    "decode.c:238:b1",
-    "decode.c:238:b2",
     "decode.c:241:b5",
     "decode.c:241:b6",
     "decode.c:242:b1",
@@ -5233,7 +5149,6 @@
     "machine.c:337:b5",
     "machine.c:337:b6",
     "machine.c:339:b1",
-    "machine.c:33:b1",
     "machine.c:34:b0",
     "machine.c:357:b1",
     "machine.c:362:b1",
@@ -5337,10 +5252,10 @@
       "missing_arcs": 45
     },
     {
-      "branches_hit": 233,
+      "branches_hit": 237,
       "branches_total": 300,
       "file": "decode.c",
-      "missing_arcs": 67
+      "missing_arcs": 63
     },
     {
       "branches_hit": 289,
@@ -5349,10 +5264,10 @@
       "missing_arcs": 65
     },
     {
-      "branches_hit": 224,
+      "branches_hit": 225,
       "branches_total": 292,
       "file": "machine.c",
-      "missing_arcs": 68
+      "missing_arcs": 67
     },
     {
       "branches_hit": 196,
@@ -5369,11 +5284,23 @@
   "remapped_arcs": 0,
   "removed_by_refactor": 0,
   "removed_by_refactor_ids": [],
-  "resolved_arc_ids": [],
-  "resolved_arcs": 0,
-  "resolved_by_test": 0,
-  "resolved_by_test_ids": [],
-  "still_baseline_open": 311,
+  "resolved_arc_ids": [
+    "decode.c:235:b1",
+    "decode.c:235:b2",
+    "decode.c:238:b1",
+    "decode.c:238:b2",
+    "machine.c:33:b1"
+  ],
+  "resolved_arcs": 5,
+  "resolved_by_test": 5,
+  "resolved_by_test_ids": [
+    "decode.c:235:b1",
+    "decode.c:235:b2",
+    "decode.c:238:b1",
+    "decode.c:238:b2",
+    "machine.c:33:b1"
+  ],
+  "still_baseline_open": 306,
   "still_baseline_open_ids": [
     "decimal.c:109:b2",
     "decimal.c:10:b0",
@@ -5450,10 +5377,6 @@
     "decode.c:199:b2",
     "decode.c:200:b1",
     "decode.c:201:b0",
-    "decode.c:235:b1",
-    "decode.c:235:b2",
-    "decode.c:238:b1",
-    "decode.c:238:b2",
     "decode.c:241:b5",
     "decode.c:241:b6",
     "decode.c:242:b1",
@@ -5598,7 +5521,6 @@
     "machine.c:337:b5",
     "machine.c:337:b6",
     "machine.c:339:b1",
-    "machine.c:33:b1",
     "machine.c:34:b0",
     "machine.c:357:b1",
     "machine.c:362:b1",
@@ -5687,7 +5609,7 @@
     "primitives.c:75:b3",
     "primitives.c:80:b2"
   ],
-  "total_missing_arcs": 311,
+  "total_missing_arcs": 306,
   "unclassified_arcs": 0,
   "unmapped_arc_ids": [],
   "unmapped_arcs": 0,
