@@ -1,21 +1,92 @@
 {
   "dimensions": {
     "c_branches": {
-      "actual": 100.0,
-      "ok": true,
+      "actual": 53.5919540229885,
+      "ok": false,
+      "raw": {
+        "hit": 746,
+        "total": 1392
+      },
       "required": 100.0
     },
     "c_functions": {
-      "actual": 100.0,
-      "ok": true,
+      "actual": 95.0,
+      "ok": false,
+      "raw": {
+        "hit": 57,
+        "total": 60
+      },
       "required": 100.0
     },
     "c_lines": {
-      "actual": 100.0,
-      "ok": true,
+      "actual": 80.55190538764784,
+      "ok": false,
       "raw": {
-        "lines_hit": 0,
-        "lines_total": 0
+        "error": null,
+        "files": [
+          {
+            "branches_hit": 80,
+            "branches_pct": 43.48,
+            "branches_total": 184,
+            "functions_hit": 11,
+            "functions_total": 11,
+            "gcno": "uem-c-decimal.gcno",
+            "lines_hit": 137,
+            "lines_pct": 88.39,
+            "lines_total": 155,
+            "source": "core/decimal.c"
+          },
+          {
+            "branches_hit": 141,
+            "branches_pct": 46.38,
+            "branches_total": 304,
+            "functions_hit": 12,
+            "functions_total": 12,
+            "gcno": "uem-c-decode.gcno",
+            "lines_hit": 211,
+            "lines_pct": 77.57,
+            "lines_total": 272,
+            "source": "core/decode.c"
+          },
+          {
+            "branches_hit": 219,
+            "branches_pct": 61.86,
+            "branches_total": 354,
+            "functions_hit": 6,
+            "functions_total": 6,
+            "gcno": "uem-c-expr.gcno",
+            "lines_hit": 301,
+            "lines_pct": 85.51,
+            "lines_total": 352,
+            "source": "core/expr.c"
+          },
+          {
+            "branches_hit": 157,
+            "branches_pct": 54.51,
+            "branches_total": 288,
+            "functions_hit": 13,
+            "functions_total": 16,
+            "gcno": "uem-c-machine.gcno",
+            "lines_hit": 306,
+            "lines_pct": 78.46,
+            "lines_total": 390,
+            "source": "core/machine.c"
+          },
+          {
+            "branches_hit": 149,
+            "branches_pct": 56.87,
+            "branches_total": 262,
+            "functions_hit": 15,
+            "functions_total": 15,
+            "gcno": "uem-c-primitives.gcno",
+            "lines_hit": 271,
+            "lines_pct": 76.77,
+            "lines_total": 353,
+            "source": "core/primitives.c"
+          }
+        ],
+        "hit": 1226,
+        "total": 1522
       },
       "required": 100.0
     },
@@ -286,12 +357,28 @@
       "ok": true,
       "permitted_catalog": [
         [
+          "unknown",
+          "false"
+        ],
+        [
+          "unknown",
+          "absent"
+        ],
+        [
+          "false",
+          "false"
+        ],
+        [
+          "formed",
+          "false"
+        ],
+        [
           "absent",
           "absent"
         ],
         [
-          "formed",
-          "invalid"
+          "unknown",
+          "formed"
         ],
         [
           "unknown",
@@ -303,47 +390,31 @@
         ],
         [
           "formed",
-          "valid"
-        ],
-        [
-          "formed",
           "absent"
         ],
         [
           "formed",
-          "false"
+          "valid"
+        ],
+        [
+          "formed",
+          "invalid"
         ],
         [
           "valid",
           "valid"
-        ],
-        [
-          "unknown",
-          "absent"
-        ],
-        [
-          "false",
-          "false"
-        ],
-        [
-          "unknown",
-          "formed"
-        ],
-        [
-          "unknown",
-          "false"
         ]
       ],
       "prohibited_exercised": true,
       "required": 100.0
     }
   },
-  "duration_s": 8.776791095733643,
+  "duration_s": 129.4605302810669,
   "l13": true,
   "rules": {
     "no_pragma_no_cover": true,
     "tests_do_not_inflate_production": true,
     "vendored_excluded_from_primary": true
   },
-  "verdict": "pass"
+  "verdict": "fail"
 }

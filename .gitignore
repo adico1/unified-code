@@ -8,3 +8,5 @@ build/
 dist/
 .coverage
 coverage_py.json
+*.gcov
+coverage_py.json

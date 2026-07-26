@@ -28,11 +28,13 @@ result = outer(middle(inner(thing)))
 > stops at `standard.gap`. Full-tree clean-room regeneration from seed alone
 > is **not** claimed (open migration gaps in [AUDIT_STANDARD_TEN.md](AUDIT_STANDARD_TEN.md)).
 >
-> **Current verification:** functional suites, behavioral gauntlets, and L13
-> complete multi-dimension coverage report **pass** (Python statements/
-> branches, C lines/functions/branches, opcodes, primitives, differential,
-> physical goldens, fuzz 100k — each 100% separately). See
-> [GAUNTLET.md](GAUNTLET.md) and [coverage.json](coverage.json).
+> **Current verification:** functional suites and behavioral gauntlets
+> **pass**. L13 complete multi-dimension coverage is **not closed**: Python
+> statements/branches, opcodes, primitives, differential, physical goldens,
+> and fuzz 100k report 100%, but **C core coverage is incomplete** (lines
+> ~80.6% 1226/1522, functions 95% 57/60, branches ~53.6% 746/1392). Zero-total
+> C coverage is treated as failure, not 100%. See [GAUNTLET.md](GAUNTLET.md)
+> and [coverage.json](coverage.json).
 >
 > **Hardware claim:** only targets with `native-pass` in
 > `c/targets/manifests/` (today: host `x86_64`). ARM64 / RISC-V / MCU are
@@ -178,11 +180,11 @@ Never one averaged score. The build **must** fail if any dimension is below 100%
 
 Emits `coverage.json` and `GAUNTLET.md`.
 
-**Current result: PASS.** All required dimensions report 100% in the
-published gauntlet (including Python statements/branches, C
-lines/functions/branches, and fuzz_100k). See [GAUNTLET.md](GAUNTLET.md)
-and [coverage.json](coverage.json) for exact measurements. If a local run
-differs, trust the files that `run_l13.sh` just wrote.
+**Current result: FAIL.** Behavioral dimensions and Python code coverage
+pass; **C lines / functions / branches do not** (published hit/total in
+`coverage.json`). Zero denominators fail the gate—they never count as
+100%. See [GAUNTLET.md](GAUNTLET.md) and [coverage.json](coverage.json).
+If a local run differs, trust the files that `run_l13.sh` just wrote.
 
 ### Standard Ten (governing contract)
 
