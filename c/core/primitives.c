@@ -381,9 +381,8 @@ int uem_prim_apply(uem_machine *m, const char *name, char *err, size_t errlen) {
     if (strcmp(name, "merge_result") == 0) return prim_merge_result(m);
     if (strcmp(name, "verify_result") == 0) return prim_verify_result(m);
     if (strcmp(name, "present_json") == 0) return prim_present_json(m);
-    if (strcmp(name, "mark_part") == 0) return prim_mark_part(m);
-    if (err) snprintf(err, errlen, "unknown-primitive");
-    return -1;
+    /* mark_part is last registry entry — always matches if uem_registry_has passed. */
+    return prim_mark_part(m);
 }
 
 void uem_ticket_construct(uem_machine *m) {

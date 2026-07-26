@@ -1,11 +1,11 @@
 {
   "dimensions": {
     "c_branches": {
-      "actual": 70.73699421965318,
+      "actual": 75.51020408163265,
       "ok": false,
       "raw": {
-        "hit": 979,
-        "total": 1384
+        "hit": 1036,
+        "total": 1372
       },
       "required": 100.0
     },
@@ -19,7 +19,7 @@
       "required": 100.0
     },
     "c_lines": {
-      "actual": 93.42537804076265,
+      "actual": 99.59731543624162,
       "ok": false,
       "raw": {
         "error": null,
@@ -38,55 +38,55 @@
           },
           {
             "branches_hit": 201,
-            "branches_pct": 66.12,
-            "branches_total": 304,
-            "functions_hit": 12,
-            "functions_total": 12,
+            "branches_pct": 68.84,
+            "branches_total": 292,
+            "functions_hit": 11,
+            "functions_total": 11,
             "gcno": "decode.gcno",
-            "lines_hit": 255,
-            "lines_pct": 93.75,
-            "lines_total": 272,
+            "lines_hit": 231,
+            "lines_pct": 97.47,
+            "lines_total": 237,
             "source": "core/decode.c"
           },
           {
-            "branches_hit": 256,
-            "branches_pct": 72.32,
+            "branches_hit": 286,
+            "branches_pct": 80.79,
             "branches_total": 354,
             "functions_hit": 6,
             "functions_total": 6,
             "gcno": "expr.gcno",
-            "lines_hit": 326,
-            "lines_pct": 92.61,
+            "lines_hit": 352,
+            "lines_pct": 100.0,
             "lines_total": 352,
             "source": "core/expr.c"
           },
           {
-            "branches_hit": 207,
-            "branches_pct": 71.88,
-            "branches_total": 288,
-            "functions_hit": 16,
-            "functions_total": 16,
+            "branches_hit": 224,
+            "branches_pct": 76.71,
+            "branches_total": 292,
+            "functions_hit": 17,
+            "functions_total": 17,
             "gcno": "machine.gcno",
-            "lines_hit": 369,
-            "lines_pct": 94.62,
-            "lines_total": 390,
+            "lines_hit": 396,
+            "lines_pct": 100.0,
+            "lines_total": 396,
             "source": "core/machine.c"
           },
           {
-            "branches_hit": 184,
-            "branches_pct": 70.23,
-            "branches_total": 262,
+            "branches_hit": 194,
+            "branches_pct": 75.19,
+            "branches_total": 258,
             "functions_hit": 15,
             "functions_total": 15,
             "gcno": "primitives.gcno",
-            "lines_hit": 317,
-            "lines_pct": 89.8,
-            "lines_total": 353,
+            "lines_hit": 351,
+            "lines_pct": 100.0,
+            "lines_total": 351,
             "source": "core/primitives.c"
           }
         ],
-        "hit": 1421,
-        "total": 1521
+        "hit": 1484,
+        "total": 1490
       },
       "required": 100.0
     },
@@ -357,35 +357,15 @@
       "ok": true,
       "permitted_catalog": [
         [
-          "unknown",
-          "absent"
-        ],
-        [
-          "formed",
-          "false"
-        ],
-        [
-          "unknown",
-          "invalid"
-        ],
-        [
-          "absent",
-          "absent"
-        ],
-        [
           "invalid",
           "invalid"
-        ],
-        [
-          "unknown",
-          "false"
         ],
         [
           "unknown",
           "formed"
         ],
         [
-          "formed",
+          "unknown",
           "absent"
         ],
         [
@@ -393,23 +373,43 @@
           "valid"
         ],
         [
+          "absent",
+          "absent"
+        ],
+        [
+          "formed",
+          "absent"
+        ],
+        [
+          "unknown",
+          "false"
+        ],
+        [
+          "formed",
+          "false"
+        ],
+        [
+          "unknown",
+          "invalid"
+        ],
+        [
           "false",
           "false"
         ],
         [
-          "valid",
-          "valid"
-        ],
-        [
           "formed",
           "invalid"
+        ],
+        [
+          "valid",
+          "valid"
         ]
       ],
       "prohibited_exercised": true,
       "required": 100.0
     }
   },
-  "duration_s": 11.28540325164795,
+  "duration_s": 16.46029281616211,
   "l13": true,
   "rules": {
     "no_pragma_no_cover": true,

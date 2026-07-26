@@ -32,7 +32,7 @@ result = outer(middle(inner(thing)))
 > **pass**. L13 complete multi-dimension coverage is **not closed**: Python
 > statements/branches, opcodes, primitives, differential, physical goldens,
 > and fuzz 100k report 100%, but **C core coverage is incomplete** (lines
-> ~93.4% 1421/1521, functions 100% 60/60, branches ~70.7% 979/1384). Zero-total
+> ~99.6% 1484/1490, functions 100% 60/60, branches ~75.5% 1036/1372). Zero-total
 > C coverage is treated as failure, not 100%. See [GAUNTLET.md](GAUNTLET.md)
 > and [coverage.json](coverage.json).
 >

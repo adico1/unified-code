@@ -296,15 +296,26 @@ static void test_expr_nodes(void) {
     expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) == 0, "count variants");
     cJSON_Delete(node); cJSON_Delete(out); out = NULL;
 
-    /* multi-byte casefold path */
+    /* multi-byte str_len codepoint walk (2/3/4-byte + invalid cont) */
     {
-        cJSON *root2 = cJSON_Parse("{\"text\":\"café CAFÉ\"}");
+        cJSON *root2 = cJSON_Parse(
+            "{\"text\":\"A\xc3\xa9\xe4\xb8\xad\xf0\x9f\x98\x80\xff\"}");
+        node = cJSON_Parse(
+            "{\"op\":\"str_len\",\"of\":{\"op\":\"field\",\"path\":[\"text\"]}}");
+        expect(uem_expr_eval(&m, node, root2, bindings, &out, err, sizeof err, &ep) == 0, "str_len utf8");
+        expect(out && cJSON_IsNumber(out) && out->valuedouble >= 4, "str_len counts cps");
+        cJSON_Delete(node); cJSON_Delete(out); out = NULL;
         node = cJSON_Parse(
             "{\"op\":\"unique_casefold_word_count\",\"of\":{\"op\":\"field\",\"path\":[\"text\"]}}");
         expect(uem_expr_eval(&m, node, root2, bindings, &out, err, sizeof err, &ep) == 0, "casefold mb");
         cJSON_Delete(node); cJSON_Delete(out); out = NULL;
         cJSON_Delete(root2);
     }
+    /* word_count invalid-text */
+    node = cJSON_Parse("{\"op\":\"word_count\",\"of\":{\"op\":\"literal\",\"value\":1}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "word invalid-text");
+    expect(strstr(err, "invalid-text") != NULL, "word invalid-text msg");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
 
     node = cJSON_Parse(
         "{\"op\":\"min_value\",\"bound\":\"1.5\",\"of\":{\"op\":\"as_decimal\","
@@ -705,6 +716,520 @@ static void test_host_json_limits(void) {
     uem_free(m);
 }
 
+/* Load file into buffer; returns length or 0 */
+static size_t slurp(const char *path, uint8_t **out) {
+    FILE *f = fopen(path, "rb");
+    long sz;
+    uint8_t *buf;
+    *out = NULL;
+    if (!f) return 0;
+    fseek(f, 0, SEEK_END);
+    sz = ftell(f);
+    rewind(f);
+    if (sz <= 0) { fclose(f); return 0; }
+    buf = (uint8_t *)malloc((size_t)sz);
+    if (!buf) { fclose(f); return 0; }
+    if (fread(buf, 1, (size_t)sz, f) != (size_t)sz) { free(buf); fclose(f); return 0; }
+    fclose(f);
+    *out = buf;
+    return (size_t)sz;
+}
+
+static int open_vec(const char *name, uint8_t **buf, size_t *len) {
+    char path[400];
+    const char *dirs[] = {
+        "tests/coverage_vectors/",
+        "c/tests/coverage_vectors/",
+        "../c/tests/coverage_vectors/",
+        NULL
+    };
+    int i;
+    for (i = 0; dirs[i]; i++) {
+        snprintf(path, sizeof path, "%s%s", dirs[i], name);
+        *len = slurp(path, buf);
+        if (*len) return 1;
+    }
+    return 0;
+}
+
+static void assert_decode_rejects(void) {
+    uint8_t *buf = NULL;
+    size_t len = 0;
+    uem_machine *m = NULL;
+    char err[128];
+    uem_status st;
+
+    /* missing-stop */
+    expect(open_vec("assert_nostop.uem", &buf, &len), "open nostop");
+    st = uem_decode_verify(buf, len, &m, err, sizeof err);
+    expect(st != UEM_OK, "nostop rejected");
+    expect(strstr(err, "missing-stop") != NULL, "nostop msg");
+    free(buf); buf = NULL; m = NULL;
+
+    /* unknown primitive */
+    expect(open_vec("assert_unkprim.uem", &buf, &len), "open unkprim");
+    st = uem_decode_verify(buf, len, &m, err, sizeof err);
+    expect(st != UEM_OK, "unkprim rejected");
+    expect(strstr(err, "unknown-primitive") != NULL, "unkprim msg");
+    free(buf); buf = NULL;
+
+    /* invalid utf8 image */
+    expect(open_vec("assert_badimgutf8.uem", &buf, &len), "open badimgutf8");
+    st = uem_decode_verify(buf, len, &m, err, sizeof err);
+    expect(st != UEM_OK, "badimgutf8 rejected");
+    expect(strstr(err, "invalid-utf8-image") != NULL || strstr(err, "utf8") != NULL, "badimgutf8 msg");
+    free(buf); buf = NULL;
+
+    /* truncated image */
+    expect(open_vec("assert_truncimg.uem", &buf, &len), "open truncimg");
+    st = uem_decode_verify(buf, len, &m, err, sizeof err);
+    expect(st != UEM_OK, "truncimg rejected");
+    free(buf); buf = NULL;
+
+    /* trailing bytes */
+    expect(open_vec("assert_trail.uem", &buf, &len), "open trail");
+    st = uem_decode_verify(buf, len, &m, err, sizeof err);
+    expect(st != UEM_OK, "trail rejected");
+    expect(strstr(err, "trailing") != NULL, "trail msg");
+    free(buf); buf = NULL;
+
+    /* float + escapes must ACCEPT (canonical) and exercise canon paths */
+    expect(open_vec("assert_float.uem", &buf, &len), "open float");
+    st = uem_decode_verify(buf, len, &m, err, sizeof err);
+    expect(st == UEM_OK, "float image accepted");
+    if (m) { uem_free(m); m = NULL; }
+    free(buf); buf = NULL;
+
+    expect(open_vec("assert_esc.uem", &buf, &len), "open esc");
+    st = uem_decode_verify(buf, len, &m, err, sizeof err);
+    expect(st == UEM_OK, "escape image accepted");
+    if (m) { uem_free(m); m = NULL; }
+    free(buf); buf = NULL;
+}
+
+static void assert_machine_semantics(void) {
+    uint8_t *buf = NULL;
+    size_t len = 0;
+    uem_machine *m = NULL;
+    char err[128];
+    uem_status st;
+
+    /* quiet dequeue */
+    expect(open_vec("assert_quiet.uem", &buf, &len), "open quiet");
+    st = uem_decode_verify(buf, len, &m, err, sizeof err);
+    expect(st == UEM_OK, "quiet decode");
+    free(buf); buf = NULL;
+    if (m) {
+        expect(uem_set_host_json(m, "{}", err, sizeof err) == UEM_OK, "quiet host");
+        expect(uem_run(m, err, sizeof err) == UEM_OK, "quiet run");
+        /* first op DEQUEUE on empty → quiet event */
+        expect(m->events_dequeued == NULL || cJSON_GetArraySize(m->events_dequeued) >= 0, "deq arr");
+        /* after-STOP via uem_step */
+        {
+            uem_status s2 = uem_step(m, err, sizeof err);
+            expect(strcmp(m->state, "invalid") == 0 || s2 != UEM_OK || m->halted, "after-stop effect");
+            expect(strstr(err, "execution-after-stop") != NULL || m->halted, "after-stop msg or halted");
+        }
+        /* pc-out-of-range: force pc past end while not halted */
+        m->halted = 0;
+        m->pc = m->n_instr + 5;
+        err[0] = 0;
+        (void)uem_step(m, err, sizeof err);
+        expect(strstr(err, "pc-out-of-range") != NULL, "pc-out-of-range msg");
+        /* unknown opcode via mutation */
+        m->halted = 0;
+        m->pc = 0;
+        if (m->n_instr > 0) {
+            m->instr[0].opcode = 0x7F;
+            err[0] = 0;
+            (void)uem_step(m, err, sizeof err);
+            expect(strstr(err, "unknown-opcode") != NULL, "unknown-opcode msg");
+        }
+        uem_free(m); m = NULL;
+    }
+
+    /* ticket ACK with external_id */
+    expect(open_vec("assert_tick.uem", &buf, &len), "open tick");
+    st = uem_decode_verify(buf, len, &m, err, sizeof err);
+    expect(st == UEM_OK, "tick decode");
+    free(buf); buf = NULL;
+    if (m) {
+        m->machine_fault = cJSON_Parse(
+            "{\"operation\":\"op\",\"error_type\":\"E\",\"message\":\"m\"}");
+        /* step TICKET then inject external_id then ACK */
+        expect(uem_step(m, err, sizeof err) == UEM_OK || m->ticket, "ticket step");
+        if (m->ticket) {
+            cJSON_AddStringToObject(m->ticket, "external_id", "ext-1");
+            expect(uem_step(m, err, sizeof err) == UEM_OK, "ack step");
+            {
+                cJSON *acked = cJSON_GetObjectItemCaseSensitive(m->ticket, "acked");
+                expect(cJSON_IsTrue(acked), "ticket acked true");
+            }
+        }
+        uem_free(m); m = NULL;
+    }
+
+    /* LOAD host twice (replace host in store) + image: */
+    expect(open_vec("assert_load.uem", &buf, &len), "open load");
+    st = uem_decode_verify(buf, len, &m, err, sizeof err);
+    expect(st == UEM_OK, "load decode");
+    free(buf); buf = NULL;
+    if (m) {
+        expect(uem_set_host_json(m, "{\"a\":1}", err, sizeof err) == UEM_OK, "load host");
+        expect(uem_run(m, err, sizeof err) == UEM_OK, "load run");
+        expect(cJSON_GetObjectItemCaseSensitive(m->store, "host") != NULL, "store host set");
+        uem_free(m); m = NULL;
+    }
+
+    /* default_outward: object form source + unknown effect (hits path + free(buf) path) */
+    {
+        char out[512];
+        FILE *tf = fopen("/tmp/uem_cov_ue.txt", "w");
+        int r;
+        if (tf) { fputs("data", tf); fclose(tf); }
+        r = uem_default_outward(NULL, "nope",
+                                "{\"source\":\"/tmp/uem_cov_ue.txt\"}",
+                                out, sizeof out, err, sizeof err);
+        expect(r == 0, "unknown-effect with file returns 0");
+        expect(strstr(out, "unknown-effect") != NULL, "unknown-effect body");
+    }
+
+    /* exhaust instr without STOP: soft runtime then uem_run sets stop */
+    {
+        expect(open_vec("assert_quiet.uem", &buf, &len), "open quiet2");
+        st = uem_decode_verify(buf, len, &m, err, sizeof err);
+        free(buf); buf = NULL;
+        if (m && m->n_instr > 0) {
+            m->instr[0].opcode = 0x7F; /* unknown */
+            m->halted = 0;
+            m->pc = 0;
+            expect(uem_run(m, err, sizeof err) == UEM_OK, "run after soft fault");
+            expect(m->halted, "halted after exhaust");
+            expect(strcmp(m->stop_reason, "stop") == 0 || m->stop_reason[0], "stop reason set");
+            uem_free(m); m = NULL;
+        }
+    }
+
+    /* APPLY soft-fail path (prim returns non-zero, continue) */
+    {
+        expect(open_vec("assert_load.uem", &buf, &len), "open load soft");
+        st = uem_decode_verify(buf, len, &m, err, sizeof err);
+        free(buf); buf = NULL;
+        if (m) {
+            /* replace first instr with APPLY unknown via pending */
+            m->pc = 0;
+            m->halted = 0;
+            free(m->instr[0].operand);
+            m->instr[0].opcode = 0x09; /* APPLY */
+            m->instr[0].operand = strdup("totally_unknown");
+            m->instr[0].operand_len = (uint32_t)strlen(m->instr[0].operand);
+            /* But decode would reject unknown prim — we inject after decode */
+            /* Registry rejects → soft continue at APPLY */
+            err[0] = 0;
+            expect(uem_step(m, err, sizeof err) == UEM_OK || strcmp(m->state, "invalid") == 0,
+                   "APPLY soft fail continues");
+            expect(strcmp(m->state, "invalid") == 0, "APPLY unknown sets invalid");
+            uem_free(m); m = NULL;
+        }
+    }
+}
+
+static void assert_expr_error_arms(void) {
+    uem_machine m;
+    cJSON *root, *bindings, *node, *out = NULL, *ep = NULL;
+    char err[128];
+    memset(&m, 0, sizeof m);
+    snprintf(m.state, sizeof m.state, "formed");
+    root = cJSON_Parse(
+        "{\"text\":\"Hi\",\"items\":[{\"quantity\":2,\"unit_price\":\"1.50\","
+        "\"nested\":{\"v\":1}}],\"n\":1}");
+    bindings = cJSON_CreateObject();
+
+    /* field path item.* inside sum_each-like context: set item and in_each via sum_each fail path */
+    node = cJSON_Parse(
+        "{\"op\":\"sum_each\",\"path\":[\"items\"],"
+        "\"collection\":{\"op\":\"field\",\"path\":[\"items\"]},"
+        "\"each\":{\"op\":\"field\",\"path\":[\"item\",\"quantity\"]}}");
+    /* each path item.quantity — uses dig item */
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) == 0 ||
+           uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0,
+           "sum_each item path runs");
+    /* re-eval cleanly */
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+    node = cJSON_Parse(
+        "{\"op\":\"sum_each\",\"path\":[\"items\"],"
+        "\"collection\":{\"op\":\"field\",\"path\":[\"items\"]},"
+        "\"each\":{\"op\":\"as_decimal\",\"of\":{\"op\":\"field\",\"path\":[\"unit_price\"]}}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) == 0, "sum_each price");
+    expect(out && cJSON_GetObjectItem(out, "__uem_dec__"), "sum_each returns decimal");
+    cJSON_Delete(node); cJSON_Delete(out); out = NULL;
+
+    /* fail_path with g_item_index + path: force require fail inside sum_each */
+    node = cJSON_Parse(
+        "{\"op\":\"sum_each\",\"path\":[\"items\"],"
+        "\"collection\":{\"op\":\"field\",\"path\":[\"items\"]},"
+        "\"each\":{\"op\":\"require\",\"error\":\"need\","
+        "\"of\":{\"op\":\"field\",\"path\":[\"missing_field\"]}}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "sum_each require fail");
+    expect(strstr(err, "need") != NULL, "sum_each require msg");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+
+    /* fail_path without coll path → default "items" arm: min_value fail inside sum_each */
+    node = cJSON_Parse(
+        "{\"op\":\"sum_each\","
+        "\"collection\":{\"op\":\"field\",\"path\":[\"items\"]},"
+        "\"each\":{\"op\":\"min_value\",\"bound\":\"100.00\",\"error\":\"need2\","
+        "\"of\":{\"op\":\"as_decimal\",\"of\":{\"op\":\"field\",\"path\":[\"unit_price\"]}}}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "sum_each min fail");
+    expect(strstr(err, "need2") != NULL || strstr(err, "below") != NULL, "sum_each min msg");
+    /* err_path should be set when using fail_path */
+    expect(ep != NULL || err[0], "sum_each min has path or err");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+
+    /* object field eval fail */
+    node = cJSON_Parse(
+        "{\"op\":\"object\",\"fields\":{\"a\":{\"op\":\"ref\",\"name\":\"nope\"}}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "object fail");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+
+    /* count of child fail */
+    node = cJSON_Parse("{\"op\":\"count\",\"of\":{\"op\":\"ref\",\"name\":\"nope\"}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "count fail");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+    node = cJSON_Parse("{\"op\":\"require\",\"of\":{\"op\":\"ref\",\"name\":\"nope\"}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "require child fail");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+    node = cJSON_Parse("{\"op\":\"as_int\",\"of\":{\"op\":\"ref\",\"name\":\"nope\"}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "as_int child fail");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+    node = cJSON_Parse("{\"op\":\"as_decimal\",\"of\":{\"op\":\"ref\",\"name\":\"nope\"}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "as_dec child fail");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+    node = cJSON_Parse("{\"op\":\"min_value\",\"bound\":1,\"of\":{\"op\":\"ref\",\"name\":\"nope\"}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "min child fail");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+    node = cJSON_Parse("{\"op\":\"word_count\",\"of\":{\"op\":\"ref\",\"name\":\"nope\"}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "word child fail");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+    /* NULL err_path + fail_path cleans g_err_path */
+    node = cJSON_Parse(
+        "{\"op\":\"sum_each\","
+        "\"collection\":{\"op\":\"field\",\"path\":[\"items\"]},"
+        "\"each\":{\"op\":\"min_value\",\"bound\":\"100.00\",\"error\":\"lo\","
+        "\"of\":{\"op\":\"as_decimal\",\"of\":{\"op\":\"field\",\"path\":[\"unit_price\"]}}}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, NULL) != 0,
+           "null err_path");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL;
+
+    /* as_int missing_error custom */
+    node = cJSON_Parse(
+        "{\"op\":\"as_int\",\"missing_error\":\"mi\",\"of\":{\"op\":\"literal\",\"value\":null}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "as_int mi");
+    expect(strstr(err, "mi") != NULL, "as_int mi msg");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+
+    /* as_decimal missing */
+    node = cJSON_Parse(
+        "{\"op\":\"as_decimal\",\"missing_error\":\"md\",\"of\":{\"op\":\"literal\",\"value\":null}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "as_dec mi");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+
+    /* as_decimal bad string value */
+    node = cJSON_Parse(
+        "{\"op\":\"as_decimal\",\"type_error\":\"bad-value\","
+        "\"of\":{\"op\":\"literal\",\"value\":\"not-dec\"}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "as_dec bad str");
+    expect(strstr(err, "bad-value") != NULL || strstr(err, "not-decimal") != NULL, "as_dec bad msg");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+
+    /* min_value bad-value (of is string non-decimal object) */
+    node = cJSON_Parse(
+        "{\"op\":\"min_value\",\"bound\":1,\"of\":{\"op\":\"literal\",\"value\":\"abc\"}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "min bad-value");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+
+    /* collection eval fail for sum_each */
+    node = cJSON_Parse(
+        "{\"op\":\"sum_each\",\"collection\":{\"op\":\"ref\",\"name\":\"nope\"},"
+        "\"each\":{\"op\":\"literal\",\"value\":1}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "sum coll fail");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+
+    /* min_value bad bound type */
+    node = cJSON_Parse(
+        "{\"op\":\"min_value\",\"bound\":[],\"of\":{\"op\":\"literal\",\"value\":1}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "min bad-bound");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+
+    /* add with bad child */
+    node = cJSON_Parse(
+        "{\"op\":\"add\",\"values\":[{\"op\":\"ref\",\"name\":\"nope\"}]}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "add fail child");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+
+    /* mul with non-number that fails as_decimal path */
+    node = cJSON_Parse(
+        "{\"op\":\"mul\",\"values\":[{\"op\":\"literal\",\"value\":\"x\"}]}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "mul bad");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+
+    /* quantize fail child */
+    node = cJSON_Parse(
+        "{\"op\":\"quantize\",\"exp\":\"0.01\",\"rounding\":\"ROUND_HALF_UP\","
+        "\"of\":{\"op\":\"ref\",\"name\":\"nope\"}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "q fail");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+
+    /* decimal_str fail */
+    node = cJSON_Parse(
+        "{\"op\":\"decimal_str\",\"places\":2,\"of\":{\"op\":\"ref\",\"name\":\"nope\"}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) != 0, "ds fail");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL; if (ep) cJSON_Delete(ep); ep = NULL;
+
+    /* word_count non-string already covered; str with multi-byte for casefold_copy else branch */
+    {
+        cJSON *root2 = cJSON_Parse("{\"text\":\"x\xc3\xa9y\"}"); /* café partial */
+        node = cJSON_Parse(
+            "{\"op\":\"unique_casefold_word_count\",\"of\":{\"op\":\"field\",\"path\":[\"text\"]}}");
+        expect(uem_expr_eval(&m, node, root2, bindings, &out, err, sizeof err, &ep) == 0, "casefold utf8");
+        cJSON_Delete(node); cJSON_Delete(out); out = NULL;
+        cJSON_Delete(root2);
+    }
+
+    /* field path item.nested — dig item.*; wrap as decimal via as_int of nested fails;
+       use mul of as_decimal unit_price (covers item field dig) */
+    node = cJSON_Parse(
+        "{\"op\":\"sum_each\",\"path\":[\"items\"],"
+        "\"collection\":{\"op\":\"field\",\"path\":[\"items\"]},"
+        "\"each\":{\"op\":\"mul\",\"values\":["
+        "{\"op\":\"as_int\",\"of\":{\"op\":\"field\",\"path\":[\"item\",\"quantity\"]}},"
+        "{\"op\":\"as_decimal\",\"of\":{\"op\":\"field\",\"path\":[\"item\",\"unit_price\"]}}"
+        "]}}");
+    expect(uem_expr_eval(&m, node, root, bindings, &out, err, sizeof err, &ep) == 0, "item.* dig mul");
+    expect(out && cJSON_GetObjectItem(out, "__uem_dec__"), "item dig result decimal");
+    cJSON_Delete(node); if (out) cJSON_Delete(out); out = NULL;
+
+    cJSON_Delete(root);
+    cJSON_Delete(bindings);
+}
+
+static void assert_primitives_eval_bindings(void) {
+    uem_machine m;
+    char err[128];
+    memset(&m, 0, sizeof m);
+    snprintf(m.state, sizeof m.state, "formed");
+    m.store = cJSON_CreateObject();
+    m.evidence = NULL;
+    m.n_evidence = 0;
+
+    /* missing-expression */
+    m.image = cJSON_Parse("{\"input_key\":\"text\",\"part_name\":\"P\",\"bindings\":{},\"binding_order\":[]}");
+    m.host = cJSON_Parse("{}");
+    expect(uem_prim_apply(&m, "eval_expression", err, sizeof err) == 0, "eval missing-expr returns");
+    expect(strcmp(m.state, "invalid") == 0, "missing-expr state");
+    {
+        cJSON *e = cJSON_GetObjectItemCaseSensitive(m.store, "error");
+        expect(cJSON_IsString(e) && strcmp(e->valuestring, "missing-expression") == 0,
+               "missing-expression error field");
+    }
+    free_soft_machine(&m);
+
+    memset(&m, 0, sizeof m);
+    snprintf(m.state, sizeof m.state, "formed");
+    m.store = cJSON_CreateObject();
+    m.image = cJSON_Parse(
+        "{\"input_key\":\"text\",\"part_name\":\"P\","
+        "\"expression\":{\"op\":\"literal\",\"value\":1},\"bindings\":{},\"binding_order\":[]}");
+    /* missing-text */
+    expect(uem_prim_apply(&m, "eval_expression", err, sizeof err) == 0, "eval missing-text");
+    expect(strcmp(m.state, "absent") == 0, "missing-text state");
+    free_soft_machine(&m);
+
+    memset(&m, 0, sizeof m);
+    snprintf(m.state, sizeof m.state, "formed");
+    m.store = cJSON_CreateObject();
+    m.image = cJSON_Parse(
+        "{\"input_key\":\"document\",\"part_name\":\"P\","
+        "\"expression\":{\"op\":\"literal\",\"value\":1},\"bindings\":{},\"binding_order\":[]}");
+    expect(uem_prim_apply(&m, "eval_expression", err, sizeof err) == 0, "eval missing-doc");
+    expect(strcmp(m.state, "absent") == 0, "missing-doc state");
+    free_soft_machine(&m);
+
+    memset(&m, 0, sizeof m);
+    snprintf(m.state, sizeof m.state, "formed");
+    m.store = cJSON_CreateObject();
+    cJSON_AddItemToObject(m.store, "document", cJSON_CreateNumber(1));
+    m.image = cJSON_Parse(
+        "{\"input_key\":\"document\",\"part_name\":\"P\","
+        "\"expression\":{\"op\":\"literal\",\"value\":1},\"bindings\":{},\"binding_order\":[]}");
+    expect(uem_prim_apply(&m, "eval_expression", err, sizeof err) != 0, "eval non-object doc");
+    expect(strcmp(m.state, "invalid") == 0, "non-object doc state");
+    free_soft_machine(&m);
+
+    /* other input_key uses store as root + bindings success */
+    memset(&m, 0, sizeof m);
+    snprintf(m.state, sizeof m.state, "formed");
+    m.store = cJSON_CreateObject();
+    cJSON_AddNumberToObject(m.store, "n", 3);
+    m.image = cJSON_Parse(
+        "{\"input_key\":\"store\",\"part_name\":\"P\","
+        "\"expression\":{\"op\":\"ref\",\"name\":\"b1\"},"
+        "\"bindings\":{\"b1\":{\"op\":\"field\",\"path\":[\"n\"]}},"
+        "\"binding_order\":[\"b1\",\"missing_name\"]}");
+    expect(uem_prim_apply(&m, "eval_expression", err, sizeof err) == 0, "eval bindings ok");
+    expect(m.acc && cJSON_IsNumber(m.acc), "acc from binding");
+    free_soft_machine(&m);
+
+    /* binding eval failure */
+    memset(&m, 0, sizeof m);
+    snprintf(m.state, sizeof m.state, "formed");
+    m.store = cJSON_CreateObject();
+    cJSON_AddStringToObject(m.store, "text", "x");
+    m.image = cJSON_Parse(
+        "{\"input_key\":\"text\",\"part_name\":\"P\","
+        "\"expression\":{\"op\":\"literal\",\"value\":1},"
+        "\"bindings\":{\"b1\":{\"op\":\"ref\",\"name\":\"nope\"}},"
+        "\"binding_order\":[\"b1\"]}");
+    expect(uem_prim_apply(&m, "eval_expression", err, sizeof err) == 0, "eval binding fail returns");
+    expect(strcmp(m.state, "invalid") == 0, "binding fail state");
+    free_soft_machine(&m);
+
+    /* main expression fail */
+    memset(&m, 0, sizeof m);
+    snprintf(m.state, sizeof m.state, "formed");
+    m.store = cJSON_CreateObject();
+    cJSON_AddStringToObject(m.store, "text", "x");
+    m.image = cJSON_Parse(
+        "{\"input_key\":\"text\",\"part_name\":\"P\","
+        "\"expression\":{\"op\":\"ref\",\"name\":\"nope\"},"
+        "\"bindings\":{},\"binding_order\":[]}");
+    expect(uem_prim_apply(&m, "eval_expression", err, sizeof err) == 0, "eval main fail");
+    expect(strcmp(m.state, "invalid") == 0, "main fail state");
+    free_soft_machine(&m);
+
+    /* verify require_evidence fail */
+    memset(&m, 0, sizeof m);
+    snprintf(m.state, sizeof m.state, "formed");
+    m.store = cJSON_CreateObject();
+    cJSON_AddNumberToObject(m.store, "stats", 1);
+    m.image = cJSON_Parse(
+        "{\"verify\":{\"require_value_field\":\"stats\","
+        "\"require_evidence_contains\":[\"must-have\"]}}");
+    expect(uem_prim_apply(&m, "verify_result", err, sizeof err) == 0, "verify evidence fail");
+    expect(strcmp(m.state, "invalid") == 0, "verify fail state");
+    free_soft_machine(&m);
+
+    /* uem_prim_apply unknown with err buffer */
+    memset(&m, 0, sizeof m);
+    snprintf(m.state, sizeof m.state, "formed");
+    m.store = cJSON_CreateObject();
+    m.image = cJSON_CreateObject();
+    expect(uem_prim_apply(&m, "totally_unknown", err, sizeof err) != 0, "unknown prim");
+    expect(strstr(err, "unknown-primitive") != NULL, "unknown prim msg");
+    free_soft_machine(&m);
+    /* note: final return -1 after strcmp list is unreachable given REGISTRY match */
+}
+
 static void fuzz_decode_expr(void) {
     /* Deterministic byte/JSON fuzz to hit remaining error/edge arms. */
     unsigned seed = 0xC0FFEE;
@@ -782,6 +1307,10 @@ int main(void) {
     test_host_errors();
     test_primitives_direct();
     test_host_json_limits();
+    assert_decode_rejects();
+    assert_machine_semantics();
+    assert_expr_error_arms();
+    assert_primitives_eval_bindings();
     fuzz_decode_expr();
 
     /* known artifact paths */

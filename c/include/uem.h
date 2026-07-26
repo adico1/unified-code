@@ -54,6 +54,9 @@ void uem_set_outward_handler(uem_machine *m, uem_outward_fn fn, void *ctx);
 
 uem_status uem_run(uem_machine *m, char *err, size_t errlen);
 
+/* Single step (Python machine_step parity). Used for after-stop / limit tests. */
+uem_status uem_step(uem_machine *m, char *err, size_t errlen);
+
 /* Canonical result JSON for differential comparison (caller frees with free()). */
 char *uem_result_json(const uem_machine *m);
 

@@ -365,15 +365,24 @@ static void fulfill_outward(uem_machine *m) {
     }
 }
 
+uem_status uem_step(uem_machine *m, char *err, size_t errlen) {
+    if (!m) return UEM_ERR_ARGS;
+    if (step_one(m, err, errlen) != 0) {
+        return m->halted ? UEM_OK : UEM_ERR_RUNTIME;
+    }
+    if (m->outward_request && !m->outward_result)
+        fulfill_outward(m);
+    return UEM_OK;
+}
+
 uem_status uem_run(uem_machine *m, char *err, size_t errlen) {
     if (!m) return UEM_ERR_ARGS;
     while (!m->halted && m->pc < m->n_instr) {
-        if (step_one(m, err, errlen) != 0) {
-            if (m->halted) return UEM_OK;
+        uem_status st = uem_step(m, err, errlen);
+        if (st != UEM_OK && !m->halted) {
+            /* soft runtime faults still stop the loop */
+            break;
         }
-        /* After OUTWARD, fulfill before next instruction (Python host order). */
-        if (m->outward_request && !m->outward_result)
-            fulfill_outward(m);
     }
     if (!m->halted) {
         m->halted = 1;

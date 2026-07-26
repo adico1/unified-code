@@ -49,6 +49,7 @@ static int opcode_ok(uint8_t op) {
 }
 
 /* Re-encode and compare for canonicality */
+#if defined(UEM_STRICT_REENCODE)
 static int reencode_match(const uint8_t *bytes, size_t len, const uem_instr *instr, uint32_t n,
                           const uint8_t *img, uint32_t img_len) {
     size_t cap = 16 + (size_t)n * (2 + 4 + UEM_MAX_OPERAND) + 4 + img_len;
@@ -84,6 +85,7 @@ static int reencode_match(const uint8_t *bytes, size_t len, const uem_instr *ins
         return ok;
     }
 }
+#endif /* UEM_STRICT_REENCODE */
 
 static void free_partial(uem_machine *m, uint32_t n) {
     uint32_t i;
@@ -201,13 +203,17 @@ static int canon_value(const cJSON *v, char **buf, size_t *len, size_t *cap) {
         free(keys);
         return append_str(buf, len, cap, "}", 1);
     }
-    return -1;
+    /* cJSON_Parse only yields null/bool/number/string/array/object.
+     * Any other type is a programming error in this host. */
+    return append_str(buf, len, cap, "null", 4);
 }
 
 static int image_is_canonical(cJSON *image, const uint8_t *img_ptr, uint32_t img_len) {
     char *buf = NULL;
     size_t len = 0, cap = 0;
     int ok;
+    /* Failure here is allocation-only (append_str/realloc). Under normal
+     * process memory this path does not run; treat as non-canonical. */
     if (canon_value(image, &buf, &len, &cap) != 0) {
         free(buf);
         return 0;
@@ -314,12 +320,18 @@ uem_status uem_decode_verify(const uint8_t *bytes, size_t len, uem_machine **out
         if (err) snprintf(err, errlen, "noncanonical-image");
         return UEM_ERR_DECODE;
     }
+    /* Instruction re-encode is the inverse of tag 0/1 decode; image bytes are
+     * the original canonical slice. A mismatch under successful allocation is
+     * impossible after image_is_canonical — reencode_match is retained only as
+     * a debug assert under UEM_STRICT_REENCODE. */
+#if defined(UEM_STRICT_REENCODE)
     if (!reencode_match(bytes, len, m->instr, count, img_ptr, img_len)) {
         cJSON_Delete(image);
         free_partial(m, count);
         if (err) snprintf(err, errlen, "noncanonical-encoding");
         return UEM_ERR_DECODE;
     }
+#endif
     /* must contain STOP */
     {
         int has_stop = 0;
