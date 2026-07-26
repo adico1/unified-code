@@ -10,3 +10,4 @@ dist/
 coverage_py.json
 *.gcov
 coverage_py.json
+contract_report.json

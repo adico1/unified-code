@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Thin wrapper: complete Unified Code acceptance contract tool.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+PY="${ROOT}/.venv/bin/python"
+if [[ ! -x "$PY" ]]; then PY=python3; fi
+exec "$PY" "${ROOT}/scripts/uc_contract.py" "$@"

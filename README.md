@@ -92,6 +92,25 @@ result = outward(world(verify(space(letter(inward("seed"))))))
 canonical thing, not a bare host value (L1). States `unknown`, `absent`,
 `false`, and `invalid` are distinct (L6).
 
+## Complete-contract tool
+
+The full acceptance plan (branch baseline, L13 closure, `uc unfold`,
+task-ledger seed proof, Standard Ten, publish) is machine-checked by one
+script:
+
+```bash
+./scripts/uc_contract plan          # ordered phases P0–P6
+./scripts/uc_contract status        # live pass/fail criteria
+./scripts/uc_contract conservation  # baseline equation only
+./scripts/uc_contract ledger        # regenerate branch ledger
+./scripts/uc_contract verify        # full gates (pytest/C/L13/audit)
+./scripts/uc_contract report        # honest 14-point final report
+```
+
+Exit code is nonzero until every criterion is green. Do not claim
+completeness while `contract_pass` is false. Writes `contract_status.json`
+/ `contract_report.json` under the repo root when verify/report run.
+
 ## Developer workflow
 
 Learn one construction process once and use it everywhere. The developer
