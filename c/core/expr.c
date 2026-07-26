@@ -91,6 +91,8 @@ static int eval_node(cJSON *node, cJSON *root, cJSON *item, int in_each,
         cJSON *nj = cJSON_GetObjectItemCaseSensitive(node, "name");
         cJSON *v;
         if (!cJSON_IsString(nj) || !bindings) return fail(err, errlen, "missing-binding");
+        /* Missing key → missing-binding. Key present with JSON null → duplicate null.
+         * cJSON_GetObjectItem returns non-NULL for null-typed items. */
         v = cJSON_GetObjectItemCaseSensitive(bindings, nj->valuestring);
         if (!v) return fail(err, errlen, "missing-binding");
         *out = cJSON_Duplicate(v, 1);
@@ -148,11 +150,12 @@ static int eval_node(cJSON *node, cJSON *root, cJSON *item, int in_each,
     if (strcmp(op, "require") == 0) {
         cJSON *ofn = NULL;
         cJSON *ej = cJSON_GetObjectItemCaseSensitive(node, "error");
+        cJSON *pj = cJSON_GetObjectItemCaseSensitive(node, "path");
         if (eval_node(cJSON_GetObjectItemCaseSensitive(node, "of"), root, item, in_each, bindings, &ofn, err, errlen) != 0)
             return -1;
         if (!ofn || cJSON_IsNull(ofn)) {
             cJSON_Delete(ofn);
-            return fail(err, errlen, cJSON_IsString(ej) ? ej->valuestring : "missing");
+            return fail_path(err, errlen, cJSON_IsString(ej) ? ej->valuestring : "missing", pj);
         }
         *out = ofn;
         return 0;
@@ -161,15 +164,16 @@ static int eval_node(cJSON *node, cJSON *root, cJSON *item, int in_each,
         cJSON *ofn = NULL;
         cJSON *te = cJSON_GetObjectItemCaseSensitive(node, "type_error");
         cJSON *me = cJSON_GetObjectItemCaseSensitive(node, "missing_error");
+        cJSON *pj = cJSON_GetObjectItemCaseSensitive(node, "path");
         if (eval_node(cJSON_GetObjectItemCaseSensitive(node, "of"), root, item, in_each, bindings, &ofn, err, errlen) != 0)
             return -1;
         if (!ofn || cJSON_IsNull(ofn)) {
             cJSON_Delete(ofn);
-            return fail(err, errlen, cJSON_IsString(me) ? me->valuestring : "missing");
+            return fail_path(err, errlen, cJSON_IsString(me) ? me->valuestring : "missing", pj);
         }
         if (!cJSON_IsNumber(ofn) || ofn->valuedouble != (double)ofn->valueint) {
             cJSON_Delete(ofn);
-            return fail(err, errlen, cJSON_IsString(te) ? te->valuestring : "invalid-integer");
+            return fail_path(err, errlen, cJSON_IsString(te) ? te->valuestring : "invalid-integer", pj);
         }
         *out = ofn;
         return 0;
@@ -178,20 +182,21 @@ static int eval_node(cJSON *node, cJSON *root, cJSON *item, int in_each,
         cJSON *ofn = NULL;
         cJSON *te = cJSON_GetObjectItemCaseSensitive(node, "type_error");
         cJSON *me = cJSON_GetObjectItemCaseSensitive(node, "missing_error");
+        cJSON *pj = cJSON_GetObjectItemCaseSensitive(node, "path");
         uem_dec d;
         if (eval_node(cJSON_GetObjectItemCaseSensitive(node, "of"), root, item, in_each, bindings, &ofn, err, errlen) != 0)
             return -1;
         if (!ofn || cJSON_IsNull(ofn)) {
             cJSON_Delete(ofn);
-            return fail(err, errlen, cJSON_IsString(me) ? me->valuestring : "missing");
+            return fail_path(err, errlen, cJSON_IsString(me) ? me->valuestring : "missing", pj);
         }
         if (!cJSON_IsString(ofn)) {
             cJSON_Delete(ofn);
-            return fail(err, errlen, cJSON_IsString(te) ? te->valuestring : "not-decimal-string");
+            return fail_path(err, errlen, cJSON_IsString(te) ? te->valuestring : "not-decimal-string", pj);
         }
         d = uem_dec_from_str(ofn->valuestring);
         cJSON_Delete(ofn);
-        if (!d.ok) return fail(err, errlen, cJSON_IsString(te) ? te->valuestring : "not-decimal-string");
+        if (!d.ok) return fail_path(err, errlen, cJSON_IsString(te) ? te->valuestring : "not-decimal-string", pj);
         /* store as object {"__dec__": coeff} */
         *out = cJSON_CreateObject();
         cJSON_AddStringToObject(*out, "__uem_dec__", "1");

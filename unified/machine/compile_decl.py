@@ -107,9 +107,12 @@ def _compile(decl):
     # Normalize expression AST to plain JSON-friendly data
     expression = _plain(tr.get("program") or tr.get("result"))
     raw_bindings = tr.get("bindings") or {}
-    # Preserve declaration insertion order (JSON sort_keys must not change eval order)
-    binding_order = list(raw_bindings.keys()) if isinstance(raw_bindings, dict) else []
-    bindings = _plain(raw_bindings)
+    # binding_order is the sole evaluation sequence. Image JSON is dumped with
+    # sort_keys=True, so object key order is NOT reliable for CSE deps.
+    # Order: declaration insertion, then stable topo-sort on internal ref edges.
+    # raw_bindings is always a mapping when present; non-mapping → empty.
+    bindings = _plain(raw_bindings) if isinstance(raw_bindings, dict) else {}
+    binding_order = _binding_eval_order(bindings)
 
     image = {
         "source": {
@@ -174,6 +177,55 @@ def _default(obj):
     if isinstance(obj, set):
         return sorted(obj)
     raise TypeError(type(obj))
+
+
+def _collect_ref_names(node, acc: set) -> None:
+    """Collect binding names referenced via op=ref (generic AST walk)."""
+    if isinstance(node, dict):
+        if node.get("op") == "ref" and isinstance(node.get("name"), str):
+            acc.add(node["name"])
+        for v in node.values():
+            _collect_ref_names(v, acc)
+    elif isinstance(node, list):
+        for v in node:
+            _collect_ref_names(v, acc)
+
+
+def _binding_eval_order(bindings: dict) -> list:
+    """Canonical evaluation order for bindings.
+
+    Starts from declaration insertion order, then topo-sorts so each name is
+    evaluated only after every internal ref it depends on. Raises ValueError on
+    unknown refs or cycles. No domain vocabulary — pure graph on AST refs.
+    """
+    if not bindings:
+        return []
+    names = list(bindings.keys())
+    name_set = set(names)
+    deps: dict[str, set] = {}
+    for n in names:
+        refs: set = set()
+        _collect_ref_names(bindings.get(n), refs)
+        unknown = refs - name_set
+        if unknown:
+            raise ValueError(f"unknown-binding-ref:{sorted(unknown)[0]}")
+        # self-ref is a cycle
+        deps[n] = set(refs)
+        if n in deps[n]:
+            raise ValueError(f"binding-cycle:{n}")
+
+    # Kahn topo; stable by filtering declaration order repeatedly
+    remaining = set(names)
+    order: list[str] = []
+    while remaining:
+        ready = [n for n in names if n in remaining and not (deps[n] & remaining)]
+        if not ready:
+            raise ValueError("binding-cycle")
+        # preserve relative declaration order among ready nodes
+        for n in ready:
+            order.append(n)
+            remaining.remove(n)
+    return order
 
 
 def write_artifacts(thing, out_dir: str):

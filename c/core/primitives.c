@@ -123,15 +123,19 @@ static int prim_accept_outward(uem_machine *m) {
     }
     if (cJSON_GetObjectItemCaseSensitive(res, "error")) {
         cJSON *er = cJSON_GetObjectItemCaseSensitive(res, "error");
+        char errtxt[128];
+        snprintf(errtxt, sizeof errtxt, "%s",
+                 cJSON_IsString(er) && er->valuestring ? er->valuestring : "error");
         store_set(m, "error", cJSON_Duplicate(er, 1));
         if (cJSON_GetObjectItemCaseSensitive(res, "path"))
             store_set(m, "path", cJSON_Duplicate(cJSON_GetObjectItemCaseSensitive(res, "path"), 1));
         cJSON_Delete(m->outward_result);
         m->outward_result = NULL;
+        res = NULL;
         uem_set_state(m, "invalid");
         snprintf(mark, sizeof mark, "boundary:%s", bname);
         uem_ev_append(m, mark);
-        snprintf(mark, sizeof mark, "read:error:%s", cJSON_IsString(er) ? er->valuestring : "error");
+        snprintf(mark, sizeof mark, "read:error:%s", errtxt);
         return uem_ev_append(m, mark);
     }
     {
@@ -212,16 +216,16 @@ static int prim_eval_expression(uem_machine *m) {
     } else {
         root = cJSON_Duplicate(m->store, 1);
     }
-    /* bindings in order */
-    if (cJSON_IsArray(order) && bindings_ast) {
+    /* bindings in binding_order only (canonical CSE sequence from compile).
+     * Never iterate bindings object key order — image JSON uses sort_keys. */
+    if (cJSON_IsArray(order) && cJSON_IsObject(bindings_ast)) {
         cJSON *nm;
         cJSON_ArrayForEach(nm, order) {
             cJSON *node, *val = NULL;
+            cJSON *bpath = NULL;
             if (!cJSON_IsString(nm)) continue;
             node = cJSON_GetObjectItemCaseSensitive(bindings_ast, nm->valuestring);
             if (!node) continue;
-            {
-            cJSON *bpath = NULL;
             if (uem_expr_eval(m, node, root, bound, &val, err, sizeof err, &bpath) != 0) {
                 store_set(m, "error", cJSON_CreateString(err));
                 if (bpath) store_set(m, "path", bpath);
@@ -233,7 +237,8 @@ static int prim_eval_expression(uem_machine *m) {
                 snprintf(mark, sizeof mark, "%s:error:%s", part, err);
                 return uem_ev_append(m, mark);
             }
-            }
+            /* val may be JSON null — still a present binding (distinct from missing). */
+            if (!val) val = cJSON_CreateNull();
             cJSON_AddItemToObject(bound, nm->valuestring, val);
         }
     }

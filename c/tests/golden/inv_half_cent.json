@@ -1,0 +1,43 @@
+{
+  "bytecode": "artifacts/uem/invoice_total/program.uem",
+  "case": "inv_half_cent.json",
+  "declaration": "examples/declarations/invoice_total.py",
+  "error": null,
+  "evidence_semantic": [
+    "boundary:inward",
+    "source:ok",
+    "outward:request:read_json",
+    "boundary:read_json_source",
+    "read:ok",
+    "letter:distinguished",
+    "part:calculate_totals",
+    "calculate_totals:ok",
+    "merge:ok",
+    "script-law:pass",
+    "present_result:ok"
+  ],
+  "host": {
+    "document": {
+      "items": [
+        {
+          "quantity": 1,
+          "unit_price": "0.05"
+        }
+      ],
+      "tax_rate": "0.10"
+    }
+  },
+  "presentation": {
+    "exit_code": 0,
+    "text": "{\"item_count\":1,\"subtotal\":\"0.05\",\"tax\":\"0.01\",\"total\":\"0.06\"}"
+  },
+  "program_sha256": "cf2a87a8219f26e51bcc78dade1c97cca2540e90cbcf6bc3e9fe283b822270c8",
+  "state": "valid",
+  "stats": {
+    "item_count": 1,
+    "subtotal": "0.05",
+    "tax": "0.01",
+    "total": "0.06"
+  },
+  "ticket": null
+}

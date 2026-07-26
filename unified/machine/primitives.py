@@ -230,13 +230,16 @@ def prim_eval_expression(thing):
     ctx = {"root": root, "path": [], "bindings": {}}
     try:
         bound = {}
-        # Declaration order if provided; else stable sorted (no domain knowledge)
+        # binding_order is canonical (compile topo-sort). Never sort keys:
+        # alphabetical order breaks CSE deps (tax before tax_rate). If order
+        # is absent, use dict insertion order only (not sorted).
         order = image.get("binding_order")
         if not isinstance(order, list) or not order:
-            order = sorted(bindings_ast.keys())
+            order = list(bindings_ast.keys()) if isinstance(bindings_ast, dict) else []
         for bname in order:
-            if bname not in bindings_ast:
+            if not isinstance(bname, str) or bname not in bindings_ast:
                 continue
+            # Evaluate into bound; JSON null is a present binding (key exists).
             bound[bname] = eval_expr(bindings_ast[bname], {**ctx, "bindings": bound})
             ctx = {**ctx, "bindings": bound}
         ctx = {**ctx, "bindings": bound}

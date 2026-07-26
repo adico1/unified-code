@@ -1,0 +1,37 @@
+{
+  "bytecode": "artifacts/uem/invoice_total/program.uem",
+  "case": "inv_reject_qty.json",
+  "declaration": "examples/declarations/invoice_total.py",
+  "error": "missing-quantity",
+  "evidence_semantic": [
+    "boundary:inward",
+    "source:ok",
+    "outward:request:read_json",
+    "boundary:read_json_source",
+    "read:ok",
+    "letter:distinguished",
+    "part:calculate_totals",
+    "calculate_totals:error:missing-quantity",
+    "merge:skipped",
+    "script-law:fail",
+    "present_result:ok"
+  ],
+  "host": {
+    "document": {
+      "items": [
+        {
+          "unit_price": "1.00"
+        }
+      ],
+      "tax_rate": "0.1"
+    }
+  },
+  "presentation": {
+    "exit_code": 1,
+    "text": "{\"error\":\"missing-quantity\",\"path\":[\"items\",0,\"quantity\"]}"
+  },
+  "program_sha256": "cf2a87a8219f26e51bcc78dade1c97cca2540e90cbcf6bc3e9fe283b822270c8",
+  "state": "invalid",
+  "stats": null,
+  "ticket": null
+}

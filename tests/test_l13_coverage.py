@@ -898,3 +898,59 @@ def test_construct_ticket_dedupe_same_id():
     v = dict(value_of(t1))
     t2 = construct_ticket_from_fault({**t1, "value": v})
     assert value_of(t2)["ticket"]["correlation_id"] == tid
+
+
+def test_binding_eval_order_edges():
+    """Cover compile_decl topo/cycle/unknown/null paths for L13 statement score."""
+    from unified.machine.compile_decl import _binding_eval_order, _default, _plain
+
+    assert _binding_eval_order({}) == []
+    assert _binding_eval_order(
+        {
+            "b": {"op": "ref", "name": "a"},
+            "a": {"op": "literal", "value": 1},
+        }
+    ) == ["a", "b"]
+
+    try:
+        _binding_eval_order({"x": {"op": "ref", "name": "missing"}})
+        assert False, "expected unknown-binding-ref"
+    except ValueError as e:
+        assert "unknown-binding-ref" in str(e)
+
+    try:
+        _binding_eval_order({"x": {"op": "ref", "name": "x"}})
+        assert False, "expected binding-cycle self"
+    except ValueError as e:
+        assert "binding-cycle" in str(e)
+
+    try:
+        _binding_eval_order(
+            {
+                "a": {"op": "ref", "name": "b"},
+                "b": {"op": "ref", "name": "a"},
+            }
+        )
+        assert False, "expected binding-cycle mutual"
+    except ValueError as e:
+        assert "binding-cycle" in str(e)
+
+    assert _default((1, 2)) == [1, 2]
+    assert _default({3, 1, 2}) == [1, 2, 3]
+    try:
+        _default(object())
+        assert False
+    except TypeError:
+        pass
+    assert _plain({"t": (1, 2)}) == {"t": [1, 2]}
+
+
+def test_prim_ref_null_binding_present():
+    from unified.machine.primitives import eval_expr, _ExprFail
+
+    assert eval_expr({"op": "ref", "name": "n"}, {"bindings": {"n": None}, "path": []}) is None
+    try:
+        eval_expr({"op": "ref", "name": "n"}, {"bindings": {}, "path": []})
+        assert False
+    except _ExprFail as e:
+        assert e.error == "missing-binding"
