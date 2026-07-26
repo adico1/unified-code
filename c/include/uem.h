@@ -43,6 +43,23 @@ uem_status uem_decode_verify(const uint8_t *bytes, size_t len, uem_machine **out
 /* Free machine. */
 void uem_free(uem_machine *m);
 
+/* Audited allocator boundary. Production default delegates to libc.
+ * fail_after: 0 = never fail; N = fail on Nth allocation attempt (1-based).
+ * Tests inject deterministic failures; no compile-time path removal. */
+typedef struct uem_allocator {
+    void *(*malloc_fn)(size_t);
+    void *(*realloc_fn)(void *, size_t);
+    void (*free_fn)(void *);
+    size_t fail_after;
+    size_t allocations;
+} uem_allocator;
+
+void uem_allocator_set(const uem_allocator *a);
+void uem_allocator_reset(int clear_fail);
+void uem_allocator_get(uem_allocator *out);
+void uem_allocator_fail_after(size_t n);
+void uem_alloc_install_cjson(void);
+
 /* Set host input JSON object string (owned copy inside machine). */
 uem_status uem_set_host_json(uem_machine *m, const char *json, char *err, size_t errlen);
 

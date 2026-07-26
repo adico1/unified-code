@@ -1,3 +1,4 @@
+#include "alloc.h"
 #include "machine_internal.h"
 #include "decimal.h"
 #include <ctype.h>
@@ -418,18 +419,18 @@ static int eval_node(cJSON *node, cJSON *root, cJSON *item, int in_each,
                     if (!found) {
                         if (nseen + 1 > cap) {
                             size_t ncap = cap ? cap * 2 : 8;
-                            char **ns = (char **)realloc(seen, ncap * sizeof(char *));
+                            char **ns = (char **)uem_mem_realloc(seen, ncap * sizeof(char *));
                             if (!ns) { /* leak on OOM path simplified */ break; }
                             seen = ns; cap = ncap;
                         }
-                        seen[nseen] = strdup(cf);
+                        seen[nseen] = uem_mem_strdup(cf);
                         nseen++;
                     }
                 }
             }
             *out = cJSON_CreateNumber((double)nseen);
-            for (i = 0; i < nseen; i++) free(seen[i]);
-            free(seen);
+            for (i = 0; i < nseen; i++) uem_mem_free(seen[i]);
+            uem_mem_free(seen);
         }
         cJSON_Delete(ofn);
         return 0;

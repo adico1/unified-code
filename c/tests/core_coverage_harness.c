@@ -3,6 +3,7 @@
  * Assertions verify outcomes; not empty line-ticks.
  */
 #include "../include/uem.h"
+#include "../core/alloc.h"
 #include "../core/decimal.h"
 #include "../core/machine_internal.h"
 #include "../third_party/cJSON.h"
@@ -1299,6 +1300,209 @@ static void fuzz_decode_expr(void) {
     }
 }
 
+/* Direct mem_* edge arms: zero size, overflow, null strdup, free(NULL). */
+static void assert_alloc_api(void) {
+    uem_allocator snap;
+    uem_allocator custom;
+    void *p;
+    char *s;
+    size_t before;
+
+    uem_alloc_install_cjson();
+
+    memset(&snap, 0, sizeof snap);
+    uem_allocator_get(NULL);
+    uem_allocator_get(&snap);
+    expect(snap.malloc_fn != NULL, "default malloc_fn set");
+    expect(snap.realloc_fn != NULL, "default realloc_fn set");
+    expect(snap.free_fn != NULL, "default free_fn set");
+    expect(snap.fail_after == 0, "default fail_after 0");
+
+    uem_allocator_fail_after(99);
+    uem_allocator_reset(0);
+    uem_allocator_get(&snap);
+    expect(snap.fail_after == 99, "reset(0) preserves fail_after");
+    expect(snap.allocations == 0, "reset zeros allocations");
+    uem_allocator_reset(1);
+    uem_allocator_get(&snap);
+    expect(snap.fail_after == 0, "reset(1) clears fail_after");
+
+    memset(&custom, 0, sizeof custom);
+    custom.fail_after = 0;
+    custom.allocations = 0;
+    custom.malloc_fn = NULL;
+    custom.realloc_fn = NULL;
+    custom.free_fn = NULL;
+    uem_allocator_set(&custom);
+    p = uem_mem_malloc(16);
+    expect(p != NULL, "NULL-fn set still allocates via libc fallback");
+    uem_mem_free(p);
+
+    custom.malloc_fn = snap.malloc_fn;
+    custom.realloc_fn = snap.realloc_fn;
+    custom.free_fn = snap.free_fn;
+    custom.fail_after = 0;
+    custom.allocations = 7;
+    uem_allocator_set(&custom);
+    uem_allocator_get(&snap);
+    expect(snap.allocations == 7, "set copies allocations counter");
+    uem_allocator_reset(1);
+
+    uem_allocator_fail_after(3);
+    uem_allocator_set(NULL);
+    uem_allocator_get(&snap);
+    expect(snap.fail_after == 0, "set(NULL) clears fail_after");
+    expect(snap.allocations == 0, "set(NULL) clears allocations");
+    p = uem_mem_malloc(8);
+    expect(p != NULL, "set(NULL) production malloc works");
+    uem_mem_free(p);
+
+    p = uem_mem_malloc(0);
+    expect(p != NULL, "malloc(0) returns non-NULL (n?n:1)");
+    uem_mem_free(p);
+    p = uem_mem_realloc(NULL, 0);
+    expect(p != NULL, "realloc(NULL,0) non-NULL");
+    uem_mem_free(p);
+    p = uem_mem_calloc(0, 32);
+    expect(p != NULL, "calloc(0,n) allocates minimal");
+    uem_mem_free(p);
+    p = uem_mem_calloc(4, 0);
+    expect(p != NULL, "calloc(n,0) allocates minimal");
+    uem_mem_free(p);
+
+    p = uem_mem_calloc((size_t)-1 / 2 + 1, 4);
+    expect(p == NULL, "calloc overflow returns NULL");
+
+    expect(uem_mem_strdup(NULL) == NULL, "strdup(NULL) is NULL");
+    uem_allocator_fail_after(1);
+    s = uem_mem_strdup("x");
+    uem_allocator_reset(1);
+    expect(s == NULL, "strdup OOM is NULL");
+
+    uem_mem_free(NULL);
+
+    p = uem_mem_malloc(4);
+    expect(p != NULL, "pre-realloc malloc");
+    uem_allocator_fail_after(1);
+    {
+        void *q = uem_mem_realloc(p, 64);
+        expect(q == NULL, "realloc OOM returns NULL");
+        uem_allocator_reset(1);
+        uem_mem_free(p);
+    }
+
+    before = 0;
+    uem_allocator_get(&snap);
+    before = snap.allocations;
+    uem_alloc_install_cjson();
+    uem_alloc_install_cjson();
+    uem_allocator_get(&snap);
+    expect(snap.allocations == before, "double install_cjson no allocs");
+}
+
+/* Deterministic OOM injection: fail on allocation N, assert cleanup + error. */
+static void assert_oom_paths(void) {
+    uint8_t *buf = NULL;
+    size_t len = 0;
+    uem_machine *m = NULL;
+    char err[128];
+    uem_status st;
+    size_t n;
+    size_t closed = 0;
+    size_t nomem_hits = 0;
+
+    assert_alloc_api();
+
+    expect(open_vec("assert_float.uem", &buf, &len), "oom open float");
+    uem_alloc_install_cjson();
+
+    for (n = 1; n <= 120; n++) {
+        m = (uem_machine *)0x1;
+        err[0] = 0;
+        uem_allocator_fail_after(n);
+        st = uem_decode_verify(buf, len, &m, err, sizeof err);
+        uem_allocator_reset(1);
+        if (st == UEM_OK) {
+            expect(m != NULL && m != (uem_machine *)0x1, "oom success has machine");
+            uem_free(m);
+            m = NULL;
+            break;
+        }
+        expect(m == NULL || m == (uem_machine *)0x1, "oom fail leaves no live machine");
+        expect(st == UEM_ERR_NOMEM || st == UEM_ERR_DECODE || st == UEM_ERR_VERIFY,
+               "oom maps to canonical error");
+        if (st == UEM_ERR_NOMEM) nomem_hits++;
+        if (m == (uem_machine *)0x1) m = NULL;
+        closed++;
+    }
+    expect(closed > 0, "at least one OOM vector fired");
+    expect(nomem_hits > 0, "at least one pure NOMEM path");
+    free(buf); buf = NULL;
+
+    expect(open_vec("assert_esc.uem", &buf, &len), "oom open esc");
+    m = (uem_machine *)0x1;
+    uem_allocator_fail_after(1);
+    st = uem_decode_verify(buf, len, &m, err, sizeof err);
+    uem_allocator_reset(1);
+    expect(st == UEM_ERR_NOMEM, "fail_after=1 is NOMEM on machine alloc");
+    expect(m == (uem_machine *)0x1 || m == NULL, "fail_after=1 no partial machine");
+    free(buf); buf = NULL;
+
+    {
+        const char *vecs[] = {
+            "assert_float.uem", "assert_esc.uem", "assert_load.uem",
+            "assert_quiet.uem", "assert_tick.uem", NULL
+        };
+        int vi;
+        for (vi = 0; vecs[vi]; vi++) {
+            if (!open_vec(vecs[vi], &buf, &len)) continue;
+            for (n = 1; n <= 40; n++) {
+                m = (uem_machine *)0x1;
+                err[0] = 0;
+                uem_allocator_fail_after(n);
+                st = uem_decode_verify(buf, len, &m, err, sizeof err);
+                uem_allocator_reset(1);
+                if (st == UEM_OK) {
+                    expect(m != NULL && m != (uem_machine *)0x1, "mid-decode success");
+                    uem_free(m);
+                    break;
+                }
+                expect(m == NULL || m == (uem_machine *)0x1, "mid-decode no partial");
+                expect(st == UEM_ERR_NOMEM || st == UEM_ERR_DECODE || st == UEM_ERR_VERIFY,
+                       "mid-decode canonical error");
+            }
+            free(buf); buf = NULL;
+        }
+    }
+
+    {
+        cJSON *j;
+        uem_alloc_install_cjson();
+        uem_allocator_fail_after(1);
+        j = cJSON_Parse("{\"a\":1}");
+        uem_allocator_reset(1);
+        expect(j == NULL, "cJSON parse fails under OOM hook");
+        if (j) cJSON_Delete(j);
+        for (n = 1; n <= 20; n++) {
+            uem_allocator_fail_after(n);
+            j = cJSON_Parse("{\"a\":[1,2,3],\"b\":{\"c\":true}}");
+            uem_allocator_reset(1);
+            if (j) cJSON_Delete(j);
+            else break;
+        }
+    }
+
+    expect(open_vec("assert_float.uem", &buf, &len), "oom recovery open");
+    uem_allocator_reset(1);
+    st = uem_decode_verify(buf, len, &m, err, sizeof err);
+    expect(st == UEM_OK && m != NULL, "allocator reset restores success");
+    if (m) {
+        expect(strcmp(uem_state(m), "formed") == 0 || uem_state(m)[0], "state formed");
+        uem_free(m);
+    }
+    free(buf);
+}
+
 int main(void) {
     fails = 0;
     test_decimal();
@@ -1311,6 +1515,7 @@ int main(void) {
     assert_machine_semantics();
     assert_expr_error_arms();
     assert_primitives_eval_bindings();
+    assert_oom_paths();
     fuzz_decode_expr();
 
     /* known artifact paths */

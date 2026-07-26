@@ -1,3 +1,4 @@
+#include "alloc.h"
 #include "machine_internal.h"
 #include "../third_party/sha256.h"
 #include <stdio.h>
@@ -9,12 +10,12 @@ int uem_ev_append(uem_machine *m, const char *mark) {
     if (!m || !mark) return -1;
     if (m->n_evidence + 1 > m->evidence_cap) {
         size_t ncap = m->evidence_cap ? m->evidence_cap * 2 : 64;
-        char **ne = (char **)realloc(m->evidence, ncap * sizeof(char *));
+        char **ne = (char **)uem_mem_realloc(m->evidence, ncap * sizeof(char *));
         if (!ne) return -1;
         m->evidence = ne;
         m->evidence_cap = ncap;
     }
-    m->evidence[m->n_evidence] = strdup(mark);
+    m->evidence[m->n_evidence] = uem_mem_strdup(mark);
     if (!m->evidence[m->n_evidence]) return -1;
     m->n_evidence++;
     return 0;
@@ -31,8 +32,8 @@ void uem_free(uem_machine *m) {
     size_t j;
     if (!m) return;
     if (m->instr) {
-        for (i = 0; i < m->n_instr; i++) free(m->instr[i].operand);
-        free(m->instr);
+        for (i = 0; i < m->n_instr; i++) uem_mem_free(m->instr[i].operand);
+        uem_mem_free(m->instr);
     }
     cJSON_Delete(m->image);
     cJSON_Delete(m->store);
@@ -46,17 +47,17 @@ void uem_free(uem_machine *m) {
     cJSON_Delete(m->outward_log);
     cJSON_Delete(m->events_emitted);
     cJSON_Delete(m->events_dequeued);
-    for (j = 0; j < m->n_evidence; j++) free(m->evidence[j]);
-    free(m->evidence);
-    free(m->pending_primitive);
-    free(m->event_name);
-    free(m->event_id);
-    for (j = 0; j < m->q_len; j++) { free(m->q_name[j]); free(m->q_id[j]); }
-    free(m->q_name);
-    free(m->q_id);
-    for (j = 0; j < m->n_processed; j++) free(m->processed_ids[j]);
-    free(m->processed_ids);
-    free(m);
+    for (j = 0; j < m->n_evidence; j++) uem_mem_free(m->evidence[j]);
+    uem_mem_free(m->evidence);
+    uem_mem_free(m->pending_primitive);
+    uem_mem_free(m->event_name);
+    uem_mem_free(m->event_id);
+    for (j = 0; j < m->q_len; j++) { uem_mem_free(m->q_name[j]); uem_mem_free(m->q_id[j]); }
+    uem_mem_free(m->q_name);
+    uem_mem_free(m->q_id);
+    for (j = 0; j < m->n_processed; j++) uem_mem_free(m->processed_ids[j]);
+    uem_mem_free(m->processed_ids);
+    uem_mem_free(m);
 }
 
 uem_status uem_set_host_json(uem_machine *m, const char *json, char *err, size_t errlen) {
@@ -176,11 +177,11 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
     case 0x05: { /* EMIT */
         char id[17];
         const char *name = operand ? operand : "event";
-        free(m->event_name);
-        m->event_name = strdup(name);
+        uem_mem_free(m->event_name);
+        m->event_name = uem_mem_strdup(name);
         event_id_make(m, name, id);
-        free(m->event_id);
-        m->event_id = strdup(id);
+        uem_mem_free(m->event_id);
+        m->event_id = uem_mem_strdup(id);
         m->event_seq++;
         m->event_count++;
         if (!m->events_emitted) m->events_emitted = cJSON_CreateArray();
@@ -197,15 +198,15 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
         char id[17];
         if (m->q_len + 1 > m->q_cap) {
             size_t ncap = m->q_cap ? m->q_cap * 2 : 16;
-            char **nn = (char **)realloc(m->q_name, ncap * sizeof(char *));
-            char **ni = (char **)realloc(m->q_id, ncap * sizeof(char *));
+            char **nn = (char **)uem_mem_realloc(m->q_name, ncap * sizeof(char *));
+            char **ni = (char **)uem_mem_realloc(m->q_id, ncap * sizeof(char *));
             if (!nn || !ni) return -1;
             m->q_name = nn; m->q_id = ni; m->q_cap = ncap;
         }
         if (m->event_id) snprintf(id, sizeof id, "%s", m->event_id);
         else event_id_make(m, name, id);
-        m->q_name[m->q_len] = strdup(name);
-        m->q_id[m->q_len] = strdup(id);
+        m->q_name[m->q_len] = uem_mem_strdup(name);
+        m->q_id[m->q_len] = uem_mem_strdup(id);
         m->q_len++;
         m->event_seq++;
         {
@@ -217,12 +218,12 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
     }
     case 0x07: /* DEQUEUE */
         if (m->q_len == 0) {
-            free(m->event_name); m->event_name = strdup("quiet");
-            free(m->event_id); m->event_id = strdup("quiet");
+            uem_mem_free(m->event_name); m->event_name = uem_mem_strdup("quiet");
+            uem_mem_free(m->event_id); m->event_id = uem_mem_strdup("quiet");
             uem_ev_append(m, "event:quiet");
         } else {
-            free(m->event_name); m->event_name = m->q_name[0];
-            free(m->event_id); m->event_id = m->q_id[0];
+            uem_mem_free(m->event_name); m->event_name = m->q_name[0];
+            uem_mem_free(m->event_id); m->event_id = m->q_id[0];
             memmove(m->q_name, m->q_name + 1, (m->q_len - 1) * sizeof(char *));
             memmove(m->q_id, m->q_id + 1, (m->q_len - 1) * sizeof(char *));
             m->q_len--;
@@ -242,7 +243,7 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
             cJSON *p = NULL;
             if (m->event_name && cJSON_IsObject(routes))
                 p = cJSON_GetObjectItemCaseSensitive(routes, m->event_name);
-            free(m->pending_primitive);
+            uem_mem_free(m->pending_primitive);
             m->pending_primitive = NULL;
             if (!cJSON_IsString(p)) {
                 char mk[160];
@@ -251,7 +252,7 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
                          m->event_name ? m->event_name : "unknown");
                 uem_ev_append(m, mk);
             } else {
-                m->pending_primitive = strdup(p->valuestring);
+                m->pending_primitive = uem_mem_strdup(p->valuestring);
             }
         }
         break;
@@ -266,7 +267,7 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
         if (uem_prim_apply(m, name, e2, sizeof e2) != 0) {
             /* soft invalid continues unless fatal */
         }
-        free(m->pending_primitive);
+        uem_mem_free(m->pending_primitive);
         m->pending_primitive = NULL;
         break;
     }
@@ -339,10 +340,10 @@ static void fulfill_outward(uem_machine *m) {
                  ? cJSON_GetObjectItemCaseSensitive(req, "effect")->valuestring
                  : "effect";
     src = cJSON_GetObjectItemCaseSensitive(req, "source");
-    srcjson = src ? cJSON_PrintUnformatted(src) : strdup("null");
+    srcjson = src ? cJSON_PrintUnformatted(src) : uem_mem_strdup("null");
     ebuf[0] = 0;
     rc = m->outward(m->outward_ctx, effect, srcjson, resbuf, sizeof resbuf, ebuf, sizeof ebuf);
-    free(srcjson);
+    uem_mem_free(srcjson);
     {
         cJSON *ent = cJSON_CreateObject();
         cJSON_AddStringToObject(ent, "effect", effect);
@@ -487,9 +488,9 @@ int uem_default_outward(void *ctx, const char *effect, const char *source_json,
     sz = ftell(f);
     if (sz < 0 || sz > (long)UEM_MAX_OUT) { fclose(f); cJSON_Delete(src); snprintf(err, errlen, "too-large"); return -1; }
     rewind(f);
-    buf = (char *)malloc((size_t)sz + 1);
+    buf = (char *)uem_mem_malloc((size_t)sz + 1);
     if (!buf) { fclose(f); cJSON_Delete(src); return -1; }
-    if (fread(buf, 1, (size_t)sz, f) != (size_t)sz) { free(buf); fclose(f); cJSON_Delete(src); return -1; }
+    if (fread(buf, 1, (size_t)sz, f) != (size_t)sz) { uem_mem_free(buf); fclose(f); cJSON_Delete(src); return -1; }
     buf[sz] = 0;
     fclose(f);
     cJSON_Delete(src);
@@ -500,15 +501,15 @@ int uem_default_outward(void *ctx, const char *effect, const char *source_json,
         {
             char *p = cJSON_PrintUnformatted(wrap);
             snprintf(result_json, result_cap, "%s", p);
-            free(p);
+            uem_mem_free(p);
         }
         cJSON_Delete(wrap);
-        free(buf);
+        uem_mem_free(buf);
         return 0;
     }
     if (strcmp(effect, "read_json") == 0) {
         cJSON *doc = cJSON_Parse(buf);
-        free(buf);
+        uem_mem_free(buf);
         if (!doc || !cJSON_IsObject(doc)) {
             if (doc) cJSON_Delete(doc);
             snprintf(result_json, result_cap, "{\"error\":\"invalid-json\"}");
@@ -520,13 +521,13 @@ int uem_default_outward(void *ctx, const char *effect, const char *source_json,
             {
                 char *p = cJSON_PrintUnformatted(wrap);
                 snprintf(result_json, result_cap, "%s", p);
-                free(p);
+                uem_mem_free(p);
             }
             cJSON_Delete(wrap);
         }
         return 0;
     }
-    free(buf);
+    uem_mem_free(buf);
     snprintf(result_json, result_cap, "{\"error\":\"unknown-effect\"}");
     return 0;
 }

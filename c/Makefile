@@ -8,6 +8,7 @@ CFLAGS += -Iinclude -Ithird_party -Icore -Ihost/mcu
 LDFLAGS ?=
 
 CORE_SRC = \
+  core/alloc.c \
   core/decode.c \
   core/machine.c \
   core/primitives.c \
@@ -17,6 +18,7 @@ CORE_SRC = \
   third_party/sha256.c
 
 CORE_OBJ = \
+  build/alloc.o \
   build/decode.o \
   build/machine.o \
   build/primitives.o \
@@ -46,7 +48,9 @@ coverage-bin: $(POSIX_BIN) $(COV_BIN)
 $(BUILD):
 	mkdir -p $(BUILD)
 
-build/decode.o: core/decode.c include/uem.h | $(BUILD)
+build/alloc.o: core/alloc.c core/alloc.h | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ core/alloc.c
+build/decode.o: core/decode.c include/uem.h core/alloc.h | $(BUILD)
 	$(CC) $(CFLAGS) -c -o $@ core/decode.c
 build/machine.o: core/machine.c include/uem.h | $(BUILD)
 	$(CC) $(CFLAGS) -c -o $@ core/machine.c

@@ -1,3 +1,4 @@
+#include "alloc.h"
 #include "machine_internal.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -355,7 +356,7 @@ static int prim_present_json(uem_machine *m) {
     }
     cJSON_AddStringToObject(pres, "text", text ? text : "{}");
     cJSON_AddNumberToObject(pres, "exit_code", exit_code);
-    free(text);
+    uem_mem_free(text);
     store_set(m, "presentation", cJSON_Duplicate(pres, 1));
     if (m->presentation) cJSON_Delete(m->presentation);
     m->presentation = pres;
