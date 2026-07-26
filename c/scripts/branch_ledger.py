@@ -4,13 +4,19 @@
 Reconciliation (must hold):
   missing_arcs_measured == missing_arcs_in_ledger + unmapped_arcs
 
+Baseline conservation vs frozen 3a0bf81 (must hold):
+  baseline_open + new_arcs
+    == resolved_by_test + removed_by_refactor + current_open
+
 L13 branch eligibility requires:
   missing_arcs_measured == 0
   unmapped_arcs == 0
   unclassified_arcs == 0
+  ambiguous_arcs == 0
 
-Arc identity is stable across runs: `{file}:{line}:b{branch_id}`.
-Previous open arcs that are now taken are reported as resolved (not zeroed).
+Arc identity: `{file}:{line}:b{branch_id}` — stable only while source layout
+is unchanged. Baseline is frozen in branch_baseline.json (commit 3a0bf81);
+normal ledger runs never rewrite that file.
 """
 
 from __future__ import annotations
@@ -18,7 +24,7 @@ from __future__ import annotations
 import json
 import re
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 
 # Local import (same directory)
@@ -33,6 +39,8 @@ CROOT = Path(__file__).resolve().parents[1]
 OUT_MD = CROOT / "tests" / "BRANCH_LEDGER.md"
 OUT_JSON = CROOT / "tests" / "branch_ledger.json"
 HISTORY_JSON = CROOT / "tests" / "branch_ledger_history.json"
+BASELINE_JSON = CROOT / "tests" / "branch_baseline.json"
+BASELINE_COMMIT = "3a0bf81"
 
 KNOWN: dict[str, dict] = {
     "decode.c:329": {
@@ -305,27 +313,121 @@ def classify(entry: dict) -> dict:
     return entry
 
 
-def _load_previous_open() -> set[str]:
-    """Stable prior open set: prefer history file, else previous ledger entries."""
-    open_ids: set[str] = set()
-    if HISTORY_JSON.is_file():
-        try:
-            hist = json.loads(HISTORY_JSON.read_text(encoding="utf-8"))
-            open_ids = set(hist.get("open_arc_ids") or [])
-        except (json.JSONDecodeError, OSError):
-            open_ids = set()
-    if not open_ids and OUT_JSON.is_file():
-        try:
-            prev = json.loads(OUT_JSON.read_text(encoding="utf-8"))
-            for e in prev.get("entries") or []:
-                aid = e.get("arc_id") or e.get("key")
-                if aid:
-                    open_ids.add(aid)
-            # also accept explicit open list
-            open_ids |= set(prev.get("open_arc_ids") or [])
-        except (json.JSONDecodeError, OSError):
-            pass
-    return open_ids
+def _load_baseline() -> dict:
+    """Load frozen baseline. Never invent a new baseline here."""
+    if not BASELINE_JSON.is_file():
+        raise SystemExit(
+            f"missing {BASELINE_JSON}: freeze baseline from {BASELINE_COMMIT} first"
+        )
+    data = json.loads(BASELINE_JSON.read_text(encoding="utf-8"))
+    if data.get("baseline_commit") != BASELINE_COMMIT:
+        raise SystemExit(
+            f"baseline_commit is {data.get('baseline_commit')!r}, "
+            f"expected {BASELINE_COMMIT!r} — refuse to proceed"
+        )
+    ids = set(data.get("open_arc_ids") or [])
+    if int(data.get("baseline_open") or 0) != len(ids):
+        raise SystemExit(
+            f"baseline_open {data.get('baseline_open')} != len(open_arc_ids) {len(ids)}"
+        )
+    return data
+
+
+def _expr_fingerprint(expr: str) -> str:
+    """Normalize expression for soft remapping hints (informational only)."""
+    e = re.sub(r"\s+", " ", (expr or "").strip())
+    e = re.sub(r"\b0x[0-9a-fA-F]+\b", "HEX", e)
+    e = re.sub(r"\b\d+\b", "N", e)
+    return e[:120]
+
+
+def _compute_baseline_progress(
+    baseline: dict,
+    arcs: list[dict],
+    now_open: set[str],
+) -> dict:
+    """Progress against frozen baseline_open; never rewrites baseline file."""
+    baseline_ids = set(baseline.get("open_arc_ids") or [])
+    baseline_open = len(baseline_ids)
+    baseline_expr = {
+        e.get("arc_id"): _expr_fingerprint(e.get("expression") or "")
+        for e in (baseline.get("entries") or [])
+        if e.get("arc_id")
+    }
+
+    all_ids_present = {a["arc_id"] for a in arcs}
+    now_taken = {a["arc_id"] for a in arcs if a["taken"]}
+    now_open = set(now_open)
+
+    # Baseline arcs that still exist and are taken → resolved by test coverage.
+    resolved_by_test_ids = sorted(baseline_ids & now_taken)
+    # Baseline arcs that no longer appear in gcov at all → identity lost (refactor).
+    removed_by_refactor_ids = sorted(baseline_ids - all_ids_present)
+    # Still open from baseline (same identity still missing).
+    still_baseline_open = sorted(baseline_ids & now_open)
+    # Current open not in baseline.
+    new_arc_ids = sorted(now_open - baseline_ids)
+
+    # Informational remapping: removed_by_refactor → new_arcs by expression fingerprint.
+    new_by_fp: dict[str, list[str]] = defaultdict(list)
+    open_expr = {e["arc_id"]: _expr_fingerprint(e.get("expression") or "") for e in
+                 # will fill from arcs missing
+                 []}
+    for a in arcs:
+        if not a["taken"]:
+            open_expr[a["arc_id"]] = _expr_fingerprint(a.get("expression") or "")
+    for aid in new_arc_ids:
+        fp = open_expr.get(aid, "")
+        if fp:
+            new_by_fp[fp].append(aid)
+
+    remapped: list[dict] = []
+    ambiguous: list[dict] = []
+    used_new: set[str] = set()
+    for rid in removed_by_refactor_ids:
+        fp = baseline_expr.get(rid, "")
+        if not fp:
+            continue
+        candidates = [n for n in new_by_fp.get(fp, []) if n not in used_new]
+        if len(candidates) == 1:
+            remapped.append({"from": rid, "to": candidates[0], "fingerprint": fp})
+            used_new.add(candidates[0])
+        elif len(candidates) > 1:
+            ambiguous.append({"from": rid, "candidates": candidates, "fingerprint": fp})
+
+    progress = {
+        "baseline_commit": baseline.get("baseline_commit"),
+        "baseline_open": baseline_open,
+        "resolved_by_test": len(resolved_by_test_ids),
+        "resolved_by_test_ids": resolved_by_test_ids,
+        "removed_by_refactor": len(removed_by_refactor_ids),
+        "removed_by_refactor_ids": removed_by_refactor_ids,
+        "new_arcs": len(new_arc_ids),
+        "new_arc_ids": new_arc_ids,
+        "remapped_arcs": len(remapped),
+        "remapped": remapped,
+        "ambiguous_arcs": len(ambiguous),
+        "ambiguous": ambiguous,
+        "current_open": len(now_open),
+        "still_baseline_open": len(still_baseline_open),
+        "still_baseline_open_ids": still_baseline_open,
+        "conservation": {
+            "equation": (
+                "baseline_open + new_arcs "
+                "== resolved_by_test + removed_by_refactor + current_open"
+            ),
+            "left": baseline_open + len(new_arc_ids),
+            "right": (
+                len(resolved_by_test_ids)
+                + len(removed_by_refactor_ids)
+                + len(now_open)
+            ),
+        },
+    }
+    progress["conservation"]["holds"] = (
+        progress["conservation"]["left"] == progress["conservation"]["right"]
+    )
+    return progress
 
 
 def main() -> int:
@@ -380,24 +482,24 @@ def main() -> int:
     missing_arcs_in_ledger = len(entries)
     unmapped_arcs = len(unmapped_ids)
 
-    # Stable progress: previous open ∩ now taken
-    prev_open = _load_previous_open()
-    now_taken = {a["arc_id"] for a in arcs if a["taken"]}
     now_open = {e["arc_id"] for e in entries}
-    resolved_ids = sorted(prev_open & now_taken)
-    still_open_from_prev = sorted(prev_open & now_open)
-    newly_open = sorted(now_open - prev_open) if prev_open else sorted(now_open)
+    baseline = _load_baseline()
+    progress = _compute_baseline_progress(baseline, arcs, now_open)
+    cons = progress["conservation"]
 
     unclassified = [e for e in entries if e.get("class") in (None, "", "unresolved")]
     by_class = Counter(e["class"] for e in entries)
     by_file = Counter(e["file"] for e in entries)
 
-    # Identity invariant
+    # Identity invariant (measurement vs ledger)
     assert missing_arcs_measured == missing_arcs_in_ledger + unmapped_arcs, (
         missing_arcs_measured,
         missing_arcs_in_ledger,
         unmapped_arcs,
     )
+    # Baseline conservation
+    assert cons["holds"], cons
+    assert progress["ambiguous_arcs"] == 0, progress["ambiguous"]
 
     per_file = [
         {
@@ -409,8 +511,18 @@ def main() -> int:
         for f in sorted(summary["by_file"])
     ]
 
+    eligible = (
+        missing_arcs_measured == 0
+        and unmapped_arcs == 0
+        and len(unclassified) == 0
+        and progress["ambiguous_arcs"] == 0
+        and progress["still_baseline_open"] == 0
+        and progress["new_arcs"] == 0
+    )
+
     ledger = {
         "identity_scheme": "{file}:{line}:b{branch_id}",
+        "baseline_commit": BASELINE_COMMIT,
         "branches_hit": branches_hit,
         "branches_total": branches_total,
         "missing_arcs_measured": missing_arcs_measured,
@@ -418,14 +530,25 @@ def main() -> int:
         "unmapped_arcs": unmapped_arcs,
         "unmapped_arc_ids": unmapped_ids,
         "unclassified_arcs": len(unclassified),
-        "resolved_arcs": len(resolved_ids),
-        "resolved_arc_ids": resolved_ids,
-        "newly_open_arc_ids": newly_open if prev_open else [],
-        "still_open_from_previous": len(still_open_from_prev),
         "open_arc_ids": sorted(now_open),
-        # aliases kept for older readers
+        "baseline_open": progress["baseline_open"],
+        "resolved_by_test": progress["resolved_by_test"],
+        "resolved_by_test_ids": progress["resolved_by_test_ids"],
+        "removed_by_refactor": progress["removed_by_refactor"],
+        "removed_by_refactor_ids": progress["removed_by_refactor_ids"],
+        "new_arcs": progress["new_arcs"],
+        "new_arc_ids": progress["new_arc_ids"],
+        "remapped_arcs": progress["remapped_arcs"],
+        "remapped": progress["remapped"],
+        "ambiguous_arcs": progress["ambiguous_arcs"],
+        "ambiguous": progress["ambiguous"],
+        "current_open": progress["current_open"],
+        "still_baseline_open": progress["still_baseline_open"],
+        "still_baseline_open_ids": progress["still_baseline_open_ids"],
         "missing_arcs": missing_arcs_measured,
         "total_missing_arcs": missing_arcs_measured,
+        "resolved_arcs": progress["resolved_by_test"],
+        "resolved_arc_ids": progress["resolved_by_test_ids"],
         "unresolved_count": len(unclassified),
         "by_class": dict(by_class),
         "by_file_missing": dict(by_file),
@@ -435,33 +558,44 @@ def main() -> int:
             "equation": "missing_arcs_measured == missing_arcs_in_ledger + unmapped_arcs",
             "holds": missing_arcs_measured == missing_arcs_in_ledger + unmapped_arcs,
         },
-        "l13_branch_eligible": (
-            missing_arcs_measured == 0
-            and unmapped_arcs == 0
-            and len(unclassified) == 0
-        ),
-        "pass_ready": (
-            missing_arcs_measured == 0
-            and unmapped_arcs == 0
-            and len(unclassified) == 0
-        ),
+        "baseline_conservation": cons,
+        "l13_branch_eligible": eligible,
+        "pass_ready": eligible,
         "l13_branch_gate": (
-            "FAIL until missing_arcs_measured==0 and unmapped_arcs==0 "
-            "and unclassified_arcs==0; open→resolved tracked by arc_id"
+            "FAIL until missing_arcs_measured==0, unmapped_arcs==0, "
+            "unclassified_arcs==0, ambiguous_arcs==0, and baseline fully "
+            f"accounted (still_baseline_open==0, new_arcs==0); baseline={BASELINE_COMMIT}"
         ),
     }
 
     OUT_JSON.write_text(
         json.dumps(ledger, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
-    # Persist open set for next run's resolved detection
+    # History snapshot — never rewrites branch_baseline.json
     HISTORY_JSON.write_text(
         json.dumps(
             {
+                "baseline_commit": BASELINE_COMMIT,
+                "baseline_open": progress["baseline_open"],
+                "resolved_by_test": progress["resolved_by_test"],
+                "removed_by_refactor": progress["removed_by_refactor"],
+                "new_arcs": progress["new_arcs"],
+                "remapped_arcs": progress["remapped_arcs"],
+                "ambiguous_arcs": progress["ambiguous_arcs"],
+                "current_open": progress["current_open"],
+                "still_baseline_open": progress["still_baseline_open"],
+                "conservation_holds": cons["holds"],
                 "open_arc_ids": sorted(now_open),
+                "resolved_by_test_ids": progress["resolved_by_test_ids"],
+                "removed_by_refactor_ids": progress["removed_by_refactor_ids"],
+                "new_arc_ids": progress["new_arc_ids"],
                 "branches_hit": branches_hit,
                 "branches_total": branches_total,
                 "missing_arcs_measured": missing_arcs_measured,
+                "note": (
+                    f"Baseline frozen at {BASELINE_COMMIT} in branch_baseline.json. "
+                    "Do not regenerate baseline until all original open arcs are accounted for."
+                ),
             },
             indent=2,
             sort_keys=True,
@@ -476,28 +610,45 @@ def main() -> int:
         "Generated by `c/scripts/branch_ledger.py` from **enumerated gcov branch arcs**",
         "(same metric as L13 C branches — not rounded summary percentages).",
         "",
+        f"**Baseline commit (frozen):** `{BASELINE_COMMIT}` — "
+        "do not rewrite until all original open arcs are accounted for.",
+        "",
         "L13 branch eligibility requires:",
         "",
         "```text",
         "missing_arcs_measured == 0",
         "unmapped_arcs == 0",
         "unclassified_arcs == 0",
+        "ambiguous_arcs == 0",
+        "still_baseline_open == 0 && new_arcs == 0",
         "```",
         "",
-        "## Reconciliation",
+        "## Measurement reconciliation",
         "",
         f"- **branches_hit:** {branches_hit}",
         f"- **branches_total:** {branches_total}",
-        f"- **missing_arcs_measured:** {missing_arcs_measured}  (`total - hit`)",
+        f"- **missing_arcs_measured:** {missing_arcs_measured}",
         f"- **missing_arcs_in_ledger:** {missing_arcs_in_ledger}",
         f"- **unmapped_arcs:** {unmapped_arcs}",
         f"- **unclassified_arcs:** {len(unclassified)}",
-        f"- **resolved_arcs (this run):** {len(resolved_ids)}  (were open, now taken)",
-        f"- Equation holds: "
-        f"`{missing_arcs_measured} == {missing_arcs_in_ledger} + {unmapped_arcs}` → "
+        f"- Equation: `{missing_arcs_measured} == {missing_arcs_in_ledger} + {unmapped_arcs}` → "
         f"**{missing_arcs_measured == missing_arcs_in_ledger + unmapped_arcs}**",
-        f"- L13 branch eligible: **{ledger['l13_branch_eligible']}**",
-        f"- Identity: `{ledger['identity_scheme']}`",
+        "",
+        "## Baseline conservation (vs frozen open set)",
+        "",
+        f"- **baseline_open:** {progress['baseline_open']}",
+        f"- **resolved_by_test:** {progress['resolved_by_test']}",
+        f"- **removed_by_refactor:** {progress['removed_by_refactor']}",
+        f"- **new_arcs:** {progress['new_arcs']}",
+        f"- **remapped_arcs:** {progress['remapped_arcs']} (informational)",
+        f"- **ambiguous_arcs:** {progress['ambiguous_arcs']} (must be 0)",
+        f"- **current_open:** {progress['current_open']}",
+        f"- **still_baseline_open:** {progress['still_baseline_open']}",
+        f"- Conservation: `{cons['left']} == {cons['right']}` "
+        f"(`baseline_open + new_arcs == resolved_by_test + removed_by_refactor + current_open`) → "
+        f"**{cons['holds']}**",
+        f"- L13 branch eligible: **{eligible}**",
+        f"- Identity: `{ledger['identity_scheme']}` (stable only while source layout unchanged)",
         f"- By class: `{json.dumps(dict(by_class), sort_keys=True)}`",
         f"- By file: `{json.dumps(dict(by_file), sort_keys=True)}`",
         "",
@@ -512,12 +663,32 @@ def main() -> int:
             f"{row['missing_arcs']} |"
         )
 
-    if resolved_ids:
-        lines += ["", "## Resolved this run (open → taken)", ""]
-        for aid in resolved_ids[:100]:
+    if progress["resolved_by_test_ids"]:
+        lines += ["", "## Resolved by test (baseline open → taken)", ""]
+        for aid in progress["resolved_by_test_ids"][:100]:
             lines.append(f"- `{aid}`")
-        if len(resolved_ids) > 100:
-            lines.append(f"- … and {len(resolved_ids) - 100} more")
+        if progress["resolved_by_test"] > 100:
+            lines.append(f"- … and {progress['resolved_by_test'] - 100} more")
+
+    if progress["removed_by_refactor_ids"]:
+        lines += ["", "## Removed by refactor (baseline identity gone from gcov)", ""]
+        for aid in progress["removed_by_refactor_ids"][:100]:
+            lines.append(f"- `{aid}`")
+
+    if progress["new_arc_ids"]:
+        lines += ["", "## New arcs (not in baseline — investigate remaps)", ""]
+        for aid in progress["new_arc_ids"][:100]:
+            lines.append(f"- `{aid}`")
+
+    if progress["remapped"]:
+        lines += ["", "## Remapped (informational expression match)", ""]
+        for r in progress["remapped"][:50]:
+            lines.append(f"- `{r['from']}` → `{r['to']}`")
+
+    if progress["ambiguous"]:
+        lines += ["", "## Ambiguous remaps (must be zero)", ""]
+        for a in progress["ambiguous"]:
+            lines.append(f"- `{a['from']}` → {a['candidates']}")
 
     if unmapped_ids:
         lines += ["", "## Unmapped (generator defect — must be zero)", ""]
@@ -526,7 +697,7 @@ def main() -> int:
 
     lines += [
         "",
-        "## Open ledger",
+        "## Open ledger (current)",
         "",
         "| arc_id | missing | expression | class | required input/state | test or refactor |",
         "| --- | --- | --- | --- | --- | --- |",
@@ -553,11 +724,20 @@ def main() -> int:
 
     lines += [
         "",
+        "## Branch-closure order",
+        "",
+        "1. Reachable rejection paths with exact error assertions.",
+        "2. Short-circuit operand combinations.",
+        "3. State-machine second arms and boundary outcomes.",
+        "4. Decimal sign/rounding combinations.",
+        "5. Redundant or invariant-impossible arcs through production simplification.",
+        "",
         "## Notes",
         "",
-        "- `unclassified_arcs == 0` means every **open** arc has a class; it does **not** mean arcs are closed.",
-        "- `resolved_arcs` counts identities that transitioned open→taken since the previous ledger run.",
-        "- Progress is `open → resolved` on stable `arc_id`, not a regenerated list with `resolved_arcs: 0`.",
+        f"- Baseline frozen at `{BASELINE_COMMIT}` in `branch_baseline.json` — **never** regenerated as a fresh baseline after ordinary ledger runs.",
+        "- `{file}:{line}:b{{branch_id}}` shifts if lines are added/deleted or the compiler renumbers branches; prefer tests over refactors until baseline is cleared.",
+        "- `unclassified_arcs == 0` means every open arc has a class; it does **not** mean arcs are closed.",
+        "- Progress is `open → resolved_by_test` (or `removed_by_refactor`) against the frozen baseline.",
         "",
     ]
     OUT_MD.write_text("\n".join(lines), encoding="utf-8")
@@ -565,23 +745,33 @@ def main() -> int:
     print(
         json.dumps(
             {
+                "baseline_commit": BASELINE_COMMIT,
                 "branches_hit": branches_hit,
                 "branches_total": branches_total,
                 "missing_arcs_measured": missing_arcs_measured,
                 "missing_arcs_in_ledger": missing_arcs_in_ledger,
                 "unmapped_arcs": unmapped_arcs,
                 "unclassified_arcs": len(unclassified),
-                "resolved_arcs": len(resolved_ids),
-                "equation_holds": missing_arcs_measured
+                "baseline_open": progress["baseline_open"],
+                "resolved_by_test": progress["resolved_by_test"],
+                "removed_by_refactor": progress["removed_by_refactor"],
+                "new_arcs": progress["new_arcs"],
+                "remapped_arcs": progress["remapped_arcs"],
+                "ambiguous_arcs": progress["ambiguous_arcs"],
+                "current_open": progress["current_open"],
+                "still_baseline_open": progress["still_baseline_open"],
+                "conservation_holds": cons["holds"],
+                "measurement_holds": missing_arcs_measured
                 == missing_arcs_in_ledger + unmapped_arcs,
-                "l13_branch_eligible": ledger["l13_branch_eligible"],
+                "l13_branch_eligible": eligible,
                 "md": str(OUT_MD),
                 "json": str(OUT_JSON),
+                "baseline": str(BASELINE_JSON),
             },
             indent=2,
         )
     )
-    return 0 if ledger["l13_branch_eligible"] else 1
+    return 0 if eligible else 1
 
 
 if __name__ == "__main__":

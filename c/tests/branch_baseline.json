@@ -1,0 +1,2814 @@
+{
+  "baseline_commit": "3a0bf81",
+  "baseline_commit_full": "3a0bf817eb34383b6ac2cceba2f3f565506db900",
+  "baseline_open": 311,
+  "branches_hit_at_freeze": 1115,
+  "branches_total_at_freeze": 1426,
+  "entries": [
+    {
+      "arc_id": "decimal.c:109:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (!a.ok || !b.ok) return r;",
+      "file": "decimal.c",
+      "line": 109
+    },
+    {
+      "arc_id": "decimal.c:10:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (r > INT64_MAX / 10) return -1;",
+      "file": "decimal.c",
+      "line": 10
+    },
+    {
+      "arc_id": "decimal.c:111:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (scale < 0) return r;",
+      "file": "decimal.c",
+      "line": 111
+    },
+    {
+      "arc_id": "decimal.c:117:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (q > INT64_MAX || q < INT64_MIN) return r;",
+      "file": "decimal.c",
+      "line": 117
+    },
+    {
+      "arc_id": "decimal.c:117:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (q > INT64_MAX || q < INT64_MIN) return r;",
+      "file": "decimal.c",
+      "line": 117
+    },
+    {
+      "arc_id": "decimal.c:139:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "const char *mode = rounding ? rounding : \"ROUND_HALF_UP\";",
+      "file": "decimal.c",
+      "line": 139
+    },
+    {
+      "arc_id": "decimal.c:141:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!a.ok) return r;",
+      "file": "decimal.c",
+      "line": 141
+    },
+    {
+      "arc_id": "decimal.c:149:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (unit <= 0) return r;",
+      "file": "decimal.c",
+      "line": 149
+    },
+    {
+      "arc_id": "decimal.c:156:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (rem != 0) {",
+      "file": "decimal.c",
+      "line": 156
+    },
+    {
+      "arc_id": "decimal.c:172:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!mul_ok(q, unit, &r.coeff)) return r;",
+      "file": "decimal.c",
+      "line": 172
+    },
+    {
+      "arc_id": "decimal.c:17:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (a == 0 || b == 0) { *out = 0; return 1; }",
+      "file": "decimal.c",
+      "line": 17
+    },
+    {
+      "arc_id": "decimal.c:181:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (!a.ok || !buf || cap < 4) return -1;",
+      "file": "decimal.c",
+      "line": 181
+    },
+    {
+      "arc_id": "decimal.c:184:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (div <= 0) return -1;",
+      "file": "decimal.c",
+      "line": 184
+    },
+    {
+      "arc_id": "decimal.c:187:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (base <= 0) return -1;",
+      "file": "decimal.c",
+      "line": 187
+    },
+    {
+      "arc_id": "decimal.c:18:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (a > 0 && b > 0 && a > INT64_MAX / b) return 0;",
+      "file": "decimal.c",
+      "line": 18
+    },
+    {
+      "arc_id": "decimal.c:18:b5",
+      "branch_id": 5,
+      "class": "reachable",
+      "expression": "if (a > 0 && b > 0 && a > INT64_MAX / b) return 0;",
+      "file": "decimal.c",
+      "line": 18
+    },
+    {
+      "arc_id": "decimal.c:191:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (scaled < 0 && ipart == 0)",
+      "file": "decimal.c",
+      "line": 191
+    },
+    {
+      "arc_id": "decimal.c:195:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (n < 0 || (size_t)n >= cap) return -1;",
+      "file": "decimal.c",
+      "line": 195
+    },
+    {
+      "arc_id": "decimal.c:195:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (n < 0 || (size_t)n >= cap) return -1;",
+      "file": "decimal.c",
+      "line": 195
+    },
+    {
+      "arc_id": "decimal.c:19:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (a > 0 && b < 0 && b < INT64_MIN / a) return 0;",
+      "file": "decimal.c",
+      "line": 19
+    },
+    {
+      "arc_id": "decimal.c:19:b4",
+      "branch_id": 4,
+      "class": "reachable",
+      "expression": "if (a > 0 && b < 0 && b < INT64_MIN / a) return 0;",
+      "file": "decimal.c",
+      "line": 19
+    },
+    {
+      "arc_id": "decimal.c:19:b5",
+      "branch_id": 5,
+      "class": "reachable",
+      "expression": "if (a > 0 && b < 0 && b < INT64_MIN / a) return 0;",
+      "file": "decimal.c",
+      "line": 19
+    },
+    {
+      "arc_id": "decimal.c:20:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (a < 0 && b > 0 && a < INT64_MIN / b) return 0;",
+      "file": "decimal.c",
+      "line": 20
+    },
+    {
+      "arc_id": "decimal.c:20:b5",
+      "branch_id": 5,
+      "class": "reachable",
+      "expression": "if (a < 0 && b > 0 && a < INT64_MIN / b) return 0;",
+      "file": "decimal.c",
+      "line": 20
+    },
+    {
+      "arc_id": "decimal.c:21:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (a < 0 && b < 0 && a < INT64_MAX / b) return 0;",
+      "file": "decimal.c",
+      "line": 21
+    },
+    {
+      "arc_id": "decimal.c:21:b4",
+      "branch_id": 4,
+      "class": "reachable",
+      "expression": "if (a < 0 && b < 0 && a < INT64_MAX / b) return 0;",
+      "file": "decimal.c",
+      "line": 21
+    },
+    {
+      "arc_id": "decimal.c:21:b5",
+      "branch_id": 5,
+      "class": "reachable",
+      "expression": "if (a < 0 && b < 0 && a < INT64_MAX / b) return 0;",
+      "file": "decimal.c",
+      "line": 21
+    },
+    {
+      "arc_id": "decimal.c:27:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (b > 0 && a > INT64_MAX - b) return 0;",
+      "file": "decimal.c",
+      "line": 27
+    },
+    {
+      "arc_id": "decimal.c:28:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (b < 0 && a < INT64_MIN - b) return 0;",
+      "file": "decimal.c",
+      "line": 28
+    },
+    {
+      "arc_id": "decimal.c:28:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (b < 0 && a < INT64_MIN - b) return 0;",
+      "file": "decimal.c",
+      "line": 28
+    },
+    {
+      "arc_id": "decimal.c:28:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (b < 0 && a < INT64_MIN - b) return 0;",
+      "file": "decimal.c",
+      "line": 28
+    },
+    {
+      "arc_id": "decimal.c:37:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (scale < 0) return d;",
+      "file": "decimal.c",
+      "line": 37
+    },
+    {
+      "arc_id": "decimal.c:38:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!mul_ok(v, scale, &d.coeff)) return d;",
+      "file": "decimal.c",
+      "line": 38
+    },
+    {
+      "arc_id": "decimal.c:53:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (*p == '+') p++;",
+      "file": "decimal.c",
+      "line": 53
+    },
+    {
+      "arc_id": "decimal.c:71:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "while (isdigit((unsigned char)*p)) p++;",
+      "file": "decimal.c",
+      "line": 71
+    },
+    {
+      "arc_id": "decimal.c:73:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (*p != 0) return d;",
+      "file": "decimal.c",
+      "line": 73
+    },
+    {
+      "arc_id": "decimal.c:75:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (scale < 0) return d;",
+      "file": "decimal.c",
+      "line": 75
+    },
+    {
+      "arc_id": "decimal.c:76:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!mul_ok(intpart, scale, &scaled_int)) return d;",
+      "file": "decimal.c",
+      "line": 76
+    },
+    {
+      "arc_id": "decimal.c:79:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (fscale < 0) return d;",
+      "file": "decimal.c",
+      "line": 79
+    },
+    {
+      "arc_id": "decimal.c:80:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!mul_ok(frac, fscale, &scaled_frac)) return d;",
+      "file": "decimal.c",
+      "line": 80
+    },
+    {
+      "arc_id": "decimal.c:82:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!add_ok(scaled_int, scaled_frac, &combined)) return d;",
+      "file": "decimal.c",
+      "line": 82
+    },
+    {
+      "arc_id": "decimal.c:89:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!a.ok || !b.ok) return 0;",
+      "file": "decimal.c",
+      "line": 89
+    },
+    {
+      "arc_id": "decimal.c:89:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (!a.ok || !b.ok) return 0;",
+      "file": "decimal.c",
+      "line": 89
+    },
+    {
+      "arc_id": "decimal.c:98:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (!a.ok || !b.ok) return r;",
+      "file": "decimal.c",
+      "line": 98
+    },
+    {
+      "arc_id": "decimal.c:99:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!add_ok(a.coeff, b.coeff, &r.coeff)) return r;",
+      "file": "decimal.c",
+      "line": 99
+    },
+    {
+      "arc_id": "decode.c:106:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "while (ncap < *len + n + 1) ncap *= 2;",
+      "file": "decode.c",
+      "line": 106
+    },
+    {
+      "arc_id": "decode.c:10:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (*off + 2 > n) return -1;",
+      "file": "decode.c",
+      "line": 10
+    },
+    {
+      "arc_id": "decode.c:120:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (append_str(buf, len, cap, \"\\\"\", 1)) return -1;",
+      "file": "decode.c",
+      "line": 120
+    },
+    {
+      "arc_id": "decode.c:125:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (append_str(buf, len, cap, tmp, 2)) return -1;",
+      "file": "decode.c",
+      "line": 125
+    },
+    {
+      "arc_id": "decode.c:127:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (append_str(buf, len, cap, \"\\\\b\", 2)) return -1;",
+      "file": "decode.c",
+      "line": 127
+    },
+    {
+      "arc_id": "decode.c:129:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (append_str(buf, len, cap, \"\\\\f\", 2)) return -1;",
+      "file": "decode.c",
+      "line": 129
+    },
+    {
+      "arc_id": "decode.c:131:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (append_str(buf, len, cap, \"\\\\n\", 2)) return -1;",
+      "file": "decode.c",
+      "line": 131
+    },
+    {
+      "arc_id": "decode.c:133:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (append_str(buf, len, cap, \"\\\\r\", 2)) return -1;",
+      "file": "decode.c",
+      "line": 133
+    },
+    {
+      "arc_id": "decode.c:135:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (append_str(buf, len, cap, \"\\\\t\", 2)) return -1;",
+      "file": "decode.c",
+      "line": 135
+    },
+    {
+      "arc_id": "decode.c:139:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (append_str(buf, len, cap, tmp, 6)) return -1;",
+      "file": "decode.c",
+      "line": 139
+    },
+    {
+      "arc_id": "decode.c:142:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (append_str(buf, len, cap, (const char *)p, 1)) return -1;",
+      "file": "decode.c",
+      "line": 142
+    },
+    {
+      "arc_id": "decode.c:159:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (v && cJSON_IsTrue(v)) return append_str(buf, len, cap, \"true\", 4);",
+      "file": "decode.c",
+      "line": 159
+    },
+    {
+      "arc_id": "decode.c:160:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (v && cJSON_IsFalse(v)) return append_str(buf, len, cap, \"false\", 5);",
+      "file": "decode.c",
+      "line": 160
+    },
+    {
+      "arc_id": "decode.c:161:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (v && cJSON_IsNumber(v)) {",
+      "file": "decode.c",
+      "line": 161
+    },
+    {
+      "arc_id": "decode.c:165:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (d == (double)(long long)d && d >= (double)LLONG_MIN && d <= (double)LLONG_MAX) {",
+      "file": "decode.c",
+      "line": 165
+    },
+    {
+      "arc_id": "decode.c:165:b4",
+      "branch_id": 4,
+      "class": "reachable",
+      "expression": "if (d == (double)(long long)d && d >= (double)LLONG_MIN && d <= (double)LLONG_MAX) {",
+      "file": "decode.c",
+      "line": 165
+    },
+    {
+      "arc_id": "decode.c:173:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (v && cJSON_IsString(v)) return json_escape_append(buf, len, cap, v->valuestring ? v->valuestring : \"\");",
+      "file": "decode.c",
+      "line": 173
+    },
+    {
+      "arc_id": "decode.c:173:b4",
+      "branch_id": 4,
+      "class": "reachable",
+      "expression": "if (v && cJSON_IsString(v)) return json_escape_append(buf, len, cap, v->valuestring ? v->valuestring : \"\");",
+      "file": "decode.c",
+      "line": 173
+    },
+    {
+      "arc_id": "decode.c:174:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (v && cJSON_IsArray(v)) {",
+      "file": "decode.c",
+      "line": 174
+    },
+    {
+      "arc_id": "decode.c:177:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (append_str(buf, len, cap, \"[\", 1)) return -1;",
+      "file": "decode.c",
+      "line": 177
+    },
+    {
+      "arc_id": "decode.c:178:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_ArrayForEach(ch, v) {",
+      "file": "decode.c",
+      "line": 178
+    },
+    {
+      "arc_id": "decode.c:179:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (!first && append_str(buf, len, cap, \",\", 1)) return -1;",
+      "file": "decode.c",
+      "line": 179
+    },
+    {
+      "arc_id": "decode.c:181:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (canon_value(ch, buf, len, cap)) return -1;",
+      "file": "decode.c",
+      "line": 181
+    },
+    {
+      "arc_id": "decode.c:185:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (v && cJSON_IsObject(v)) {",
+      "file": "decode.c",
+      "line": 185
+    },
+    {
+      "arc_id": "decode.c:190:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_ArrayForEach(ch, v) n++;",
+      "file": "decode.c",
+      "line": 190
+    },
+    {
+      "arc_id": "decode.c:194:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_ArrayForEach(ch, v) keys[i++] = ch->string ? ch->string : \"\";",
+      "file": "decode.c",
+      "line": 194
+    },
+    {
+      "arc_id": "decode.c:194:b5",
+      "branch_id": 5,
+      "class": "reachable",
+      "expression": "cJSON_ArrayForEach(ch, v) keys[i++] = ch->string ? ch->string : \"\";",
+      "file": "decode.c",
+      "line": 194
+    },
+    {
+      "arc_id": "decode.c:199:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (i && append_str(buf, len, cap, \",\", 1)) { uem_mem_free(keys); return -1; }",
+      "file": "decode.c",
+      "line": 199
+    },
+    {
+      "arc_id": "decode.c:200:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (json_escape_append(buf, len, cap, keys[i])) { uem_mem_free(keys); return -1; }",
+      "file": "decode.c",
+      "line": 200
+    },
+    {
+      "arc_id": "decode.c:201:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (append_str(buf, len, cap, \":\", 1)) { uem_mem_free(keys); return -1; }",
+      "file": "decode.c",
+      "line": 201
+    },
+    {
+      "arc_id": "decode.c:235:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!bytes || !out) return UEM_ERR_ARGS;",
+      "file": "decode.c",
+      "line": 235
+    },
+    {
+      "arc_id": "decode.c:235:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (!bytes || !out) return UEM_ERR_ARGS;",
+      "file": "decode.c",
+      "line": 235
+    },
+    {
+      "arc_id": "decode.c:238:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (err && errlen) snprintf(err, errlen, \"truncated\");",
+      "file": "decode.c",
+      "line": 238
+    },
+    {
+      "arc_id": "decode.c:238:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (err && errlen) snprintf(err, errlen, \"truncated\");",
+      "file": "decode.c",
+      "line": 238
+    },
+    {
+      "arc_id": "decode.c:241:b5",
+      "branch_id": 5,
+      "class": "reachable",
+      "expression": "if (bytes[0] != UEM_MAGIC0 || bytes[1] != UEM_MAGIC1 || bytes[2] != UEM_MAGIC2 || bytes[3] != UEM_MAGIC3) {",
+      "file": "decode.c",
+      "line": 241
+    },
+    {
+      "arc_id": "decode.c:241:b6",
+      "branch_id": 6,
+      "class": "reachable",
+      "expression": "if (bytes[0] != UEM_MAGIC0 || bytes[1] != UEM_MAGIC1 || bytes[2] != UEM_MAGIC2 || bytes[3] != UEM_MAGIC3) {",
+      "file": "decode.c",
+      "line": 241
+    },
+    {
+      "arc_id": "decode.c:242:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (err && errlen) snprintf(err, errlen, \"bad-magic\");",
+      "file": "decode.c",
+      "line": 242
+    },
+    {
+      "arc_id": "decode.c:242:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (err && errlen) snprintf(err, errlen, \"bad-magic\");",
+      "file": "decode.c",
+      "line": 242
+    },
+    {
+      "arc_id": "decode.c:246:b1",
+      "branch_id": 1,
+      "class": "short-circuit",
+      "expression": "if (rd_u16(bytes, len, &off, &ver) || ver != UEM_FORMAT_VERSION) {",
+      "file": "decode.c",
+      "line": 246
+    },
+    {
+      "arc_id": "decode.c:247:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (err && errlen) snprintf(err, errlen, \"bad-version\");",
+      "file": "decode.c",
+      "line": 247
+    },
+    {
+      "arc_id": "decode.c:247:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (err && errlen) snprintf(err, errlen, \"bad-version\");",
+      "file": "decode.c",
+      "line": 247
+    },
+    {
+      "arc_id": "decode.c:250:b1",
+      "branch_id": 1,
+      "class": "short-circuit",
+      "expression": "if (rd_u16(bytes, len, &off, &flags) || flags != 0) {",
+      "file": "decode.c",
+      "line": 250
+    },
+    {
+      "arc_id": "decode.c:251:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (err && errlen) snprintf(err, errlen, \"bad-flags\");",
+      "file": "decode.c",
+      "line": 251
+    },
+    {
+      "arc_id": "decode.c:251:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (err && errlen) snprintf(err, errlen, \"bad-flags\");",
+      "file": "decode.c",
+      "line": 251
+    },
+    {
+      "arc_id": "decode.c:254:b1",
+      "branch_id": 1,
+      "class": "short-circuit",
+      "expression": "if (rd_u32(bytes, len, &off, &count) || count == 0 || count > UEM_MAX_INSTR) {",
+      "file": "decode.c",
+      "line": 254
+    },
+    {
+      "arc_id": "decode.c:254:b3",
+      "branch_id": 3,
+      "class": "short-circuit",
+      "expression": "if (rd_u32(bytes, len, &off, &count) || count == 0 || count > UEM_MAX_INSTR) {",
+      "file": "decode.c",
+      "line": 254
+    },
+    {
+      "arc_id": "decode.c:255:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (err && errlen) snprintf(err, errlen, \"bad-count\");",
+      "file": "decode.c",
+      "line": 255
+    },
+    {
+      "arc_id": "decode.c:255:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (err && errlen) snprintf(err, errlen, \"bad-count\");",
+      "file": "decode.c",
+      "line": 255
+    },
+    {
+      "arc_id": "decode.c:267:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (off >= len) { free_partial(m, i); if (err) snprintf(err, errlen, \"truncated\"); return UEM_ERR_DECODE; }",
+      "file": "decode.c",
+      "line": 267
+    },
+    {
+      "arc_id": "decode.c:269:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (!opcode_ok(op)) { free_partial(m, i); if (err) snprintf(err, errlen, \"unknown-opcode\"); return UEM_ERR_DECODE; }",
+      "file": "decode.c",
+      "line": 269
+    },
+    {
+      "arc_id": "decode.c:270:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (off >= len) { free_partial(m, i); if (err) snprintf(err, errlen, \"truncated\"); return UEM_ERR_DECODE; }",
+      "file": "decode.c",
+      "line": 270
+    },
+    {
+      "arc_id": "decode.c:280:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "free_partial(m, i); if (err) snprintf(err, errlen, \"truncated\"); return UEM_ERR_DECODE;",
+      "file": "decode.c",
+      "line": 280
+    },
+    {
+      "arc_id": "decode.c:283:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "free_partial(m, i); if (err) snprintf(err, errlen, \"invalid-utf8\"); return UEM_ERR_DECODE;",
+      "file": "decode.c",
+      "line": 283
+    },
+    {
+      "arc_id": "decode.c:292:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "free_partial(m, i); if (err) snprintf(err, errlen, \"bad-tag\"); return UEM_ERR_DECODE;",
+      "file": "decode.c",
+      "line": 292
+    },
+    {
+      "arc_id": "decode.c:296:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "free_partial(m, count); if (err) snprintf(err, errlen, \"truncated\"); return UEM_ERR_DECODE;",
+      "file": "decode.c",
+      "line": 296
+    },
+    {
+      "arc_id": "decode.c:299:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "free_partial(m, count); if (err) snprintf(err, errlen, \"trailing-bytes\"); return UEM_ERR_DECODE;",
+      "file": "decode.c",
+      "line": 299
+    },
+    {
+      "arc_id": "decode.c:303:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "free_partial(m, count); if (err) snprintf(err, errlen, \"invalid-utf8-image\"); return UEM_ERR_DECODE;",
+      "file": "decode.c",
+      "line": 303
+    },
+    {
+      "arc_id": "decode.c:314:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (err) snprintf(err, errlen, \"bad-image-json\");",
+      "file": "decode.c",
+      "line": 314
+    },
+    {
+      "arc_id": "decode.c:31:b0",
+      "branch_id": 0,
+      "class": "short-circuit",
+      "expression": "if (c < 0xc2) return 0; /* overlong */",
+      "file": "decode.c",
+      "line": 31
+    },
+    {
+      "arc_id": "decode.c:321:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (err) snprintf(err, errlen, \"noncanonical-image\");",
+      "file": "decode.c",
+      "line": 321
+    },
+    {
+      "arc_id": "decode.c:343:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (err) snprintf(err, errlen, \"missing-stop\");",
+      "file": "decode.c",
+      "line": 343
+    },
+    {
+      "arc_id": "decode.c:353:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (err) snprintf(err, errlen, \"unknown-primitive\");",
+      "file": "decode.c",
+      "line": 353
+    },
+    {
+      "arc_id": "decode.c:35:b4",
+      "branch_id": 4,
+      "class": "short-circuit",
+      "expression": "if (i + 2 >= len || (s[i+1] & 0xc0) != 0x80 || (s[i+2] & 0xc0) != 0x80) return 0;",
+      "file": "decode.c",
+      "line": 35
+    },
+    {
+      "arc_id": "decode.c:39:b5",
+      "branch_id": 5,
+      "class": "short-circuit",
+      "expression": "if (i + 3 >= len || (s[i+1] & 0xc0) != 0x80 || (s[i+2] & 0xc0) != 0x80 || (s[i+3] & 0xc0) != 0x80) return 0;",
+      "file": "decode.c",
+      "line": 39
+    },
+    {
+      "arc_id": "decode.c:39:b6",
+      "branch_id": 6,
+      "class": "short-circuit",
+      "expression": "if (i + 3 >= len || (s[i+1] & 0xc0) != 0x80 || (s[i+2] & 0xc0) != 0x80 || (s[i+3] & 0xc0) != 0x80) return 0;",
+      "file": "decode.c",
+      "line": 39
+    },
+    {
+      "arc_id": "decode.c:93:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!m) return;",
+      "file": "decode.c",
+      "line": 93
+    },
+    {
+      "arc_id": "decode.c:94:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (m->instr) {",
+      "file": "decode.c",
+      "line": 94
+    },
+    {
+      "arc_id": "expr.c:105:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (path && cJSON_IsArray(path) && cJSON_GetArraySize(path) > 0) {",
+      "file": "expr.c",
+      "line": 105
+    },
+    {
+      "arc_id": "expr.c:105:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (path && cJSON_IsArray(path) && cJSON_GetArraySize(path) > 0) {",
+      "file": "expr.c",
+      "line": 105
+    },
+    {
+      "arc_id": "expr.c:107:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (cJSON_IsString(first) && strcmp(first->valuestring, \"item\") == 0) {",
+      "file": "expr.c",
+      "line": 107
+    },
+    {
+      "arc_id": "expr.c:114:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "} else if (in_each && item) {",
+      "file": "expr.c",
+      "line": 114
+    },
+    {
+      "arc_id": "expr.c:128:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!cJSON_IsObject(fields) || !obj) return fail(err, errlen, \"bad-object\");",
+      "file": "expr.c",
+      "line": 128
+    },
+    {
+      "arc_id": "expr.c:128:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (!cJSON_IsObject(fields) || !obj) return fail(err, errlen, \"bad-object\");",
+      "file": "expr.c",
+      "line": 128
+    },
+    {
+      "arc_id": "expr.c:129:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_ArrayForEach(child, fields) {",
+      "file": "expr.c",
+      "line": 129
+    },
+    {
+      "arc_id": "expr.c:12:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!path_arr || !cJSON_IsArray(path_arr)) return NULL;",
+      "file": "expr.c",
+      "line": 12
+    },
+    {
+      "arc_id": "expr.c:12:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (!path_arr || !cJSON_IsArray(path_arr)) return NULL;",
+      "file": "expr.c",
+      "line": 12
+    },
+    {
+      "arc_id": "expr.c:13:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_ArrayForEach(el, path_arr) {",
+      "file": "expr.c",
+      "line": 13
+    },
+    {
+      "arc_id": "expr.c:144:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!ofn || cJSON_IsNull(ofn)) { *out = cJSON_CreateNumber(0); cJSON_Delete(ofn); return 0; }",
+      "file": "expr.c",
+      "line": 144
+    },
+    {
+      "arc_id": "expr.c:14:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (!cur) return NULL;",
+      "file": "expr.c",
+      "line": 14
+    },
+    {
+      "arc_id": "expr.c:157:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!ofn || cJSON_IsNull(ofn)) {",
+      "file": "expr.c",
+      "line": 157
+    },
+    {
+      "arc_id": "expr.c:159:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "return fail_path(err, errlen, cJSON_IsString(ej) ? ej->valuestring : \"missing\", pj);",
+      "file": "expr.c",
+      "line": 159
+    },
+    {
+      "arc_id": "expr.c:171:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!ofn || cJSON_IsNull(ofn)) {",
+      "file": "expr.c",
+      "line": 171
+    },
+    {
+      "arc_id": "expr.c:175:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (!cJSON_IsNumber(ofn) || ofn->valuedouble != (double)ofn->valueint) {",
+      "file": "expr.c",
+      "line": 175
+    },
+    {
+      "arc_id": "expr.c:177:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "return fail_path(err, errlen, cJSON_IsString(te) ? te->valuestring : \"invalid-integer\", pj);",
+      "file": "expr.c",
+      "line": 177
+    },
+    {
+      "arc_id": "expr.c:17:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!cJSON_IsArray(cur) || idx < 0 || idx >= cJSON_GetArraySize(cur)) return NULL;",
+      "file": "expr.c",
+      "line": 17
+    },
+    {
+      "arc_id": "expr.c:190:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!ofn || cJSON_IsNull(ofn)) {",
+      "file": "expr.c",
+      "line": 190
+    },
+    {
+      "arc_id": "expr.c:196:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "return fail_path(err, errlen, cJSON_IsString(te) ? te->valuestring : \"not-decimal-string\", pj);",
+      "file": "expr.c",
+      "line": 196
+    },
+    {
+      "arc_id": "expr.c:19:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "} else if (cJSON_IsString(el)) {",
+      "file": "expr.c",
+      "line": 19
+    },
+    {
+      "arc_id": "expr.c:20:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!cJSON_IsObject(cur)) return NULL;",
+      "file": "expr.c",
+      "line": 20
+    },
+    {
+      "arc_id": "expr.c:214:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (cJSON_IsObject(ofn) && cJSON_GetObjectItem(ofn, \"__uem_dec__\")) {",
+      "file": "expr.c",
+      "line": 214
+    },
+    {
+      "arc_id": "expr.c:229:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "return fail_path(err, errlen, cJSON_IsString(ej) ? ej->valuestring : \"below-minimum\", pj);",
+      "file": "expr.c",
+      "line": 229
+    },
+    {
+      "arc_id": "expr.c:234:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "return fail_path(err, errlen, cJSON_IsString(ej) ? ej->valuestring : \"above-maximum\", pj);",
+      "file": "expr.c",
+      "line": 234
+    },
+    {
+      "arc_id": "expr.c:244:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!cJSON_IsArray(values)) return fail(err, errlen, \"bad-values\");",
+      "file": "expr.c",
+      "line": 244
+    },
+    {
+      "arc_id": "expr.c:246:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_ArrayForEach(child, values) {",
+      "file": "expr.c",
+      "line": 246
+    },
+    {
+      "arc_id": "expr.c:250:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (cJSON_IsObject(v) && cJSON_GetObjectItem(v, \"__uem_dec__\")) {",
+      "file": "expr.c",
+      "line": 250
+    },
+    {
+      "arc_id": "expr.c:259:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!acc.ok) return fail(err, errlen, \"num-overflow\");",
+      "file": "expr.c",
+      "line": 259
+    },
+    {
+      "arc_id": "expr.c:277:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_ArrayForEach(el, coll) {",
+      "file": "expr.c",
+      "line": 277
+    },
+    {
+      "arc_id": "expr.c:287:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (cJSON_IsObject(part) && cJSON_GetObjectItem(part, \"__uem_dec__\")) {",
+      "file": "expr.c",
+      "line": 287
+    },
+    {
+      "arc_id": "expr.c:293:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!total.ok) { g_item_index = -1; g_coll_path = NULL; cJSON_Delete(coll); return fail(err, errlen, \"num-overflow\"); }",
+      "file": "expr.c",
+      "line": 293
+    },
+    {
+      "arc_id": "expr.c:312:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (cJSON_IsObject(ofn) && cJSON_GetObjectItem(ofn, \"__uem_dec__\")) {",
+      "file": "expr.c",
+      "line": 312
+    },
+    {
+      "arc_id": "expr.c:312:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (cJSON_IsObject(ofn) && cJSON_GetObjectItem(ofn, \"__uem_dec__\")) {",
+      "file": "expr.c",
+      "line": 312
+    },
+    {
+      "arc_id": "expr.c:317:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "q = uem_dec_quantize(d, cJSON_IsString(exp) ? exp->valuestring : \"0.01\",",
+      "file": "expr.c",
+      "line": 317
+    },
+    {
+      "arc_id": "expr.c:318:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_IsString(rnd) ? rnd->valuestring : \"ROUND_HALF_UP\");",
+      "file": "expr.c",
+      "line": 318
+    },
+    {
+      "arc_id": "expr.c:319:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!q.ok) return fail(err, errlen, \"quantize-fail\");",
+      "file": "expr.c",
+      "line": 319
+    },
+    {
+      "arc_id": "expr.c:328:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "int places = cJSON_IsNumber(pl) ? pl->valueint : 2;",
+      "file": "expr.c",
+      "line": 328
+    },
+    {
+      "arc_id": "expr.c:32:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (err && errlen) snprintf(err, errlen, \"%s\", msg);",
+      "file": "expr.c",
+      "line": 32
+    },
+    {
+      "arc_id": "expr.c:32:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (err && errlen) snprintf(err, errlen, \"%s\", msg);",
+      "file": "expr.c",
+      "line": 32
+    },
+    {
+      "arc_id": "expr.c:333:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (cJSON_IsObject(ofn) && cJSON_GetObjectItem(ofn, \"__uem_dec__\")) {",
+      "file": "expr.c",
+      "line": 333
+    },
+    {
+      "arc_id": "expr.c:333:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (cJSON_IsObject(ofn) && cJSON_GetObjectItem(ofn, \"__uem_dec__\")) {",
+      "file": "expr.c",
+      "line": 333
+    },
+    {
+      "arc_id": "expr.c:338:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (uem_dec_format(d, places, buf, sizeof buf) != 0) return fail(err, errlen, \"format-fail\");",
+      "file": "expr.c",
+      "line": 338
+    },
+    {
+      "arc_id": "expr.c:373:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (s[0] == 0) lines = 0;",
+      "file": "expr.c",
+      "line": 373
+    },
+    {
+      "arc_id": "expr.c:37:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (g_err_path) cJSON_Delete(g_err_path);",
+      "file": "expr.c",
+      "line": 37
+    },
+    {
+      "arc_id": "expr.c:385:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (*p == '\\r' && p[1] == '\\n') p += 2;",
+      "file": "expr.c",
+      "line": 385
+    },
+    {
+      "arc_id": "expr.c:385:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (*p == '\\r' && p[1] == '\\n') p += 2;",
+      "file": "expr.c",
+      "line": 385
+    },
+    {
+      "arc_id": "expr.c:385:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (*p == '\\r' && p[1] == '\\n') p += 2;",
+      "file": "expr.c",
+      "line": 385
+    },
+    {
+      "arc_id": "expr.c:386:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "else if (*p == '\\n' || *p == '\\r') p++;",
+      "file": "expr.c",
+      "line": 386
+    },
+    {
+      "arc_id": "expr.c:407:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "while (s[i] && isspace((unsigned char)s[i])) i++;",
+      "file": "expr.c",
+      "line": 407
+    },
+    {
+      "arc_id": "expr.c:408:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (!s[i]) break;",
+      "file": "expr.c",
+      "line": 408
+    },
+    {
+      "arc_id": "expr.c:414:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (len >= sizeof word) len = sizeof word - 1;",
+      "file": "expr.c",
+      "line": 414
+    },
+    {
+      "arc_id": "expr.c:41:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (g_coll_path && cJSON_IsArray(g_coll_path)) {",
+      "file": "expr.c",
+      "line": 41
+    },
+    {
+      "arc_id": "expr.c:421:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "size_t ncap = cap ? cap * 2 : 8;",
+      "file": "expr.c",
+      "line": 421
+    },
+    {
+      "arc_id": "expr.c:423:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!ns) { /* leak on OOM path simplified */ break; }",
+      "file": "expr.c",
+      "line": 423
+    },
+    {
+      "arc_id": "expr.c:42:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_ArrayForEach(el, g_coll_path) cJSON_AddItemToArray(full, cJSON_Duplicate(el, 1));",
+      "file": "expr.c",
+      "line": 42
+    },
+    {
+      "arc_id": "expr.c:445:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (g_err_path) { cJSON_Delete(g_err_path); g_err_path = NULL; }",
+      "file": "expr.c",
+      "line": 445
+    },
+    {
+      "arc_id": "expr.c:450:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "} else if (g_err_path) {",
+      "file": "expr.c",
+      "line": 450
+    },
+    {
+      "arc_id": "expr.c:47:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (path && cJSON_IsArray(path)) {",
+      "file": "expr.c",
+      "line": 47
+    },
+    {
+      "arc_id": "expr.c:48:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_ArrayForEach(el, path) cJSON_AddItemToArray(full, cJSON_Duplicate(el, 1));",
+      "file": "expr.c",
+      "line": 48
+    },
+    {
+      "arc_id": "expr.c:80:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!node || !cJSON_IsObject(node)) return fail(err, errlen, \"bad-node\");",
+      "file": "expr.c",
+      "line": 80
+    },
+    {
+      "arc_id": "expr.c:82:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!cJSON_IsString(opj)) return fail(err, errlen, \"bad-node\");",
+      "file": "expr.c",
+      "line": 82
+    },
+    {
+      "arc_id": "expr.c:88:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "*out = v ? cJSON_Duplicate(v, 1) : cJSON_CreateNull();",
+      "file": "expr.c",
+      "line": 88
+    },
+    {
+      "arc_id": "expr.c:94:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!cJSON_IsString(nj) || !bindings) return fail(err, errlen, \"missing-binding\");",
+      "file": "expr.c",
+      "line": 94
+    },
+    {
+      "arc_id": "expr.c:94:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (!cJSON_IsString(nj) || !bindings) return fail(err, errlen, \"missing-binding\");",
+      "file": "expr.c",
+      "line": 94
+    },
+    {
+      "arc_id": "machine.c:104:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (ms && *ms) {",
+      "file": "machine.c",
+      "line": 104
+    },
+    {
+      "arc_id": "machine.c:106:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (v > 0 && v < m->max_steps) m->max_steps = (uint32_t)v;",
+      "file": "machine.c",
+      "line": 106
+    },
+    {
+      "arc_id": "machine.c:10:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!m || !mark) return -1;",
+      "file": "machine.c",
+      "line": 10
+    },
+    {
+      "arc_id": "machine.c:10:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (!m || !mark) return -1;",
+      "file": "machine.c",
+      "line": 10
+    },
+    {
+      "arc_id": "machine.c:112:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (err) snprintf(err, errlen, \"execution-after-stop\");",
+      "file": "machine.c",
+      "line": 112
+    },
+    {
+      "arc_id": "machine.c:123:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (err) snprintf(err, errlen, \"pc-out-of-range\");",
+      "file": "machine.c",
+      "line": 123
+    },
+    {
+      "arc_id": "machine.c:12:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "size_t ncap = m->evidence_cap ? m->evidence_cap * 2 : 64;",
+      "file": "machine.c",
+      "line": 12
+    },
+    {
+      "arc_id": "machine.c:136:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "const char *on = (op >= 1 && op <= 16) ? OPN[op] : \"?\";",
+      "file": "machine.c",
+      "line": 136
+    },
+    {
+      "arc_id": "machine.c:143:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (operand && strcmp(operand, \"host_input\") == 0) {",
+      "file": "machine.c",
+      "line": 143
+    },
+    {
+      "arc_id": "machine.c:145:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "m->acc = m->host ? cJSON_Duplicate(m->host, 1) : cJSON_CreateNull();",
+      "file": "machine.c",
+      "line": 145
+    },
+    {
+      "arc_id": "machine.c:146:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (m->host) {",
+      "file": "machine.c",
+      "line": 146
+    },
+    {
+      "arc_id": "machine.c:14:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!ne) return -1;",
+      "file": "machine.c",
+      "line": 14
+    },
+    {
+      "arc_id": "machine.c:152:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "} else if (operand && strncmp(operand, \"image:\", 6) == 0) {",
+      "file": "machine.c",
+      "line": 152
+    },
+    {
+      "arc_id": "machine.c:155:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "m->acc = v ? cJSON_Duplicate(v, 1) : cJSON_CreateNull();",
+      "file": "machine.c",
+      "line": 155
+    },
+    {
+      "arc_id": "machine.c:159:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (operand) {",
+      "file": "machine.c",
+      "line": 159
+    },
+    {
+      "arc_id": "machine.c:161:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (m->acc) cJSON_Delete(m->acc);",
+      "file": "machine.c",
+      "line": 161
+    },
+    {
+      "arc_id": "machine.c:162:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "m->acc = v ? cJSON_Duplicate(v, 1) : cJSON_CreateNull();",
+      "file": "machine.c",
+      "line": 162
+    },
+    {
+      "arc_id": "machine.c:166:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (operand) {",
+      "file": "machine.c",
+      "line": 166
+    },
+    {
+      "arc_id": "machine.c:167:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON *v = m->acc ? cJSON_Duplicate(m->acc, 1) : cJSON_CreateNull();",
+      "file": "machine.c",
+      "line": 167
+    },
+    {
+      "arc_id": "machine.c:175:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (operand) cJSON_DeleteItemFromObjectCaseSensitive(m->store, operand);",
+      "file": "machine.c",
+      "line": 175
+    },
+    {
+      "arc_id": "machine.c:179:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "const char *name = operand ? operand : \"event\";",
+      "file": "machine.c",
+      "line": 179
+    },
+    {
+      "arc_id": "machine.c:187:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (!m->events_emitted) m->events_emitted = cJSON_CreateArray();",
+      "file": "machine.c",
+      "line": 187
+    },
+    {
+      "arc_id": "machine.c:197:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "const char *name = operand ? operand : (m->event_name ? m->event_name : \"event\");",
+      "file": "machine.c",
+      "line": 197
+    },
+    {
+      "arc_id": "machine.c:19:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!m->evidence[m->n_evidence]) return -1;",
+      "file": "machine.c",
+      "line": 19
+    },
+    {
+      "arc_id": "machine.c:200:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "size_t ncap = m->q_cap ? m->q_cap * 2 : 16;",
+      "file": "machine.c",
+      "line": 200
+    },
+    {
+      "arc_id": "machine.c:203:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!nn || !ni) return -1;",
+      "file": "machine.c",
+      "line": 203
+    },
+    {
+      "arc_id": "machine.c:203:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (!nn || !ni) return -1;",
+      "file": "machine.c",
+      "line": 203
+    },
+    {
+      "arc_id": "machine.c:244:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (m->event_name && cJSON_IsObject(routes))",
+      "file": "machine.c",
+      "line": 244
+    },
+    {
+      "arc_id": "machine.c:244:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (m->event_name && cJSON_IsObject(routes))",
+      "file": "machine.c",
+      "line": 244
+    },
+    {
+      "arc_id": "machine.c:251:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "snprintf(mk, sizeof mk, \"event:unknown:%s\",",
+      "file": "machine.c",
+      "line": 251
+    },
+    {
+      "arc_id": "machine.c:25:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!m || !st) return -1;",
+      "file": "machine.c",
+      "line": 25
+    },
+    {
+      "arc_id": "machine.c:25:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (!m || !st) return -1;",
+      "file": "machine.c",
+      "line": 25
+    },
+    {
+      "arc_id": "machine.c:285:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "const char *effect = operand ? operand : \"effect\";",
+      "file": "machine.c",
+      "line": 285
+    },
+    {
+      "arc_id": "machine.c:291:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (b) {",
+      "file": "machine.c",
+      "line": 291
+    },
+    {
+      "arc_id": "machine.c:293:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (cJSON_IsString(s)) sf = s->valuestring;",
+      "file": "machine.c",
+      "line": 293
+    },
+    {
+      "arc_id": "machine.c:298:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (m->outward_request) cJSON_Delete(m->outward_request);",
+      "file": "machine.c",
+      "line": 298
+    },
+    {
+      "arc_id": "machine.c:301:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (m->outward_result) { cJSON_Delete(m->outward_result); m->outward_result = NULL; }",
+      "file": "machine.c",
+      "line": 301
+    },
+    {
+      "arc_id": "machine.c:307:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (m->ticket) {",
+      "file": "machine.c",
+      "line": 307
+    },
+    {
+      "arc_id": "machine.c:309:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (cJSON_IsString(ext) && ext->valuestring[0]) {",
+      "file": "machine.c",
+      "line": 309
+    },
+    {
+      "arc_id": "machine.c:319:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "snprintf(m->stop_reason, sizeof m->stop_reason, \"%s\", operand ? operand : \"stop\");",
+      "file": "machine.c",
+      "line": 319
+    },
+    {
+      "arc_id": "machine.c:323:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (err) snprintf(err, errlen, \"unknown-opcode\");",
+      "file": "machine.c",
+      "line": 323
+    },
+    {
+      "arc_id": "machine.c:337:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!m || !m->outward_request || m->outward_result || !m->outward) return;",
+      "file": "machine.c",
+      "line": 337
+    },
+    {
+      "arc_id": "machine.c:337:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (!m || !m->outward_request || m->outward_result || !m->outward) return;",
+      "file": "machine.c",
+      "line": 337
+    },
+    {
+      "arc_id": "machine.c:337:b5",
+      "branch_id": 5,
+      "class": "reachable",
+      "expression": "if (!m || !m->outward_request || m->outward_result || !m->outward) return;",
+      "file": "machine.c",
+      "line": 337
+    },
+    {
+      "arc_id": "machine.c:337:b6",
+      "branch_id": 6,
+      "class": "reachable",
+      "expression": "if (!m || !m->outward_request || m->outward_result || !m->outward) return;",
+      "file": "machine.c",
+      "line": 337
+    },
+    {
+      "arc_id": "machine.c:339:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "effect = cJSON_GetObjectItemCaseSensitive(req, \"effect\")",
+      "file": "machine.c",
+      "line": 339
+    },
+    {
+      "arc_id": "machine.c:33:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!m) return;",
+      "file": "machine.c",
+      "line": 33
+    },
+    {
+      "arc_id": "machine.c:34:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (m->instr) {",
+      "file": "machine.c",
+      "line": 34
+    },
+    {
+      "arc_id": "machine.c:357:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (m->outward_result) cJSON_Delete(m->outward_result);",
+      "file": "machine.c",
+      "line": 357
+    },
+    {
+      "arc_id": "machine.c:362:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_AddStringToObject(rj, \"error\", ebuf[0] ? ebuf : \"outward-fail\");",
+      "file": "machine.c",
+      "line": 362
+    },
+    {
+      "arc_id": "machine.c:363:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (m->outward_result) cJSON_Delete(m->outward_result);",
+      "file": "machine.c",
+      "line": 363
+    },
+    {
+      "arc_id": "machine.c:370:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!m) return UEM_ERR_ARGS;",
+      "file": "machine.c",
+      "line": 370
+    },
+    {
+      "arc_id": "machine.c:380:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!m) return UEM_ERR_ARGS;",
+      "file": "machine.c",
+      "line": 380
+    },
+    {
+      "arc_id": "machine.c:383:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (st != UEM_OK && !m->halted) {",
+      "file": "machine.c",
+      "line": 383
+    },
+    {
+      "arc_id": "machine.c:401:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!m) return NULL;",
+      "file": "machine.c",
+      "line": 401
+    },
+    {
+      "arc_id": "machine.c:408:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_AddStringToObject(root, \"stop_reason\", m->stop_reason[0] ? m->stop_reason : \"stop\");",
+      "file": "machine.c",
+      "line": 408
+    },
+    {
+      "arc_id": "machine.c:452:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "const char *uem_program_sha256(const uem_machine *m) { return m ? m->program_sha256 : NULL; }",
+      "file": "machine.c",
+      "line": 452
+    },
+    {
+      "arc_id": "machine.c:453:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "uint32_t uem_instruction_count(const uem_machine *m) { return m ? m->n_instr : 0; }",
+      "file": "machine.c",
+      "line": 453
+    },
+    {
+      "arc_id": "machine.c:487:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (fseek(f, 0, SEEK_END) != 0) { fclose(f); cJSON_Delete(src); return -1; }",
+      "file": "machine.c",
+      "line": 487
+    },
+    {
+      "arc_id": "machine.c:489:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (sz < 0 || sz > (long)UEM_MAX_OUT) { fclose(f); cJSON_Delete(src); snprintf(err, errlen, \"too-large\"); return -1; }",
+      "file": "machine.c",
+      "line": 489
+    },
+    {
+      "arc_id": "machine.c:489:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (sz < 0 || sz > (long)UEM_MAX_OUT) { fclose(f); cJSON_Delete(src); snprintf(err, errlen, \"too-large\"); return -1; }",
+      "file": "machine.c",
+      "line": 489
+    },
+    {
+      "arc_id": "machine.c:492:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!buf) { fclose(f); cJSON_Delete(src); return -1; }",
+      "file": "machine.c",
+      "line": 492
+    },
+    {
+      "arc_id": "machine.c:58:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "for (j = 0; j < m->n_processed; j++) uem_mem_free(m->processed_ids[j]);",
+      "file": "machine.c",
+      "line": 58
+    },
+    {
+      "arc_id": "machine.c:65:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!m || !json) return UEM_ERR_ARGS;",
+      "file": "machine.c",
+      "line": 65
+    },
+    {
+      "arc_id": "machine.c:65:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (!m || !json) return UEM_ERR_ARGS;",
+      "file": "machine.c",
+      "line": 65
+    },
+    {
+      "arc_id": "machine.c:67:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (err) snprintf(err, errlen, \"host-too-large\");",
+      "file": "machine.c",
+      "line": 67
+    },
+    {
+      "arc_id": "machine.c:73:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (err) snprintf(err, errlen, \"host-json\");",
+      "file": "machine.c",
+      "line": 73
+    },
+    {
+      "arc_id": "machine.c:82:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!m) return;",
+      "file": "machine.c",
+      "line": 82
+    },
+    {
+      "arc_id": "primitives.c:114:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (b) {",
+      "file": "primitives.c",
+      "line": 114
+    },
+    {
+      "arc_id": "primitives.c:117:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (cJSON_IsString(n)) bname = n->valuestring;",
+      "file": "primitives.c",
+      "line": 117
+    },
+    {
+      "arc_id": "primitives.c:118:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (cJSON_IsString(t)) target = t->valuestring;",
+      "file": "primitives.c",
+      "line": 118
+    },
+    {
+      "arc_id": "primitives.c:128:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "snprintf(errtxt, sizeof errtxt, \"%s\",",
+      "file": "primitives.c",
+      "line": 128
+    },
+    {
+      "arc_id": "primitives.c:128:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "snprintf(errtxt, sizeof errtxt, \"%s\",",
+      "file": "primitives.c",
+      "line": 128
+    },
+    {
+      "arc_id": "primitives.c:15:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!name) return 0;",
+      "file": "primitives.c",
+      "line": 15
+    },
+    {
+      "arc_id": "primitives.c:164:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (strcmp(m->state, \"invalid\") == 0 || strcmp(m->state, \"absent\") == 0 ||",
+      "file": "primitives.c",
+      "line": 164
+    },
+    {
+      "arc_id": "primitives.c:164:b4",
+      "branch_id": 4,
+      "class": "reachable",
+      "expression": "if (strcmp(m->state, \"invalid\") == 0 || strcmp(m->state, \"absent\") == 0 ||",
+      "file": "primitives.c",
+      "line": 164
+    },
+    {
+      "arc_id": "primitives.c:165:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "strcmp(m->state, \"false\") == 0 || strcmp(m->state, \"unknown\") == 0) {",
+      "file": "primitives.c",
+      "line": 165
+    },
+    {
+      "arc_id": "primitives.c:174:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (cJSON_IsString(ik)) input_key = ik->valuestring;",
+      "file": "primitives.c",
+      "line": 174
+    },
+    {
+      "arc_id": "primitives.c:176:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (cJSON_IsString(pn)) part = pn->valuestring;",
+      "file": "primitives.c",
+      "line": 176
+    },
+    {
+      "arc_id": "primitives.c:222:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (cJSON_IsArray(order) && cJSON_IsObject(bindings_ast)) {",
+      "file": "primitives.c",
+      "line": 222
+    },
+    {
+      "arc_id": "primitives.c:222:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (cJSON_IsArray(order) && cJSON_IsObject(bindings_ast)) {",
+      "file": "primitives.c",
+      "line": 222
+    },
+    {
+      "arc_id": "primitives.c:224:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_ArrayForEach(nm, order) {",
+      "file": "primitives.c",
+      "line": 224
+    },
+    {
+      "arc_id": "primitives.c:227:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!cJSON_IsString(nm)) continue;",
+      "file": "primitives.c",
+      "line": 227
+    },
+    {
+      "arc_id": "primitives.c:242:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!val) val = cJSON_CreateNull();",
+      "file": "primitives.c",
+      "line": 242
+    },
+    {
+      "arc_id": "primitives.c:249:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (err_path) { store_set(m, \"path\", err_path); err_path = NULL; }",
+      "file": "primitives.c",
+      "line": 249
+    },
+    {
+      "arc_id": "primitives.c:270:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "const char *key = cJSON_IsString(mk) ? mk->valuestring : \"result\";",
+      "file": "primitives.c",
+      "line": 270
+    },
+    {
+      "arc_id": "primitives.c:271:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (strcmp(m->state, \"invalid\") == 0 || strcmp(m->state, \"absent\") == 0 ||",
+      "file": "primitives.c",
+      "line": 271
+    },
+    {
+      "arc_id": "primitives.c:271:b4",
+      "branch_id": 4,
+      "class": "reachable",
+      "expression": "if (strcmp(m->state, \"invalid\") == 0 || strcmp(m->state, \"absent\") == 0 ||",
+      "file": "primitives.c",
+      "line": 271
+    },
+    {
+      "arc_id": "primitives.c:274:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (m->acc) store_set(m, key, cJSON_Duplicate(m->acc, 1));",
+      "file": "primitives.c",
+      "line": 274
+    },
+    {
+      "arc_id": "primitives.c:283:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (strcmp(m->state, \"invalid\") == 0 || strcmp(m->state, \"absent\") == 0 ||",
+      "file": "primitives.c",
+      "line": 283
+    },
+    {
+      "arc_id": "primitives.c:283:b4",
+      "branch_id": 4,
+      "class": "reachable",
+      "expression": "if (strcmp(m->state, \"invalid\") == 0 || strcmp(m->state, \"absent\") == 0 ||",
+      "file": "primitives.c",
+      "line": 283
+    },
+    {
+      "arc_id": "primitives.c:298:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_ArrayForEach(el, req) {",
+      "file": "primitives.c",
+      "line": 298
+    },
+    {
+      "arc_id": "primitives.c:301:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!cJSON_IsString(el)) continue;",
+      "file": "primitives.c",
+      "line": 301
+    },
+    {
+      "arc_id": "primitives.c:318:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON *keys = pcfg ? cJSON_GetObjectItemCaseSensitive(pcfg, \"success_keys\") : NULL;",
+      "file": "primitives.c",
+      "line": 318
+    },
+    {
+      "arc_id": "primitives.c:319:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON *sf = pcfg ? cJSON_GetObjectItemCaseSensitive(pcfg, \"success_from\") : NULL;",
+      "file": "primitives.c",
+      "line": 319
+    },
+    {
+      "arc_id": "primitives.c:320:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON *inc = pcfg ? cJSON_GetObjectItemCaseSensitive(pcfg, \"include_error_path\") : NULL;",
+      "file": "primitives.c",
+      "line": 320
+    },
+    {
+      "arc_id": "primitives.c:321:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "const char *success_from = cJSON_IsString(sf) ? sf->valuestring : \"result\";",
+      "file": "primitives.c",
+      "line": 321
+    },
+    {
+      "arc_id": "primitives.c:325:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (strcmp(m->state, \"valid\") == 0 && cJSON_IsArray(keys)) {",
+      "file": "primitives.c",
+      "line": 325
+    },
+    {
+      "arc_id": "primitives.c:330:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_ArrayForEach(k, keys) {",
+      "file": "primitives.c",
+      "line": 330
+    },
+    {
+      "arc_id": "primitives.c:332:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (!cJSON_IsString(k)) continue;",
+      "file": "primitives.c",
+      "line": 332
+    },
+    {
+      "arc_id": "primitives.c:334:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (v) cJSON_AddItemToObject(obj, k->valuestring, cJSON_Duplicate(v, 1));",
+      "file": "primitives.c",
+      "line": 334
+    },
+    {
+      "arc_id": "primitives.c:345:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "cJSON_AddStringToObject(body, \"error\", er && cJSON_IsString(er) ? er->valuestring : \"invalid\");",
+      "file": "primitives.c",
+      "line": 345
+    },
+    {
+      "arc_id": "primitives.c:346:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (cJSON_IsTrue(inc) || (cJSON_IsNumber(inc) && inc->valueint)) include_path = 1;",
+      "file": "primitives.c",
+      "line": 346
+    },
+    {
+      "arc_id": "primitives.c:346:b4",
+      "branch_id": 4,
+      "class": "reachable",
+      "expression": "if (cJSON_IsTrue(inc) || (cJSON_IsNumber(inc) && inc->valueint)) include_path = 1;",
+      "file": "primitives.c",
+      "line": 346
+    },
+    {
+      "arc_id": "primitives.c:346:b5",
+      "branch_id": 5,
+      "class": "reachable",
+      "expression": "if (cJSON_IsTrue(inc) || (cJSON_IsNumber(inc) && inc->valueint)) include_path = 1;",
+      "file": "primitives.c",
+      "line": 346
+    },
+    {
+      "arc_id": "primitives.c:348:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (inc && inc->type & cJSON_True) include_path = 1;",
+      "file": "primitives.c",
+      "line": 348
+    },
+    {
+      "arc_id": "primitives.c:357:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "cJSON_AddStringToObject(pres, \"text\", text ? text : \"{}\");",
+      "file": "primitives.c",
+      "line": 357
+    },
+    {
+      "arc_id": "primitives.c:361:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (m->presentation) cJSON_Delete(m->presentation);",
+      "file": "primitives.c",
+      "line": 361
+    },
+    {
+      "arc_id": "primitives.c:369:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "snprintf(mark, sizeof mark, \"part:%s\", cJSON_IsString(pn) ? pn->valuestring : \"part\");",
+      "file": "primitives.c",
+      "line": 369
+    },
+    {
+      "arc_id": "primitives.c:375:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (err) snprintf(err, errlen, \"unknown-primitive\");",
+      "file": "primitives.c",
+      "line": 375
+    },
+    {
+      "arc_id": "primitives.c:409:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (cJSON_IsString(o)) op = o->valuestring;",
+      "file": "primitives.c",
+      "line": 409
+    },
+    {
+      "arc_id": "primitives.c:410:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (cJSON_IsString(e)) et = e->valuestring;",
+      "file": "primitives.c",
+      "line": 410
+    },
+    {
+      "arc_id": "primitives.c:411:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (cJSON_IsString(ms)) msg = ms->valuestring;",
+      "file": "primitives.c",
+      "line": 411
+    },
+    {
+      "arc_id": "primitives.c:417:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (n >= sizeof lower) n = sizeof lower - 1;",
+      "file": "primitives.c",
+      "line": 417
+    },
+    {
+      "arc_id": "primitives.c:41:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "if (strcmp(m->state, \"invalid\") == 0 || strcmp(m->state, \"absent\") == 0 ||",
+      "file": "primitives.c",
+      "line": 41
+    },
+    {
+      "arc_id": "primitives.c:41:b4",
+      "branch_id": 4,
+      "class": "reachable",
+      "expression": "if (strcmp(m->state, \"invalid\") == 0 || strcmp(m->state, \"absent\") == 0 ||",
+      "file": "primitives.c",
+      "line": 41
+    },
+    {
+      "arc_id": "primitives.c:420:b5",
+      "branch_id": 5,
+      "class": "reachable",
+      "expression": "for (i = 0; i < n; i++) if (lower[i] >= 'A' && lower[i] <= 'Z') lower[i] = (char)(lower[i] - 'A' + 'a');",
+      "file": "primitives.c",
+      "line": 420
+    },
+    {
+      "arc_id": "primitives.c:421:b3",
+      "branch_id": 3,
+      "class": "short-circuit",
+      "expression": "if (strstr(lower, \"password\") || strstr(lower, \"token\") || strstr(lower, \"secret\") ||",
+      "file": "primitives.c",
+      "line": 421
+    },
+    {
+      "arc_id": "primitives.c:421:b5",
+      "branch_id": 5,
+      "class": "short-circuit",
+      "expression": "if (strstr(lower, \"password\") || strstr(lower, \"token\") || strstr(lower, \"secret\") ||",
+      "file": "primitives.c",
+      "line": 421
+    },
+    {
+      "arc_id": "primitives.c:421:b6",
+      "branch_id": 6,
+      "class": "short-circuit",
+      "expression": "if (strstr(lower, \"password\") || strstr(lower, \"token\") || strstr(lower, \"secret\") ||",
+      "file": "primitives.c",
+      "line": 421
+    },
+    {
+      "arc_id": "primitives.c:422:b1",
+      "branch_id": 1,
+      "class": "short-circuit",
+      "expression": "strstr(lower, \"authorization\") || strstr(lower, \"api_key\") || strstr(lower, \"apikey\"))",
+      "file": "primitives.c",
+      "line": 422
+    },
+    {
+      "arc_id": "primitives.c:422:b3",
+      "branch_id": 3,
+      "class": "short-circuit",
+      "expression": "strstr(lower, \"authorization\") || strstr(lower, \"api_key\") || strstr(lower, \"apikey\"))",
+      "file": "primitives.c",
+      "line": 422
+    },
+    {
+      "arc_id": "primitives.c:425:b1",
+      "branch_id": 1,
+      "class": "reachable",
+      "expression": "if (n > 500) n = 500;",
+      "file": "primitives.c",
+      "line": 425
+    },
+    {
+      "arc_id": "primitives.c:53:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (src_cfg) {",
+      "file": "primitives.c",
+      "line": 53
+    },
+    {
+      "arc_id": "primitives.c:55:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (cJSON_IsString(f)) field = f->valuestring;",
+      "file": "primitives.c",
+      "line": 55
+    },
+    {
+      "arc_id": "primitives.c:57:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (cJSON_IsString(e)) err_missing = e->valuestring;",
+      "file": "primitives.c",
+      "line": 57
+    },
+    {
+      "arc_id": "primitives.c:59:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "if (cJSON_IsString(e)) err_extra = e->valuestring;",
+      "file": "primitives.c",
+      "line": 59
+    },
+    {
+      "arc_id": "primitives.c:66:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (cJSON_GetObjectItemCaseSensitive(m->host, \"text\") &&",
+      "file": "primitives.c",
+      "line": 66
+    },
+    {
+      "arc_id": "primitives.c:69:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "store_set(m, field, cJSON_CreateString(sf && cJSON_IsString(sf) ? sf->valuestring : \"-\"));",
+      "file": "primitives.c",
+      "line": 69
+    },
+    {
+      "arc_id": "primitives.c:72:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (cJSON_GetObjectItemCaseSensitive(m->host, \"document\") &&",
+      "file": "primitives.c",
+      "line": 72
+    },
+    {
+      "arc_id": "primitives.c:75:b0",
+      "branch_id": 0,
+      "class": "reachable",
+      "expression": "store_set(m, field, cJSON_CreateString(sf && cJSON_IsString(sf) ? sf->valuestring : \"-\"));",
+      "file": "primitives.c",
+      "line": 75
+    },
+    {
+      "arc_id": "primitives.c:75:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "store_set(m, field, cJSON_CreateString(sf && cJSON_IsString(sf) ? sf->valuestring : \"-\"));",
+      "file": "primitives.c",
+      "line": 75
+    },
+    {
+      "arc_id": "primitives.c:75:b3",
+      "branch_id": 3,
+      "class": "reachable",
+      "expression": "store_set(m, field, cJSON_CreateString(sf && cJSON_IsString(sf) ? sf->valuestring : \"-\"));",
+      "file": "primitives.c",
+      "line": 75
+    },
+    {
+      "arc_id": "primitives.c:80:b2",
+      "branch_id": 2,
+      "class": "reachable",
+      "expression": "if (sf && !cJSON_IsNull(sf)) {",
+      "file": "primitives.c",
+      "line": 80
+    }
+  ],
+  "frozen_at": "2026-07-26T16:31:20Z",
+  "identity_scheme": "{file}:{line}:b{branch_id}",
+  "missing_arcs_measured_at_freeze": 311,
+  "note": "FROZEN branch-closure baseline. Do not regenerate until all 311 original open arcs are accounted for (resolved_by_test + removed_by_refactor). Adding/deleting lines or compiler renumbering invalidates line:bN identity.",
+  "open_arc_ids": [
+    "decimal.c:109:b2",
+    "decimal.c:10:b0",
+    "decimal.c:111:b1",
+    "decimal.c:117:b1",
+    "decimal.c:117:b2",
+    "decimal.c:139:b1",
+    "decimal.c:141:b1",
+    "decimal.c:149:b0",
+    "decimal.c:156:b0",
+    "decimal.c:172:b1",
+    "decimal.c:17:b2",
+    "decimal.c:181:b3",
+    "decimal.c:184:b0",
+    "decimal.c:187:b0",
+    "decimal.c:18:b3",
+    "decimal.c:18:b5",
+    "decimal.c:191:b2",
+    "decimal.c:195:b1",
+    "decimal.c:195:b2",
+    "decimal.c:19:b2",
+    "decimal.c:19:b4",
+    "decimal.c:19:b5",
+    "decimal.c:20:b3",
+    "decimal.c:20:b5",
+    "decimal.c:21:b2",
+    "decimal.c:21:b4",
+    "decimal.c:21:b5",
+    "decimal.c:27:b3",
+    "decimal.c:28:b0",
+    "decimal.c:28:b2",
+    "decimal.c:28:b3",
+    "decimal.c:37:b1",
+    "decimal.c:38:b1",
+    "decimal.c:53:b0",
+    "decimal.c:71:b0",
+    "decimal.c:73:b0",
+    "decimal.c:75:b1",
+    "decimal.c:76:b1",
+    "decimal.c:79:b1",
+    "decimal.c:80:b1",
+    "decimal.c:82:b1",
+    "decimal.c:89:b1",
+    "decimal.c:89:b2",
+    "decimal.c:98:b2",
+    "decimal.c:99:b1",
+    "decode.c:106:b0",
+    "decode.c:10:b0",
+    "decode.c:120:b0",
+    "decode.c:125:b1",
+    "decode.c:127:b1",
+    "decode.c:129:b0",
+    "decode.c:131:b1",
+    "decode.c:133:b1",
+    "decode.c:135:b1",
+    "decode.c:139:b0",
+    "decode.c:142:b0",
+    "decode.c:159:b1",
+    "decode.c:160:b1",
+    "decode.c:161:b1",
+    "decode.c:165:b3",
+    "decode.c:165:b4",
+    "decode.c:173:b1",
+    "decode.c:173:b4",
+    "decode.c:174:b1",
+    "decode.c:177:b0",
+    "decode.c:178:b1",
+    "decode.c:179:b3",
+    "decode.c:181:b0",
+    "decode.c:185:b1",
+    "decode.c:190:b1",
+    "decode.c:194:b1",
+    "decode.c:194:b5",
+    "decode.c:199:b2",
+    "decode.c:200:b1",
+    "decode.c:201:b0",
+    "decode.c:235:b1",
+    "decode.c:235:b2",
+    "decode.c:238:b1",
+    "decode.c:238:b2",
+    "decode.c:241:b5",
+    "decode.c:241:b6",
+    "decode.c:242:b1",
+    "decode.c:242:b2",
+    "decode.c:246:b1",
+    "decode.c:247:b1",
+    "decode.c:247:b2",
+    "decode.c:250:b1",
+    "decode.c:251:b1",
+    "decode.c:251:b2",
+    "decode.c:254:b1",
+    "decode.c:254:b3",
+    "decode.c:255:b1",
+    "decode.c:255:b2",
+    "decode.c:267:b2",
+    "decode.c:269:b2",
+    "decode.c:270:b2",
+    "decode.c:280:b1",
+    "decode.c:283:b0",
+    "decode.c:292:b0",
+    "decode.c:296:b0",
+    "decode.c:299:b0",
+    "decode.c:303:b0",
+    "decode.c:314:b0",
+    "decode.c:31:b0",
+    "decode.c:321:b0",
+    "decode.c:343:b1",
+    "decode.c:353:b1",
+    "decode.c:35:b4",
+    "decode.c:39:b5",
+    "decode.c:39:b6",
+    "decode.c:93:b1",
+    "decode.c:94:b1",
+    "expr.c:105:b1",
+    "expr.c:105:b3",
+    "expr.c:107:b1",
+    "expr.c:114:b2",
+    "expr.c:128:b1",
+    "expr.c:128:b2",
+    "expr.c:129:b1",
+    "expr.c:12:b1",
+    "expr.c:12:b2",
+    "expr.c:13:b1",
+    "expr.c:144:b1",
+    "expr.c:14:b0",
+    "expr.c:157:b1",
+    "expr.c:159:b1",
+    "expr.c:171:b1",
+    "expr.c:175:b2",
+    "expr.c:177:b0",
+    "expr.c:17:b1",
+    "expr.c:190:b1",
+    "expr.c:196:b0",
+    "expr.c:19:b1",
+    "expr.c:20:b1",
+    "expr.c:214:b2",
+    "expr.c:229:b1",
+    "expr.c:234:b1",
+    "expr.c:244:b1",
+    "expr.c:246:b1",
+    "expr.c:250:b2",
+    "expr.c:259:b1",
+    "expr.c:277:b1",
+    "expr.c:287:b2",
+    "expr.c:293:b1",
+    "expr.c:312:b1",
+    "expr.c:312:b2",
+    "expr.c:317:b1",
+    "expr.c:318:b1",
+    "expr.c:319:b1",
+    "expr.c:328:b1",
+    "expr.c:32:b1",
+    "expr.c:32:b2",
+    "expr.c:333:b1",
+    "expr.c:333:b2",
+    "expr.c:338:b1",
+    "expr.c:373:b1",
+    "expr.c:37:b1",
+    "expr.c:385:b0",
+    "expr.c:385:b2",
+    "expr.c:385:b3",
+    "expr.c:386:b2",
+    "expr.c:407:b1",
+    "expr.c:408:b0",
+    "expr.c:414:b1",
+    "expr.c:41:b2",
+    "expr.c:421:b0",
+    "expr.c:423:b1",
+    "expr.c:42:b1",
+    "expr.c:445:b1",
+    "expr.c:450:b0",
+    "expr.c:47:b2",
+    "expr.c:48:b1",
+    "expr.c:80:b1",
+    "expr.c:82:b1",
+    "expr.c:88:b1",
+    "expr.c:94:b1",
+    "expr.c:94:b2",
+    "machine.c:104:b2",
+    "machine.c:106:b1",
+    "machine.c:10:b1",
+    "machine.c:10:b2",
+    "machine.c:112:b0",
+    "machine.c:123:b0",
+    "machine.c:12:b0",
+    "machine.c:136:b1",
+    "machine.c:143:b1",
+    "machine.c:145:b1",
+    "machine.c:146:b0",
+    "machine.c:14:b1",
+    "machine.c:152:b1",
+    "machine.c:155:b1",
+    "machine.c:159:b0",
+    "machine.c:161:b0",
+    "machine.c:162:b1",
+    "machine.c:166:b0",
+    "machine.c:167:b1",
+    "machine.c:175:b0",
+    "machine.c:179:b1",
+    "machine.c:187:b0",
+    "machine.c:197:b3",
+    "machine.c:19:b1",
+    "machine.c:200:b0",
+    "machine.c:203:b1",
+    "machine.c:203:b3",
+    "machine.c:244:b1",
+    "machine.c:244:b2",
+    "machine.c:251:b1",
+    "machine.c:25:b1",
+    "machine.c:25:b2",
+    "machine.c:285:b1",
+    "machine.c:291:b0",
+    "machine.c:293:b1",
+    "machine.c:298:b1",
+    "machine.c:301:b1",
+    "machine.c:307:b0",
+    "machine.c:309:b2",
+    "machine.c:319:b0",
+    "machine.c:323:b1",
+    "machine.c:337:b1",
+    "machine.c:337:b3",
+    "machine.c:337:b5",
+    "machine.c:337:b6",
+    "machine.c:339:b1",
+    "machine.c:33:b1",
+    "machine.c:34:b0",
+    "machine.c:357:b1",
+    "machine.c:362:b1",
+    "machine.c:363:b1",
+    "machine.c:370:b1",
+    "machine.c:380:b1",
+    "machine.c:383:b2",
+    "machine.c:401:b1",
+    "machine.c:408:b1",
+    "machine.c:452:b1",
+    "machine.c:453:b1",
+    "machine.c:487:b0",
+    "machine.c:489:b1",
+    "machine.c:489:b2",
+    "machine.c:492:b1",
+    "machine.c:58:b0",
+    "machine.c:65:b1",
+    "machine.c:65:b2",
+    "machine.c:67:b0",
+    "machine.c:73:b0",
+    "machine.c:82:b1",
+    "primitives.c:114:b0",
+    "primitives.c:117:b0",
+    "primitives.c:118:b0",
+    "primitives.c:128:b1",
+    "primitives.c:128:b2",
+    "primitives.c:15:b1",
+    "primitives.c:164:b3",
+    "primitives.c:164:b4",
+    "primitives.c:165:b1",
+    "primitives.c:174:b0",
+    "primitives.c:176:b0",
+    "primitives.c:222:b1",
+    "primitives.c:222:b2",
+    "primitives.c:224:b1",
+    "primitives.c:227:b1",
+    "primitives.c:242:b1",
+    "primitives.c:249:b1",
+    "primitives.c:270:b1",
+    "primitives.c:271:b3",
+    "primitives.c:271:b4",
+    "primitives.c:274:b0",
+    "primitives.c:283:b3",
+    "primitives.c:283:b4",
+    "primitives.c:298:b1",
+    "primitives.c:301:b1",
+    "primitives.c:318:b1",
+    "primitives.c:319:b1",
+    "primitives.c:320:b1",
+    "primitives.c:321:b1",
+    "primitives.c:325:b3",
+    "primitives.c:330:b1",
+    "primitives.c:332:b1",
+    "primitives.c:334:b0",
+    "primitives.c:345:b3",
+    "primitives.c:346:b2",
+    "primitives.c:346:b4",
+    "primitives.c:346:b5",
+    "primitives.c:348:b1",
+    "primitives.c:357:b1",
+    "primitives.c:361:b1",
+    "primitives.c:369:b1",
+    "primitives.c:375:b0",
+    "primitives.c:409:b0",
+    "primitives.c:410:b0",
+    "primitives.c:411:b0",
+    "primitives.c:417:b1",
+    "primitives.c:41:b3",
+    "primitives.c:41:b4",
+    "primitives.c:420:b5",
+    "primitives.c:421:b3",
+    "primitives.c:421:b5",
+    "primitives.c:421:b6",
+    "primitives.c:422:b1",
+    "primitives.c:422:b3",
+    "primitives.c:425:b1",
+    "primitives.c:53:b0",
+    "primitives.c:55:b0",
+    "primitives.c:57:b0",
+    "primitives.c:59:b0",
+    "primitives.c:66:b2",
+    "primitives.c:69:b2",
+    "primitives.c:72:b2",
+    "primitives.c:75:b0",
+    "primitives.c:75:b2",
+    "primitives.c:75:b3",
+    "primitives.c:80:b2"
+  ]
+}

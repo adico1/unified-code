@@ -1,7 +1,15 @@
 {
+  "ambiguous_arcs": 0,
+  "baseline_commit": "3a0bf81",
+  "baseline_open": 311,
   "branches_hit": 1115,
   "branches_total": 1426,
+  "conservation_holds": true,
+  "current_open": 311,
   "missing_arcs_measured": 311,
+  "new_arc_ids": [],
+  "new_arcs": 0,
+  "note": "Baseline frozen at 3a0bf81 in branch_baseline.json. Do not regenerate baseline until all original open arcs are accounted for.",
   "open_arc_ids": [
     "decimal.c:109:b2",
     "decimal.c:10:b0",
@@ -314,5 +322,11 @@
     "primitives.c:75:b2",
     "primitives.c:75:b3",
     "primitives.c:80:b2"
-  ]
+  ],
+  "remapped_arcs": 0,
+  "removed_by_refactor": 0,
+  "removed_by_refactor_ids": [],
+  "resolved_by_test": 0,
+  "resolved_by_test_ids": [],
+  "still_baseline_open": 311
 }

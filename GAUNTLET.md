@@ -36,16 +36,21 @@ Generated in 97.1s.
 
 ## C branch ledger
 
+- **Baseline (frozen):** `3a0bf81` → `c/tests/branch_baseline.json`
 - Artifact: `c/tests/BRANCH_LEDGER.md` (+ `branch_ledger.json`, `branch_ledger_history.json`)
-- Metric: **gcov arc enumeration** (same as L13 `c_branches`; not rounded summary %)
+- Metric: gcov arc enumeration (same as L13 `c_branches`)
 - `branches_hit` / `branches_total`: **1115 / 1426**
-- `missing_arcs_measured`: **311**
-- `missing_arcs_in_ledger`: **311**
-- `unmapped_arcs`: **0**
-- `unclassified_arcs`: **0**
-- `resolved_arcs` (open→taken this run): **0**
-- Equation: `measured == in_ledger + unmapped` → **True**
-- L13 branch eligible: **False** (requires measured=unmapped=unclassified=0)
-- Identity: `{file}:{line}:b{branch_id}` — progress is open→resolved, not `resolved_arcs: 0` rewrite
-- Generator: `python3 c/scripts/branch_ledger.py` (after coverage run)
+- Measurement: `missing_arcs_measured=311`, `in_ledger=311`, `unmapped=0`, `unclassified=0`
+- Baseline conservation:
+  - `baseline_open=311`
+  - `resolved_by_test=0`
+  - `removed_by_refactor=0`
+  - `new_arcs=0`
+  - `remapped_arcs=0` (informational)
+  - `ambiguous_arcs=0` (must be 0)
+  - `current_open=311`
+  - equation holds: **True**
+- L13 branch eligible: **False**
+- Identity: `{file}:{line}:b{branch_id}` — do not rewrite baseline until all 311 original arcs are accounted for
+- Generator: `python3 c/scripts/branch_ledger.py`
 
