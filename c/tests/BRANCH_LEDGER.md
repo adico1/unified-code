@@ -17,29 +17,29 @@ still_baseline_open == 0 && new_arcs == 0
 
 ## Measurement reconciliation
 
-- **branches_hit:** 1120
+- **branches_hit:** 1131
 - **branches_total:** 1426
-- **missing_arcs_measured:** 306
-- **missing_arcs_in_ledger:** 306
+- **missing_arcs_measured:** 295
+- **missing_arcs_in_ledger:** 295
 - **unmapped_arcs:** 0
 - **unclassified_arcs:** 0
-- Equation: `306 == 306 + 0` → **True**
+- Equation: `295 == 295 + 0` → **True**
 
 ## Baseline conservation (vs frozen open set)
 
 - **baseline_open:** 311
-- **resolved_by_test:** 5
+- **resolved_by_test:** 16
 - **removed_by_refactor:** 0
 - **new_arcs:** 0
 - **remapped_arcs:** 0 (informational)
 - **ambiguous_arcs:** 0 (must be 0)
-- **current_open:** 306
-- **still_baseline_open:** 306
+- **current_open:** 295
+- **still_baseline_open:** 295
 - Conservation: `311 == 311` (`baseline_open + new_arcs == resolved_by_test + removed_by_refactor + current_open`) → **True**
 - L13 branch eligible: **False**
 - Identity: `{file}:{line}:b{branch_id}` (stable only while source layout unchanged)
-- By class: `{"reachable": 293, "short-circuit": 13}`
-- By file: `{"decimal.c": 45, "decode.c": 63, "expr.c": 65, "machine.c": 67, "primitives.c": 66}`
+- By class: `{"reachable": 283, "short-circuit": 12}`
+- By file: `{"decimal.c": 45, "decode.c": 52, "expr.c": 65, "machine.c": 67, "primitives.c": 66}`
 
 ## Per-file hit/total
 
@@ -47,7 +47,7 @@ still_baseline_open == 0 && new_arcs == 0
 | --- | ---: | ---: | ---: |
 | `alloc.c` | 42 | 42 | 0 |
 | `decimal.c` | 131 | 176 | 45 |
-| `decode.c` | 237 | 300 | 63 |
+| `decode.c` | 248 | 300 | 52 |
 | `expr.c` | 289 | 354 | 65 |
 | `machine.c` | 225 | 292 | 67 |
 | `primitives.c` | 196 | 262 | 66 |
@@ -58,6 +58,17 @@ still_baseline_open == 0 && new_arcs == 0
 - `decode.c:235:b2`
 - `decode.c:238:b1`
 - `decode.c:238:b2`
+- `decode.c:241:b5`
+- `decode.c:241:b6`
+- `decode.c:242:b1`
+- `decode.c:242:b2`
+- `decode.c:247:b1`
+- `decode.c:247:b2`
+- `decode.c:251:b1`
+- `decode.c:251:b2`
+- `decode.c:254:b3`
+- `decode.c:255:b1`
+- `decode.c:255:b2`
 - `machine.c:33:b1`
 
 ## Open ledger (current)
@@ -145,20 +156,9 @@ still_baseline_open == 0 && new_arcs == 0
 | `decode.c:199:b2` | taken-0% | `if (i && append_str(buf, len, cap, ",", 1)) { uem_mem_free(keys); retu` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
 | `decode.c:200:b1` | taken-0% | `if (json_escape_append(buf, len, cap, keys[i])) { uem_mem_free(keys); ` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
 | `decode.c:201:b0` | taken-0% | `if (append_str(buf, len, cap, ":", 1)) { uem_mem_free(keys); return -1` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
-| `decode.c:241:b5` | taken-0% | `if (bytes[0] != UEM_MAGIC0 \|\| bytes[1] != UEM_MAGIC1 \|\| bytes[2] !` | **reachable** | decode state that flips: if (bytes[0] != UEM_MAGIC | decode reject / canon vector |
-| `decode.c:241:b6` | taken-0% | `if (bytes[0] != UEM_MAGIC0 \|\| bytes[1] != UEM_MAGIC1 \|\| bytes[2] !` | **reachable** | decode state that flips: if (bytes[0] != UEM_MAGIC | decode reject / canon vector |
-| `decode.c:242:b1` | taken-0% | `if (err && errlen) snprintf(err, errlen, "bad-magic");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `decode.c:242:b2` | taken-0% | `if (err && errlen) snprintf(err, errlen, "bad-magic");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
 | `decode.c:246:b1` | taken-0% | `if (rd_u16(bytes, len, &off, &ver) \|\| ver != UEM_FORMAT_VERSION) {` | **short-circuit** | rd fail vs value mismatch independently | truncated header vs bad-version/flags vectors |
-| `decode.c:247:b1` | taken-0% | `if (err && errlen) snprintf(err, errlen, "bad-version");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `decode.c:247:b2` | taken-0% | `if (err && errlen) snprintf(err, errlen, "bad-version");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
 | `decode.c:250:b1` | taken-0% | `if (rd_u16(bytes, len, &off, &flags) \|\| flags != 0) {` | **short-circuit** | rd fail vs value mismatch independently | truncated header vs bad-version/flags vectors |
-| `decode.c:251:b1` | taken-0% | `if (err && errlen) snprintf(err, errlen, "bad-flags");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `decode.c:251:b2` | taken-0% | `if (err && errlen) snprintf(err, errlen, "bad-flags");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
 | `decode.c:254:b1` | taken-0% | `if (rd_u32(bytes, len, &off, &count) \|\| count == 0 \|\| count > UEM_` | **short-circuit** | rd fail vs value mismatch independently | truncated header vs bad-version/flags vectors |
-| `decode.c:254:b3` | taken-0% | `if (rd_u32(bytes, len, &off, &count) \|\| count == 0 \|\| count > UEM_` | **short-circuit** | rd fail vs value mismatch independently | truncated header vs bad-version/flags vectors |
-| `decode.c:255:b1` | taken-0% | `if (err && errlen) snprintf(err, errlen, "bad-count");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `decode.c:255:b2` | taken-0% | `if (err && errlen) snprintf(err, errlen, "bad-count");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
 | `decode.c:267:b2` | taken-0% | `if (off >= len) { free_partial(m, i); if (err) snprintf(err, errlen, "` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
 | `decode.c:269:b2` | taken-0% | `if (!opcode_ok(op)) { free_partial(m, i); if (err) snprintf(err, errle` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
 | `decode.c:270:b2` | taken-0% | `if (off >= len) { free_partial(m, i); if (err) snprintf(err, errlen, "` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |

@@ -1688,12 +1688,129 @@ static void assert_decode_public_contract(void) {
     }
 }
 
+/* Batch 2 — decode header rejection matrix (test-only).
+ * Targets: magic positions, bad-version, bad-flags, bad-count + err-buffer arms.
+ * Does not include instruction-body / image rejections. */
+static void expect_header_decode_reject(const uint8_t *buf, size_t len,
+                                        const char *want_msg, const char *label) {
+    uem_machine *m;
+    char err[64];
+    char sentinel[8];
+    uem_status st;
+    int pass;
+    size_t a0, a1;
+
+    /* writable error buffer + exact message + null out */
+    for (pass = 0; pass < 3; pass++) {
+        m = (uem_machine *)0x1;
+        memset(err, 0xFF, sizeof err);
+        a0 = alloc_attempts();
+        st = uem_decode_verify(buf, len, &m, err, sizeof err);
+        a1 = alloc_attempts();
+        expect(st == UEM_ERR_DECODE, label);
+        expect(m == NULL, label);
+        expect(strcmp(err, want_msg) == 0, label);
+        expect(a1 >= a0, label); /* attempts do not go backwards */
+        (void)a1;
+    }
+
+    /* null error buffer */
+    m = (uem_machine *)0x1;
+    st = uem_decode_verify(buf, len, &m, NULL, 64);
+    expect(st == UEM_ERR_DECODE, label);
+    expect(m == NULL, label);
+
+    /* zero-length error buffer: sentinel untouched */
+    m = (uem_machine *)0x1;
+    memset(sentinel, 0x5A, sizeof sentinel);
+    st = uem_decode_verify(buf, len, &m, sentinel, 0);
+    expect(st == UEM_ERR_DECODE, label);
+    expect(m == NULL, label);
+    expect((unsigned char)sentinel[0] == 0x5A &&
+           (unsigned char)sentinel[3] == 0x5A &&
+           (unsigned char)sentinel[7] == 0x5A,
+           label);
+}
+
+static void assert_decode_header_matrix(void) {
+    /* Minimal valid-length header skeleton: magic|ver|flags|count (12 bytes).
+     * Never reaches instruction body on rejection. */
+    uint8_t hdr[12];
+    int i;
+
+    uem_allocator_reset(1);
+
+    /* --- each incorrect magic-byte position independently --- */
+    for (i = 0; i < 4; i++) {
+        memset(hdr, 0, sizeof hdr);
+        hdr[0] = 'U'; hdr[1] = 'E'; hdr[2] = 'M'; hdr[3] = 0x16;
+        hdr[4] = 0; hdr[5] = 1; /* version 1 */
+        /* flags 0, count 1 */
+        hdr[8] = 0; hdr[9] = 0; hdr[10] = 0; hdr[11] = 1;
+        hdr[i] = (uint8_t)(hdr[i] ^ 0x01); /* flip one magic position */
+        expect_header_decode_reject(hdr, sizeof hdr, "bad-magic", "header bad-magic pos");
+    }
+
+    /* --- unsupported version (magic ok) --- */
+    memset(hdr, 0, sizeof hdr);
+    hdr[0] = 'U'; hdr[1] = 'E'; hdr[2] = 'M'; hdr[3] = 0x16;
+    hdr[4] = 0; hdr[5] = 2; /* version 2 */
+    hdr[11] = 1;
+    expect_header_decode_reject(hdr, sizeof hdr, "bad-version", "header bad-version");
+
+    /* version 0 also unsupported */
+    hdr[5] = 0;
+    expect_header_decode_reject(hdr, sizeof hdr, "bad-version", "header bad-version 0");
+
+    /* --- nonzero / unsupported flags --- */
+    memset(hdr, 0, sizeof hdr);
+    hdr[0] = 'U'; hdr[1] = 'E'; hdr[2] = 'M'; hdr[3] = 0x16;
+    hdr[4] = 0; hdr[5] = 1;
+    hdr[6] = 0; hdr[7] = 1; /* flags = 1 */
+    hdr[11] = 1;
+    expect_header_decode_reject(hdr, sizeof hdr, "bad-flags", "header bad-flags 1");
+
+    hdr[6] = 0x80; hdr[7] = 0; /* flags high bit */
+    expect_header_decode_reject(hdr, sizeof hdr, "bad-flags", "header bad-flags high");
+
+    /* --- invalid instruction count: zero --- */
+    memset(hdr, 0, sizeof hdr);
+    hdr[0] = 'U'; hdr[1] = 'E'; hdr[2] = 'M'; hdr[3] = 0x16;
+    hdr[4] = 0; hdr[5] = 1;
+    /* count = 0 already */
+    expect_header_decode_reject(hdr, sizeof hdr, "bad-count", "header bad-count 0");
+
+    /* count > UEM_MAX_INSTR (0xFFFFFFFF) */
+    hdr[8] = 0xff; hdr[9] = 0xff; hdr[10] = 0xff; hdr[11] = 0xff;
+    expect_header_decode_reject(hdr, sizeof hdr, "bad-count", "header bad-count max");
+
+    /* count just above max if MAX is not all-ones — also use 0x00001001 if MAX is 4096 */
+    hdr[8] = 0; hdr[9] = 0; hdr[10] = 0x10; hdr[11] = 0x01; /* 4097 */
+    expect_header_decode_reject(hdr, sizeof hdr, "bad-count", "header bad-count 4097");
+
+    /* Recovery: valid header+STOP must still decode after matrix */
+    {
+        uint8_t ok[] = {
+            'U', 'E', 'M', 0x16, 0, 1, 0, 0, 0, 0, 0, 1,
+            0x10, 0x00, 0, 0, 0, 2, '{', '}'
+        };
+        uem_machine *m = NULL;
+        char err[32];
+        uem_status st;
+        uem_allocator_reset(1);
+        st = uem_decode_verify(ok, sizeof ok, &m, err, sizeof err);
+        expect(st == UEM_OK && m != NULL, "header matrix recovery ok");
+        if (m) uem_free(m);
+    }
+}
+
 int main(void) {
     fails = 0;
     test_decimal();
     test_expr_nodes();
     test_decode_rejects();
     assert_decode_public_contract();
+    assert_decode_header_matrix();
     test_host_errors();
     test_primitives_direct();
     test_host_json_limits();
