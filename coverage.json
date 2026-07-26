@@ -1,10 +1,10 @@
 {
   "dimensions": {
     "c_branches": {
-      "actual": 69.79768786127168,
+      "actual": 70.73699421965318,
       "ok": false,
       "raw": {
-        "hit": 966,
+        "hit": 979,
         "total": 1384
       },
       "required": 100.0
@@ -19,32 +19,32 @@
       "required": 100.0
     },
     "c_lines": {
-      "actual": 92.8336620644313,
+      "actual": 93.42537804076265,
       "ok": false,
       "raw": {
         "error": null,
         "files": [
           {
-            "branches_hit": 130,
-            "branches_pct": 73.86,
+            "branches_hit": 131,
+            "branches_pct": 74.43,
             "branches_total": 176,
             "functions_hit": 11,
             "functions_total": 11,
             "gcno": "decimal.gcno",
-            "lines_hit": 153,
-            "lines_pct": 99.35,
+            "lines_hit": 154,
+            "lines_pct": 100.0,
             "lines_total": 154,
             "source": "core/decimal.c"
           },
           {
-            "branches_hit": 190,
-            "branches_pct": 62.5,
+            "branches_hit": 201,
+            "branches_pct": 66.12,
             "branches_total": 304,
             "functions_hit": 12,
             "functions_total": 12,
             "gcno": "decode.gcno",
-            "lines_hit": 249,
-            "lines_pct": 91.54,
+            "lines_hit": 255,
+            "lines_pct": 93.75,
             "lines_total": 272,
             "source": "core/decode.c"
           },
@@ -73,19 +73,19 @@
             "source": "core/machine.c"
           },
           {
-            "branches_hit": 183,
-            "branches_pct": 69.85,
+            "branches_hit": 184,
+            "branches_pct": 70.23,
             "branches_total": 262,
             "functions_hit": 15,
             "functions_total": 15,
             "gcno": "primitives.gcno",
-            "lines_hit": 315,
-            "lines_pct": 89.24,
+            "lines_hit": 317,
+            "lines_pct": 89.8,
             "lines_total": 353,
             "source": "core/primitives.c"
           }
         ],
-        "hit": 1412,
+        "hit": 1421,
         "total": 1521
       },
       "required": 100.0
@@ -358,30 +358,14 @@
       "permitted_catalog": [
         [
           "unknown",
-          "false"
+          "absent"
         ],
         [
           "formed",
-          "absent"
-        ],
-        [
-          "valid",
-          "valid"
-        ],
-        [
-          "unknown",
-          "absent"
-        ],
-        [
-          "false",
           "false"
         ],
         [
           "unknown",
-          "formed"
-        ],
-        [
-          "formed",
           "invalid"
         ],
         [
@@ -393,23 +377,39 @@
           "invalid"
         ],
         [
-          "formed",
+          "unknown",
           "false"
         ],
         [
           "unknown",
-          "invalid"
+          "formed"
+        ],
+        [
+          "formed",
+          "absent"
         ],
         [
           "formed",
           "valid"
+        ],
+        [
+          "false",
+          "false"
+        ],
+        [
+          "valid",
+          "valid"
+        ],
+        [
+          "formed",
+          "invalid"
         ]
       ],
       "prohibited_exercised": true,
       "required": 100.0
     }
   },
-  "duration_s": 22.551445960998535,
+  "duration_s": 11.28540325164795,
   "l13": true,
   "rules": {
     "no_pragma_no_cover": true,

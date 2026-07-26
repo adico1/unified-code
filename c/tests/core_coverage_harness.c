@@ -72,7 +72,15 @@ static void test_decimal(void) {
     a = uem_dec_from_str("1.001");
     expect(uem_dec_quantize(a, "0.01", "ROUND_UP").ok, "q up rem");
     a = uem_dec_from_str("-1.001");
-    expect(uem_dec_quantize(a, "0.01", "ROUND_UP").ok, "q up rem neg");
+    {
+        uem_dec qn = uem_dec_quantize(a, "0.01", "ROUND_UP");
+        expect(qn.ok, "q up rem neg");
+        /* force rem!=0 negative branch for ROUND_UP (line 163) */
+        a = uem_dec_from_str("-1.019");
+        expect(uem_dec_quantize(a, "0.01", "ROUND_UP").ok, "q up rem neg2");
+    }
+    a = uem_dec_from_str("-1.015");
+    expect(uem_dec_quantize(a, "0.01", "ROUND_HALF_EVEN").ok, "q he neg odd");
     /* ROUND_HALF_EVEN: exact half with odd/even q */
     a = uem_dec_from_str("1.005");
     expect(uem_dec_quantize(a, "0.01", "ROUND_HALF_EVEN").ok, "q he");
@@ -812,6 +820,126 @@ int main(void) {
     exercise_file("../artifacts/uem/text_stats_v2/program.uem", "{\"text\":\"x\"}");
     exercise_file("artifacts/uem/text_stats_v2/program.uem", "{\"text\":\"x\"}");
     unsetenv("UEM_MAX_STEPS");
+
+    /* named edge vectors */
+    {
+        const char *edges[] = {
+            "nostop.uem", "limg.uem", "enq.uem", "quiet.uem", "amiss.uem",
+            "tick.uem", "uroute.uem", "ev.uem", "wrd.uem", "utf4.uem", "esc.uem",
+            "mb_0.uem", "mb_1.uem", "mb_2.uem", "mb_3.uem", "ctrl.uem",
+            "nostop2.uem", "trail.uem", NULL
+        };
+        int e;
+        char path[320];
+        for (e = 0; edges[e]; e++) {
+            snprintf(path, sizeof path, "tests/coverage_vectors/%s", edges[e]);
+            exercise_file(path, "{\"text\":\"x\\ny\"}");
+            snprintf(path, sizeof path, "c/tests/coverage_vectors/%s", edges[e]);
+            exercise_file(path, "{\"text\":\"x\\ny\"}");
+            snprintf(path, sizeof path, "../c/tests/coverage_vectors/%s", edges[e]);
+            exercise_file(path, "{\"text\":\"x\\ny\"}");
+        }
+    }
+
+    /* image with JSON-escape-worthy characters (canonical via encode) */
+    {
+        FILE *f = fopen("tests/coverage_vectors/esc.uem", "rb");
+        if (!f) f = fopen("c/tests/coverage_vectors/esc.uem", "rb");
+        if (!f) f = fopen("../c/tests/coverage_vectors/esc.uem", "rb");
+        if (f) {
+            uint8_t *buf;
+            long sz;
+            uem_machine *m = NULL;
+            char err[128];
+            fseek(f, 0, SEEK_END);
+            sz = ftell(f);
+            rewind(f);
+            buf = (uint8_t *)malloc((size_t)sz);
+            if (buf && fread(buf, 1, (size_t)sz, f) == (size_t)sz) {
+                (void)uem_decode_verify(buf, (size_t)sz, &m, err, sizeof err);
+                if (m) uem_free(m);
+            }
+            free(buf);
+            fclose(f);
+        }
+    }
+
+    /* invalid 4-byte utf-8 sequence in operand */
+    {
+        uint8_t p[] = {
+            'U','E','M',0x16, 0,1, 0,0,
+            0,0,0,1,
+            0x01, 0x01, 0,0,0,4, 0xf5, 0x80, 0x80, 0x80, /* invalid > f4 */
+            0,0,0,2, '{','}'
+        };
+        uem_machine *m = NULL;
+        char err[128];
+        (void)uem_decode_verify(p, sizeof p, &m, err, sizeof err);
+        if (m) uem_free(m);
+    }
+    {
+        uint8_t p[] = {
+            'U','E','M',0x16, 0,1, 0,0,
+            0,0,0,1,
+            0x01, 0x01, 0,0,0,4, 0xf0, 0x20, 0x80, 0x80, /* bad cont */
+            0,0,0,2, '{','}'
+        };
+        uem_machine *m = NULL;
+        char err[128];
+        (void)uem_decode_verify(p, sizeof p, &m, err, sizeof err);
+        if (m) uem_free(m);
+    }
+    /* valid 4-byte utf-8 */
+    {
+        uint8_t p[] = {
+            'U','E','M',0x16, 0,1, 0,0,
+            0,0,0,1,
+            0x01, 0x01, 0,0,0,4, 0xf0, 0x9f, 0x98, 0x80,
+            0,0,0,2, '{','}'
+        };
+        uem_machine *m = NULL;
+        char err[128];
+        (void)uem_decode_verify(p, sizeof p, &m, err, sizeof err);
+        if (m) {
+            (void)uem_state(m);
+            uem_free(m);
+        }
+    }
+
+    /* bindings + failing expression for prim_eval error path */
+    {
+        uem_machine m;
+        char err[64];
+        memset(&m, 0, sizeof m);
+        snprintf(m.state, sizeof m.state, "formed");
+        m.store = cJSON_CreateObject();
+        cJSON_AddStringToObject(m.store, "text", "hi");
+        m.image = cJSON_Parse(
+            "{\"input_key\":\"text\",\"part_name\":\"feat\","
+            "\"expression\":{\"op\":\"ref\",\"name\":\"missing\"},"
+            "\"bindings\":{\"bad\":{\"op\":\"ref\",\"name\":\"nope\"}},"
+            "\"binding_order\":[\"bad\",\"missing_name\"]}");
+        m.host = cJSON_Parse("{\"text\":\"hi\"}");
+        (void)uem_prim_apply(&m, "eval_expression", err, sizeof err);
+        free_soft_machine(&m);
+    }
+    /* verify_result fail paths */
+    {
+        uem_machine m;
+        char err[64];
+        memset(&m, 0, sizeof m);
+        snprintf(m.state, sizeof m.state, "formed");
+        m.store = cJSON_CreateObject();
+        cJSON_AddStringToObject(m.store, "error", "e");
+        m.image = cJSON_Parse(
+            "{\"verify\":{\"require_value_field\":\"stats\","
+            "\"require_evidence_contains\":[\"must\"]}}");
+        (void)uem_prim_apply(&m, "verify_result", err, sizeof err);
+        cJSON_DeleteItemFromObjectCaseSensitive(m.store, "error");
+        snprintf(m.state, sizeof m.state, "formed");
+        (void)uem_prim_apply(&m, "verify_result", err, sizeof err); /* missing stats */
+        free_soft_machine(&m);
+    }
 
     if (fails) {
         fprintf(stderr, "core_coverage_harness: %d failures\n", fails);
