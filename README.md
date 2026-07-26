@@ -32,8 +32,9 @@ result = outer(middle(inner(thing)))
 > **pass**, including full invoice Python/C differential (basic, empty,
 > half-cent, reject paths). L13 multi-dimension coverage is **not closed**:
 > **C lines 100% (1567/1567), C functions 100% (76/76), C branches incomplete
-> ~76.86% (1096/1426).** Branch ledger: `c/tests/BRANCH_LEDGER.md`
-> (`missing_arcs` 313, `unclassified_arcs` 0 — classified ≠ resolved).
+> ~78.19% (1115/1426).** Branch ledger: `c/tests/BRANCH_LEDGER.md`
+> (`missing_arcs_measured` = `missing_arcs_in_ledger` + `unmapped_arcs`;
+> currently 311 = 311 + 0; `unclassified_arcs` 0 — classified ≠ closed).
 > Zero-total C coverage is failure, not 100%. See [GAUNTLET.md](GAUNTLET.md)
 > and [coverage.json](coverage.json).
 >
@@ -183,12 +184,15 @@ Emits `coverage.json` and `GAUNTLET.md`.
 
 **Current result: FAIL.** Behavioral dimensions and Python code coverage
 pass (invoice Py/C differential restored). **C lines and functions pass**;
-**C branches do not** (1096/1426). Allocator fault injection is in place
-(`uem_allocator` / `fail_after`); branch work is tracked in
-`c/tests/BRANCH_LEDGER.md` (`missing_arcs` vs `unclassified_arcs`). Zero
-denominators fail the gate—they never count as 100%. See
-[GAUNTLET.md](GAUNTLET.md) and [coverage.json](coverage.json). If a local
-run differs, trust the files that `run_l13.sh` just wrote.
+**C branches do not** (1115/1426 under arc enumeration). Allocator fault
+injection is in place (`uem_allocator` / `fail_after`); branch work is
+tracked in `c/tests/BRANCH_LEDGER.md` with reconciliation fields
+(`missing_arcs_measured`, `unmapped_arcs`, `unclassified_arcs`,
+`resolved_arcs` on stable `arc_id`). L13 branch eligibility requires all
+three missing/unmapped/unclassified counters at zero. Zero denominators
+fail the gate—they never count as 100%. See [GAUNTLET.md](GAUNTLET.md)
+and [coverage.json](coverage.json). If a local run differs, trust the
+files that `run_l13.sh` just wrote.
 
 ### Standard Ten (governing contract)
 

@@ -6,7 +6,7 @@ Each dimension is scored separately. Never combined into one average.
 
 | Dimension | Required | Actual | OK |
 | --- | ---: | ---: | --- |
-| `c_branches` | 100.0 | 76.86 (1096/1426) | NO |
+| `c_branches` | 100.0 | 78.19 (1115/1426) | NO |
 | `c_functions` | 100.0 | 100.00 (76/76) | yes |
 | `c_lines` | 100.0 | 100.00 (1567/1567) | yes |
 | `error_ticket_paths` | 100.0 | 100.00 | yes |
@@ -33,3 +33,19 @@ Each dimension is scored separately. Never combined into one average.
 - **Zero denominator is failure** (never report 100% of 0)
 
 Generated in 97.1s.
+
+## C branch ledger
+
+- Artifact: `c/tests/BRANCH_LEDGER.md` (+ `branch_ledger.json`, `branch_ledger_history.json`)
+- Metric: **gcov arc enumeration** (same as L13 `c_branches`; not rounded summary %)
+- `branches_hit` / `branches_total`: **1115 / 1426**
+- `missing_arcs_measured`: **311**
+- `missing_arcs_in_ledger`: **311**
+- `unmapped_arcs`: **0**
+- `unclassified_arcs`: **0**
+- `resolved_arcs` (open→taken this run): **0**
+- Equation: `measured == in_ledger + unmapped` → **True**
+- L13 branch eligible: **False** (requires measured=unmapped=unclassified=0)
+- Identity: `{file}:{line}:b{branch_id}` — progress is open→resolved, not `resolved_arcs: 0` rewrite
+- Generator: `python3 c/scripts/branch_ledger.py` (after coverage run)
+

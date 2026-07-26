@@ -1,21 +1,62 @@
 {
   "branch_ledger": {
-    "by_class": {
-      "reachable": 300,
-      "short-circuit": 13
-    },
-    "missing_arcs": 313,
-    "note": "classified\u2260resolved; L13 branch FAIL until missing_arcs==0",
+    "branches_hit": 1115,
+    "branches_total": 1426,
+    "equation_holds": true,
+    "identity_scheme": "{file}:{line}:b{branch_id}",
+    "l13_branch_eligible": false,
+    "missing_arcs_in_ledger": 311,
+    "missing_arcs_measured": 311,
     "path": "c/tests/BRANCH_LEDGER.md",
     "resolved_arcs": 0,
-    "unclassified_arcs": 0
+    "unclassified_arcs": 0,
+    "unmapped_arcs": 0
   },
   "dimensions": {
     "c_branches": {
-      "actual": 76.85834502103786,
+      "actual": 78.19074333800842,
       "ok": false,
       "raw": {
-        "hit": 1096,
+        "files": [
+          {
+            "branches_hit": 42,
+            "branches_total": 42,
+            "file": "alloc.c",
+            "missing_arcs": 0
+          },
+          {
+            "branches_hit": 131,
+            "branches_total": 176,
+            "file": "decimal.c",
+            "missing_arcs": 45
+          },
+          {
+            "branches_hit": 233,
+            "branches_total": 300,
+            "file": "decode.c",
+            "missing_arcs": 67
+          },
+          {
+            "branches_hit": 289,
+            "branches_total": 354,
+            "file": "expr.c",
+            "missing_arcs": 65
+          },
+          {
+            "branches_hit": 224,
+            "branches_total": 292,
+            "file": "machine.c",
+            "missing_arcs": 68
+          },
+          {
+            "branches_hit": 196,
+            "branches_total": 262,
+            "file": "primitives.c",
+            "missing_arcs": 66
+          }
+        ],
+        "hit": 1115,
+        "metric": "gcov-arc-enumeration",
         "total": 1426
       },
       "required": 100.0
@@ -434,6 +475,7 @@
   },
   "duration_s": 97.11733913421631,
   "l13": true,
+  "ok": false,
   "rules": {
     "no_pragma_no_cover": true,
     "tests_do_not_inflate_production": true,

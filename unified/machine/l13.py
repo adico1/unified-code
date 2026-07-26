@@ -147,6 +147,44 @@ def _gcno_for_core(stem: str) -> Path | None:
     return None
 
 
+def _run_branch_ledger() -> dict:
+    """Regenerate c/tests/branch_ledger.json from current gcov arcs.
+
+    Returns the reconciliation summary required for L13 branch eligibility:
+    missing_arcs_measured / missing_arcs_in_ledger / unmapped_arcs /
+    unclassified_arcs / resolved_arcs. Uses the same arc enumeration as
+    measure_c_coverage branch totals.
+    """
+    script = CROOT / "scripts" / "branch_ledger.py"
+    if not script.is_file():
+        return {
+            "error": "branch_ledger.py missing",
+            "l13_branch_eligible": False,
+        }
+    _run([sys.executable, str(script)], cwd=str(CROOT), timeout=120)
+    path = CROOT / "tests" / "branch_ledger.json"
+    if not path.is_file():
+        return {"error": "branch_ledger.json missing", "l13_branch_eligible": False}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        return {"error": str(exc), "l13_branch_eligible": False}
+    return {
+        "path": "c/tests/BRANCH_LEDGER.md",
+        "json": "c/tests/branch_ledger.json",
+        "branches_hit": data.get("branches_hit"),
+        "branches_total": data.get("branches_total"),
+        "missing_arcs_measured": data.get("missing_arcs_measured"),
+        "missing_arcs_in_ledger": data.get("missing_arcs_in_ledger"),
+        "unmapped_arcs": data.get("unmapped_arcs"),
+        "unclassified_arcs": data.get("unclassified_arcs"),
+        "resolved_arcs": data.get("resolved_arcs"),
+        "equation_holds": (data.get("reconciliation") or {}).get("holds"),
+        "l13_branch_eligible": data.get("l13_branch_eligible"),
+        "identity_scheme": data.get("identity_scheme"),
+    }
+
+
 def measure_c_coverage() -> dict:
     """Line/function/branch coverage for c/core only (not third_party).
 
@@ -300,18 +338,47 @@ def measure_c_coverage() -> dict:
         else:
             file_raw["lines_parse"] = "missing"
 
-        # Branch metric: taken at least once (L13 "C branches")
-        m = re.search(r"Taken at least once:([\d.]+)% of (\d+)", text)
-        if m:
-            pct, n = float(m.group(1)), int(m.group(2))
-            bh = int(round(pct / 100.0 * n))
-            br_total += n
+        # Branch metric: enumerate gcov arcs (same source as branch ledger).
+        # Do NOT use rounded "Taken at least once:X% of N" — that can disagree
+        # with arc enumeration by O(files) and breaks ledger reconciliation.
+        gcov_path = CROOT / f"{cfile.name}.gcov"
+        bh = bt = 0
+        if gcov_path.is_file():
+            gtext_br = gcov_path.read_text(encoding="utf-8", errors="replace")
+            for ln in gtext_br.splitlines():
+                bm = re.match(
+                    r"^\s*branch\s+(\d+)\s+(taken\s+(\d+)%|never executed)",
+                    ln,
+                    re.I,
+                )
+                if not bm:
+                    continue
+                bt += 1
+                never = "never" in bm.group(2).lower()
+                pct_b = 0 if never else int(bm.group(3) or 0)
+                if (not never) and pct_b > 0:
+                    bh += 1
+        if bt > 0:
+            br_total += bt
             br_hit += bh
             file_raw["branches_hit"] = bh
-            file_raw["branches_total"] = n
-            file_raw["branches_pct"] = pct
+            file_raw["branches_total"] = bt
+            file_raw["branches_pct"] = (100.0 * bh / bt) if bt else 0.0
+            file_raw["branch_metric"] = "gcov-arc-enumeration"
         else:
-            file_raw["branches_parse"] = "missing"
+            # Fallback to summary only if .gcov has no branch lines
+            m = re.search(r"Taken at least once:([\d.]+)% of (\d+)", text)
+            if m:
+                pct, n = float(m.group(1)), int(m.group(2))
+                bh = int(round(pct / 100.0 * n))
+                br_total += n
+                br_hit += bh
+                file_raw["branches_hit"] = bh
+                file_raw["branches_total"] = n
+                file_raw["branches_pct"] = pct
+                file_raw["branch_metric"] = "gcov-summary-rounded-fallback"
+            else:
+                file_raw["branches_parse"] = "missing"
 
         # Functions: parse generated .gcov (Apple puts "function X called N" there)
         gcov_path = CROOT / f"{cfile.name}.gcov"
@@ -481,6 +548,8 @@ def run_l13_gauntlet(thing=None):
             "raw": {
                 "hit": c_raw.get("branches_hit", 0),
                 "total": c_br_total,
+                "files": c_raw.get("files"),
+                "metric": "gcov-arc-enumeration",
             },
         },
         "fuzz_100k": fuzz,
@@ -488,16 +557,30 @@ def run_l13_gauntlet(thing=None):
     for k, v in catalogs.items():
         dimensions[k] = v
 
+    # Regenerate branch ledger from the same gcov arcs L13 just measured.
+    branch_ledger_meta = _run_branch_ledger()
+    # Branch gate also requires ledger reconciliation (no unmapped / unclassified).
+    if branch_ledger_meta:
+        bl_ok = bool(branch_ledger_meta.get("l13_branch_eligible"))
+        # c_branches dimension remains coverage-only; eligibility published separately
+        dimensions["c_branches"]["ledger"] = branch_ledger_meta
+        if c_br_ok and not bl_ok:
+            # Measured 100% must still match ledger eligibility
+            dimensions["c_branches"]["ok"] = False
+            dimensions["c_branches"]["ledger_block"] = True
+
     all_ok = all(d.get("ok") for d in dimensions.values())
     report = {
         "l13": True,
         "verdict": "pass" if all_ok else "fail",
         "dimensions": dimensions,
+        "branch_ledger": branch_ledger_meta,
         "duration_s": time.time() - t0,
         "rules": {
             "no_pragma_no_cover": True,
             "vendored_excluded_from_primary": True,
             "tests_do_not_inflate_production": True,
+            "branch_ledger_must_reconcile": True,
         },
     }
     # Emit files
