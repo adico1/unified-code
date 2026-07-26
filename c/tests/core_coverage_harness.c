@@ -1804,6 +1804,237 @@ static void assert_decode_header_matrix(void) {
     }
 }
 
+/* Batch 3 — instruction framing rejections (test-only).
+ * Byte-level instruction decode only; no image/STOP/primitive semantics. */
+static void expect_framing_reject(const uint8_t *buf, size_t len,
+                                  const char *want_msg, const char *label) {
+    uem_machine *m;
+    char err[64];
+    char sentinel[8];
+    uem_status st;
+    int pass;
+    size_t a0;
+
+    for (pass = 0; pass < 3; pass++) {
+        m = (uem_machine *)0x1;
+        memset(err, 0xFF, sizeof err);
+        a0 = alloc_attempts();
+        st = uem_decode_verify(buf, len, &m, err, sizeof err);
+        expect(st == UEM_ERR_DECODE, label);
+        expect(m == NULL, label);
+        expect(strcmp(err, want_msg) == 0, label);
+        expect(alloc_attempts() >= a0, label);
+    }
+
+    m = (uem_machine *)0x1;
+    st = uem_decode_verify(buf, len, &m, NULL, 64);
+    expect(st == UEM_ERR_DECODE, label);
+    expect(m == NULL, label);
+
+    m = (uem_machine *)0x1;
+    memset(sentinel, 0x5A, sizeof sentinel);
+    st = uem_decode_verify(buf, len, &m, sentinel, 0);
+    expect(st == UEM_ERR_DECODE, label);
+    expect(m == NULL, label);
+    expect((unsigned char)sentinel[0] == 0x5A &&
+           (unsigned char)sentinel[7] == 0x5A, label);
+}
+
+/* Write big-endian u16/u32 into buffer. */
+static void be_u16(uint8_t *p, uint16_t v) {
+    p[0] = (uint8_t)(v >> 8);
+    p[1] = (uint8_t)v;
+}
+static void be_u32(uint8_t *p, uint32_t v) {
+    p[0] = (uint8_t)(v >> 24);
+    p[1] = (uint8_t)(v >> 16);
+    p[2] = (uint8_t)(v >> 8);
+    p[3] = (uint8_t)v;
+}
+
+/* Header: magic + ver1 + flags0 + count (12 bytes). */
+static void write_header(uint8_t *p, uint32_t count) {
+    p[0] = 'U'; p[1] = 'E'; p[2] = 'M'; p[3] = 0x16;
+    be_u16(p + 4, 1);
+    be_u16(p + 6, 0);
+    be_u32(p + 8, count);
+}
+
+static void assert_decode_instruction_framing(void) {
+    uint8_t buf[64];
+    size_t n;
+    uem_machine *m;
+    char err[64];
+    uem_status st;
+
+    uem_allocator_reset(1);
+
+    /* --- Truncation boundary table (field incomplete) --- */
+
+    /* 1. Truncated before opcode (header only, count=1). field=opcode */
+    write_header(buf, 1);
+    n = 12;
+    expect_framing_reject(buf, n, "truncated", "trunc before opcode");
+
+    /* 2. Truncated after opcode, missing tag. field=tag */
+    write_header(buf, 1);
+    buf[12] = 0x10; /* STOP */
+    n = 13;
+    expect_framing_reject(buf, n, "truncated", "trunc after opcode missing tag");
+
+    /* 3. Tag=1 but truncated length field (0 of 4). field=length */
+    write_header(buf, 1);
+    buf[12] = 0x01; /* LOAD */
+    buf[13] = 0x01; /* string tag */
+    n = 14;
+    expect_framing_reject(buf, n, "truncated", "trunc missing operand length");
+
+    /* 4. Tag=1 length field partial (2 of 4 bytes). field=length */
+    write_header(buf, 1);
+    buf[12] = 0x01;
+    buf[13] = 0x01;
+    buf[14] = 0; buf[15] = 0; /* partial L */
+    n = 16;
+    expect_framing_reject(buf, n, "truncated", "trunc partial operand length");
+
+    /* 5. Length complete L=5 but payload only 2 bytes. field=payload */
+    write_header(buf, 1);
+    buf[12] = 0x01;
+    buf[13] = 0x01;
+    be_u32(buf + 14, 5);
+    buf[18] = 'a'; buf[19] = 'b'; /* only 2 of 5 */
+    n = 20;
+    expect_framing_reject(buf, n, "truncated", "trunc payload short of L");
+
+    /* 6. L exceeds remaining after length (L=100, no payload, no image). field=payload */
+    write_header(buf, 1);
+    buf[12] = 0x01;
+    buf[13] = 0x01;
+    be_u32(buf + 14, 100);
+    n = 18; /* ends after L */
+    expect_framing_reject(buf, n, "truncated", "trunc L exceeds remaining");
+
+    /* 7. Second instruction missing entirely (count=2, only one STOP none). field=opcode#2 */
+    write_header(buf, 2);
+    buf[12] = 0x10;
+    buf[13] = 0x00;
+    n = 14;
+    expect_framing_reject(buf, n, "truncated", "trunc missing second opcode");
+
+    /* 8. After instructions, truncated image length field. field=img_len */
+    write_header(buf, 1);
+    buf[12] = 0x10;
+    buf[13] = 0x00;
+    n = 14; /* no img_len */
+    expect_framing_reject(buf, n, "truncated", "trunc missing image length");
+
+    /* 9. img_len says 5 but only 1 byte follows. field=image payload */
+    write_header(buf, 1);
+    buf[12] = 0x10;
+    buf[13] = 0x00;
+    be_u32(buf + 14, 5);
+    buf[18] = '{';
+    n = 19;
+    expect_framing_reject(buf, n, "truncated", "trunc image payload short");
+
+    /* --- Unknown opcode --- */
+    write_header(buf, 1);
+    buf[12] = 0x11; /* outside 0x01..0x10 */
+    buf[13] = 0x00;
+    be_u32(buf + 14, 2);
+    buf[18] = '{'; buf[19] = '}';
+    n = 20;
+    expect_framing_reject(buf, n, "unknown-opcode", "unknown opcode 0x11");
+
+    write_header(buf, 1);
+    buf[12] = 0x00; /* zero opcode */
+    buf[13] = 0x00;
+    be_u32(buf + 14, 2);
+    buf[18] = '{'; buf[19] = '}';
+    n = 20;
+    expect_framing_reject(buf, n, "unknown-opcode", "unknown opcode 0x00");
+
+    /* --- Unknown operand tag --- */
+    write_header(buf, 1);
+    buf[12] = 0x10;
+    buf[13] = 0x02; /* only 0 and 1 valid */
+    be_u32(buf + 14, 2);
+    buf[18] = '{'; buf[19] = '}';
+    n = 20;
+    expect_framing_reject(buf, n, "bad-tag", "unknown tag 0x02");
+
+    write_header(buf, 1);
+    buf[12] = 0x01;
+    buf[13] = 0x7f;
+    be_u32(buf + 14, 2);
+    buf[18] = '{'; buf[19] = '}';
+    n = 20;
+    expect_framing_reject(buf, n, "bad-tag", "unknown tag 0x7f");
+
+    /* --- Invalid UTF-8 operand --- */
+    write_header(buf, 1);
+    buf[12] = 0x01; /* LOAD */
+    buf[13] = 0x01; /* string */
+    be_u32(buf + 14, 1);
+    buf[18] = 0xff; /* invalid UTF-8 */
+    be_u32(buf + 19, 2);
+    buf[23] = '{'; buf[24] = '}';
+    n = 25;
+    expect_framing_reject(buf, n, "invalid-utf8", "invalid utf8 operand");
+
+    /* overlong 2-byte sequence */
+    write_header(buf, 1);
+    buf[12] = 0x01;
+    buf[13] = 0x01;
+    be_u32(buf + 14, 2);
+    buf[18] = 0xc0; buf[19] = 0x80; /* overlong */
+    be_u32(buf + 20, 2);
+    buf[24] = '{'; buf[25] = '}';
+    n = 26;
+    expect_framing_reject(buf, n, "invalid-utf8", "overlong utf8 operand");
+
+    /* --- Trailing bytes after declared stream --- */
+    /* Complete: STOP none + image {} then extra 0x00 */
+    write_header(buf, 1);
+    buf[12] = 0x10;
+    buf[13] = 0x00;
+    be_u32(buf + 14, 2);
+    buf[18] = '{'; buf[19] = '}';
+    buf[20] = 0x00; /* trailing */
+    n = 21;
+    expect_framing_reject(buf, n, "trailing-bytes", "trailing byte after image");
+
+    /* Complete program with trailing two bytes */
+    write_header(buf, 1);
+    buf[12] = 0x10;
+    buf[13] = 0x00;
+    be_u32(buf + 14, 2);
+    buf[18] = '{'; buf[19] = '}';
+    buf[20] = 'X'; buf[21] = 'Y';
+    n = 22;
+    expect_framing_reject(buf, n, "trailing-bytes", "trailing XY after image");
+
+    /* Recovery: valid framing must still decode */
+    write_header(buf, 1);
+    buf[12] = 0x10;
+    buf[13] = 0x00;
+    be_u32(buf + 14, 2);
+    buf[18] = '{'; buf[19] = '}';
+    n = 20;
+    m = NULL;
+    memset(err, 0, sizeof err);
+    uem_allocator_reset(1);
+    st = uem_decode_verify(buf, n, &m, err, sizeof err);
+    expect(st == UEM_OK && m != NULL, "framing recovery ok");
+    if (m) uem_free(m);
+
+    /* Second recovery identical → deterministic success */
+    m = NULL;
+    st = uem_decode_verify(buf, n, &m, err, sizeof err);
+    expect(st == UEM_OK && m != NULL, "framing recovery deterministic");
+    if (m) uem_free(m);
+}
+
 int main(void) {
     fails = 0;
     test_decimal();
@@ -1811,6 +2042,7 @@ int main(void) {
     test_decode_rejects();
     assert_decode_public_contract();
     assert_decode_header_matrix();
+    assert_decode_instruction_framing();
     test_host_errors();
     test_primitives_direct();
     test_host_json_limits();
