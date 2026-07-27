@@ -5,11 +5,12 @@ from __future__ import annotations
 import ast
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-UC = ROOT / ".venv" / "bin" / "uc"
+UC = (sys.executable, "-m", "unified.generator.cli")
 SEED = ROOT / "seed" / "declarations" / "task_ledger.json"
 SECOND_SEED = ROOT / "seed" / "declarations" / "score_board.json"
 
@@ -18,7 +19,7 @@ def test_public_unfold_contract(tmp_path):
     output = tmp_path / "uc-task-ledger"
     result = subprocess.run(
         [
-            str(UC),
+            *UC,
             "unfold",
             "seed/declarations/task_ledger.json",
             "--output",
@@ -55,7 +56,7 @@ def test_second_stateful_application_uses_independent_vocabulary(tmp_path):
     output = tmp_path / "uc-score-board"
     result = subprocess.run(
         [
-            str(UC),
+            *UC,
             "unfold",
             "seed/declarations/score_board.json",
             "--output",
@@ -92,7 +93,7 @@ def test_second_stateful_application_uses_independent_vocabulary(tmp_path):
 
 def test_generic_generator_has_no_application_vocabulary():
     result = subprocess.run(
-        [str(ROOT / ".venv" / "bin" / "python"), "scripts/check_stateful_overfit.py"],
+        [sys.executable, "scripts/check_stateful_overfit.py"],
         cwd=ROOT,
         capture_output=True,
         text=True,
@@ -107,7 +108,7 @@ def test_anti_overfitting_scan_detects_injected_vocabulary(tmp_path):
     (source / "generic.py").write_text('DOMAIN = "task-not-open"\n', encoding="utf-8")
     result = subprocess.run(
         [
-            str(ROOT / ".venv" / "bin" / "python"),
+            sys.executable,
             "scripts/check_stateful_overfit.py",
             str(source),
         ],
@@ -129,7 +130,7 @@ def test_atomic_refusal_preserves_installed_output(tmp_path):
     invalid_seed.write_text("{}\n", encoding="utf-8")
     result = subprocess.run(
         [
-            str(UC),
+            *UC,
             "unfold",
             str(invalid_seed),
             "--output",
