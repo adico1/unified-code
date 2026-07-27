@@ -172,6 +172,11 @@ reusable math library, calculator consuming that library, and deterministic
 browser/headless game from five seeds with one command. See
 [APPLICATION_ASSEMBLY.md](APPLICATION_ASSEMBLY.md).
 
+Qualified names can resolve through a pinned, content-addressed registry to
+one verified Thing v2 artifact without implicit version selection. The bounded
+resolution and artifact lifecycle are specified in
+[MANIFESTATION.md](MANIFESTATION.md).
+
 Exit code is nonzero until every criterion is green. Do not claim
 completeness while `contract_pass` is false. Writes `contract_status.json`
 / `contract_report.json` under the repo root when verify/report run.
