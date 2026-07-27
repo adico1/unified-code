@@ -12,14 +12,14 @@ uc unfold seed/declarations/task_ledger.json \
 ```
 
 This checkpoint proved the complete task-ledger product pipeline: one JSON seed
-configures a prebuilt persistent-resource profile, generates its runnable
-application and tests, verifies Python/C canonical equality and deterministic
-rebuild hashes, and installs only after every requested gate passes.
+configured a prebuilt persistent-resource profile, generated its runnable
+application and tests, verified deterministic rebuild hashes, and installed
+only after every requested gate passed.
 
-> At checkpoint `8933e8456b67375ec2b567c0107a64d9afc3c060`, one 158-line JSON seed deterministically unfolded into a 1,811-line
-> persistent application, with zero handwritten application code, zero
-> domain/composition control-flow nodes, identical Python/C results, and
-> complete L1–L13 verification.
+The later Milestone 1.1 audit found that this checkpoint's Python/C result check
+transported Python's completed payload through a literal UEM program. It did not
+prove independent cross-host application behavior. The generation and product
+proof remained valid; the equality claim was superseded by Milestone 1.1.
 
 ## Milestone 1.1 — Generic seed-defined stateful behavior
 
@@ -44,6 +44,11 @@ uc unfold seed/declarations/score_board.json \
 ```
 
 Milestone 1.1 does not depend on or widen Milestone 2.
+
+Both hosts now execute one generic UEM transition program derived from each
+seed. Every step compares resulting state, result, evidence, errors, and ticket
+status. Declared duplicate/missing-resource errors are exercised inside the
+persisted sequence, followed by successful recovery commands and restart.
 
 ## Milestone 2 — Root-seed fixed-point bootstrap
 

@@ -6,9 +6,9 @@ Each dimension is scored separately. Never combined into one average.
 
 | Dimension | Required | Actual | OK |
 | --- | ---: | ---: | --- |
-| `c_branches` | 100.0 | 100.00 (1270/1270) | yes |
-| `c_functions` | 100.0 | 100.00 (76/76) | yes |
-| `c_lines` | 100.0 | 100.00 (1678/1678) | yes |
+| `c_branches` | 100.0 | 100.00 (1480/1480) | yes |
+| `c_functions` | 100.0 | 100.00 (88/88) | yes |
+| `c_lines` | 100.0 | 100.00 (1920/1920) | yes |
 | `error_ticket_paths` | 100.0 | 100.00 | yes |
 | `event_routes` | 100.0 | 100.00 | yes |
 | `fuzz_100k` | 100.0 | 100.00 | yes |
@@ -32,4 +32,4 @@ Each dimension is scored separately. Never combined into one average.
 - Assertions verify state, output, evidence, events, effects
 - **Zero denominator is failure** (never report 100% of 0)
 
-Generated in 54.3s.
+Generated in 82.2s.

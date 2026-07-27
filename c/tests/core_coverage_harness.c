@@ -3810,6 +3810,274 @@ static void assert_remaining_l13_paths(void) {
 }
 
 
+static void run_stateful_soft(const char *image_json, const char *host_json) {
+    uem_machine m;
+    memset(&m, 0, sizeof m);
+    snprintf(m.state, sizeof m.state, "formed");
+    m.store = cJSON_CreateObject();
+    m.image = cJSON_Parse(image_json);
+    m.host = host_json ? cJSON_Parse(host_json) : NULL;
+    (void)uem_stateful_transition(&m);
+    free_soft_machine(&m);
+}
+
+static void test_stateful_matrix(void) {
+    const char *complex_image =
+        "{\"stateful\":{\"commands\":{\"c\":{"
+        "\"arguments\":[],"
+        "\"guards\":[{\"kind\":\"require\",\"path\":[\"rows\"],\"where\":[],\"as\":\"sel\"}],"
+        "\"actions\":["
+        "{\"kind\":\"set\",\"target\":\"sel\",\"values\":{\"v\":{\"$literal\":2}}},"
+        "{\"kind\":\"increment\",\"target\":\"sel\",\"values\":{\"new\":{\"$literal\":3}}},"
+        "{\"kind\":\"other\"}],"
+        "\"result\":{"
+        "\"state\":{\"$state\":[\"rows\"]},"
+        "\"selected\":{\"$selected\":{\"name\":\"sel\",\"field\":\"missing\"}},"
+        "\"missing_selected\":{\"$selected\":{\"name\":\"other\",\"field\":\"v\"}},"
+        "\"bad_field\":{\"$selected\":{\"name\":\"sel\",\"field\":1}},"
+        "\"bad_selected\":{\"$selected\":{\"name\":1,\"field\":1}},"
+        "\"argument\":{\"$arg\":\"missing\"},"
+        "\"project\":{\"$project\":{\"path\":[\"rows\"],\"fields\":[\"v\",\"missing\",1]}},"
+        "\"array\":[{\"$literal\":1},2],\"scalar\":3"
+        "}}}}}";
+    run_stateful_soft(complex_image, "{\"resource_state\":{\"rows\":[{\"v\":1}]},\"command\":\"c\",\"arguments\":[]}");
+
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],\"guards\":[],\"actions\":[],"
+        "\"result\":{\"$state\":[\"missing\"]}}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],\"guards\":[],\"actions\":[],"
+        "\"result\":{\"$project\":{\"path\":[\"missing\"],\"fields\":null}}}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],\"guards\":[],\"actions\":[],"
+        "\"result\":{\"$project\":{\"path\":[\"rows\"],\"fields\":null}}}}}}",
+        "{\"resource_state\":{\"rows\":[{}]},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],\"guards\":[],\"actions\":[],"
+        "\"result\":{\"$project\":{\"path\":[\"rows\"]}}}}}}",
+        "{\"resource_state\":{\"rows\":[{}]},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],"
+        "\"guards\":[{\"kind\":\"unique\",\"path\":null,\"where\":null}],"
+        "\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],\"guards\":[],\"actions\":[],"
+        "\"result\":{\"$project\":{\"path\":[1],\"fields\":[]}}}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],\"guards\":[],\"actions\":[],"
+        "\"result\":{\"$state\":[\"x\",\"y\"]}}}}}",
+        "{\"resource_state\":{\"x\":1},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],"
+        "\"guards\":[{\"kind\":\"other\",\"path\":[\"rows\"],\"where\":[]}],"
+        "\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{\"rows\":[]},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],"
+        "\"guards\":[{\"kind\":1,\"path\":[\"rows\"],\"where\":[]}],"
+        "\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{\"rows\":[]},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],"
+        "\"guards\":[{\"kind\":\"unique\",\"path\":[\"rows\"],\"where\":null}],"
+        "\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{\"rows\":[{}]},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],"
+        "\"guards\":[{\"kind\":\"unique\",\"path\":[\"rows\"]}],"
+        "\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{\"rows\":[{}]},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],"
+        "\"guards\":[{\"kind\":\"unique\",\"path\":[\"rows\"],"
+        "\"where\":[{\"field\":1,\"equals\":{\"$literal\":1}}]}],"
+        "\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{\"rows\":[{}]},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],"
+        "\"guards\":[{\"kind\":\"unique\",\"path\":[\"rows\"],"
+        "\"where\":[{\"field\":\"missing\",\"equals\":{\"$literal\":1}}]}],"
+        "\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{\"rows\":[{}]},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],"
+        "\"guards\":[{\"kind\":\"require\",\"path\":[\"rows\"],\"where\":[],\"as\":1}],"
+        "\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{\"rows\":[{}]},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],\"guards\":[],"
+        "\"actions\":[{\"kind\":\"set\",\"target\":1,\"values\":null}],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],"
+        "\"guards\":[{\"kind\":\"require\",\"path\":[\"rows\"],\"where\":[],\"as\":\"x\"}],"
+        "\"actions\":[{\"kind\":\"set\",\"target\":\"x\",\"values\":null}],\"result\":null}}}}",
+        "{\"resource_state\":{\"rows\":[{}]},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],"
+        "\"guards\":[{\"kind\":\"require\",\"path\":[\"rows\"],\"where\":[],\"as\":\"x\"}],"
+        "\"actions\":[{\"kind\":\"set\",\"target\":\"x\"}],\"result\":null}}}}",
+        "{\"resource_state\":{\"rows\":[{}]},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],\"guards\":[],"
+        "\"actions\":[{\"kind\":1}],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],\"guards\":[],"
+        "\"actions\":[{\"kind\":\"other\"}],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],"
+        "\"guards\":[{\"kind\":\"require\",\"path\":[\"rows\"],\"where\":[],\"as\":\"x\"}],"
+        "\"actions\":[{\"kind\":\"increment\",\"target\":\"x\","
+        "\"values\":{\"v\":{\"$literal\":\"bad\"}}}],\"result\":null}}}}",
+        "{\"resource_state\":{\"rows\":[{}]},\"command\":\"c\",\"arguments\":[]}"
+    );
+
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":{\"$arg\":\"x\"}}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"ok\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[1]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"other\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"x\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"999999999999999999999999999999999\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"1x\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"x\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[1]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\",\"non_empty\":true}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"1\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"non_empty\":true}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"   \"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"minimum\":2}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"a\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\",\"minimum\":\"x\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"3\"]}"
+    );
+
+    run_stateful_soft("{}", NULL);
+    run_stateful_soft("{\"stateful\":{\"commands\":{}}}", "{\"command\":1,\"arguments\":null}");
+    run_stateful_soft("{\"stateful\":{\"commands\":1}}", "{\"command\":\"c\",\"arguments\":[]}");
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[],\"guards\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":null}"
+    );
+
+    {
+        uem_machine m;
+        cJSON *config;
+        cJSON *commands;
+        cJSON *command;
+        cJSON *guards;
+        int index;
+        memset(&m, 0, sizeof m);
+        snprintf(m.state, sizeof m.state, "formed");
+        m.store = cJSON_CreateObject();
+        m.image = cJSON_CreateObject();
+        config = cJSON_CreateObject();
+        commands = cJSON_CreateObject();
+        command = cJSON_CreateObject();
+        guards = cJSON_CreateArray();
+        cJSON_AddItemToObject(m.image, "stateful", config);
+        cJSON_AddItemToObject(config, "commands", commands);
+        cJSON_AddItemToObject(commands, "c", command);
+        cJSON_AddItemToObject(command, "arguments", cJSON_CreateArray());
+        cJSON_AddItemToObject(command, "guards", guards);
+        cJSON_AddItemToObject(command, "actions", cJSON_CreateArray());
+        cJSON_AddNullToObject(command, "result");
+        for (index = 0; index < 65; index++) {
+            cJSON *guard = cJSON_CreateObject();
+            cJSON_AddStringToObject(guard, "kind", "require");
+            cJSON_AddItemToObject(guard, "path", cJSON_Parse("[\"rows\"]"));
+            cJSON_AddItemToObject(guard, "where", cJSON_CreateArray());
+            cJSON_AddStringToObject(guard, "as", "x");
+            cJSON_AddItemToArray(guards, guard);
+        }
+        m.host = cJSON_Parse(
+            "{\"resource_state\":{\"rows\":[{}]},\"command\":\"c\",\"arguments\":[]}"
+        );
+        (void)uem_stateful_transition(&m);
+        free_soft_machine(&m);
+    }
+}
+
+
 int main(void) {
     fails = 0;
     test_decimal();
@@ -3827,6 +4095,7 @@ int main(void) {
     assert_primitives_eval_bindings();
     assert_oom_paths();
     fuzz_decode_expr();
+    test_stateful_matrix();
 
     /* known artifact paths */
     exercise_file("../artifacts/uem/text_stats_v2/program.uem", "{\"text\":\"Hello World\\nA a\"}");

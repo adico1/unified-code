@@ -12,7 +12,7 @@ import re
 from typing import Any
 
 CANONICAL_VERSION = 1
-REGISTRY_VERSION = 1
+REGISTRY_VERSION = 2
 UNICODE_PROFILE = "UEM-ASCII-1"  # frozen: ASCII A-Z→a-z only; non-ASCII identity
 
 # Evidence marks retained for cross-host equivalence (ordered).

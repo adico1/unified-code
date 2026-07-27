@@ -252,23 +252,9 @@ def run_audit(thing=None):
         "files": files,
     }
 
-    generator_root = root / "unified" / "generator"
-    application_terms = (
-        "task",
-        "tasks",
-        "title",
-        "completed",
-        "invalid-title",
-        "duplicate-title",
-        "task-not-open",
-        "uc_task_ledger_state",
-    )
-    application_hits = []
-    for path in generator_root.rglob("*.py"):
-        text = path.read_text(encoding="utf-8").lower()
-        for token in application_terms:
-            if token in text:
-                application_hits.append((str(path.relative_to(root)), token))
+    from scripts.check_stateful_overfit import vocabulary_hits
+
+    application_hits = vocabulary_hits()
     generic_stateful_ok = (
         not application_hits
         and (root / "seed" / "declarations" / "task_ledger.json").is_file()
@@ -282,22 +268,24 @@ def run_audit(thing=None):
         "",
         "## Separate conformance verdicts",
         "",
-        "**Milestone 1 task-ledger profile conformance:** `pass`",
+        "**Milestone 1 historical task-ledger checkpoint:** `superseded`",
         "",
         "- Public command: `uc unfold seed/declarations/task_ledger.json "
         "--output /tmp/uc-task-ledger --verify --run`",
-        "- The command verifies generated stateful tests, restart persistence, "
-        "atomic install, deterministic application hashes, and Python/C equality.",
+        "- Its original Python/C claim measured canonical payload transport, not "
+        "independent application transitions. Milestone 1.1 corrects that proof.",
         "",
-        f"**Milestone 1.1 generic stateful conformance:** "
+        f"**Milestone 1.1 seed-defined stateful conformance:** "
         f"`{'pass' if generic_stateful_ok else 'fail'}`",
         "",
         "- Independent declarations: `seed/declarations/task_ledger.json` and "
         "`seed/declarations/score_board.json`",
         "- Application schema, commands, validation, transitions, results, errors, "
         "persistence identity, composition, and scenarios originate in JSON.",
+        "- Python and C independently execute the same seed-defined transition "
+        "program over the same pre-state, command, and raw arguments.",
         "- `scripts/check_stateful_overfit.py` rejects application vocabulary in "
-        "generic generation.",
+        "generic generation and UEM runtime source.",
         f"- Static application-vocabulary leaks: `{len(application_hits)}`",
         "",
         f"**Milestone 2 self-hosting conformance:** `{verdict}` "

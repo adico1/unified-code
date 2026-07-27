@@ -54,10 +54,37 @@
             }
           },
           {
+            "argv": ["register", "Ada"],
+            "exit": 1,
+            "expect": {
+              "error": "duplicate-player",
+              "state": "invalid"
+            }
+          },
+          {
+            "argv": ["standings"],
+            "expect": {
+              "players": [
+                {
+                  "name": "Ada",
+                  "points": 0
+                }
+              ]
+            }
+          },
+          {
             "argv": ["award", "Ada", "3"],
             "expect": {
               "name": "Ada",
               "points": 3
+            }
+          },
+          {
+            "argv": ["award", "Grace", "1"],
+            "exit": 1,
+            "expect": {
+              "error": "unknown-player",
+              "state": "invalid"
             }
           },
           {

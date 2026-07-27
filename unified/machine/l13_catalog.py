@@ -18,6 +18,7 @@ OPCODES = (
 PRIMITIVES = (
     "identity", "letter", "mark_inward", "require_source", "accept_outward",
     "eval_expression", "merge_result", "verify_result", "present_json", "mark_part",
+    "state_transition",
 )
 
 # Spec clauses traced to tests (requirement id → test id)

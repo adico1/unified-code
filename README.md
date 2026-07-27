@@ -128,8 +128,11 @@ uc unfold seed/declarations/score_board.json \
 
 Both applications declare their schema, commands, arguments, validation,
 transitions, results, errors, persistence identity, composition, and acceptance
-scenarios in JSON. `scripts/check_stateful_overfit.py` rejects application
-vocabulary in generic generation.
+scenarios in JSON. Python and C independently execute the same seed-defined
+transition program for every sequential acceptance and rejection step, including
+post-state, result, error, ticket, and evidence equality.
+`scripts/check_stateful_overfit.py` derives application vocabulary from every
+proof seed and rejects it in generic generator and UEM runtime source.
 
 Full repository self-hosting is tracked separately as “Milestone 2 — Root-seed
 fixed-point bootstrap” in `ROADMAP.md`; it does not block this application

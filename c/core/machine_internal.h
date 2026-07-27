@@ -57,6 +57,7 @@ struct uem_machine {
 int uem_ev_append(uem_machine *m, const char *mark);
 int uem_set_state(uem_machine *m, const char *st);
 int uem_prim_apply(uem_machine *m, const char *name, char *err, size_t errlen);
+int uem_stateful_transition(uem_machine *m);
 int uem_expr_eval(uem_machine *m, cJSON *node, cJSON *root, cJSON *bindings, cJSON **out,
                   char *err, size_t errlen, cJSON **err_path);
 void uem_ticket_construct(uem_machine *m);

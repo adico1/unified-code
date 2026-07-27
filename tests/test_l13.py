@@ -174,7 +174,7 @@ def test_l13_catalog_complete():
     from unified.machine.l13_catalog import OPCODES, PRIMITIVES, SPEC_TRACE, run_all_catalogs
 
     assert len(OPCODES) == 16
-    assert len(PRIMITIVES) == 10
+    assert len(PRIMITIVES) == 11
     assert len(SPEC_TRACE) >= 10
     cats = run_all_catalogs()
     assert cats["opcodes"]["ok"]

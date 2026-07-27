@@ -604,11 +604,21 @@ def _invoke(state, argv, capsys):
 def test_complete_stateful_proof_and_restart(tmp_path, capsys):
     state = tmp_path / "state.json"
     outputs = []
+    rejected = False
     for case in ACCEPTANCE:
+        before = state.read_bytes() if state.exists() else None
         code, payload = _invoke(state, case["argv"], capsys)
         assert code == case.get("exit", 0)
         assert payload == case["expect"]
+        if code != 0:
+            after = state.read_bytes() if state.exists() else None
+            assert after == before
+            assert not (tmp_path / ".uc-tickets").exists()
+            rejected = True
+        elif rejected:
+            rejected = False
         outputs.append(payload)
+    assert rejected is False
     assert json.loads(state.read_text(encoding="utf-8")) == EXPECT_STATE
     assert outputs[-1] == outputs[-2]
 

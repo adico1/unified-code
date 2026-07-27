@@ -40,6 +40,20 @@ def test_public_unfold_contract(tmp_path):
     assert value["install"] == "ok"
     assert value["run_result"]["restart_verified"] is True
     assert value["python_c_result"]["equal"] is True
+    assert value["python_c_result"]["application_equal"] is True
+    assert value["python_c_result"]["final_state_equal"] is True
+    assert all(
+        step["equal"] and step["application_equal"]
+        for step in value["python_c_result"]["steps"]
+    )
+    assert [
+        item["output"]
+        for item in value["run_result"]["outputs"]
+        if item["exit"] != 0
+    ] == [
+        {"error": "duplicate-title", "state": "invalid"},
+        {"error": "task-not-open", "state": "invalid"},
+    ]
     assert value["fixed_point"]["tree_sha256_a"] == value["fixed_point"]["tree_sha256_b"]
     assert not tuple(output.rglob("__pycache__"))
     assert not tuple(output.rglob("*.pyc"))
@@ -74,7 +88,22 @@ def test_second_stateful_application_uses_independent_vocabulary(tmp_path):
     value = json.loads(result.stdout)["value"]
     assert value["run_result"]["outputs"] == [
         {"argv": ["register", "Ada"], "exit": 0, "output": {"name": "Ada", "points": 0}},
+        {
+            "argv": ["register", "Ada"],
+            "exit": 1,
+            "output": {"error": "duplicate-player", "state": "invalid"},
+        },
+        {
+            "argv": ["standings"],
+            "exit": 0,
+            "output": {"players": [{"name": "Ada", "points": 0}]},
+        },
         {"argv": ["award", "Ada", "3"], "exit": 0, "output": {"name": "Ada", "points": 3}},
+        {
+            "argv": ["award", "Grace", "1"],
+            "exit": 1,
+            "output": {"error": "unknown-player", "state": "invalid"},
+        },
         {
             "argv": ["standings"],
             "exit": 0,
@@ -88,6 +117,12 @@ def test_second_stateful_application_uses_independent_vocabulary(tmp_path):
     ]
     assert value["run_result"]["restart_verified"] is True
     assert value["python_c_result"]["equal"] is True
+    assert value["python_c_result"]["application_equal"] is True
+    assert value["python_c_result"]["final_state_equal"] is True
+    assert all(
+        step["equal"] and step["application_equal"]
+        for step in value["python_c_result"]["steps"]
+    )
     assert value["fixed_point"]["tree_sha256_a"] == value["fixed_point"]["tree_sha256_b"]
 
 
@@ -103,22 +138,21 @@ def test_generic_generator_has_no_application_vocabulary():
 
 
 def test_anti_overfitting_scan_detects_injected_vocabulary(tmp_path):
+    from scripts.check_stateful_overfit import (
+        derive_application_vocabulary,
+        vocabulary_hits,
+    )
+
     source = tmp_path / "generator"
     source.mkdir()
-    (source / "generic.py").write_text('DOMAIN = "task-not-open"\n', encoding="utf-8")
-    result = subprocess.run(
-        [
-            sys.executable,
-            "scripts/check_stateful_overfit.py",
-            str(source),
-        ],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
+    injected = source / "generic.py"
+    vocabulary = derive_application_vocabulary()
+    assert {"duplicate-title", "task-not-open", "duplicate-player", "unknown-player"} <= set(
+        vocabulary
     )
-    assert result.returncode == 1
-    assert "task-not-open" in result.stdout
+    for term in vocabulary:
+        injected.write_text(f'DOMAIN = "{term}"\n', encoding="utf-8")
+        assert any(token == term for _, token in vocabulary_hits((source,)))
 
 
 def test_atomic_refusal_preserves_installed_output(tmp_path):

@@ -299,68 +299,192 @@ print(json.dumps({{"imported": True, "package": {pkg!r}}}))
     }
 
 
-def _verify_python_c_result(result_payload) -> dict:
-    """Run a seed-derived canonical result through both UEM-16 hosts."""
+def _verify_python_c_application(seed_path: Path, app_outputs: list[dict]) -> dict:
+    """Run every seed-declared transition independently in both UEM-16 hosts."""
     try:
+        from unified.machine.bytecode import encode_program
         from unified.machine.canonical import canonical_bytes, canonical_sha256, from_python_run
-        from unified.machine.compile_decl import compile_declaration
         from unified.machine.host import run_compiled
         from unified.machine.l11 import run_c_vector
         from unified.machine.thing import blank_thing, value_of
+        from unified.machine.validate import validate_symbolic
 
-        declaration = {
-            "name": "uc-canonical-result-proof",
-            "package": "uc_canonical_result_proof",
-            "features": (
-                {
-                    "name": "canonical_result",
-                    "transformation": {
-                        "kind": "expression",
-                        "input_key": "document",
-                        "merge": "stats",
-                        "program": {"op": "literal", "value": result_payload},
-                    },
-                },
-            ),
-            "boundaries": (
-                {
-                    "kind": "read_json_source",
-                    "name": "read_json_source",
-                    "source_field": "source",
-                    "document_field": "document",
-                },
-            ),
-            "cli": {"argv": {"field": "source", "stdin_token": "-"}},
-            "presentation": {
-                "success_from": "stats",
-                "success_keys": tuple(result_payload.keys())
-                if isinstance(result_payload, dict)
-                else (),
-            },
-            "verify": {"require_value_field": "stats"},
-        }
-        compiled = compile_declaration(
-            blank_thing({"declaration": declaration})
+        declaration = json.loads(seed_path.read_text(encoding="utf-8"))
+        feature = next(
+            feature
+            for feature in declaration.get("features") or ()
+            if (feature.get("transformation") or {}).get("kind")
+            == "stateful_resource"
         )
+        transition = feature["transformation"]
+        image = {
+            "stateful": {"commands": transition["commands"]},
+            "verify": {
+                "require_value_field": "stats",
+                "require_evidence_contains": [],
+            },
+        }
+        symbolic = blank_thing(
+            {
+                "instructions": (
+                    ("APPLY", "state_transition"),
+                    ("VERIFY", "result"),
+                    ("STOP", None),
+                ),
+                "image": image,
+            }
+        )
+        compiled = encode_program(validate_symbolic(symbolic))
         if compiled.get("state") == "invalid":
             return {
                 "ok": False,
                 "detail": "compile-invalid",
                 "evidence": list(compiled.get("evidence") or ()),
             }
-        host = {"document": {}}
-        py = from_python_run(compiled, run_compiled(compiled, host))
-        c_result, error = run_c_vector(compiled, host)
-        if c_result is None:
-            return {"ok": False, "detail": error or "c-host-unavailable"}
-        equal = canonical_bytes(py) == canonical_bytes(c_result)
+        state = json.loads(json.dumps(transition["state"]["initial"]))
+        cases = list(transition.get("acceptance") or ())
+        if len(app_outputs) != len(cases):
+            return {
+                "ok": False,
+                "detail": "application-output-count-mismatch",
+                "expected": len(cases),
+                "actual": len(app_outputs),
+            }
+        python_results = []
+        c_results = []
+        steps = []
+        for index, (case, app_output) in enumerate(zip(cases, app_outputs)):
+            argv = list(case.get("argv") or ())
+            host = {
+                "resource_state": state,
+                "command": argv[0] if argv else None,
+                "arguments": argv[1:],
+            }
+            python_result = from_python_run(
+                compiled, run_compiled(compiled, host)
+            )
+            c_result, error = run_c_vector(compiled, host)
+            if c_result is None:
+                return {
+                    "ok": False,
+                    "detail": error or "c-host-unavailable",
+                    "step": index,
+                }
+            equal = canonical_bytes(python_result) == canonical_bytes(c_result)
+            envelope = python_result.get("stats") or {}
+            expected_exit = int(case.get("exit", 0))
+            expected_output = case.get("expect")
+            if expected_exit == 0:
+                application_equal = (
+                    envelope.get("error") is None
+                    and envelope.get("result") == expected_output
+                    and app_output.get("exit") == expected_exit
+                    and app_output.get("output") == expected_output
+                )
+                state = envelope.get("resource_state")
+            else:
+                application_equal = (
+                    envelope.get("error") == expected_output.get("error")
+                    and envelope.get("resource_state") == state
+                    and envelope.get("state_changed") is False
+                    and python_result.get("ticket") is None
+                    and c_result.get("ticket") is None
+                    and app_output.get("exit") == expected_exit
+                    and app_output.get("output") == expected_output
+                )
+            steps.append(
+                {
+                    "argv": argv,
+                    "equal": equal,
+                    "application_equal": application_equal,
+                    "state": python_result.get("state"),
+                    "error": python_result.get("error"),
+                    "python_sha256": canonical_sha256(python_result),
+                    "c_sha256": canonical_sha256(c_result),
+                }
+            )
+            python_results.append(python_result)
+            c_results.append(c_result)
+            if not equal or not application_equal:
+                return {
+                    "ok": False,
+                    "equal": equal,
+                    "application_equal": application_equal,
+                    "detail": "transition-mismatch",
+                    "step": index,
+                    "steps": steps,
+                    "python": python_result,
+                    "c": c_result,
+                }
+        for rejection_index, case in enumerate(transition.get("rejections") or ()):
+            argv = list(case.get("argv") or ())
+            rejection_state = json.loads(
+                json.dumps(transition["state"]["initial"])
+            )
+            host = {
+                "resource_state": rejection_state,
+                "command": argv[0] if argv else None,
+                "arguments": argv[1:],
+            }
+            python_result = from_python_run(
+                compiled, run_compiled(compiled, host)
+            )
+            c_result, error = run_c_vector(compiled, host)
+            if c_result is None:
+                return {
+                    "ok": False,
+                    "detail": error or "c-host-unavailable",
+                    "rejection": rejection_index,
+                }
+            equal = canonical_bytes(python_result) == canonical_bytes(c_result)
+            envelope = python_result.get("stats") or {}
+            expected = case.get("expect") or {}
+            application_equal = (
+                envelope.get("error") == expected.get("error")
+                and envelope.get("resource_state") == rejection_state
+                and envelope.get("state_changed") is False
+                and python_result.get("ticket") is None
+                and c_result.get("ticket") is None
+            )
+            steps.append(
+                {
+                    "kind": "isolated-rejection",
+                    "argv": argv,
+                    "equal": equal,
+                    "application_equal": application_equal,
+                    "state": python_result.get("state"),
+                    "error": python_result.get("error"),
+                    "python_sha256": canonical_sha256(python_result),
+                    "c_sha256": canonical_sha256(c_result),
+                }
+            )
+            python_results.append(python_result)
+            c_results.append(c_result)
+            if not equal or not application_equal:
+                return {
+                    "ok": False,
+                    "equal": equal,
+                    "application_equal": application_equal,
+                    "detail": "rejection-mismatch",
+                    "rejection": rejection_index,
+                    "steps": steps,
+                    "python": python_result,
+                    "c": c_result,
+                }
+        final_state_equal = state == transition["state"].get("expect")
+        python_payload = json.loads(canonical_bytes({"steps": python_results}))
+        c_payload = json.loads(canonical_bytes({"steps": c_results}))
+        equal = canonical_bytes(python_payload) == canonical_bytes(c_payload)
         return {
-            "ok": equal,
+            "ok": equal and final_state_equal,
             "equal": equal,
-            "python_sha256": canonical_sha256(py),
-            "c_sha256": canonical_sha256(c_result),
+            "application_equal": True,
+            "final_state_equal": final_state_equal,
+            "python_sha256": canonical_sha256(python_payload),
+            "c_sha256": canonical_sha256(c_payload),
             "program_sha256": value_of(compiled).get("program_sha256"),
-            "result": result_payload,
+            "steps": steps,
+            "final_state": state,
         }
     except Exception as exc:  # noqa: BLE001 — verification boundary
         return {
@@ -444,7 +568,7 @@ def install_atomic(thing):
     python_c_result = {"ok": True, "detail": "not-applicable"}
     outputs = run_result.get("outputs") if isinstance(run_result, dict) else None
     if do_verify and outputs:
-        python_c_result = _verify_python_c_result(outputs[-1].get("output"))
+        python_c_result = _verify_python_c_application(seed_path, outputs)
         if not python_c_result.get("ok"):
             return {
                 **thing,

@@ -152,6 +152,7 @@ Required to run text statistics and invoice totals without domain hardcoding:
 | `verify_result` | Required field + evidence membership |
 | `present_json` | Ordered JSON object presentation |
 | `mark_part` | Append part evidence marks from config |
+| `state_transition` | Execute a generic seed-declared state transition |
 | `identity` | No-op |
 
 Expression operators (inside `eval_expression` only):  

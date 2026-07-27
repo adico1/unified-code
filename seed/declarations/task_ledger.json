@@ -75,9 +75,40 @@
             }
           },
           {
+            "argv": ["add", "A"],
+            "exit": 1,
+            "expect": {
+              "error": "duplicate-title",
+              "state": "invalid"
+            }
+          },
+          {
+            "argv": ["list"],
+            "expect": {
+              "tasks": [
+                {
+                  "completed": false,
+                  "title": "A"
+                },
+                {
+                  "completed": false,
+                  "title": "B"
+                }
+              ]
+            }
+          },
+          {
             "argv": ["complete", "A"],
             "expect": {
               "completed": "A"
+            }
+          },
+          {
+            "argv": ["complete", "A"],
+            "exit": 1,
+            "expect": {
+              "error": "task-not-open",
+              "state": "invalid"
             }
           },
           {

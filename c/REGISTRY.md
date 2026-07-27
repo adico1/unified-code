@@ -1,6 +1,6 @@
-# UEM-16 Portable Primitive Registry — version 1
+# UEM-16 Portable Primitive Registry — version 2
 
-**Registry version:** `1`  
+**Registry version:** `2`
 **Machine:** UEM-16  
 **Spec:** UEM_SPEC.md 0.1  
 **Unicode profile:** `UEM-ASCII-1` (frozen)
@@ -17,7 +17,7 @@ here. Implementations MUST reject or fail unknown names as
 Domain names MUST NOT appear as primitive names. Domain configuration is
 data inside the program image only.
 
-## Primitives (v1)
+## Primitives (v2)
 
 | Name | I/O | Purpose |
 | --- | --- | --- |
@@ -31,6 +31,7 @@ data inside the program image only.
 | `verify_result` | pure | Required field + evidence; fail → invalid, **no ticket** |
 | `present_json` | pure | Ordered JSON presentation under store.presentation |
 | `mark_part` | pure | Append part evidence from image.part_name |
+| `state_transition` | pure | Execute seed-declared arguments, guards, actions, and projection against host state |
 
 ## Expression operators (inside `eval_expression` only)
 
