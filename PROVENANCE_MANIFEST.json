@@ -59,8 +59,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": ".github/workflows/test.yml",
       "provenance": "handwritten-pending",
-      "sha256": "c4cf3ee4b879177e60a4aa148a9f8ecb21feedb4745a10bd965d89843fda1c0f",
-      "size": 6939,
+      "sha256": "daf9dc9485d797c6f6ea0676e09ba18d0b0761d82fe021bfe894b36323b1b866",
+      "size": 6799,
       "standard_ten_class_ok": false
     },
     {
@@ -100,7 +100,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "8deb41a9d14a9c9d1abd744f179a1363f9d0e55d2a8dbda4619a3c8ab9b767b4",
+      "sha256": "e7b7e7a77e13e2b302787c98a8fcd88720b828ef87d36637e06ab84d6f03e414",
       "size": 26474,
       "standard_ten_class_ok": true
     },
@@ -182,7 +182,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "810d8bfbb53e26b63b4c23080b7a0516f4688264b29b59829e3d4ac0ed84b545",
+      "sha256": "766a4fc6e98d70f49dd5b2ff08b42d8485e4e4bd1f77dec10f2f44b1d59adfd0",
       "size": 156171,
       "standard_ten_class_ok": true
     },

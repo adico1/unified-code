@@ -62,13 +62,13 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 
 - `.coverage` · `evidence` · `ok` · `e50b891b51c6b190`
 - `.coveragerc` · `handwritten-pending` · `standard.gap` · `f4c1eac25e83d766`
-- `.github/workflows/test.yml` · `handwritten-pending` · `standard.gap` · `c4cf3ee4b879177e`
+- `.github/workflows/test.yml` · `handwritten-pending` · `standard.gap` · `daf9dc9485d797c6`
 - `.gitignore` · `handwritten-pending` · `standard.gap` · `699c693cc407b221`
-- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `8deb41a9d14a9c9d`
+- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `e7b7e7a77e13e2b3`
 - `GAUNTLET.md` · `evidence` · `ok` · `ecd030cec9009814`
 - `LAW.md` · `handwritten-pending` · `standard.gap` · `7d452c174dec7c94`
 - `LICENSE` · `handwritten-pending` · `standard.gap` · `af6b910929ec375c`
-- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `810d8bfbb53e26b6`
+- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `766a4fc6e98d70f4`
 - `README.md` · `handwritten-pending` · `standard.gap` · `5adffec5df67ba9a`
 - `ROADMAP.md` · `handwritten-pending` · `standard.gap` · `367d3af6e5ffc703`
 - `SPEC.md` · `handwritten-pending` · `standard.gap` · `fb04ba1772610eb3`
