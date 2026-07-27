@@ -143,6 +143,23 @@ Full repository self-hosting is tracked separately as “Milestone 2 — Root-se
 fixed-point bootstrap” in `ROADMAP.md`; it does not block this application
 contract.
 
+### Thing v2 — compile-time specialization
+
+Thing v2 specializes seven seedless (`בלי_מה`) boilerplate responsibilities at
+compile time. The generated application runs without loading the seed or
+requiring the source repository:
+
+```bash
+uc compile seed/thing_v2/trajectory_meter.json \
+  --output /tmp/uc-trajectory-meter \
+  --verify
+```
+
+The native and foreign-fixture proofs, seed schema, exact stage map,
+deterministic manifest, affected-file churn contract, anti-overfitting
+mutations, and honest limitations are specified in
+[THING_V2.md](THING_V2.md).
+
 Exit code is nonzero until every criterion is green. Do not claim
 completeness while `contract_pass` is false. Writes `contract_status.json`
 / `contract_report.json` under the repo root when verify/report run.
