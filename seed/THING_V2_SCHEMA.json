@@ -1,0 +1,340 @@
+{
+  "$id": "https://github.com/adico1/unified-code/blob/main/seed/THING_V2_SCHEMA.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "acceptance": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "expect": {
+            "additionalProperties": false,
+            "properties": {
+              "error": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "evidence": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "output": {},
+              "state": {
+                "enum": [
+                  "valid",
+                  "invalid"
+                ]
+              }
+            },
+            "required": [
+              "state",
+              "output",
+              "error",
+              "evidence"
+            ],
+            "type": "object"
+          },
+          "outer_input": {},
+          "runtime_params": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "outer_input",
+          "runtime_params",
+          "expect"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "application": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "type": "string"
+        },
+        "package": {
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "package",
+        "description"
+      ],
+      "type": "object"
+    },
+    "compile_time_constants": {
+      "additionalProperties": false,
+      "properties": {
+        "bias": {
+          "type": "number"
+        },
+        "fixture_failure_below": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "bias"
+      ],
+      "type": "object"
+    },
+    "computation_seed": {
+      "additionalProperties": false,
+      "properties": {
+        "coefficient": {
+          "type": "number"
+        },
+        "input_field": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "operation": {
+          "const": "affine"
+        },
+        "output_field": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "runtime_parameter": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "input_field",
+        "output_field",
+        "runtime_parameter",
+        "coefficient"
+      ],
+      "type": "object"
+    },
+    "core": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "native",
+            "foreign_fixture"
+          ]
+        }
+      },
+      "required": [
+        "mode"
+      ],
+      "type": "object"
+    },
+    "evidence_requirements": {
+      "additionalProperties": false,
+      "properties": {
+        "exact": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "exact"
+      ],
+      "type": "object"
+    },
+    "foreign_dependency": {
+      "additionalProperties": false,
+      "properties": {
+        "effect": {
+          "const": "pure"
+        },
+        "license": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "source",
+        "sha256",
+        "license",
+        "effect"
+      ],
+      "type": "object"
+    },
+    "formats": {
+      "additionalProperties": false,
+      "properties": {
+        "core_input": {
+          "$ref": "#/$defs/numberFormat"
+        },
+        "core_output": {
+          "$ref": "#/$defs/numberFormat"
+        },
+        "inner_input": {
+          "$ref": "#/$defs/objectFormat"
+        },
+        "inner_output": {
+          "$ref": "#/$defs/objectFormat"
+        },
+        "outer_input": {
+          "$ref": "#/$defs/outerFormat"
+        },
+        "outer_output": {
+          "$ref": "#/$defs/outerFormat"
+        }
+      },
+      "required": [
+        "outer_input",
+        "inner_input",
+        "core_input",
+        "core_output",
+        "inner_output",
+        "outer_output"
+      ],
+      "type": "object"
+    },
+    "runtime_parameter_schema": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "maximum": {
+            "type": "number"
+          },
+          "minimum": {
+            "type": "number"
+          },
+          "type": {
+            "const": "number"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "type": "object"
+      },
+      "minProperties": 1,
+      "type": "object"
+    },
+    "selected_adapters": {
+      "additionalProperties": false,
+      "properties": {
+        "outer_input": {
+          "enum": [
+            "object",
+            "json_text"
+          ]
+        },
+        "outer_output": {
+          "enum": [
+            "object",
+            "json_text"
+          ]
+        }
+      },
+      "required": [
+        "outer_input",
+        "outer_output"
+      ],
+      "type": "object"
+    },
+    "thing_v2": {
+      "const": 2
+    },
+    "validation": {
+      "additionalProperties": false,
+      "properties": {
+        "input_type": {
+          "const": "number"
+        }
+      },
+      "required": [
+        "input_type"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "thing_v2",
+    "application",
+    "formats",
+    "core",
+    "computation_seed",
+    "compile_time_constants",
+    "runtime_parameter_schema",
+    "validation",
+    "evidence_requirements",
+    "selected_adapters",
+    "acceptance"
+  ],
+  "title": "Unified Code Thing v2 compile-time seed",
+  "type": "object",
+  "$defs": {
+    "numberFormat": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "number"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "objectFormat": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "object"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "outerFormat": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "object",
+            "json_text",
+            "number"
+          ]
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    }
+  }
+}
