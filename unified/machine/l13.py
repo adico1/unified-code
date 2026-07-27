@@ -44,16 +44,15 @@ def _run(cmd, **kw):
 
 def measure_python_coverage() -> dict:
     """Statement + branch coverage for production unified/machine only."""
-    cov = ROOT / ".venv" / "bin" / "coverage"
-    py = ROOT / ".venv" / "bin" / "python"
+    cov = (sys.executable, "-m", "coverage")
     env = os.environ.copy()
     env["UEM_C"] = str(CROOT / "build" / "uem-c")
     # Clear prior data
-    _run([str(cov), "erase"], cwd=str(ROOT))
+    _run([*cov, "erase"], cwd=str(ROOT))
     # Uses repo .coveragerc — omits gauntlet harnesses (l11/l13/gauntlet/measure)
     r = _run(
         [
-            str(cov),
+            *cov,
             "run",
             "--rcfile=" + str(ROOT / ".coveragerc"),
             "-m",
@@ -79,7 +78,7 @@ def measure_python_coverage() -> dict:
         }
     _run(
         [
-            str(cov),
+            *cov,
             "json",
             "-o",
             str(ROOT / "coverage_py.json"),

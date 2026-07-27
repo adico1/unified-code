@@ -59,8 +59,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": ".github/workflows/test.yml",
       "provenance": "handwritten-pending",
-      "sha256": "57cf4c45308821b0265b31f64c876e2ce9d09bd3e4dcfd78ae77ff8c321e5a94",
-      "size": 6879,
+      "sha256": "0fb38b7e50773b145ea759e73c01c7f21a3b6c16a1dbf2e8868f1f880c0bdccd",
+      "size": 6881,
       "standard_ten_class_ok": false
     },
     {
@@ -100,7 +100,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "45e563f0bc1bfee368e93b30565d1699efa9724fe0d6931b3ede24adaf63cee7",
+      "sha256": "597a55947fbfb25a3a3b771cc987f017a44251fee8b7f1db245917ef2cdc37d2",
       "size": 26474,
       "standard_ten_class_ok": true
     },
@@ -120,7 +120,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "GAUNTLET.md",
       "provenance": "evidence",
-      "sha256": "13e50e37626995ab62893498c64ee1b6701b38842861ea77f57459c38522b30c",
+      "sha256": "c696cdad833fefe6874f5572533b0754c30480dfa2f832ef5bae9ccd6ca70718",
       "size": 1331,
       "standard_ten_class_ok": true
     },
@@ -182,7 +182,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "e001136db3007f4ddac8cd876dc45d6c0231e6d01728d99fcabb486c4571e6e1",
+      "sha256": "28e8dcada4e22ab9ac7ba5e1ddb674d2b56d11f62f5ccdec81ea45b7d25b6d44",
       "size": 156171,
       "standard_ten_class_ok": true
     },
@@ -1069,7 +1069,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "c/targets/manifests/l12_report_x86_64.json",
       "provenance": "evidence",
-      "sha256": "0a16e3bbf67078945d25b68e000f620d881c4c6d9dada9d539c960a90af8033f",
+      "sha256": "6221c100da434eb468f41bd1fa2a435cfcbd5c7981c5709451bece6ee7cab814",
       "size": 2498,
       "standard_ten_class_ok": true
     },
@@ -3190,7 +3190,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "coverage.json",
       "provenance": "evidence",
-      "sha256": "f7afda5d2174e827cc6885922e9941e17ad250999eb72ee38043d8747398e9ed",
+      "sha256": "3ea904bc7f00a47156653d25bd002f749cf589778cc8027695a52d5d16b957d0",
       "size": 14425,
       "standard_ten_class_ok": true
     },
@@ -3210,7 +3210,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "coverage_py.json",
       "provenance": "evidence",
-      "sha256": "f1aaed776ca4f08fcdc4296dfb9c04f6254d7f2fd985f46c07dc5a8db1887c92",
+      "sha256": "982d1b43f375d38ca2af125fcc11c6faa246c23dd4529df5a176c581aa8f41ba",
       "size": 102538,
       "standard_ten_class_ok": true
     },
@@ -3459,8 +3459,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "pyproject.toml",
       "provenance": "handwritten-pending",
-      "sha256": "34ac92612457d845ad50af5421e449730b44d94d4bde37d8be61cac96ea76e1f",
-      "size": 571,
+      "sha256": "033818aa172c883be500f15489d0292f98f03506b62258645396babb07869b40",
+      "size": 586,
       "standard_ten_class_ok": false
     },
     {
@@ -4687,8 +4687,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/gauntlet.py",
       "provenance": "handwritten-pending",
-      "sha256": "df5c7a7784a7a64edee11d3b4feb842ce89be4a937a3b49688f2128598a76f6c",
-      "size": 87661,
+      "sha256": "5d8b79d636b348a2024b077e592e1059c2683a734afdc6a20b6aeb12a346d182",
+      "size": 87753,
       "standard_ten_class_ok": false
     },
     {
@@ -5118,8 +5118,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/machine/l13.py",
       "provenance": "handwritten-pending",
-      "sha256": "3e9a881d2caebb42b0942695ba934cea559c3676859e62bad125eb680c0a48e8",
-      "size": 22431,
+      "sha256": "610780f81e6ec00d105c62a52fc4adb4d179416a4ba2ad4ee91d4759f53a7f71",
+      "size": 22375,
       "standard_ten_class_ok": false
     },
     {

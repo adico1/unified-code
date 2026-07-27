@@ -7,7 +7,9 @@ hidden by aggregate success.
 from __future__ import annotations
 
 import ast
+import contextlib
 import hashlib
+import io
 import json
 import math
 import os
@@ -1416,7 +1418,8 @@ def _g7_mutations(project_path: str, decl_data: dict | None = None) -> dict:
                 ignore=shutil.ignore_patterns(".venv", "__pycache__", "*.egg-info", ".pytest_cache"),
             )
             mutator(dest)
-            detected, how = _detect_mutation(str(dest), name, decl_data)
+            with contextlib.redirect_stdout(io.StringIO()):
+                detected, how = _detect_mutation(str(dest), name, decl_data)
             check(f"detect:{name}", detected, detail=how)
 
     check("mutations-count-15", len(mutations) == 15)
