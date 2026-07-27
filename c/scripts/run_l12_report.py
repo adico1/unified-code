@@ -186,7 +186,7 @@ def main():
         "endianness": sys.byteorder,
         "pointer_width": 8 * struct_size(),
         "uem_version": "0.1",
-        "registry_version": 1,
+        "registry_version": 2,
         "artifact_sha256": sha256_file(bin_path),
         "golden_suite_sha256": suite_sha(),
         "status": "native-pass" if native_pass else "native-fail",
@@ -222,7 +222,7 @@ def main():
         "status": arm_status,
         "note": arm_note,
         "uem_version": "0.1",
-        "registry_version": 1,
+        "registry_version": 2,
         "golden_suite_sha256": suite_sha(),
     })
 
@@ -232,7 +232,7 @@ def main():
         "status": "unavailable",
         "note": "QEMU/compile is not support; requires physical RISC-V golden pass.",
         "uem_version": "0.1",
-        "registry_version": 1,
+        "registry_version": 2,
         "golden_suite_sha256": suite_sha(),
     })
 
@@ -259,7 +259,7 @@ def main():
         "status": wasm_status,
         "note": "Wasm-host support requires golden pass in ≥2 independent runtimes; not chip support.",
         "uem_version": "0.1",
-        "registry_version": 1,
+        "registry_version": 2,
         "golden_suite_sha256": suite_sha(),
     })
 
@@ -277,7 +277,7 @@ def main():
         "status": mcu_status,
         "note": "Bounded profile defined; no MCU family claimed without physical board goldens.",
         "uem_version": "0.1",
-        "registry_version": 1,
+        "registry_version": 2,
         "golden_suite_sha256": suite_sha(),
     })
 

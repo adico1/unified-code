@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+import shlex
 import subprocess
 import sys
 import time
@@ -44,16 +45,15 @@ def _run(cmd, **kw):
 
 def measure_python_coverage() -> dict:
     """Statement + branch coverage for production unified/machine only."""
-    cov = ROOT / ".venv" / "bin" / "coverage"
-    py = ROOT / ".venv" / "bin" / "python"
+    cov = (sys.executable, "-m", "coverage")
     env = os.environ.copy()
     env["UEM_C"] = str(CROOT / "build" / "uem-c")
     # Clear prior data
-    _run([str(cov), "erase"], cwd=str(ROOT))
+    _run([*cov, "erase"], cwd=str(ROOT))
     # Uses repo .coveragerc — omits gauntlet harnesses (l11/l13/gauntlet/measure)
     r = _run(
         [
-            str(cov),
+            *cov,
             "run",
             "--rcfile=" + str(ROOT / ".coveragerc"),
             "-m",
@@ -79,7 +79,7 @@ def measure_python_coverage() -> dict:
         }
     _run(
         [
-            str(cov),
+            *cov,
             "json",
             "-o",
             str(ROOT / "coverage_py.json"),
@@ -269,7 +269,7 @@ def measure_c_coverage() -> dict:
     # 2) Public host exercise via pytest + catalogs + goldens
     _run(
         [
-            str(ROOT / ".venv" / "bin" / "python"),
+            sys.executable,
             "-m",
             "pytest",
             "tests/test_l13.py",
@@ -286,7 +286,7 @@ def measure_c_coverage() -> dict:
     )
     _run(
         [
-            str(ROOT / ".venv" / "bin" / "python"),
+            sys.executable,
             "-c",
             "from unified.machine.l13_catalog import run_all_catalogs; run_all_catalogs()",
         ],
@@ -329,8 +329,9 @@ def measure_c_coverage() -> dict:
             missing_gcno.append(stem)
             continue
         # Apple clang: -o path/to/uem-c-stem.gcno (note file, not directory)
+        gcov = shlex.split(os.environ.get("GCOV", "gcov"))
         r = _run(
-            ["gcov", "-b", "-o", str(gcno), str(cfile)],
+            [*gcov, "-b", "-o", str(gcno), str(cfile)],
             cwd=str(CROOT),
             timeout=60,
         )
@@ -456,7 +457,7 @@ def measure_fuzz_100k() -> dict:
     env["UEM_FUZZ_N"] = os.environ.get("UEM_FUZZ_N", "100000")
     env["UEM_FUZZ_SEED"] = os.environ.get("UEM_FUZZ_SEED", "12")
     r = _run(
-        [str(ROOT / ".venv" / "bin" / "python"), str(CROOT / "scripts" / "fuzz_l12.py")],
+        [sys.executable, str(CROOT / "scripts" / "fuzz_l12.py")],
         cwd=str(ROOT),
         env=env,
         timeout=600,

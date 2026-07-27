@@ -116,6 +116,29 @@ uc unfold seed/declarations/task_ledger.json \
   --run
 ```
 
+Milestone 1.1 removes the original task-ledger profile behavior from the generic
+generator. Its independent numeric-transition proof is:
+
+```bash
+uc unfold seed/declarations/score_board.json \
+  --output /tmp/uc-score-board \
+  --verify \
+  --run
+```
+
+Both applications declare their schema, commands, arguments, validation,
+transitions, results, errors, persistence identity, composition, and acceptance
+scenarios in JSON. Python and C independently execute the same seed-defined
+transition program for every sequential acceptance and rejection step, including
+post-state, result, error, ticket, and evidence equality.
+`scripts/check_stateful_overfit.py` derives application vocabulary from every
+proof seed and rejects it in generic generator and UEM runtime source. Its
+contextual command check rejects task-ledger `add` comparisons in the stateful
+runtime without confusing them with the registered generic expression operator.
+The frozen stateful scalar profile is specified in `UEM_SPEC.md`; generated
+Python, Python UEM, and C UEM share its ASCII integer grammar, exact JSON range,
+and explicit ASCII-only `non_empty` whitespace rule.
+
 Full repository self-hosting is tracked separately as “Milestone 2 — Root-seed
 fixed-point bootstrap” in `ROADMAP.md`; it does not block this application
 contract.

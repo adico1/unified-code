@@ -152,6 +152,7 @@ Required to run text statistics and invoice totals without domain hardcoding:
 | `verify_result` | Required field + evidence membership |
 | `present_json` | Ordered JSON object presentation |
 | `mark_part` | Append part evidence marks from config |
+| `state_transition` | Execute a generic seed-declared state transition |
 | `identity` | No-op |
 
 Expression operators (inside `eval_expression` only):  
@@ -203,6 +204,25 @@ inside `TICKET`.
 Limit exhaustion evidence: `limit:steps`, `limit:queue`, `limit:depth`,
 `limit:items`, `limit:memory`, `limit:output`.  
 These MUST be distinct from normal `STOP` (`stop_reason=stop`).
+
+## Stateful scalar profile
+
+`state_transition` parses raw command arguments under one host-independent
+profile:
+
+- `integer` accepts only ASCII `-?(0|[1-9][0-9]*)`;
+- its inclusive range is `-999999999999999` through `999999999999999`;
+  this conservative 15-digit interval survives the vendored cJSON numeric
+  representation and canonical serializer byte-for-byte;
+- plus signs, surrounding whitespace, underscores, leading zeroes, Unicode
+  digits, non-string inputs, and overflow are rejected as the argument's
+  declared error;
+- `non_empty` rejects the empty string and strings composed entirely of ASCII
+  space, tab, LF, vertical tab, form feed, or carriage return;
+- other Unicode whitespace is data, not whitespace, and is therefore non-empty.
+
+Python generated applications, Python UEM, and C UEM MUST apply these rules
+before guards and actions. Rejection leaves resource state unchanged.
 
 ## Binary encoding
 

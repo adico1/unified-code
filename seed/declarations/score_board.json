@@ -1,0 +1,275 @@
+{
+  "boundaries": [
+    {
+      "kind": "state_read",
+      "name": "load_state",
+      "phase": "OUTWARD"
+    },
+    {
+      "kind": "state_write",
+      "name": "persist_state",
+      "phase": "OUTWARD"
+    }
+  ],
+  "cli": {
+    "script": "uc-score-board"
+  },
+  "composition": [
+    "inward",
+    "parse_host_argv",
+    "load_state",
+    "apply_score",
+    "persist_state",
+    "verify",
+    "present_result",
+    "outward"
+  ],
+  "description": "A seed-defined persistent score board with numeric transitions.",
+  "features": [
+    {
+      "boundaries": [],
+      "doc": "Apply declared registration, numeric award, and ranking transitions.",
+      "errors": [
+        "invalid-name",
+        "duplicate-player",
+        "invalid-points",
+        "unknown-player",
+        "unknown-command"
+      ],
+      "invariants": [
+        "player order is registration order",
+        "awards increase the selected score",
+        "validation failure does not change state"
+      ],
+      "name": "apply_score",
+      "role": "transform",
+      "tests": [],
+      "transformation": {
+        "acceptance": [
+          {
+            "argv": ["register", "Ada"],
+            "expect": {
+              "name": "Ada",
+              "points": 0
+            }
+          },
+          {
+            "argv": ["register", "Ada"],
+            "exit": 1,
+            "expect": {
+              "error": "duplicate-player",
+              "state": "invalid"
+            }
+          },
+          {
+            "argv": ["standings"],
+            "expect": {
+              "players": [
+                {
+                  "name": "Ada",
+                  "points": 0
+                }
+              ]
+            }
+          },
+          {
+            "argv": ["award", "Ada", "3"],
+            "expect": {
+              "name": "Ada",
+              "points": 3
+            }
+          },
+          {
+            "argv": ["award", "Grace", "1"],
+            "exit": 1,
+            "expect": {
+              "error": "unknown-player",
+              "state": "invalid"
+            }
+          },
+          {
+            "argv": ["standings"],
+            "expect": {
+              "players": [
+                {
+                  "name": "Ada",
+                  "points": 3
+                }
+              ]
+            }
+          },
+          {
+            "argv": ["standings"],
+            "expect": {
+              "players": [
+                {
+                  "name": "Ada",
+                  "points": 3
+                }
+              ]
+            }
+          }
+        ],
+        "commands": {
+          "award": {
+            "actions": [
+              {
+                "kind": "increment",
+                "target": "player",
+                "values": {
+                  "points": {"$arg": "points"}
+                }
+              }
+            ],
+            "arguments": [
+              {
+                "error": "invalid-name",
+                "name": "name",
+                "non_empty": true,
+                "type": "string"
+              },
+              {
+                "error": "invalid-points",
+                "minimum": 1,
+                "name": "points",
+                "type": "integer"
+              }
+            ],
+            "guards": [
+              {
+                "as": "player",
+                "error": "unknown-player",
+                "kind": "require",
+                "path": ["players"],
+                "where": [
+                  {
+                    "equals": {"$arg": "name"},
+                    "field": "name"
+                  }
+                ]
+              }
+            ],
+            "result": {
+              "name": {"$arg": "name"},
+              "points": {
+                "$selected": {
+                  "field": "points",
+                  "name": "player"
+                }
+              }
+            }
+          },
+          "register": {
+            "actions": [
+              {
+                "kind": "append",
+                "path": ["players"],
+                "value": {
+                  "name": {"$arg": "name"},
+                  "points": {"$literal": 0}
+                }
+              }
+            ],
+            "arguments": [
+              {
+                "error": "invalid-name",
+                "name": "name",
+                "non_empty": true,
+                "type": "string"
+              }
+            ],
+            "guards": [
+              {
+                "error": "duplicate-player",
+                "kind": "unique",
+                "path": ["players"],
+                "where": [
+                  {
+                    "equals": {"$arg": "name"},
+                    "field": "name"
+                  }
+                ]
+              }
+            ],
+            "result": {
+              "name": {"$arg": "name"},
+              "points": {"$literal": 0}
+            }
+          },
+          "standings": {
+            "actions": [],
+            "arguments": [],
+            "guards": [],
+            "result": {
+              "players": {
+                "$project": {
+                  "fields": ["name", "points"],
+                  "path": ["players"]
+                }
+              }
+            }
+          }
+        },
+        "failure_probe": ["standings"],
+        "kind": "stateful_resource",
+        "persistence": {
+          "default_path": ".uc-score-board.json",
+          "environment": "UC_SCORE_BOARD_STATE"
+        },
+        "rejections": [
+          {
+            "argv": ["register", ""],
+            "exit": 1,
+            "expect": {
+              "error": "invalid-name",
+              "state": "invalid"
+            }
+          },
+          {
+            "argv": ["award", "Ada", "0"],
+            "exit": 1,
+            "expect": {
+              "error": "invalid-points",
+              "state": "invalid"
+            }
+          }
+        ],
+        "state": {
+          "expect": {
+            "players": [
+              {
+                "name": "Ada",
+                "points": 3
+              }
+            ]
+          },
+          "initial": {
+            "players": []
+          },
+          "schema": [
+            {
+              "path": ["players"],
+              "type": "array"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "name": "uc-score-board",
+  "package": "uc_score_board",
+  "presentation": {
+    "format": "canonical_json",
+    "success_from": "result"
+  },
+  "tests": [],
+  "verify": {
+    "require_evidence_contains": [
+      "boundary:inward",
+      "boundary:outward:state.read",
+      "part:apply_score",
+      "boundary:outward:state.write"
+    ],
+    "require_value_field": "result"
+  }
+}

@@ -4,8 +4,8 @@
     "baseline": "c/tests/branch_baseline.json",
     "baseline_commit": "3a0bf81",
     "baseline_open": 311,
-    "branches_hit": 1270,
-    "branches_total": 1270,
+    "branches_hit": 1272,
+    "branches_total": 1272,
     "conservation_holds": true,
     "current_open": 0,
     "equation_holds": true,
@@ -17,9 +17,9 @@
     "new_arcs": 0,
     "path": "c/tests/BRANCH_LEDGER.md",
     "remapped_arcs": 0,
-    "removed_by_refactor": 239,
-    "resolved_arcs": 72,
-    "resolved_by_test": 72,
+    "removed_by_refactor": 243,
+    "resolved_arcs": 68,
+    "resolved_by_test": 68,
     "still_baseline_open": 0,
     "unclassified_arcs": 0,
     "unmapped_arcs": 0
@@ -32,8 +32,8 @@
         "baseline": "c/tests/branch_baseline.json",
         "baseline_commit": "3a0bf81",
         "baseline_open": 311,
-        "branches_hit": 1270,
-        "branches_total": 1270,
+        "branches_hit": 1272,
+        "branches_total": 1272,
         "conservation_holds": true,
         "current_open": 0,
         "equation_holds": true,
@@ -45,9 +45,9 @@
         "new_arcs": 0,
         "path": "c/tests/BRANCH_LEDGER.md",
         "remapped_arcs": 0,
-        "removed_by_refactor": 239,
-        "resolved_arcs": 72,
-        "resolved_by_test": 72,
+        "removed_by_refactor": 243,
+        "resolved_arcs": 68,
+        "resolved_by_test": 68,
         "still_baseline_open": 0,
         "unclassified_arcs": 0,
         "unmapped_arcs": 0
@@ -122,21 +122,34 @@
           },
           {
             "branch_metric": "gcov-arc-enumeration",
-            "branches_hit": 250,
+            "branches_hit": 252,
             "branches_pct": 100.0,
-            "branches_total": 250,
+            "branches_total": 252,
             "functions_hit": 15,
             "functions_total": 15,
             "gcno": "primitives.gcno",
-            "lines_hit": 375,
+            "lines_hit": 376,
             "lines_pct": 100.0,
-            "lines_total": 375,
+            "lines_total": 376,
             "source": "core/primitives.c"
+          },
+          {
+            "branch_metric": "gcov-arc-enumeration",
+            "branches_hit": 234,
+            "branches_pct": 100.0,
+            "branches_total": 234,
+            "functions_hit": 14,
+            "functions_total": 14,
+            "gcno": "stateful.gcno",
+            "lines_hit": 257,
+            "lines_pct": 100.0,
+            "lines_total": 257,
+            "source": "core/stateful.c"
           }
         ],
-        "hit": 1270,
+        "hit": 1506,
         "metric": "gcov-arc-enumeration",
-        "total": 1270
+        "total": 1506
       },
       "required": 100.0
     },
@@ -144,8 +157,8 @@
       "actual": 100.0,
       "ok": true,
       "raw": {
-        "hit": 76,
-        "total": 76
+        "hit": 90,
+        "total": 90
       },
       "required": 100.0
     },
@@ -222,20 +235,33 @@
           },
           {
             "branch_metric": "gcov-arc-enumeration",
-            "branches_hit": 250,
+            "branches_hit": 252,
             "branches_pct": 100.0,
-            "branches_total": 250,
+            "branches_total": 252,
             "functions_hit": 15,
             "functions_total": 15,
             "gcno": "primitives.gcno",
-            "lines_hit": 375,
+            "lines_hit": 376,
             "lines_pct": 100.0,
-            "lines_total": 375,
+            "lines_total": 376,
             "source": "core/primitives.c"
+          },
+          {
+            "branch_metric": "gcov-arc-enumeration",
+            "branches_hit": 234,
+            "branches_pct": 100.0,
+            "branches_total": 234,
+            "functions_hit": 14,
+            "functions_total": 14,
+            "gcno": "stateful.gcno",
+            "lines_hit": 257,
+            "lines_pct": 100.0,
+            "lines_total": 257,
+            "source": "core/stateful.c"
           }
         ],
-        "hit": 1678,
-        "total": 1678
+        "hit": 1936,
+        "total": 1936
       },
       "required": 100.0
     },
@@ -447,6 +473,12 @@
           "positive": true,
           "type": true
         },
+        "state_transition": {
+          "boundary": true,
+          "negative": true,
+          "positive": true,
+          "type": true
+        },
         "verify_result": {
           "boundary": true,
           "negative": true,
@@ -506,16 +538,24 @@
       "ok": true,
       "permitted_catalog": [
         [
+          "formed",
+          "false"
+        ],
+        [
+          "formed",
+          "invalid"
+        ],
+        [
           "unknown",
-          "absent"
+          "invalid"
         ],
         [
           "formed",
           "absent"
         ],
         [
-          "unknown",
-          "false"
+          "absent",
+          "absent"
         ],
         [
           "valid",
@@ -523,10 +563,6 @@
         ],
         [
           "unknown",
-          "formed"
-        ],
-        [
-          "formed",
           "false"
         ],
         [
@@ -535,30 +571,26 @@
         ],
         [
           "unknown",
-          "invalid"
+          "absent"
         ],
         [
           "formed",
           "valid"
         ],
         [
-          "formed",
-          "invalid"
+          "unknown",
+          "formed"
         ],
         [
           "false",
           "false"
-        ],
-        [
-          "absent",
-          "absent"
         ]
       ],
       "prohibited_exercised": true,
       "required": 100.0
     }
   },
-  "duration_s": 16.784296989440918,
+  "duration_s": 37.26819086074829,
   "l13": true,
   "rules": {
     "branch_ledger_must_reconcile": true,

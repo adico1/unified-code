@@ -3,20 +3,24 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+PYTHON_BIN="${PYTHON:-python3}"
+if [[ -x .venv/bin/python ]]; then
+  PYTHON_BIN=".venv/bin/python"
+fi
 
 echo "=== ensure C posix binary ==="
 make -C c posix CFLAGS="-std=c99 -Wall -O2 -Iinclude -Ithird_party -Icore -Ihost/mcu"
 
 echo "=== L12 native report (physical target) ==="
-.venv/bin/python c/scripts/run_l12_report.py >/tmp/l12.json || true
+"$PYTHON_BIN" c/scripts/run_l12_report.py >/tmp/l12.json || true
 
 echo "=== pytest production tests ==="
-UEM_C="$ROOT/c/build/uem-c" .venv/bin/python -m pytest \
+UEM_C="$ROOT/c/build/uem-c" "$PYTHON_BIN" -m pytest \
   tests/test_l13.py tests/test_l13_deep.py tests/test_l13_coverage.py \
   tests/test_l11.py tests/test_uem.py -q --tb=line
 
 echo "=== L13 gauntlet (all dimensions) ==="
-UEM_C="$ROOT/c/build/uem-c" .venv/bin/python - <<'PY'
+UEM_C="$ROOT/c/build/uem-c" "$PYTHON_BIN" - <<'PY'
 from unified.machine.l13 import run_l13_gauntlet
 from unified.machine.thing import value_of
 r = run_l13_gauntlet()

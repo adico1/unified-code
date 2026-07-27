@@ -36,7 +36,7 @@ jobs:
       - name: Run Unified Code gauntlet
         run: |
           set -euo pipefail
-          uc gauntlet examples/declarations/text_stats_v2.py > /tmp/uc-gauntlet.json
+          uc gauntlet examples/declarations/text_stats_v2.json > /tmp/uc-gauntlet.json
           python - <<'PY'
           import json, sys
           report = json.load(open("/tmp/uc-gauntlet.json", encoding="utf-8"))
@@ -66,7 +66,7 @@ jobs:
 
   l13:
     name: L13 Complete Testing Gauntlet
-    runs-on: ubuntu-latest
+    runs-on: macos-26-intel
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -80,7 +80,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[test]"
-          sudo apt-get update -qq && sudo apt-get install -y -qq gcc gcovr || true
 
       - name: Build C host
         run: make -C c posix CFLAGS="-std=c99 -Wall -O2 -Iinclude -Ithird_party -Icore -Ihost/mcu"

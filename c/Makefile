@@ -12,6 +12,7 @@ CORE_SRC = \
   core/decode.c \
   core/machine.c \
   core/primitives.c \
+  core/stateful.c \
   core/expr.c \
   core/decimal.c \
   third_party/cJSON.c \
@@ -22,6 +23,7 @@ CORE_OBJ = \
   build/decode.o \
   build/machine.o \
   build/primitives.o \
+  build/stateful.o \
   build/expr.o \
   build/decimal.o \
   build/cJSON.o \
@@ -56,6 +58,8 @@ build/machine.o: core/machine.c include/uem.h | $(BUILD)
 	$(CC) $(CFLAGS) -c -o $@ core/machine.c
 build/primitives.o: core/primitives.c include/uem.h | $(BUILD)
 	$(CC) $(CFLAGS) -c -o $@ core/primitives.c
+build/stateful.o: core/stateful.c include/uem.h | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ core/stateful.c
 build/expr.o: core/expr.c include/uem.h | $(BUILD)
 	$(CC) $(CFLAGS) -c -o $@ core/expr.c
 build/decimal.o: core/decimal.c | $(BUILD)

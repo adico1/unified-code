@@ -59,6 +59,147 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 # ---------------------------------------------------------------------------
+# generic state transitions
+# ---------------------------------------------------------------------------
+
+
+def test_stateful_transition_expression_and_defensive_paths():
+    from unified.machine.stateful import transition
+
+    base = {
+        "commands": {
+            "inspect": {
+                "arguments": [],
+                "guards": [],
+                "actions": [],
+                "result": {
+                    "state": {"$state": ["rows"]},
+                    "nested": [{"$literal": 1}, "plain"],
+                },
+            },
+            "bad-guard": {
+                "arguments": [],
+                "guards": [{"kind": "other", "path": ["rows"], "where": []}],
+                "actions": [],
+                "result": None,
+            },
+            "bad-action": {
+                "arguments": [],
+                "guards": [
+                    {
+                        "kind": "require",
+                        "path": ["rows"],
+                        "where": [],
+                        "as": "row",
+                    }
+                ],
+                "actions": [{"kind": "other", "target": "row"}],
+                "result": {"$literal": None},
+            },
+            "typed": {
+                "arguments": [{"name": "value", "type": "other"}],
+                "guards": [],
+                "actions": [],
+                "result": {"$arg": "value"},
+            },
+            "integer": {
+                "arguments": [{"name": "value", "type": "integer"}],
+                "guards": [],
+                "actions": [],
+                "result": {"$arg": "value"},
+            },
+            "non-empty": {
+                "arguments": [
+                    {"name": "value", "type": "string", "non_empty": True}
+                ],
+                "guards": [],
+                "actions": [],
+                "result": {"$arg": "value"},
+            },
+        }
+    }
+    state = {"rows": [{"value": 1}]}
+    inspected = transition(
+        base, {"resource_state": state, "command": "inspect", "arguments": []}
+    )
+    assert inspected["result"] == {"state": state["rows"], "nested": [1, "plain"]}
+    assert transition(
+        base, {"resource_state": state, "command": "bad-guard", "arguments": []}
+    )["error"] == "invalid-guard"
+    assert transition(
+        base, {"resource_state": state, "command": "bad-action", "arguments": []}
+    )["state_changed"] is False
+    assert transition(
+        base, {"resource_state": state, "command": "typed", "arguments": ["x"]}
+    )["error"] == "invalid-argument"
+    assert transition(
+        base, {"resource_state": state, "command": "typed", "arguments": []}
+    )["error"] == "invalid-arity"
+    assert transition(
+        base, {"resource_state": state, "command": "integer", "arguments": ["x"]}
+    )["error"] == "invalid-argument"
+    for raw, expected in (
+        ("0", 0),
+        ("-0", 0),
+        ("1", 1),
+        ("-1", -1),
+        ("999999999999999", 999999999999999),
+        ("-999999999999999", -999999999999999),
+    ):
+        assert transition(
+            base,
+            {
+                "resource_state": state,
+                "command": "integer",
+                "arguments": [raw],
+            },
+        )["result"] == expected
+    for raw in (
+        "",
+        "+1",
+        " 1",
+        "1 ",
+        "01",
+        "-01",
+        "1_000",
+        "١",
+        "1000000000000000",
+        "-1000000000000000",
+        "9999999999999999",
+        "10000000000000000",
+    ):
+        assert transition(
+            base,
+            {
+                "resource_state": state,
+                "command": "integer",
+                "arguments": [raw],
+            },
+        )["error"] == "invalid-argument"
+    for raw in ("", " \t\n\v\f\r"):
+        assert transition(
+            base,
+            {
+                "resource_state": state,
+                "command": "non-empty",
+                "arguments": [raw],
+            },
+        )["error"] == "invalid-argument"
+    for raw in ("\u00a0", "\u2003", " x "):
+        assert transition(
+            base,
+            {
+                "resource_state": state,
+                "command": "non-empty",
+                "arguments": [raw],
+            },
+        )["result"] == raw
+    assert transition(
+        base, {"resource_state": state, "command": "missing", "arguments": []}
+    )["error"] == "unknown-command"
+
+
+# ---------------------------------------------------------------------------
 # bytecode
 # ---------------------------------------------------------------------------
 

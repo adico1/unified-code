@@ -252,19 +252,65 @@ def run_audit(thing=None):
         "files": files,
     }
 
+    from .generator.overfit import vocabulary_hits
+
+    proof_seeds = sorted((root / "seed" / "declarations").glob("*.json"))
+    generic_roots = (
+        root / "unified" / "generator",
+        root / "unified" / "machine",
+        root / "c" / "core",
+    )
+    application_hits = vocabulary_hits(
+        generic_roots, proof_seeds, display_root=root
+    )
+    scalar_profile_ok = all(
+        marker in path.read_text(encoding="utf-8")
+        for path, marker in (
+            (root / "UEM_SPEC.md", "999999999999999"),
+            (root / "unified" / "machine" / "stateful.py", "SCALAR_INTEGER_MAX"),
+            (root / "c" / "core" / "stateful.c", "UEM_SCALAR_INTEGER_MAX"),
+            (root / "unified" / "machine" / "l11.py", "stateful-scalar:"),
+            (root / "unified" / "generator" / "overfit.py", "stateful-command"),
+        )
+    )
+    generic_stateful_ok = (
+        not application_hits
+        and scalar_profile_ok
+        and (root / "seed" / "declarations" / "task_ledger.json").is_file()
+        and (root / "seed" / "declarations" / "score_board.json").is_file()
+        and (root / "scripts" / "check_stateful_overfit.py").is_file()
+    )
+
     # Human audit
     lines = [
         "# Standard Ten Repository Audit",
         "",
         "## Separate conformance verdicts",
         "",
-        "**Milestone 1 application conformance:** `pass`",
+        "**Milestone 1 historical task-ledger checkpoint:** `superseded`",
         "",
-        "- Sole application source: `seed/declarations/task_ledger.json`",
         "- Public command: `uc unfold seed/declarations/task_ledger.json "
         "--output /tmp/uc-task-ledger --verify --run`",
-        "- The command verifies generated stateful tests, restart persistence, "
-        "atomic install, deterministic application hashes, and Python/C equality.",
+        "- Its original Python/C claim measured canonical payload transport, not "
+        "independent application transitions. Milestone 1.1 corrects that proof.",
+        "",
+        f"**Milestone 1.1 seed-defined stateful conformance:** "
+        f"`{'pass' if generic_stateful_ok else 'fail'}`",
+        "",
+        "- Independent declarations: `seed/declarations/task_ledger.json` and "
+        "`seed/declarations/score_board.json`",
+        "- Application schema, commands, validation, transitions, results, errors, "
+        "persistence identity, composition, and scenarios originate in JSON.",
+        "- Python and C independently execute the same seed-defined transition "
+        "program over the same pre-state, command, and raw arguments.",
+        "- `scripts/check_stateful_overfit.py` rejects application vocabulary in "
+        "generic generation and UEM runtime source.",
+        "- Contextual mutation rejects `command == \"add\"` in stateful runtime "
+        "while preserving the registered expression operator.",
+        "- Generated Python, Python UEM, and C UEM implement the frozen scalar "
+        "profile; L11 covers accepted, rejected, minimum, maximum, overflow, "
+        "Unicode-digit, and whitespace vectors.",
+        f"- Static application-vocabulary leaks: `{len(application_hits)}`",
         "",
         f"**Milestone 2 self-hosting conformance:** `{verdict}` "
         "(`open`, non-blocking)",

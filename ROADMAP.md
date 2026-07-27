@@ -11,15 +11,47 @@ uc unfold seed/declarations/task_ledger.json \
   --run
 ```
 
-This milestone is application-scoped: one JSON seed generates the runnable
-stateful application, generated tests and acceptance sequence; verifies
-Python/C canonical equality and deterministic rebuild hashes; and installs only
-after every requested gate passes.
+This checkpoint proved the complete task-ledger product pipeline: one JSON seed
+configured a prebuilt persistent-resource profile, generated its runnable
+application and tests, verified deterministic rebuild hashes, and installed
+only after every requested gate passed.
 
-> One 158-line JSON seed deterministically unfolds into a 1,811-line
-> persistent application, with zero handwritten application code, zero
-> domain/composition control-flow nodes, identical Python/C results, and
-> complete L1–L13 verification.
+The later Milestone 1.1 audit found that this checkpoint's Python/C result check
+transported Python's completed payload through a literal UEM program. It did not
+prove independent cross-host application behavior. The generation and product
+proof remained valid; the equality claim was superseded by Milestone 1.1.
+
+## Milestone 1.1 — Generic seed-defined stateful behavior
+
+Issue [#11](https://github.com/adico1/unified-code/issues/11) corrects an
+overfitting defect found after the Milestone 1 checkpoint. Application-domain
+commands, fields, validation, transitions, results, errors, persistence
+identity, composition, and acceptance scenarios must originate in the seed,
+not in the generic generator.
+
+The acceptance proof uses two independent applications:
+
+```bash
+uc unfold seed/declarations/task_ledger.json \
+  --output /tmp/uc-task-ledger \
+  --verify \
+  --run
+
+uc unfold seed/declarations/score_board.json \
+  --output /tmp/uc-score-board \
+  --verify \
+  --run
+```
+
+Milestone 1.1 does not depend on or widen Milestone 2.
+
+Both hosts now execute one generic UEM transition program derived from each
+seed. Every step compares resulting state, result, evidence, errors, and ticket
+status. Declared duplicate/missing-resource errors are exercised inside the
+persisted sequence, followed by successful recovery commands and restart.
+Generated Python, Python UEM, and C UEM also share the frozen scalar input
+profile in `UEM_SPEC.md`, with differential minimum, maximum, overflow, syntax,
+Unicode-digit, and whitespace vectors.
 
 ## Milestone 2 — Root-seed fixed-point bootstrap
 
@@ -121,7 +153,8 @@ This milestone is deliberately non-blocking for Milestone 1. Open items:
 
 - Close `standard.gap` tickets by seed-expressing packages (no conventional fill)
 - Eliminate OOP (`_ExprFail`) via plain-data faults
-- Collapse dual Python/C cores toward one UEM + thin host boundaries
+- Unify the UEM surface while preserving independent Python and C hosts for
+  L11 equivalence
 - Optional: ARM64 / RISC-V / wasm executables after vector pass on-device
 - Formal grammar and semantics toward 1.0
 

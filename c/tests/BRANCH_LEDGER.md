@@ -17,8 +17,8 @@ still_baseline_open == 0 && new_arcs == 0
 
 ## Measurement reconciliation
 
-- **branches_hit:** 1270
-- **branches_total:** 1270
+- **branches_hit:** 1272
+- **branches_total:** 1272
 - **missing_arcs_measured:** 0
 - **missing_arcs_in_ledger:** 0
 - **unmapped_arcs:** 0
@@ -28,8 +28,8 @@ still_baseline_open == 0 && new_arcs == 0
 ## Baseline conservation (vs frozen open set)
 
 - **baseline_open:** 311
-- **resolved_by_test:** 72
-- **removed_by_refactor:** 239
+- **resolved_by_test:** 68
+- **removed_by_refactor:** 243
 - **new_arcs:** 0
 - **remapped_arcs:** 0 (informational)
 - **ambiguous_arcs:** 0 (must be 0)
@@ -50,7 +50,7 @@ still_baseline_open == 0 && new_arcs == 0
 | `decode.c` | 244 | 244 | 0 |
 | `expr.c` | 320 | 320 | 0 |
 | `machine.c` | 276 | 276 | 0 |
-| `primitives.c` | 250 | 250 | 0 |
+| `primitives.c` | 252 | 252 | 0 |
 
 ## Resolved by test (baseline open → taken)
 
@@ -109,23 +109,19 @@ still_baseline_open == 0 && new_arcs == 0
 - `machine.c:362:b1`
 - `machine.c:67:b0`
 - `machine.c:73:b0`
-- `primitives.c:128:b1`
-- `primitives.c:15:b1`
-- `primitives.c:227:b1`
-- `primitives.c:242:b1`
-- `primitives.c:301:b1`
-- `primitives.c:319:b1`
+- `primitives.c:249:b1`
+- `primitives.c:318:b1`
+- `primitives.c:320:b1`
+- `primitives.c:330:b1`
+- `primitives.c:348:b1`
+- `primitives.c:357:b1`
+- `primitives.c:369:b1`
 - `primitives.c:375:b0`
 - `primitives.c:409:b0`
 - `primitives.c:410:b0`
 - `primitives.c:411:b0`
-- `primitives.c:41:b3`
-- `primitives.c:41:b4`
-- `primitives.c:53:b0`
-- `primitives.c:55:b0`
-- `primitives.c:57:b0`
-- `primitives.c:59:b0`
-- `primitives.c:80:b2`
+- `primitives.c:417:b1`
+- `primitives.c:69:b2`
 
 ## Removed by refactor (baseline identity gone from gcov)
 

@@ -46,29 +46,21 @@
       "transformation": {
         "acceptance": [
           {
-            "argv": [
-              "add",
-              "A"
-            ],
+            "argv": ["add", "A"],
             "expect": {
               "added": "A",
               "completed": false
             }
           },
           {
-            "argv": [
-              "add",
-              "B"
-            ],
+            "argv": ["add", "B"],
             "expect": {
               "added": "B",
               "completed": false
             }
           },
           {
-            "argv": [
-              "list"
-            ],
+            "argv": ["list"],
             "expect": {
               "tasks": [
                 {
@@ -83,18 +75,44 @@
             }
           },
           {
-            "argv": [
-              "complete",
-              "A"
-            ],
+            "argv": ["add", "A"],
+            "exit": 1,
+            "expect": {
+              "error": "duplicate-title",
+              "state": "invalid"
+            }
+          },
+          {
+            "argv": ["list"],
+            "expect": {
+              "tasks": [
+                {
+                  "completed": false,
+                  "title": "A"
+                },
+                {
+                  "completed": false,
+                  "title": "B"
+                }
+              ]
+            }
+          },
+          {
+            "argv": ["complete", "A"],
             "expect": {
               "completed": "A"
             }
           },
           {
-            "argv": [
-              "list"
-            ],
+            "argv": ["complete", "A"],
+            "exit": 1,
+            "expect": {
+              "error": "task-not-open",
+              "state": "invalid"
+            }
+          },
+          {
+            "argv": ["list"],
             "expect": {
               "tasks": [
                 {
@@ -109,9 +127,7 @@
             }
           },
           {
-            "argv": [
-              "list"
-            ],
+            "argv": ["list"],
             "expect": {
               "tasks": [
                 {
@@ -127,15 +143,136 @@
           }
         ],
         "commands": {
-          "add": 1,
-          "complete": 1,
-          "list": 0
+          "add": {
+            "actions": [
+              {
+                "kind": "append",
+                "path": ["tasks"],
+                "value": {
+                  "completed": {"$literal": false},
+                  "title": {"$arg": "title"}
+                }
+              }
+            ],
+            "arguments": [
+              {
+                "error": "invalid-title",
+                "name": "title",
+                "non_empty": true,
+                "type": "string"
+              }
+            ],
+            "guards": [
+              {
+                "error": "duplicate-title",
+                "kind": "unique",
+                "path": ["tasks"],
+                "where": [
+                  {
+                    "equals": {"$arg": "title"},
+                    "field": "title"
+                  }
+                ]
+              }
+            ],
+            "result": {
+              "added": {"$arg": "title"},
+              "completed": {"$literal": false}
+            }
+          },
+          "complete": {
+            "actions": [
+              {
+                "kind": "set",
+                "target": "open_task",
+                "values": {
+                  "completed": {"$literal": true}
+                }
+              }
+            ],
+            "arguments": [
+              {
+                "error": "invalid-title",
+                "name": "title",
+                "non_empty": true,
+                "type": "string"
+              }
+            ],
+            "guards": [
+              {
+                "as": "open_task",
+                "error": "task-not-open",
+                "kind": "require",
+                "path": ["tasks"],
+                "where": [
+                  {
+                    "equals": {"$arg": "title"},
+                    "field": "title"
+                  },
+                  {
+                    "equals": {"$literal": false},
+                    "field": "completed"
+                  }
+                ]
+              }
+            ],
+            "result": {
+              "completed": {"$arg": "title"}
+            }
+          },
+          "list": {
+            "actions": [],
+            "arguments": [],
+            "guards": [],
+            "result": {
+              "tasks": {
+                "$project": {
+                  "fields": ["completed", "title"],
+                  "path": ["tasks"]
+                }
+              }
+            }
+          }
         },
-        "default_state": {
-          "tasks": []
-        },
+        "failure_probe": ["list"],
         "kind": "stateful_resource",
-        "resource": "tasks"
+        "persistence": {
+          "default_path": ".uc-task-ledger.json",
+          "environment": "UC_TASK_LEDGER_STATE"
+        },
+        "rejections": [
+          {
+            "argv": ["add", ""],
+            "exit": 1,
+            "expect": {
+              "error": "invalid-title",
+              "state": "invalid"
+            }
+          }
+        ],
+        "state": {
+          "expect": {
+            "tasks": [
+              {
+                "completed": true,
+                "title": "A"
+              },
+              {
+                "completed": false,
+                "title": "B"
+              }
+            ]
+          },
+          "initial": {
+            "tasks": []
+          },
+          "schema": [
+            {
+              "path": ["tasks"],
+              "type": "array"
+            }
+          ]
+        }
       }
     }
   ],

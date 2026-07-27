@@ -29,6 +29,7 @@ def registry():
         "verify_result": prim_verify_result,
         "present_json": prim_present_json,
         "mark_part": prim_mark_part,
+        "state_transition": prim_state_transition,
         "accept_outward": prim_accept_outward,
     }
 
@@ -48,6 +49,36 @@ def apply_primitive(thing, name):
 
 def prim_identity(thing):
     return with_evidence(thing, "primitive:identity")
+
+
+def prim_state_transition(thing):
+    """Execute the image's seed-declared transition against raw host input."""
+    from .stateful import transition
+
+    v = dict(value_of(thing))
+    image = v.get("image") or {}
+    config = image.get("stateful") or {}
+    host = v.get("host_input") or {}
+    envelope = transition(config, host)
+    store = dict(v.get("store") or {})
+    store["stats"] = envelope
+    v["store"] = store
+    error = envelope.get("error")
+    if error is not None:
+        store["error"] = error
+        return with_state(
+            with_evidence(
+                {**thing, "value": v},
+                "part:state_transition",
+                f"state_transition:error:{error}",
+            ),
+            "invalid",
+        )
+    return with_evidence(
+        {**thing, "value": v},
+        "part:state_transition",
+        "state_transition:ok",
+    )
 
 
 def prim_mark_inward(thing):
