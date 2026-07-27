@@ -22,8 +22,8 @@ The repository-wide figures and gaps below measure only the root-seed fixed-poin
 **Repository self-hosting verdict:** `fail`
 **standard_version:** TEN-1
 **seed_sha256:** `375956e77f77ce474f8deacba7d0aefe4ed90f2023b7819e357388a3eb03e5e3`
-**files classified:** 248
-**illegal provenance (not in allowed five classes):** 204
+**files classified:** 249
+**illegal provenance (not in allowed five classes):** 205
 **OOP class files:** 0
 **open standard.gap tickets:** 6
 
@@ -51,7 +51,7 @@ Conventional development is not an authorized fallback. Gaps below are `standard
 | `evidence` | 7 |
 | `external-vendored` | 4 |
 | `generated` | 8 |
-| `handwritten-pending` | 204 |
+| `handwritten-pending` | 205 |
 | `physical-host-boundary` | 16 |
 | `seed` | 9 |
 
@@ -65,11 +65,11 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `.coveragerc` · `handwritten-pending` · `standard.gap` · `f4c1eac25e83d766`
 - `.github/workflows/test.yml` · `handwritten-pending` · `standard.gap` · `daf9dc9485d797c6`
 - `.gitignore` · `handwritten-pending` · `standard.gap` · `699c693cc407b221`
-- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `cb742a568e0413ca`
+- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `ceb0b18df5eb55dd`
 - `GAUNTLET.md` · `evidence` · `ok` · `9db4ac8d28eeb5ad`
 - `LAW.md` · `handwritten-pending` · `standard.gap` · `7d452c174dec7c94`
 - `LICENSE` · `handwritten-pending` · `standard.gap` · `af6b910929ec375c`
-- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `ee85d871704d9169`
+- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `5b9749121ae2f63a`
 - `README.md` · `handwritten-pending` · `standard.gap` · `9474dc4af62b69d7`
 - `ROADMAP.md` · `handwritten-pending` · `standard.gap` · `a788774e61d21571`
 - `SPEC.md` · `handwritten-pending` · `standard.gap` · `fb04ba1772610eb3`
@@ -227,7 +227,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `examples/two_dimensions.py` · `handwritten-pending` · `standard.gap` · `a6eec3842bbbe930`
 - `pyproject.toml` · `handwritten-pending` · `standard.gap` · `033818aa172c883b`
 - `scripts/audit_standard_ten.py` · `handwritten-pending` · `standard.gap` · `400c2bdc3650a4bc`
-- `scripts/check_stateful_overfit.py` · `handwritten-pending` · `standard.gap` · `625b39ef4c195883`
+- `scripts/check_stateful_overfit.py` · `handwritten-pending` · `standard.gap` · `1068fd99ebb46984`
 - `scripts/clean_room_ten.sh` · `handwritten-pending` · `standard.gap` · `a25cddf4323da5c8`
 - `scripts/emit_l13_report.py` · `handwritten-pending` · `standard.gap` · `3810ee0ccf9dc694`
 - `scripts/run_l13.sh` · `handwritten-pending` · `standard.gap` · `f0655cb2c9a828ff`
@@ -262,7 +262,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `tests/test_signature.py` · `handwritten-pending` · `standard.gap` · `8e640c56a6580c13`
 - `tests/test_standard_ten.py` · `handwritten-pending` · `standard.gap` · `6daf6aec6921f2df`
 - `tests/test_uem.py` · `handwritten-pending` · `standard.gap` · `124d0cb0b656702c`
-- `tests/test_unfold_stateful.py` · `handwritten-pending` · `standard.gap` · `71199f2d2e6436bd`
+- `tests/test_unfold_stateful.py` · `handwritten-pending` · `standard.gap` · `655e78cf2e750146`
 - `unified/__init__.py` · `handwritten-pending` · `standard.gap` · `24a5176c9cd5a7f9`
 - `unified/__main__.py` · `handwritten-pending` · `standard.gap` · `2b9731d81c4a0fe6`
 - `unified/boundary.py` · `handwritten-pending` · `standard.gap` · `9a76b9d73f1daab0`
@@ -281,6 +281,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `unified/generator/gauntlet.py` · `handwritten-pending` · `standard.gap` · `5d8b79d636b348a2`
 - `unified/generator/generate.py` · `handwritten-pending` · `standard.gap` · `e2f992740b0ee252`
 - `unified/generator/names.py` · `handwritten-pending` · `standard.gap` · `04791c2fa1ca7cf6`
+- `unified/generator/overfit.py` · `handwritten-pending` · `standard.gap` · `eee6e1cc3414beb2`
 - `unified/generator/render.py` · `handwritten-pending` · `standard.gap` · `c7d4a443dead9e30`
 - `unified/generator/render_declared.py` · `handwritten-pending` · `standard.gap` · `b5e91bd42c4f39c8`
 - `unified/generator/stateful_emit.py` · `handwritten-pending` · `standard.gap` · `45b18f8ada141d9d`
@@ -305,7 +306,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `unified/machine/thing.py` · `handwritten-pending` · `standard.gap` · `991b7864294015f9`
 - `unified/machine/validate.py` · `handwritten-pending` · `standard.gap` · `a7233a9e4015f04f`
 - `unified/standard.py` · `handwritten-pending` · `standard.gap` · `8aa45f56d2948ac5`
-- `unified/standard_audit.py` · `handwritten-pending` · `standard.gap` · `3b228d8cf26a1e4d`
+- `unified/standard_audit.py` · `handwritten-pending` · `standard.gap` · `fdeedd06bb56a23c`
 - `unified/standard_generate.py` · `handwritten-pending` · `standard.gap` · `78fd6e444cffdc5d`
 - `unified/thing.py` · `handwritten-pending` · `standard.gap` · `7db7669dc8e629b1`
 - `unified/verify.py` · `handwritten-pending` · `standard.gap` · `d72f0665fb484a42`

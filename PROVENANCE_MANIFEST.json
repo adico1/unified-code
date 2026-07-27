@@ -1,5 +1,5 @@
 {
-  "file_count": 248,
+  "file_count": 249,
   "files": [
     {
       "compliance": "ok",
@@ -100,7 +100,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "cb742a568e0413cab47ebb67b7b763ca147e1d9fe09704174a70f37accc62308",
+      "sha256": "ceb0b18df5eb55dddf82a3b646a98ae97c099a01b873a54d31845cac8fefb7f8",
       "size": 26819,
       "standard_ten_class_ok": true
     },
@@ -182,7 +182,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "ee85d871704d91696dd457aebb8766a7acf03dd44a319a47d8849ed93c0acc5c",
+      "sha256": "5b9749121ae2f63a3889306efc04e4536d63f5dc320c7f9f27f36ae19a40559d",
       "size": 157422,
       "standard_ten_class_ok": true
     },
@@ -3512,12 +3512,12 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 3,
-        "for": 11,
-        "if": 16,
+        "comp": 2,
+        "for": 1,
+        "if": 1,
         "match": 0,
-        "total": 31,
-        "try": 1,
+        "total": 4,
+        "try": 0,
         "while": 0
       },
       "gap_id": "gap.untracked-or-handwritten",
@@ -3528,8 +3528,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "scripts/check_stateful_overfit.py",
       "provenance": "handwritten-pending",
-      "sha256": "625b39ef4c195883f6f14ba084c54f9ccc32ad4f1ee052a5fc7604223a004b98",
-      "size": 6399,
+      "sha256": "1068fd99ebb469848d3b505b70b4355c51f428c2603ea81a62e5a442387ad1cd",
+      "size": 1103,
       "standard_ten_class_ok": false
     },
     {
@@ -4324,8 +4324,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_unfold_stateful.py",
       "provenance": "handwritten-pending",
-      "sha256": "71199f2d2e6436bddcbf418c568b4b4d89789234f45986c96ad4b0db32a03444",
-      "size": 6330,
+      "sha256": "655e78cf2e7501463f0c05b9df270bcbe4dc6a6a8a9101f12bfac1a5282ba6bc",
+      "size": 6422,
       "standard_ten_class_ok": false
     },
     {
@@ -4758,6 +4758,30 @@
       "provenance": "handwritten-pending",
       "sha256": "04791c2fa1ca7cf6bceba0c4f92898b56de78b3d935eba6e6da112e08d29d1fa",
       "size": 1351,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 1,
+        "for": 11,
+        "if": 17,
+        "match": 0,
+        "total": 30,
+        "try": 1,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "unified/generator/overfit.py",
+      "provenance": "handwritten-pending",
+      "sha256": "eee6e1cc3414beb212b237792dd740aa53f8ea2f89e218d1bae9d82db1f1739f",
+      "size": 5780,
       "standard_ten_class_ok": false
     },
     {
@@ -5355,8 +5379,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/standard_audit.py",
       "provenance": "handwritten-pending",
-      "sha256": "3b228d8cf26a1e4dde06cba375264f8685b90ef295ebd66d39df741a00121309",
-      "size": 14502,
+      "sha256": "fdeedd06bb56a23c596eee46eb7ac08b1e32b2a21819a733b5d30336a0fc9b04",
+      "size": 14758,
       "standard_ten_class_ok": false
     },
     {
@@ -5432,7 +5456,7 @@
       "standard_ten_class_ok": false
     }
   ],
-  "illegal_provenance_count": 204,
+  "illegal_provenance_count": 205,
   "oop_files": [],
   "open_gaps": [
     {

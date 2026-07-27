@@ -138,7 +138,7 @@ def test_generic_generator_has_no_application_vocabulary():
 
 
 def test_anti_overfitting_scan_detects_injected_vocabulary(tmp_path):
-    from scripts.check_stateful_overfit import (
+    from unified.generator.overfit import (
         derive_application_vocabulary,
         vocabulary_hits,
     )
@@ -146,13 +146,17 @@ def test_anti_overfitting_scan_detects_injected_vocabulary(tmp_path):
     source = tmp_path / "generator"
     source.mkdir()
     injected = source / "generic.py"
-    vocabulary = derive_application_vocabulary()
+    seeds = (SEED, SECOND_SEED)
+    vocabulary = derive_application_vocabulary(seeds)
     assert {"duplicate-title", "task-not-open", "duplicate-player", "unknown-player"} <= set(
         vocabulary
     )
     for term in vocabulary:
         injected.write_text(f'DOMAIN = "{term}"\n', encoding="utf-8")
-        assert any(token == term for _, token in vocabulary_hits((source,)))
+        assert any(
+            token == term
+            for _, token in vocabulary_hits((source,), seeds, display_root=ROOT)
+        )
 
 
 def test_atomic_refusal_preserves_installed_output(tmp_path):

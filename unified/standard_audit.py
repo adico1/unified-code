@@ -252,9 +252,17 @@ def run_audit(thing=None):
         "files": files,
     }
 
-    from scripts.check_stateful_overfit import vocabulary_hits
+    from .generator.overfit import vocabulary_hits
 
-    application_hits = vocabulary_hits()
+    proof_seeds = sorted((root / "seed" / "declarations").glob("*.json"))
+    generic_roots = (
+        root / "unified" / "generator",
+        root / "unified" / "machine",
+        root / "c" / "core",
+    )
+    application_hits = vocabulary_hits(
+        generic_roots, proof_seeds, display_root=root
+    )
     generic_stateful_ok = (
         not application_hits
         and (root / "seed" / "declarations" / "task_ledger.json").is_file()
