@@ -1,0 +1,385 @@
+{
+  "contract": {
+    "application_conformance": "pass",
+    "baseline_commit": "3a0bf81",
+    "blockers": [],
+    "conservation": {
+      "ambiguous_arcs": 0,
+      "baseline_commit": "3a0bf81",
+      "baseline_open": 311,
+      "baseline_path": "c/tests/branch_baseline.json",
+      "branches_hit": 1270,
+      "branches_total": 1270,
+      "conservation": {
+        "equation": "baseline_open + new_arcs == resolved_by_test + removed_by_refactor + current_open",
+        "holds": true,
+        "left": 311,
+        "right": 311
+      },
+      "current_open": 0,
+      "history_note": "Baseline frozen at 3a0bf81 in branch_baseline.json. Do not regenerate baseline until all original open arcs are accounted for.",
+      "ledger_path": "c/tests/branch_ledger.json",
+      "measurement": {
+        "equation": "missing_arcs_measured == missing_arcs_in_ledger + unmapped_arcs",
+        "holds": true
+      },
+      "missing_arcs_in_ledger": 0,
+      "missing_arcs_measured": 0,
+      "new_arcs": 0,
+      "remapped_arcs": 0,
+      "removed_by_refactor": 239,
+      "resolved_by_test": 72,
+      "still_baseline_open": 0,
+      "unclassified_arcs": 0,
+      "unmapped_arcs": 0
+    },
+    "contract_pass": true,
+    "criteria": [
+      {
+        "actual": {
+          "commit": "3a0bf81",
+          "open": 311
+        },
+        "blocker": "",
+        "evidence": "c/tests/branch_baseline.json",
+        "id": "baseline.frozen",
+        "name": "Branch baseline frozen at 3a0bf81 with open=311",
+        "ok": true,
+        "phase": "P0",
+        "required": {
+          "commit": "3a0bf81",
+          "open": 311
+        }
+      },
+      {
+        "actual": {
+          "equation": "baseline_open + new_arcs == resolved_by_test + removed_by_refactor + current_open",
+          "holds": true,
+          "left": 311,
+          "right": 311
+        },
+        "blocker": "",
+        "evidence": "{\"equation\": \"baseline_open + new_arcs == resolved_by_test + removed_by_refactor + current_open\", \"left\": 311, \"right\": 311, \"holds\": true}",
+        "id": "baseline.conservation",
+        "name": "baseline_open + new_arcs == resolved + removed + current_open",
+        "ok": true,
+        "phase": "P0",
+        "required": true
+      },
+      {
+        "actual": {
+          "equation": "missing_arcs_measured == missing_arcs_in_ledger + unmapped_arcs",
+          "holds": true
+        },
+        "blocker": "",
+        "evidence": "{\"equation\": \"missing_arcs_measured == missing_arcs_in_ledger + unmapped_arcs\", \"holds\": true}",
+        "id": "ledger.measurement",
+        "name": "missing_arcs_measured == in_ledger + unmapped",
+        "ok": true,
+        "phase": "P0",
+        "required": true
+      },
+      {
+        "actual": 0,
+        "blocker": "",
+        "evidence": "",
+        "id": "ledger.unmapped",
+        "name": "unmapped_arcs == 0",
+        "ok": true,
+        "phase": "P0",
+        "required": 0
+      },
+      {
+        "actual": 0,
+        "blocker": "",
+        "evidence": "",
+        "id": "ledger.unclassified",
+        "name": "unclassified_arcs == 0",
+        "ok": true,
+        "phase": "P0",
+        "required": 0
+      },
+      {
+        "actual": 0,
+        "blocker": "",
+        "evidence": "",
+        "id": "ledger.ambiguous",
+        "name": "ambiguous_arcs == 0",
+        "ok": true,
+        "phase": "P0",
+        "required": 0
+      },
+      {
+        "actual": 0,
+        "blocker": "",
+        "evidence": "resolved_by_test=72 still_baseline_open=0",
+        "id": "branches.current_open_zero",
+        "name": "current_open == 0",
+        "ok": true,
+        "phase": "P1",
+        "required": 0
+      },
+      {
+        "actual": "1270/1270",
+        "blocker": "",
+        "evidence": "",
+        "id": "branches.c_100",
+        "name": "C branches 100% nonzero denominator",
+        "ok": true,
+        "phase": "P1",
+        "required": "hit==total>0"
+      },
+      {
+        "actual": 100.0,
+        "blocker": "",
+        "evidence": "actual=100.0",
+        "id": "l13.python_statements",
+        "name": "L13 dimension python_statements",
+        "ok": true,
+        "phase": "P1/P5",
+        "required": 100.0
+      },
+      {
+        "actual": 100.0,
+        "blocker": "",
+        "evidence": "actual=100.0",
+        "id": "l13.python_branches",
+        "name": "L13 dimension python_branches",
+        "ok": true,
+        "phase": "P1/P5",
+        "required": 100.0
+      },
+      {
+        "actual": 100.0,
+        "blocker": "",
+        "evidence": "actual=100.0 hit/total=1678/1678",
+        "id": "l13.c_lines",
+        "name": "L13 dimension c_lines",
+        "ok": true,
+        "phase": "P1/P5",
+        "required": 100.0
+      },
+      {
+        "actual": 100.0,
+        "blocker": "",
+        "evidence": "actual=100.0 hit/total=76/76",
+        "id": "l13.c_functions",
+        "name": "L13 dimension c_functions",
+        "ok": true,
+        "phase": "P1/P5",
+        "required": 100.0
+      },
+      {
+        "actual": 100.0,
+        "blocker": "",
+        "evidence": "actual=100.0 hit/total=1270/1270",
+        "id": "l13.c_branches",
+        "name": "L13 dimension c_branches",
+        "ok": true,
+        "phase": "P1/P5",
+        "required": 100.0
+      },
+      {
+        "actual": 100.0,
+        "blocker": "",
+        "evidence": "actual=100.0",
+        "id": "l13.python_c_differential",
+        "name": "L13 dimension python_c_differential",
+        "ok": true,
+        "phase": "P1/P5",
+        "required": 100.0
+      },
+      {
+        "actual": "pass",
+        "blocker": "",
+        "evidence": "coverage.json",
+        "id": "l13.verdict",
+        "name": "L13 overall pass",
+        "ok": true,
+        "phase": "P5",
+        "required": "pass"
+      },
+      {
+        "actual": true,
+        "blocker": "",
+        "evidence": "{\"uc_binary\": \"/Users/adicohen/Projects/unified-code/.venv/bin/uc\", \"unfold_in_cli_source\": true, \"probe_exit\": 1}",
+        "id": "unfold.cli",
+        "name": "uc unfold implemented in CLI",
+        "ok": true,
+        "phase": "P2",
+        "required": true
+      },
+      {
+        "actual": true,
+        "blocker": "",
+        "evidence": "",
+        "id": "unfold.task_ledger_seed",
+        "name": "seed/declarations/task_ledger.json exists",
+        "ok": true,
+        "phase": "P3",
+        "required": true
+      },
+      {
+        "actual": "unknown",
+        "blocker": "Standard Ten fail; gaps=['gap.seed-expresses-full-framework', 'gap.no-app-control-flow-in-host', 'gap.declarations-as-python', 'gap.dual-host-not-single-machine-surface', 'gap.generated-tests-and-docs', 'gap.clean-room-full-tree']",
+        "evidence": "gaps=['gap.seed-expresses-full-framework', 'gap.no-app-control-flow-in-host', 'gap.declarations-as-python', 'gap.dual-host-not-single-machine-surface', 'gap.generated-tests-and-docs', 'gap.clean-room-full-tree']",
+        "id": "standard_ten.audit",
+        "name": "Standard Ten audit pass",
+        "ok": false,
+        "phase": "P4",
+        "required": "pass"
+      }
+    ],
+    "git_head": "6ab02cb",
+    "phases": [
+      {
+        "goal": "Keep 3a0bf81 baseline; never re-freeze until current_open=0",
+        "id": "P0",
+        "name": "Contract measurement freeze",
+        "ok": true,
+        "related_failed": []
+      },
+      {
+        "goal": "current_open=0 under frozen baseline; L13 c_branches 100%",
+        "id": "P1",
+        "name": "C branch closure (remaining ledger)",
+        "ok": true,
+        "related_failed": []
+      },
+      {
+        "goal": "seed \u2192 validated, generated, built, verified, installed application",
+        "id": "P2",
+        "name": "uc unfold one-command pipeline",
+        "ok": true,
+        "related_failed": []
+      },
+      {
+        "goal": "One seed (not text/invoice) unfolds to a usable app",
+        "id": "P3",
+        "name": "Independent task-ledger seed proof",
+        "ok": true,
+        "related_failed": []
+      },
+      {
+        "goal": "Later: AUDIT_STANDARD_TEN repository self-hosting verdict pass",
+        "id": "P4",
+        "name": "Milestone 2 root-seed fixed-point bootstrap",
+        "ok": false,
+        "related_failed": [
+          "standard_ten.audit"
+        ]
+      },
+      {
+        "goal": "L1\u2013L13 all 100%; CI runs same one-command unfold proof",
+        "id": "P5",
+        "name": "Full gauntlet + CI",
+        "ok": true,
+        "related_failed": []
+      },
+      {
+        "goal": "LAW/SPEC/README/GAUNTLET + signed manifest reflect truth",
+        "id": "P6",
+        "name": "Publish evidence",
+        "ok": false,
+        "related_failed": []
+      }
+    ],
+    "self_hosting_blockers": [
+      "Standard Ten fail; gaps=['gap.seed-expresses-full-framework', 'gap.no-app-control-flow-in-host', 'gap.declarations-as-python', 'gap.dual-host-not-single-machine-surface', 'gap.generated-tests-and-docs', 'gap.clean-room-full-tree']"
+    ],
+    "self_hosting_conformance": "open",
+    "self_hosting_pass": false,
+    "summary": {
+      "failed": 1,
+      "passed": 17,
+      "total": 18
+    },
+    "timestamp": "2026-07-27T05:01:37Z"
+  },
+  "duration_s": 67.7,
+  "ok": true,
+  "steps": [
+    {
+      "cmd": [
+        "/Users/adicohen/Projects/unified-code/.venv/bin/python",
+        "/Users/adicohen/Projects/unified-code/c/scripts/branch_ledger.py"
+      ],
+      "exit": 0,
+      "name": "branch_ledger",
+      "ok": true,
+      "stderr_tail": "",
+      "stdout_tail": " 311,\n  \"resolved_by_test\": 72,\n  \"removed_by_refactor\": 239,\n  \"new_arcs\": 0,\n  \"remapped_arcs\": 0,\n  \"ambiguous_arcs\": 0,\n  \"current_open\": 0,\n  \"still_baseline_open\": 0,\n  \"conservation_holds\": true,\n  \"measurement_holds\": true,\n  \"l13_branch_eligible\": true,\n  \"md\": \"/Users/adicohen/Projects/unified-code/c/tests/BRANCH_LEDGER.md\",\n  \"json\": \"/Users/adicohen/Projects/unified-code/c/tests/branch_ledger.json\",\n  \"baseline\": \"/Users/adicohen/Projects/unified-code/c/tests/branch_baseline.json\"\n}\n"
+    },
+    {
+      "cmd": [
+        "make",
+        "-C",
+        "/Users/adicohen/Projects/unified-code/c",
+        "clean"
+      ],
+      "exit": 0,
+      "name": "make_posix",
+      "ok": true,
+      "stderr_tail": "",
+      "stdout_tail": "rm -rf build\nrm -f *.gcov core/*.gcov\n"
+    },
+    {
+      "cmd": [
+        "make",
+        "-C",
+        "/Users/adicohen/Projects/unified-code/c",
+        "posix",
+        "CFLAGS=-std=c99 -Wall -O2 -Iinclude -Ithird_party -Icore -Ihost/mcu"
+      ],
+      "exit": 0,
+      "name": "make_posix_build",
+      "ok": true,
+      "stderr_tail": "",
+      "stdout_tail": "host/mcu -c -o build/decimal.o core/decimal.c\ncc -std=c99 -Wall -O2 -Iinclude -Ithird_party -Icore -Ihost/mcu -c -o build/cJSON.o third_party/cJSON.c\ncc -std=c99 -Wall -O2 -Iinclude -Ithird_party -Icore -Ihost/mcu -c -o build/sha256.o third_party/sha256.c\ncc -std=c99 -Wall -O2 -Iinclude -Ithird_party -Icore -Ihost/mcu -o build/uem-c build/main.o build/alloc.o build/decode.o build/machine.o build/primitives.o build/expr.o build/decimal.o build/cJSON.o build/sha256.o -L/usr/local/opt/binutils/lib\n"
+    },
+    {
+      "cmd": [
+        "bash",
+        "/Users/adicohen/Projects/unified-code/c/scripts/run_tests.sh"
+      ],
+      "exit": 0,
+      "name": "c_run_tests",
+      "ok": true,
+      "stderr_tail": "bash: warning: setlocale: LC_ALL: cannot change locale (C.UTF-8): Bad file descriptor\nbash: warning: setlocale: LC_ALL: cannot change locale (C.UTF-8): Bad file descriptor\nbash: warning: setlocale: LC_ALL: cannot change locale (C.UTF-8): Bad file descriptor\n",
+      "stdout_tail": "te c/tests/golden/ts_empty.json\nwrote c/tests/golden/inv_basic.json\nwrote c/tests/golden/inv_empty_items.json\nOK inv_basic.json state=valid py=c\nOK inv_empty_items.json state=valid py=c\nOK inv_half_cent.json state=valid py=c\nOK inv_reject_qty.json state=invalid py=c\nOK ts_empty.json state=valid py=c\nOK ts_gogo.json state=valid py=c\nOK reject bad_magic.uem\nOK reject trailing.uem\nOK reject truncated.uem\nOK reject unknown_opcode.uem\nOK deterministic\nOK invoice evidence order\nall C/UEM tests passed\n"
+    },
+    {
+      "cmd": [
+        "bash",
+        "/Users/adicohen/Projects/unified-code/c/scripts/run_l11_full.sh"
+      ],
+      "exit": 0,
+      "name": "c_l11_full",
+      "ok": true,
+      "stderr_tail": "erns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.\")\n      | ^\n/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'\n  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))\n      |                                                       ^\n6 warnings generated.\nbash: warning: setlocale: LC_ALL: cannot change locale (C.UTF-8): Bad file descriptor\n",
+      "stdout_tail": "o build/alloc.o build/decode.o build/machine.o build/primitives.o build/expr.o build/decimal.o build/cJSON.o build/sha256.o -L/usr/local/opt/binutils/lib -fsanitize=undefined\nUBSan run ok\n=== native identity ===\nx86_64\nbuild/uem-c: Mach-O 64-bit executable x86_64\n-rwxr-xr-x@ 1 adicohen  staff  283168 Jul 27 08:01 build/uem-c\n=== multi-arch note ===\nARM64/RISC-V: not marked supported without hardware golden execution.\nNative host (x86_64) golden vectors: PASS under release+ASan+UBSan.\nALL CLOSED\n"
+    },
+    {
+      "cmd": [
+        "bash",
+        "/Users/adicohen/Projects/unified-code/scripts/run_l13.sh"
+      ],
+      "exit": 0,
+      "name": "l13",
+      "ok": true,
+      "stderr_tail": "bash: warning: setlocale: LC_ALL: cannot change locale (C.UTF-8): Bad file descriptor\nwrote /Users/adicohen/Projects/unified-code/c/targets/manifests/l12_report_x86_64.json\n",
+      "stdout_tail": "0\n  [OK] error_ticket_paths: 100.0\n  [OK] event_routes: 100.0\n  [OK] fuzz_100k: 100.0\n  [OK] opcode_rejection_paths: 100.0\n  [OK] opcode_valid_paths: 100.0\n  [OK] opcodes: 100.0\n  [OK] physical_target_goldens: 100.0\n  [OK] primitive_registry: 100.0\n  [OK] python_branches: 100.0\n  [OK] python_c_differential: 100.0\n  [OK] python_statements: 100.0\n  [OK] required_mutations: 100.0\n  [OK] specification_requirements: 100.0\n  [OK] state_transitions: 100.0\ncoverage.json and GAUNTLET.md written\nL13 PASS\n"
+    },
+    {
+      "cmd": [
+        "/Users/adicohen/Projects/unified-code/.venv/bin/python",
+        "/Users/adicohen/Projects/unified-code/scripts/audit_standard_ten.py"
+      ],
+      "exit": 0,
+      "name": "standard_ten_audit",
+      "ok": true,
+      "stderr_tail": "",
+      "stdout_tail": "{\n  \"audit_path\": \"/Users/adicohen/Projects/unified-code/AUDIT_STANDARD_TEN.md\",\n  \"gap\": null,\n  \"illegal_provenance_count\": 202,\n  \"manifest_path\": \"/Users/adicohen/Projects/unified-code/PROVENANCE_MANIFEST.json\",\n  \"open_gap_count\": 6,\n  \"seed_sha256\": \"375956e77f77ce474f8deacba7d0aefe4ed90f2023b7819e357388a3eb03e5e3\",\n  \"state\": \"invalid\",\n  \"verdict\": \"fail\"\n}\n"
+    }
+  ]
+}

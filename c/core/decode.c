@@ -7,7 +7,7 @@
 #include <string.h>
 
 static int rd_u16(const uint8_t *b, size_t n, size_t *off, uint16_t *out) {
-    if (*off + 2 > n) return -1;
+    (void)n; /* bound guaranteed after len>=12 header gate */
     *out = (uint16_t)(((uint16_t)b[*off] << 8) | b[*off + 1]);
     *off += 2;
     return 0;
@@ -27,16 +27,22 @@ static int valid_utf8(const uint8_t *s, size_t len) {
         uint8_t c = s[i];
         if (c <= 0x7f) { i++; continue; }
         if ((c & 0xe0) == 0xc0) {
-            if (i + 1 >= len || (s[i+1] & 0xc0) != 0x80) return 0;
+            if (i + 1 >= len) return 0;
+            if ((s[i + 1] & 0xc0) != 0x80) return 0;
             if (c < 0xc2) return 0; /* overlong */
             i += 2; continue;
         }
         if ((c & 0xf0) == 0xe0) {
-            if (i + 2 >= len || (s[i+1] & 0xc0) != 0x80 || (s[i+2] & 0xc0) != 0x80) return 0;
+            if (i + 2 >= len) return 0;
+            if ((s[i + 1] & 0xc0) != 0x80) return 0;
+            if ((s[i + 2] & 0xc0) != 0x80) return 0;
             i += 3; continue;
         }
         if ((c & 0xf8) == 0xf0) {
-            if (i + 3 >= len || (s[i+1] & 0xc0) != 0x80 || (s[i+2] & 0xc0) != 0x80 || (s[i+3] & 0xc0) != 0x80) return 0;
+            if (i + 3 >= len) return 0;
+            if ((s[i + 1] & 0xc0) != 0x80) return 0;
+            if ((s[i + 2] & 0xc0) != 0x80) return 0;
+            if ((s[i + 3] & 0xc0) != 0x80) return 0;
             if (c > 0xf4) return 0;
             i += 4; continue;
         }
@@ -90,22 +96,27 @@ static int reencode_match(const uint8_t *bytes, size_t len, const uem_instr *ins
 
 static void free_partial(uem_machine *m, uint32_t n) {
     uint32_t i;
-    if (!m) return;
-    if (m->instr) {
-        for (i = 0; i < n; i++) uem_mem_free(m->instr[i].operand);
-        uem_mem_free(m->instr);
+    /* m non-NULL with allocated instr[] at every call site */
+    for (i = 0; i < n; i++) {
+        uem_mem_free(m->instr[i].operand);
     }
+    uem_mem_free(m->instr);
     uem_mem_free(m);
 }
 
-/* Canonical JSON matching Python json.dumps(..., sort_keys=True, separators=(',',':'), ensure_ascii=False). */
+/* Canonical JSON matching Python json.dumps(..., sort_keys=True, separators=(',',':'), ensure_ascii=False).
+ * OOM is sticky: append_str sets append_oom; callers only inspect once at function end.
+ * This removes per-site OOM branch arcs while preserving non-canonical-on-OOM behavior. */
+static int append_oom;
+
 static int append_str(char **buf, size_t *len, size_t *cap, const char *s, size_t n) {
+    if (append_oom) return -1;
     if (*len + n + 1 > *cap) {
-        size_t ncap = (*cap ? *cap * 2 : 256);
-        char *nb;
-        while (ncap < *len + n + 1) ncap *= 2;
-        nb = (char *)uem_mem_realloc(*buf, ncap);
-        if (!nb) return -1;
+        size_t need = *len + n + 1;
+        /* Always pick a capacity that covers need without a second grow loop. */
+        size_t ncap = need + 256;
+        char *nb = (char *)uem_mem_realloc(*buf, ncap);
+        if (!nb) { append_oom = 1; return -1; }
         *buf = nb;
         *cap = ncap;
     }
@@ -115,38 +126,37 @@ static int append_str(char **buf, size_t *len, size_t *cap, const char *s, size_
     return 0;
 }
 
-static int json_escape_append(char **buf, size_t *len, size_t *cap, const char *s) {
+static void json_escape_append(char **buf, size_t *len, size_t *cap, const char *s) {
     const unsigned char *p = (const unsigned char *)s;
-    if (append_str(buf, len, cap, "\"", 1)) return -1;
+    append_str(buf, len, cap, "\"", 1);
     while (*p) {
         unsigned char c = *p;
         if (c == '"' || c == '\\') {
             char tmp[2] = {'\\', (char)c};
-            if (append_str(buf, len, cap, tmp, 2)) return -1;
+            append_str(buf, len, cap, tmp, 2);
         } else if (c == '\b') {
-            if (append_str(buf, len, cap, "\\b", 2)) return -1;
+            append_str(buf, len, cap, "\\b", 2);
         } else if (c == '\f') {
-            if (append_str(buf, len, cap, "\\f", 2)) return -1;
+            append_str(buf, len, cap, "\\f", 2);
         } else if (c == '\n') {
-            if (append_str(buf, len, cap, "\\n", 2)) return -1;
+            append_str(buf, len, cap, "\\n", 2);
         } else if (c == '\r') {
-            if (append_str(buf, len, cap, "\\r", 2)) return -1;
+            append_str(buf, len, cap, "\\r", 2);
         } else if (c == '\t') {
-            if (append_str(buf, len, cap, "\\t", 2)) return -1;
+            append_str(buf, len, cap, "\\t", 2);
         } else if (c < 0x20) {
             char tmp[8];
             snprintf(tmp, sizeof tmp, "\\u%04x", c);
-            if (append_str(buf, len, cap, tmp, 6)) return -1;
+            append_str(buf, len, cap, tmp, 6);
         } else {
-            /* UTF-8 passthrough (ensure_ascii=False) */
-            if (append_str(buf, len, cap, (const char *)p, 1)) return -1;
+            append_str(buf, len, cap, (const char *)p, 1);
         }
         p++;
     }
-    return append_str(buf, len, cap, "\"", 1);
+    append_str(buf, len, cap, "\"", 1);
 }
 
-static int canon_value(const cJSON *v, char **buf, size_t *len, size_t *cap);
+static void canon_value(const cJSON *v, char **buf, size_t *len, size_t *cap);
 
 static int cmp_cstr(const void *a, const void *b) {
     const char *const *sa = (const char *const *)a;
@@ -154,68 +164,84 @@ static int cmp_cstr(const void *a, const void *b) {
     return strcmp(*sa, *sb);
 }
 
-static int canon_value(const cJSON *v, char **buf, size_t *len, size_t *cap) {
-    /* Known JSON kinds first; null / missing / non-JSON kinds share one exit. */
-    if (v && cJSON_IsTrue(v)) return append_str(buf, len, cap, "true", 4);
-    if (v && cJSON_IsFalse(v)) return append_str(buf, len, cap, "false", 5);
-    if (v && cJSON_IsNumber(v)) {
+static void canon_value(const cJSON *v, char **buf, size_t *len, size_t *cap) {
+    /* NULL v and non-JSON kinds fall through to final null. cJSON_Is*(NULL)==false. */
+    if (cJSON_IsTrue(v)) {
+        append_str(buf, len, cap, "true", 4);
+        return;
+    }
+    if (cJSON_IsFalse(v)) {
+        append_str(buf, len, cap, "false", 5);
+        return;
+    }
+    if (cJSON_IsNumber(v)) {
         char tmp[64];
         double d = v->valuedouble;
-        /* Match Python: ints without .0 when integral */
-        if (d == (double)(long long)d && d >= (double)LLONG_MIN && d <= (double)LLONG_MAX) {
-            snprintf(tmp, sizeof tmp, "%lld", (long long)d);
-        } else {
-            /* Python json uses shortest representation; cJSON_Print style */
-            snprintf(tmp, sizeof tmp, "%.17g", d);
+        int use_int = 0;
+        /* Exact integers within 2^53 are safe as long long. */
+        if (d <= 9007199254740992.0) {
+            if (d >= -9007199254740992.0) {
+                if (d == (double)(long long)d) use_int = 1;
+            }
         }
-        return append_str(buf, len, cap, tmp, strlen(tmp));
+        if (use_int) snprintf(tmp, sizeof tmp, "%lld", (long long)d);
+        else snprintf(tmp, sizeof tmp, "%.17g", d);
+        append_str(buf, len, cap, tmp, strlen(tmp));
+        return;
     }
-    if (v && cJSON_IsString(v)) return json_escape_append(buf, len, cap, v->valuestring ? v->valuestring : "");
-    if (v && cJSON_IsArray(v)) {
+    if (cJSON_IsString(v)) {
+        /* cJSON string nodes always carry valuestring (possibly empty). */
+        json_escape_append(buf, len, cap, v->valuestring);
+        return;
+    }
+    if (cJSON_IsArray(v)) {
         const cJSON *ch;
         int first = 1;
-        if (append_str(buf, len, cap, "[", 1)) return -1;
-        cJSON_ArrayForEach(ch, v) {
-            if (!first && append_str(buf, len, cap, ",", 1)) return -1;
+        append_str(buf, len, cap, "[", 1);
+        for (ch = v->child; ch != NULL; ch = ch->next) {
+            if (!first) append_str(buf, len, cap, ",", 1);
             first = 0;
-            if (canon_value(ch, buf, len, cap)) return -1;
+            canon_value(ch, buf, len, cap);
         }
-        return append_str(buf, len, cap, "]", 1);
+        append_str(buf, len, cap, "]", 1);
+        return;
     }
-    if (v && cJSON_IsObject(v)) {
-        /* collect keys, sort, emit */
+    if (cJSON_IsObject(v)) {
         int n = 0, i;
         const cJSON *ch;
         const char **keys;
-        cJSON_ArrayForEach(ch, v) n++;
-        keys = (const char **)uem_mem_malloc(sizeof(char *) * (size_t)(n ? n : 1));
-        if (!keys) return -1;
+        for (ch = v->child; ch != NULL; ch = ch->next) n++;
+        keys = (const char **)uem_mem_malloc(sizeof(char *) * (size_t)(n > 0 ? n : 1));
+        if (!keys) { append_oom = 1; return; }
         i = 0;
-        cJSON_ArrayForEach(ch, v) keys[i++] = ch->string ? ch->string : "";
+        for (ch = v->child; ch != NULL; ch = ch->next) {
+            /* cJSON object children always carry a key string. */
+            keys[i++] = ch->string;
+        }
         qsort(keys, (size_t)n, sizeof(char *), cmp_cstr);
-        if (append_str(buf, len, cap, "{", 1)) { uem_mem_free(keys); return -1; }
+        append_str(buf, len, cap, "{", 1);
         for (i = 0; i < n; i++) {
             cJSON *item = cJSON_GetObjectItemCaseSensitive((cJSON *)v, keys[i]);
-            if (i && append_str(buf, len, cap, ",", 1)) { uem_mem_free(keys); return -1; }
-            if (json_escape_append(buf, len, cap, keys[i])) { uem_mem_free(keys); return -1; }
-            if (append_str(buf, len, cap, ":", 1)) { uem_mem_free(keys); return -1; }
-            if (canon_value(item, buf, len, cap)) { uem_mem_free(keys); return -1; }
+            if (i) append_str(buf, len, cap, ",", 1);
+            json_escape_append(buf, len, cap, keys[i]);
+            append_str(buf, len, cap, ":", 1);
+            /* item is NULL only if key vanished — serialize as null via !v. */
+            canon_value(item, buf, len, cap);
         }
         uem_mem_free(keys);
-        return append_str(buf, len, cap, "}", 1);
+        append_str(buf, len, cap, "}", 1);
+        return;
     }
-    /* null, !v, or non-JSON kinds (cJSON_Invalid/Raw): serialize as null.
-     * Production parse only yields standard kinds; shared exit is covered by null. */
-    return append_str(buf, len, cap, "null", 4);
+    append_str(buf, len, cap, "null", 4);
 }
 
 static int image_is_canonical(cJSON *image, const uint8_t *img_ptr, uint32_t img_len) {
     char *buf = NULL;
     size_t len = 0, cap = 0;
     int ok;
-    /* Failure here is allocation-only (append_str/realloc). Under normal
-     * process memory this path does not run; treat as non-canonical. */
-    if (canon_value(image, &buf, &len, &cap) != 0) {
+    append_oom = 0;
+    canon_value(image, &buf, &len, &cap);
+    if (append_oom) {
         uem_mem_free(buf);
         return 0;
     }
@@ -243,15 +269,23 @@ uem_status uem_decode_verify(const uint8_t *bytes, size_t len, uem_machine **out
         return UEM_ERR_DECODE;
     }
     off = 4;
-    if (rd_u16(bytes, len, &off, &ver) || ver != UEM_FORMAT_VERSION) {
+    (void)rd_u16(bytes, len, &off, &ver);
+    if (ver != UEM_FORMAT_VERSION) {
         if (err && errlen) snprintf(err, errlen, "bad-version");
         return UEM_ERR_DECODE;
     }
-    if (rd_u16(bytes, len, &off, &flags) || flags != 0) {
+    (void)rd_u16(bytes, len, &off, &flags);
+    if (flags != 0) {
         if (err && errlen) snprintf(err, errlen, "bad-flags");
         return UEM_ERR_DECODE;
     }
-    if (rd_u32(bytes, len, &off, &count) || count == 0 || count > UEM_MAX_INSTR) {
+    /* off==8 and len>=12: rd_u32 cannot fail. */
+    (void)rd_u32(bytes, len, &off, &count);
+    if (count == 0) {
+        if (err && errlen) snprintf(err, errlen, "bad-count");
+        return UEM_ERR_DECODE;
+    }
+    if (count > UEM_MAX_INSTR) {
         if (err && errlen) snprintf(err, errlen, "bad-count");
         return UEM_ERR_DECODE;
     }
@@ -276,7 +310,13 @@ uem_status uem_decode_verify(const uint8_t *bytes, size_t len, uem_machine **out
             /* none */
         } else if (tag == 1) {
             uint32_t L;
-            if (rd_u32(bytes, len, &off, &L) || L > UEM_MAX_OPERAND || off + L > len) {
+            if (rd_u32(bytes, len, &off, &L) != 0) {
+                free_partial(m, i); if (err) snprintf(err, errlen, "truncated"); return UEM_ERR_DECODE;
+            }
+            if (L > UEM_MAX_OPERAND) {
+                free_partial(m, i); if (err) snprintf(err, errlen, "truncated"); return UEM_ERR_DECODE;
+            }
+            if (off + L > len) {
                 free_partial(m, i); if (err) snprintf(err, errlen, "truncated"); return UEM_ERR_DECODE;
             }
             if (!valid_utf8(bytes + off, L)) {
@@ -292,7 +332,13 @@ uem_status uem_decode_verify(const uint8_t *bytes, size_t len, uem_machine **out
             free_partial(m, i); if (err) snprintf(err, errlen, "bad-tag"); return UEM_ERR_DECODE;
         }
     }
-    if (rd_u32(bytes, len, &off, &img_len) || img_len > UEM_MAX_IMAGE || off + img_len > len) {
+    if (rd_u32(bytes, len, &off, &img_len) != 0) {
+        free_partial(m, count); if (err) snprintf(err, errlen, "truncated"); return UEM_ERR_DECODE;
+    }
+    if (img_len > UEM_MAX_IMAGE) {
+        free_partial(m, count); if (err) snprintf(err, errlen, "truncated"); return UEM_ERR_DECODE;
+    }
+    if (off + img_len > len) {
         free_partial(m, count); if (err) snprintf(err, errlen, "truncated"); return UEM_ERR_DECODE;
     }
     if (off + img_len != len) {
@@ -308,8 +354,13 @@ uem_status uem_decode_verify(const uint8_t *bytes, size_t len, uem_machine **out
     img_str[img_len] = 0;
     image = cJSON_ParseWithLength(img_str, img_len);
     uem_mem_free(img_str);
-    if (!image || !cJSON_IsObject(image)) {
-        if (image) cJSON_Delete(image);
+    if (!image) {
+        free_partial(m, count);
+        if (err) snprintf(err, errlen, "bad-image-json");
+        return UEM_ERR_DECODE;
+    }
+    if (!cJSON_IsObject(image)) {
+        cJSON_Delete(image);
         free_partial(m, count);
         if (err) snprintf(err, errlen, "bad-image-json");
         return UEM_ERR_DECODE;

@@ -1,12 +1,24 @@
 # Standard Ten Repository Audit
 
-**Verdict:** `fail`
+## Separate conformance verdicts
+
+**Milestone 1 application conformance:** `pass`
+
+- Sole application source: `seed/declarations/task_ledger.json`
+- Public command: `uc unfold seed/declarations/task_ledger.json --output /tmp/uc-task-ledger --verify --run`
+- The command verifies generated stateful tests, restart persistence, atomic install, deterministic application hashes, and Python/C equality.
+
+**Milestone 2 self-hosting conformance:** `fail` (`open`, non-blocking)
+
+The repository-wide figures and gaps below measure only the root-seed fixed-point bootstrap. They do not mean that the application generator failed.
+
+**Repository self-hosting verdict:** `fail`
 **standard_version:** TEN-1
-**seed_sha256:** `bcd58991e3a7b754a7369a0ac44dcb3b9e3c3673013e4dfcf5293d68097307cf`
-**files classified:** 305
-**illegal provenance (not in allowed five classes):** 266
-**OOP class files:** 1
-**open standard.gap tickets:** 7
+**seed_sha256:** `375956e77f77ce474f8deacba7d0aefe4ed90f2023b7819e357388a3eb03e5e3`
+**files classified:** 244
+**illegal provenance (not in allowed five classes):** 202
+**OOP class files:** 0
+**open standard.gap tickets:** 6
 
 ## Non-fallback law
 
@@ -16,7 +28,6 @@ Conventional development is not an authorized fallback. Gaps below are `standard
 
 - **gap.seed-expresses-full-framework** (rule 3): UEM machine, generator, and framework modules are not yet fully expressed as seed package bodies; currently handwritten under unified/.
 - **gap.no-app-control-flow-in-host** (rule 6): Python/C UEM hosts still use imperative control flow (required for physical boundary execution until seed can emit hosts).
-- **gap.oop-exprfail** (rule 5): unified/machine/primitives.py defines class _ExprFail — forbidden OOP; must become plain-data fault path.
 - **gap.declarations-as-python** (rule 4): Application declarations live as .py modules with Python syntax; must be pure JSON under seed/declarations/.
 - **gap.dual-host-not-single-machine-surface** (rule 7): Python and C interpreters are parallel implementations; Standard Ten requires one UEM with hosts as boundaries only. Semantic parity is proven (L11) but structure is dual-impl.
 - **gap.generated-tests-and-docs** (rule 10): Tests and documentation are handwritten, not generated from seed/declaration.
@@ -24,7 +35,7 @@ Conventional development is not an authorized fallback. Gaps below are `standard
 
 ## OOP violations
 
-- `unified/machine/primitives.py`
+- (none)
 
 ## Provenance summary
 
@@ -33,9 +44,9 @@ Conventional development is not an authorized fallback. Gaps below are `standard
 | `evidence` | 7 |
 | `external-vendored` | 4 |
 | `generated` | 8 |
-| `handwritten-pending` | 266 |
-| `physical-host-boundary` | 13 |
-| `seed` | 7 |
+| `handwritten-pending` | 202 |
+| `physical-host-boundary` | 15 |
+| `seed` | 8 |
 
 ## Clean-room status
 
@@ -43,222 +54,147 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 
 ## File table (path · class · compliance · sha256[:16])
 
-- `.coverage` · `evidence` · `ok` · `b30fd7699c94595f`
+- `.coverage` · `evidence` · `ok` · `e50b891b51c6b190`
 - `.coveragerc` · `handwritten-pending` · `standard.gap` · `f4c1eac25e83d766`
 - `.github/workflows/test.yml` · `handwritten-pending` · `standard.gap` · `57cf4c45308821b0`
-- `.gitignore` · `handwritten-pending` · `standard.gap` · `3a86022b6133cba2`
-- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `addea878f87896e9`
-- `GAUNTLET.md` · `evidence` · `ok` · `1376f7803b8932a1`
+- `.gitignore` · `handwritten-pending` · `standard.gap` · `fa6b32e2f06f17d2`
+- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `5e1806e5edc8d55c`
+- `GAUNTLET.md` · `evidence` · `ok` · `24771a171a844866`
 - `LAW.md` · `handwritten-pending` · `standard.gap` · `7d452c174dec7c94`
 - `LICENSE` · `handwritten-pending` · `standard.gap` · `af6b910929ec375c`
-- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `7a83ae0ddf58df90`
-- `README.md` · `handwritten-pending` · `standard.gap` · `bb1782f48e375960`
-- `ROADMAP.md` · `handwritten-pending` · `standard.gap` · `51123dc7e6a4fcc7`
+- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `ce028fe7986d1bfc`
+- `README.md` · `handwritten-pending` · `standard.gap` · `280482f95fed2341`
+- `ROADMAP.md` · `handwritten-pending` · `standard.gap` · `1f9aa0443eb31d92`
 - `SPEC.md` · `handwritten-pending` · `standard.gap` · `fb04ba1772610eb3`
 - `STANDARD_TEN.md` · `seed` · `ok` · `28bcb6c07dc035ce`
 - `UEM_SPEC.md` · `handwritten-pending` · `standard.gap` · `936fd94aafda7049`
-- `artifacts/uem/invoice_total/program.symbolic.json` · `generated` · `ok` · `af0807511ee2dedb`
-- `artifacts/uem/invoice_total/program.symbolic.json.stamp.json` · `generated` · `ok` · `616a42427c0a48ab`
-- `artifacts/uem/invoice_total/program.uem` · `generated` · `ok` · `a79c68a10f78ccde`
-- `artifacts/uem/invoice_total/program.uem.stamp.json` · `generated` · `ok` · `efba50dda4407fef`
+- `artifacts/uem/invoice_total/program.symbolic.json` · `generated` · `ok` · `a1899fe0c2f6ac40`
+- `artifacts/uem/invoice_total/program.symbolic.json.stamp.json` · `generated` · `ok` · `d44578b02edc54de`
+- `artifacts/uem/invoice_total/program.uem` · `generated` · `ok` · `cf2a87a8219f26e5`
+- `artifacts/uem/invoice_total/program.uem.stamp.json` · `generated` · `ok` · `b6e0134ac7043ea5`
 - `artifacts/uem/text_stats_v2/program.symbolic.json` · `generated` · `ok` · `2813f009eccd6cd9`
-- `artifacts/uem/text_stats_v2/program.symbolic.json.stamp.json` · `generated` · `ok` · `5242eb35a889b508`
+- `artifacts/uem/text_stats_v2/program.symbolic.json.stamp.json` · `generated` · `ok` · `6c0850565dc2628e`
 - `artifacts/uem/text_stats_v2/program.uem` · `generated` · `ok` · `b625f4a2104df5a4`
-- `artifacts/uem/text_stats_v2/program.uem.stamp.json` · `generated` · `ok` · `f10e1f07a72628a3`
+- `artifacts/uem/text_stats_v2/program.uem.stamp.json` · `generated` · `ok` · `a756042213f3087c`
 - `c/.gitignore` · `handwritten-pending` · `standard.gap` · `2dc3b312a4902f53`
-- `c/Makefile` · `handwritten-pending` · `standard.gap` · `998b9b52742be447`
+- `c/Makefile` · `handwritten-pending` · `standard.gap` · `60f6781260e3af59`
 - `c/README.md` · `handwritten-pending` · `standard.gap` · `84a0d2f879ecac82`
 - `c/REGISTRY.md` · `handwritten-pending` · `standard.gap` · `d7c442594208b63b`
-- `c/core/decimal.c` · `physical-host-boundary` · `ok` · `93841b42d3cc37f6`
+- `c/core/alloc.c` · `physical-host-boundary` · `ok` · `205c11e59669f1ed`
+- `c/core/alloc.h` · `physical-host-boundary` · `ok` · `bfa89ba51b39d5d4`
+- `c/core/decimal.c` · `physical-host-boundary` · `ok` · `b719a7691e18c0e8`
 - `c/core/decimal.h` · `physical-host-boundary` · `ok` · `a9ca485106343638`
-- `c/core/decode.c` · `physical-host-boundary` · `ok` · `7962b1f6ebc88a75`
-- `c/core/expr.c` · `physical-host-boundary` · `ok` · `9ece3fac8d98af83`
-- `c/core/machine.c` · `physical-host-boundary` · `ok` · `3a5c1ac10157b419`
+- `c/core/decode.c` · `physical-host-boundary` · `ok` · `ad682987fa8f0781`
+- `c/core/expr.c` · `physical-host-boundary` · `ok` · `4429acabdcabad15`
+- `c/core/machine.c` · `physical-host-boundary` · `ok` · `818f8cdada11cbe9`
 - `c/core/machine_internal.h` · `physical-host-boundary` · `ok` · `292aa154c1de6877`
-- `c/core/primitives.c` · `physical-host-boundary` · `ok` · `2a3933f7bf220038`
+- `c/core/primitives.c` · `physical-host-boundary` · `ok` · `e37f37d548d7d8b3`
 - `c/host/mcu/mcu_host.c` · `physical-host-boundary` · `ok` · `8d18055f3f71ec77`
 - `c/host/mcu/uem_mcu.h` · `physical-host-boundary` · `ok` · `ba4469916eabbd40`
-- `c/host/posix/main.c` · `physical-host-boundary` · `ok` · `914baadeac10ade2`
+- `c/host/posix/main.c` · `physical-host-boundary` · `ok` · `78145a6ea38475a3`
 - `c/host/wasm/main.c` · `physical-host-boundary` · `ok` · `4a9da23c975b1e02`
-- `c/include/uem.h` · `physical-host-boundary` · `ok` · `7e545ca02bea2564`
+- `c/include/uem.h` · `physical-host-boundary` · `ok` · `9228ae23dae0d72b`
+- `c/scripts/branch_ledger.py` · `handwritten-pending` · `standard.gap` · `188b4ce9d85cec1b`
 - `c/scripts/build_cross.sh` · `handwritten-pending` · `standard.gap` · `177d91a9e6f2587a`
-- `c/scripts/diff_py_c.sh` · `handwritten-pending` · `standard.gap` · `0e2dd679c4f3907e`
+- `c/scripts/diff_py_c.sh` · `handwritten-pending` · `standard.gap` · `909cca5cc70ed1a1`
 - `c/scripts/fuzz_bytecode.py` · `handwritten-pending` · `standard.gap` · `c6588410a65b5a72`
-- `c/scripts/fuzz_l12.py` · `handwritten-pending` · `standard.gap` · `7e8f4a6f27d52a72`
-- `c/scripts/gen_golden.sh` · `handwritten-pending` · `standard.gap` · `8abb12c698b97e88`
+- `c/scripts/fuzz_l12.py` · `handwritten-pending` · `standard.gap` · `94138743da31ceff`
+- `c/scripts/gcov_arcs.py` · `handwritten-pending` · `standard.gap` · `35102b4156c2eb38`
+- `c/scripts/gen_golden.sh` · `handwritten-pending` · `standard.gap` · `3714c03feb458f02`
 - `c/scripts/run_l11_full.sh` · `handwritten-pending` · `standard.gap` · `7d2cc34998478d50`
-- `c/scripts/run_l12_report.py` · `handwritten-pending` · `standard.gap` · `3f164bed4aa8763a`
+- `c/scripts/run_l12_report.py` · `handwritten-pending` · `standard.gap` · `792da9de3079cbdd`
 - `c/scripts/run_tests.sh` · `handwritten-pending` · `standard.gap` · `aaf230b1f4c73ece`
-- `c/targets/manifests/l12_report_x86_64.json` · `evidence` · `ok` · `35e1236f99f0041b`
+- `c/targets/manifests/l12_report_x86_64.json` · `evidence` · `ok` · `ef36261ba5c3c54b`
+- `c/tests/BRANCH_LEDGER.md` · `handwritten-pending` · `standard.gap` · `e6b7fafbe4eadeea`
+- `c/tests/branch_baseline.json` · `handwritten-pending` · `standard.gap` · `b6e5feed17b09ebf`
+- `c/tests/branch_ledger.json` · `handwritten-pending` · `standard.gap` · `388ce430646ee8d3`
+- `c/tests/branch_ledger_history.json` · `handwritten-pending` · `standard.gap` · `a4d285b32ed6d513`
+- `c/tests/core_coverage_harness.c` · `handwritten-pending` · `standard.gap` · `611910d72fb84d80`
+- `c/tests/coverage_vectors/amiss.uem` · `handwritten-pending` · `standard.gap` · `c48edea268bf8191`
+- `c/tests/coverage_vectors/assert_badimgutf8.uem` · `handwritten-pending` · `standard.gap` · `e1a25cd1b00272b0`
+- `c/tests/coverage_vectors/assert_esc.uem` · `handwritten-pending` · `standard.gap` · `bb4d815983e0bd5c`
+- `c/tests/coverage_vectors/assert_float.uem` · `handwritten-pending` · `standard.gap` · `2806fbd4625fb180`
+- `c/tests/coverage_vectors/assert_load.uem` · `handwritten-pending` · `standard.gap` · `98243bb061a6ee98`
+- `c/tests/coverage_vectors/assert_nostop.uem` · `handwritten-pending` · `standard.gap` · `469ecde8632675ac`
+- `c/tests/coverage_vectors/assert_nullimg.uem` · `handwritten-pending` · `standard.gap` · `146af03abdd2e69d`
+- `c/tests/coverage_vectors/assert_quiet.uem` · `handwritten-pending` · `standard.gap` · `59f8571ea7ec862f`
+- `c/tests/coverage_vectors/assert_tick.uem` · `handwritten-pending` · `standard.gap` · `16078838cacb9754`
+- `c/tests/coverage_vectors/assert_trail.uem` · `handwritten-pending` · `standard.gap` · `729c0c837cb14c06`
+- `c/tests/coverage_vectors/assert_truncimg.uem` · `handwritten-pending` · `standard.gap` · `1d45a235d360dc39`
+- `c/tests/coverage_vectors/assert_unkprim.uem` · `handwritten-pending` · `standard.gap` · `e25af0291db25f51`
+- `c/tests/coverage_vectors/ctrl.uem` · `handwritten-pending` · `standard.gap` · `42a8679ba19ac9f6`
+- `c/tests/coverage_vectors/enq.uem` · `handwritten-pending` · `standard.gap` · `c89c4879c6d57139`
+- `c/tests/coverage_vectors/esc.uem` · `handwritten-pending` · `standard.gap` · `770a77dcd71bbc97`
+- `c/tests/coverage_vectors/ev.uem` · `handwritten-pending` · `standard.gap` · `99c12d721cf71c77`
+- `c/tests/coverage_vectors/img.uem` · `handwritten-pending` · `standard.gap` · `6c8a68ca3a040f33`
+- `c/tests/coverage_vectors/limg.uem` · `handwritten-pending` · `standard.gap` · `6c8a68ca3a040f33`
+- `c/tests/coverage_vectors/mb_0.uem` · `handwritten-pending` · `standard.gap` · `af7319705bdacabc`
+- `c/tests/coverage_vectors/mb_1.uem` · `handwritten-pending` · `standard.gap` · `1cbe6dcd4030a933`
+- `c/tests/coverage_vectors/mb_2.uem` · `handwritten-pending` · `standard.gap` · `62c29796c1e68484`
+- `c/tests/coverage_vectors/mb_3.uem` · `handwritten-pending` · `standard.gap` · `d8084da0755824dd`
+- `c/tests/coverage_vectors/mf.uem` · `handwritten-pending` · `standard.gap` · `adee76bf05e80312`
+- `c/tests/coverage_vectors/nostop.uem` · `handwritten-pending` · `standard.gap` · `8c0b1fcc0f0ce976`
+- `c/tests/coverage_vectors/nostop2.uem` · `handwritten-pending` · `standard.gap` · `469ecde8632675ac`
+- `c/tests/coverage_vectors/quiet.uem` · `handwritten-pending` · `standard.gap` · `9cad52ff87c6de10`
+- `c/tests/coverage_vectors/tick.uem` · `handwritten-pending` · `standard.gap` · `16078838cacb9754`
+- `c/tests/coverage_vectors/trail.uem` · `handwritten-pending` · `standard.gap` · `54416af308c773be`
+- `c/tests/coverage_vectors/uroute.uem` · `handwritten-pending` · `standard.gap` · `57fabd7bebcb2e1e`
+- `c/tests/coverage_vectors/utf4.uem` · `handwritten-pending` · `standard.gap` · `a4a2e5fea36adf16`
+- `c/tests/coverage_vectors/v000.uem` · `handwritten-pending` · `standard.gap` · `b41edab3ba1c6702`
+- `c/tests/coverage_vectors/v001.uem` · `handwritten-pending` · `standard.gap` · `c3f7572d20a98941`
+- `c/tests/coverage_vectors/v002.uem` · `handwritten-pending` · `standard.gap` · `7717b5c1d3bfb1d2`
+- `c/tests/coverage_vectors/v003.uem` · `handwritten-pending` · `standard.gap` · `449193c640d36c69`
+- `c/tests/coverage_vectors/v004.uem` · `handwritten-pending` · `standard.gap` · `ff7286484b49544d`
+- `c/tests/coverage_vectors/v005.uem` · `handwritten-pending` · `standard.gap` · `e263acfdc98cac7a`
+- `c/tests/coverage_vectors/v006.uem` · `handwritten-pending` · `standard.gap` · `dd67e2b378664f1d`
+- `c/tests/coverage_vectors/v007.uem` · `handwritten-pending` · `standard.gap` · `3e2791f78c8a4a93`
+- `c/tests/coverage_vectors/v008.uem` · `handwritten-pending` · `standard.gap` · `16078838cacb9754`
+- `c/tests/coverage_vectors/v009.uem` · `handwritten-pending` · `standard.gap` · `0f19e18ad97ebfe5`
+- `c/tests/coverage_vectors/v010.uem` · `handwritten-pending` · `standard.gap` · `416ac53eae35899b`
+- `c/tests/coverage_vectors/v011.uem` · `handwritten-pending` · `standard.gap` · `b625f4a2104df5a4`
+- `c/tests/coverage_vectors/v012.uem` · `handwritten-pending` · `standard.gap` · `cf2a87a8219f26e5`
+- `c/tests/coverage_vectors/wrd.uem` · `handwritten-pending` · `standard.gap` · `c902d659adcea9df`
 - `c/tests/fuzz_corpus/seed_0000.uem` · `handwritten-pending` · `standard.gap` · `b625f4a2104df5a4`
 - `c/tests/fuzz_corpus/seed_0001.uem` · `handwritten-pending` · `standard.gap` · `b625f4a2104df5a4`
 - `c/tests/fuzz_corpus/seed_0002.uem` · `handwritten-pending` · `standard.gap` · `cf2a87a8219f26e5`
-- `c/tests/fuzz_corpus/seed_0003.uem` · `handwritten-pending` · `standard.gap` · `b6c3b364445086f5`
+- `c/tests/fuzz_corpus/seed_0003.uem` · `handwritten-pending` · `standard.gap` · `2ea6e97a6a0c876f`
 - `c/tests/fuzz_corpus/seed_0004.uem` · `handwritten-pending` · `standard.gap` · `9beeba5b4c4b4d6d`
 - `c/tests/fuzz_corpus/seed_0005.uem` · `handwritten-pending` · `standard.gap` · `0bc7649914086bc7`
 - `c/tests/fuzz_corpus/seed_0006.uem` · `handwritten-pending` · `standard.gap` · `2ea6e97a6a0c876f`
 - `c/tests/fuzz_corpus/seed_0007.uem` · `handwritten-pending` · `standard.gap` · `af886cc0f7d670b2`
 - `c/tests/fuzz_corpus/seed_0008.uem` · `handwritten-pending` · `standard.gap` · `2ea6e97a6a0c876f`
 - `c/tests/fuzz_corpus/seed_0009.uem` · `handwritten-pending` · `standard.gap` · `62b0807e71ac7988`
-- `c/tests/fuzz_corpus/seed_0010.uem` · `handwritten-pending` · `standard.gap` · `a74cba9abb9d6809`
+- `c/tests/fuzz_corpus/seed_0010.uem` · `handwritten-pending` · `standard.gap` · `1eae99efa61aa7cb`
 - `c/tests/fuzz_corpus/seed_0011.uem` · `handwritten-pending` · `standard.gap` · `cf15c41706455dcb`
 - `c/tests/fuzz_corpus/seed_0012.uem` · `handwritten-pending` · `standard.gap` · `4c2d094543d01aac`
 - `c/tests/fuzz_corpus/seed_0013.uem` · `handwritten-pending` · `standard.gap` · `62b0807e71ac7988`
 - `c/tests/fuzz_corpus/seed_0014.uem` · `handwritten-pending` · `standard.gap` · `e1809420d55cd1e0`
 - `c/tests/fuzz_corpus/seed_0015.uem` · `handwritten-pending` · `standard.gap` · `ab661832955529d3`
-- `c/tests/fuzz_corpus/seed_0016.uem` · `handwritten-pending` · `standard.gap` · `12924b0e0e9ba87c`
-- `c/tests/fuzz_corpus/seed_0017.uem` · `handwritten-pending` · `standard.gap` · `7867b0814b0196e2`
-- `c/tests/fuzz_corpus/seed_0018.uem` · `handwritten-pending` · `standard.gap` · `95647a5850ac82dd`
-- `c/tests/fuzz_corpus/seed_0019.uem` · `handwritten-pending` · `standard.gap` · `2ea6e97a6a0c876f`
+- `c/tests/fuzz_corpus/seed_0016.uem` · `handwritten-pending` · `standard.gap` · `2c2f44bbbddabe57`
+- `c/tests/fuzz_corpus/seed_0017.uem` · `handwritten-pending` · `standard.gap` · `4339951a2998dd8b`
+- `c/tests/fuzz_corpus/seed_0018.uem` · `handwritten-pending` · `standard.gap` · `3b7d935d8ee4c5a9`
+- `c/tests/fuzz_corpus/seed_0019.uem` · `handwritten-pending` · `standard.gap` · `316197b478c46ad3`
 - `c/tests/fuzz_corpus/seed_0020.uem` · `handwritten-pending` · `standard.gap` · `acfeffdbfd992f77`
 - `c/tests/fuzz_corpus/seed_0021.uem` · `handwritten-pending` · `standard.gap` · `2ea6e97a6a0c876f`
 - `c/tests/fuzz_corpus/seed_0022.uem` · `handwritten-pending` · `standard.gap` · `b41edab3ba1c6702`
 - `c/tests/fuzz_corpus/seed_0023.uem` · `handwritten-pending` · `standard.gap` · `2ea6e97a6a0c876f`
-- `c/tests/fuzz_corpus/seed_0024.uem` · `handwritten-pending` · `standard.gap` · `cb074a97327611ff`
-- `c/tests/fuzz_corpus/seed_0025.uem` · `handwritten-pending` · `standard.gap` · `963777201d797a0a`
-- `c/tests/fuzz_corpus/seed_0026.uem` · `handwritten-pending` · `standard.gap` · `cf622470c391b290`
-- `c/tests/fuzz_corpus/seed_0027.uem` · `handwritten-pending` · `standard.gap` · `ff3b2c2111c0909f`
-- `c/tests/fuzz_corpus/seed_0028.uem` · `handwritten-pending` · `standard.gap` · `274fbb1a8daa1793`
-- `c/tests/fuzz_corpus/seed_0029.uem` · `handwritten-pending` · `standard.gap` · `56187646f723f633`
+- `c/tests/fuzz_corpus/seed_0024.uem` · `handwritten-pending` · `standard.gap` · `32a66b77075a5db9`
+- `c/tests/fuzz_corpus/seed_0025.uem` · `handwritten-pending` · `standard.gap` · `579089704d687ffb`
+- `c/tests/fuzz_corpus/seed_0026.uem` · `handwritten-pending` · `standard.gap` · `2ea6e97a6a0c876f`
+- `c/tests/fuzz_corpus/seed_0027.uem` · `handwritten-pending` · `standard.gap` · `9a60e98b37021cb4`
+- `c/tests/fuzz_corpus/seed_0028.uem` · `handwritten-pending` · `standard.gap` · `92b85cddfde8ca31`
+- `c/tests/fuzz_corpus/seed_0029.uem` · `handwritten-pending` · `standard.gap` · `62b0807e71ac7988`
 - `c/tests/fuzz_corpus/seed_0030.uem` · `handwritten-pending` · `standard.gap` · `88f1f540f45ef54c`
-- `c/tests/fuzz_corpus/seed_0031.uem` · `handwritten-pending` · `standard.gap` · `3dbfbf5bfa65fbf6`
-- `c/tests/fuzz_corpus/seed_0032.uem` · `handwritten-pending` · `standard.gap` · `4e3ebc4e323b676b`
-- `c/tests/fuzz_corpus/seed_0033.uem` · `handwritten-pending` · `standard.gap` · `71efa077f37c5a65`
+- `c/tests/fuzz_corpus/seed_0031.uem` · `handwritten-pending` · `standard.gap` · `6a41cb5394238eb8`
+- `c/tests/fuzz_corpus/seed_0032.uem` · `handwritten-pending` · `standard.gap` · `49a1d3b8256076ba`
+- `c/tests/fuzz_corpus/seed_0033.uem` · `handwritten-pending` · `standard.gap` · `2ea6e97a6a0c876f`
 - `c/tests/fuzz_corpus/seed_0034.uem` · `handwritten-pending` · `standard.gap` · `2ea6e97a6a0c876f`
-- `c/tests/golden/inv_basic.json` · `handwritten-pending` · `standard.gap` · `1cffc056093fad31`
-- `c/tests/golden/inv_empty_items.json` · `handwritten-pending` · `standard.gap` · `701f8bf595c77e5f`
-- `c/tests/golden/ts_empty.json` · `handwritten-pending` · `standard.gap` · `fb2833ada7254b1f`
-- `c/tests/golden/ts_gogo.json` · `handwritten-pending` · `standard.gap` · `1a5902131e957286`
-- `c/tests/regressions/fuzz_016b127bfaa2e52e.txt` · `handwritten-pending` · `standard.gap` · `cc19132f4821f755`
-- `c/tests/regressions/fuzz_016b127bfaa2e52e.uem` · `handwritten-pending` · `standard.gap` · `016b127bfaa2e52e`
-- `c/tests/regressions/fuzz_02df0902124a67d0.txt` · `handwritten-pending` · `standard.gap` · `07cd44e391337465`
-- `c/tests/regressions/fuzz_02df0902124a67d0.uem` · `handwritten-pending` · `standard.gap` · `02df0902124a67d0`
-- `c/tests/regressions/fuzz_030f2a3efe041b6e.txt` · `handwritten-pending` · `standard.gap` · `aeb30faf3196f3bd`
-- `c/tests/regressions/fuzz_030f2a3efe041b6e.uem` · `handwritten-pending` · `standard.gap` · `030f2a3efe041b6e`
-- `c/tests/regressions/fuzz_046dd3780ffeced1.txt` · `handwritten-pending` · `standard.gap` · `71ad1647766dbfdc`
-- `c/tests/regressions/fuzz_046dd3780ffeced1.uem` · `handwritten-pending` · `standard.gap` · `046dd3780ffeced1`
-- `c/tests/regressions/fuzz_085e87c4d9643d60.txt` · `handwritten-pending` · `standard.gap` · `73d1bbe271176d6a`
-- `c/tests/regressions/fuzz_085e87c4d9643d60.uem` · `handwritten-pending` · `standard.gap` · `085e87c4d9643d60`
-- `c/tests/regressions/fuzz_130c468449982615.txt` · `handwritten-pending` · `standard.gap` · `4865ed246209c564`
-- `c/tests/regressions/fuzz_130c468449982615.uem` · `handwritten-pending` · `standard.gap` · `130c468449982615`
-- `c/tests/regressions/fuzz_165f425006539c1e.txt` · `handwritten-pending` · `standard.gap` · `4162f85f277e98a6`
-- `c/tests/regressions/fuzz_165f425006539c1e.uem` · `handwritten-pending` · `standard.gap` · `165f425006539c1e`
-- `c/tests/regressions/fuzz_1a7af3734835d876.txt` · `handwritten-pending` · `standard.gap` · `ea5aa75e699a5295`
-- `c/tests/regressions/fuzz_1a7af3734835d876.uem` · `handwritten-pending` · `standard.gap` · `1a7af3734835d876`
-- `c/tests/regressions/fuzz_1d2c0a398ad5a34a.txt` · `handwritten-pending` · `standard.gap` · `ff2cee9857efedca`
-- `c/tests/regressions/fuzz_1d2c0a398ad5a34a.uem` · `handwritten-pending` · `standard.gap` · `1d2c0a398ad5a34a`
-- `c/tests/regressions/fuzz_2d6687775ba0eae2.txt` · `handwritten-pending` · `standard.gap` · `a73836274c85c498`
-- `c/tests/regressions/fuzz_2d6687775ba0eae2.uem` · `handwritten-pending` · `standard.gap` · `2d6687775ba0eae2`
-- `c/tests/regressions/fuzz_34a055b36f027a56.txt` · `handwritten-pending` · `standard.gap` · `71f9910c756caba1`
-- `c/tests/regressions/fuzz_34a055b36f027a56.uem` · `handwritten-pending` · `standard.gap` · `34a055b36f027a56`
-- `c/tests/regressions/fuzz_3bb8b1568233ba49.txt` · `handwritten-pending` · `standard.gap` · `f53fff76d50c2997`
-- `c/tests/regressions/fuzz_3bb8b1568233ba49.uem` · `handwritten-pending` · `standard.gap` · `3bb8b1568233ba49`
-- `c/tests/regressions/fuzz_3ddeb32e6328efce.txt` · `handwritten-pending` · `standard.gap` · `1ada822043f0e38f`
-- `c/tests/regressions/fuzz_3ddeb32e6328efce.uem` · `handwritten-pending` · `standard.gap` · `3ddeb32e6328efce`
-- `c/tests/regressions/fuzz_3fb57f87f5cb937f.txt` · `handwritten-pending` · `standard.gap` · `9481fa6841f7d3b9`
-- `c/tests/regressions/fuzz_3fb57f87f5cb937f.uem` · `handwritten-pending` · `standard.gap` · `3fb57f87f5cb937f`
-- `c/tests/regressions/fuzz_44e53f1b3493c125.txt` · `handwritten-pending` · `standard.gap` · `756db68c6e3e3f3a`
-- `c/tests/regressions/fuzz_44e53f1b3493c125.uem` · `handwritten-pending` · `standard.gap` · `44e53f1b3493c125`
-- `c/tests/regressions/fuzz_46d878410e09549e.txt` · `handwritten-pending` · `standard.gap` · `4afe067ee9ee4c65`
-- `c/tests/regressions/fuzz_46d878410e09549e.uem` · `handwritten-pending` · `standard.gap` · `46d878410e09549e`
-- `c/tests/regressions/fuzz_4ccb4614f9e51dca.txt` · `handwritten-pending` · `standard.gap` · `fda521941550af3d`
-- `c/tests/regressions/fuzz_4ccb4614f9e51dca.uem` · `handwritten-pending` · `standard.gap` · `4ccb4614f9e51dca`
-- `c/tests/regressions/fuzz_4da6bb17e5229f56.txt` · `handwritten-pending` · `standard.gap` · `cf00a009a81af21b`
-- `c/tests/regressions/fuzz_4da6bb17e5229f56.uem` · `handwritten-pending` · `standard.gap` · `4da6bb17e5229f56`
-- `c/tests/regressions/fuzz_5165c0391495e268.txt` · `handwritten-pending` · `standard.gap` · `eacd2bd7a50efc24`
-- `c/tests/regressions/fuzz_5165c0391495e268.uem` · `handwritten-pending` · `standard.gap` · `5165c0391495e268`
-- `c/tests/regressions/fuzz_5385e5049cccdebe.txt` · `handwritten-pending` · `standard.gap` · `2c61bf67e767ba14`
-- `c/tests/regressions/fuzz_5385e5049cccdebe.uem` · `handwritten-pending` · `standard.gap` · `5385e5049cccdebe`
-- `c/tests/regressions/fuzz_545cf635af05befb.txt` · `handwritten-pending` · `standard.gap` · `b27447febeceeaec`
-- `c/tests/regressions/fuzz_545cf635af05befb.uem` · `handwritten-pending` · `standard.gap` · `545cf635af05befb`
-- `c/tests/regressions/fuzz_55c59997f7a2d4af.txt` · `handwritten-pending` · `standard.gap` · `25829f786d5137b4`
-- `c/tests/regressions/fuzz_55c59997f7a2d4af.uem` · `handwritten-pending` · `standard.gap` · `55c59997f7a2d4af`
-- `c/tests/regressions/fuzz_5d44e00ffe7a0fa2.txt` · `handwritten-pending` · `standard.gap` · `9ac1f500ed3c5587`
-- `c/tests/regressions/fuzz_5d44e00ffe7a0fa2.uem` · `handwritten-pending` · `standard.gap` · `5d44e00ffe7a0fa2`
-- `c/tests/regressions/fuzz_62b0807e71ac7988.txt` · `handwritten-pending` · `standard.gap` · `17334504765ff03a`
-- `c/tests/regressions/fuzz_62b0807e71ac7988.uem` · `handwritten-pending` · `standard.gap` · `62b0807e71ac7988`
-- `c/tests/regressions/fuzz_6cdab13c65ff94ec.txt` · `handwritten-pending` · `standard.gap` · `a0e75266d519478d`
-- `c/tests/regressions/fuzz_6cdab13c65ff94ec.uem` · `handwritten-pending` · `standard.gap` · `6cdab13c65ff94ec`
-- `c/tests/regressions/fuzz_6d1021c93c9162f4.txt` · `handwritten-pending` · `standard.gap` · `1ae128d6b84b7467`
-- `c/tests/regressions/fuzz_6d1021c93c9162f4.uem` · `handwritten-pending` · `standard.gap` · `6d1021c93c9162f4`
-- `c/tests/regressions/fuzz_71aa3001ba619b73.txt` · `handwritten-pending` · `standard.gap` · `e451e538a29b304f`
-- `c/tests/regressions/fuzz_71aa3001ba619b73.uem` · `handwritten-pending` · `standard.gap` · `71aa3001ba619b73`
-- `c/tests/regressions/fuzz_8125fef29b05db21.txt` · `handwritten-pending` · `standard.gap` · `e260de86d4e829be`
-- `c/tests/regressions/fuzz_8125fef29b05db21.uem` · `handwritten-pending` · `standard.gap` · `8125fef29b05db21`
-- `c/tests/regressions/fuzz_81646a7945033a59.txt` · `handwritten-pending` · `standard.gap` · `f555a120bcb843f6`
-- `c/tests/regressions/fuzz_81646a7945033a59.uem` · `handwritten-pending` · `standard.gap` · `81646a7945033a59`
-- `c/tests/regressions/fuzz_820237fffa6219f5.txt` · `handwritten-pending` · `standard.gap` · `64f71453c0c27111`
-- `c/tests/regressions/fuzz_820237fffa6219f5.uem` · `handwritten-pending` · `standard.gap` · `820237fffa6219f5`
-- `c/tests/regressions/fuzz_886e2ebe90004155.txt` · `handwritten-pending` · `standard.gap` · `b3c486cd2e5d1c49`
-- `c/tests/regressions/fuzz_886e2ebe90004155.uem` · `handwritten-pending` · `standard.gap` · `886e2ebe90004155`
-- `c/tests/regressions/fuzz_8923a6787c51278e.txt` · `handwritten-pending` · `standard.gap` · `f486f3f0a237c83c`
-- `c/tests/regressions/fuzz_8923a6787c51278e.uem` · `handwritten-pending` · `standard.gap` · `8923a6787c51278e`
-- `c/tests/regressions/fuzz_905f95f032109533.txt` · `handwritten-pending` · `standard.gap` · `f84c232bbe451552`
-- `c/tests/regressions/fuzz_905f95f032109533.uem` · `handwritten-pending` · `standard.gap` · `905f95f032109533`
-- `c/tests/regressions/fuzz_971975d7b0a444ce.txt` · `handwritten-pending` · `standard.gap` · `894c038b0e799513`
-- `c/tests/regressions/fuzz_971975d7b0a444ce.uem` · `handwritten-pending` · `standard.gap` · `971975d7b0a444ce`
-- `c/tests/regressions/fuzz_98c8cdf0374a5bc0.txt` · `handwritten-pending` · `standard.gap` · `2ff898314a291007`
-- `c/tests/regressions/fuzz_98c8cdf0374a5bc0.uem` · `handwritten-pending` · `standard.gap` · `98c8cdf0374a5bc0`
-- `c/tests/regressions/fuzz_9aa113af1423cc71.txt` · `handwritten-pending` · `standard.gap` · `df40f8970ac8a357`
-- `c/tests/regressions/fuzz_9aa113af1423cc71.uem` · `handwritten-pending` · `standard.gap` · `9aa113af1423cc71`
-- `c/tests/regressions/fuzz_a13305f1979c0509.txt` · `handwritten-pending` · `standard.gap` · `4a6fda8204a1b63c`
-- `c/tests/regressions/fuzz_a13305f1979c0509.uem` · `handwritten-pending` · `standard.gap` · `a13305f1979c0509`
-- `c/tests/regressions/fuzz_a338373eb4bf51d4.txt` · `handwritten-pending` · `standard.gap` · `e111267d80f93d6c`
-- `c/tests/regressions/fuzz_a338373eb4bf51d4.uem` · `handwritten-pending` · `standard.gap` · `a338373eb4bf51d4`
-- `c/tests/regressions/fuzz_a3604298a65d1ad5.txt` · `handwritten-pending` · `standard.gap` · `3d343fbf2976937e`
-- `c/tests/regressions/fuzz_a3604298a65d1ad5.uem` · `handwritten-pending` · `standard.gap` · `a3604298a65d1ad5`
-- `c/tests/regressions/fuzz_af607e09699a13d9.txt` · `handwritten-pending` · `standard.gap` · `20431a040dcf4d16`
-- `c/tests/regressions/fuzz_af607e09699a13d9.uem` · `handwritten-pending` · `standard.gap` · `af607e09699a13d9`
-- `c/tests/regressions/fuzz_b41edab3ba1c6702.txt` · `handwritten-pending` · `standard.gap` · `6057382d54f251d6`
-- `c/tests/regressions/fuzz_b41edab3ba1c6702.uem` · `handwritten-pending` · `standard.gap` · `b41edab3ba1c6702`
-- `c/tests/regressions/fuzz_b549930f3dfa14b3.txt` · `handwritten-pending` · `standard.gap` · `ccdf349e4b76444d`
-- `c/tests/regressions/fuzz_b549930f3dfa14b3.uem` · `handwritten-pending` · `standard.gap` · `b549930f3dfa14b3`
-- `c/tests/regressions/fuzz_bbf427db6ff2ba6f.txt` · `handwritten-pending` · `standard.gap` · `b7034ea6732fd48b`
-- `c/tests/regressions/fuzz_bbf427db6ff2ba6f.uem` · `handwritten-pending` · `standard.gap` · `bbf427db6ff2ba6f`
-- `c/tests/regressions/fuzz_bf0b38d75c192f1f.txt` · `handwritten-pending` · `standard.gap` · `3ed38b9d3304c91e`
-- `c/tests/regressions/fuzz_bf0b38d75c192f1f.uem` · `handwritten-pending` · `standard.gap` · `bf0b38d75c192f1f`
-- `c/tests/regressions/fuzz_c62331bf727d79de.txt` · `handwritten-pending` · `standard.gap` · `92b1fa13aa98b63f`
-- `c/tests/regressions/fuzz_c62331bf727d79de.uem` · `handwritten-pending` · `standard.gap` · `c62331bf727d79de`
-- `c/tests/regressions/fuzz_c644e6c69a320735.txt` · `handwritten-pending` · `standard.gap` · `53f1a5eebb1456a9`
-- `c/tests/regressions/fuzz_c644e6c69a320735.uem` · `handwritten-pending` · `standard.gap` · `c644e6c69a320735`
-- `c/tests/regressions/fuzz_c7e7f87ea67141c8.txt` · `handwritten-pending` · `standard.gap` · `f0d662cdcea499f5`
-- `c/tests/regressions/fuzz_c7e7f87ea67141c8.uem` · `handwritten-pending` · `standard.gap` · `c7e7f87ea67141c8`
-- `c/tests/regressions/fuzz_c80d2cb02102f417.txt` · `handwritten-pending` · `standard.gap` · `bfaa4d4a6d7d5bb8`
-- `c/tests/regressions/fuzz_c80d2cb02102f417.uem` · `handwritten-pending` · `standard.gap` · `c80d2cb02102f417`
-- `c/tests/regressions/fuzz_ca321bb6acfeae09.txt` · `handwritten-pending` · `standard.gap` · `d7fcdf8ed4d5366e`
-- `c/tests/regressions/fuzz_ca321bb6acfeae09.uem` · `handwritten-pending` · `standard.gap` · `ca321bb6acfeae09`
-- `c/tests/regressions/fuzz_cb7bc8174a35ecf4.txt` · `handwritten-pending` · `standard.gap` · `f9566f267984620d`
-- `c/tests/regressions/fuzz_cb7bc8174a35ecf4.uem` · `handwritten-pending` · `standard.gap` · `cb7bc8174a35ecf4`
-- `c/tests/regressions/fuzz_d025dfc3c30ceb79.txt` · `handwritten-pending` · `standard.gap` · `e841b774b195bd12`
-- `c/tests/regressions/fuzz_d025dfc3c30ceb79.uem` · `handwritten-pending` · `standard.gap` · `d025dfc3c30ceb79`
-- `c/tests/regressions/fuzz_d3f4f1f0ac3ec95a.txt` · `handwritten-pending` · `standard.gap` · `ccb7559aea69e36c`
-- `c/tests/regressions/fuzz_d3f4f1f0ac3ec95a.uem` · `handwritten-pending` · `standard.gap` · `d3f4f1f0ac3ec95a`
-- `c/tests/regressions/fuzz_d604186d7a51770c.txt` · `handwritten-pending` · `standard.gap` · `78a4c280b275b059`
-- `c/tests/regressions/fuzz_d604186d7a51770c.uem` · `handwritten-pending` · `standard.gap` · `d604186d7a51770c`
-- `c/tests/regressions/fuzz_d8f44c7e27055f8a.txt` · `handwritten-pending` · `standard.gap` · `80c3204722218142`
-- `c/tests/regressions/fuzz_d8f44c7e27055f8a.uem` · `handwritten-pending` · `standard.gap` · `d8f44c7e27055f8a`
-- `c/tests/regressions/fuzz_dbc92cb69ac41aa9.txt` · `handwritten-pending` · `standard.gap` · `7a17065c274d9d50`
-- `c/tests/regressions/fuzz_dbc92cb69ac41aa9.uem` · `handwritten-pending` · `standard.gap` · `dbc92cb69ac41aa9`
-- `c/tests/regressions/fuzz_e63eb4ea174bfad6.txt` · `handwritten-pending` · `standard.gap` · `7cf94c5a5fc3df88`
-- `c/tests/regressions/fuzz_e63eb4ea174bfad6.uem` · `handwritten-pending` · `standard.gap` · `e63eb4ea174bfad6`
-- `c/tests/regressions/fuzz_e6d3e0a231fc79d6.txt` · `handwritten-pending` · `standard.gap` · `288b962cdc0874f0`
-- `c/tests/regressions/fuzz_e6d3e0a231fc79d6.uem` · `handwritten-pending` · `standard.gap` · `e6d3e0a231fc79d6`
-- `c/tests/regressions/fuzz_e6ee76e3e9a2355a.txt` · `handwritten-pending` · `standard.gap` · `edcd256c2ebaabdb`
-- `c/tests/regressions/fuzz_e6ee76e3e9a2355a.uem` · `handwritten-pending` · `standard.gap` · `e6ee76e3e9a2355a`
-- `c/tests/regressions/fuzz_ed794668c4794827.txt` · `handwritten-pending` · `standard.gap` · `fbf1f30c175111af`
-- `c/tests/regressions/fuzz_ed794668c4794827.uem` · `handwritten-pending` · `standard.gap` · `ed794668c4794827`
-- `c/tests/regressions/fuzz_ee7a38e6d1644e98.txt` · `handwritten-pending` · `standard.gap` · `449200eff6c7bb4a`
-- `c/tests/regressions/fuzz_ee7a38e6d1644e98.uem` · `handwritten-pending` · `standard.gap` · `ee7a38e6d1644e98`
-- `c/tests/regressions/fuzz_f1500aca4ec7d693.txt` · `handwritten-pending` · `standard.gap` · `50d903e7469f4db0`
-- `c/tests/regressions/fuzz_f1500aca4ec7d693.uem` · `handwritten-pending` · `standard.gap` · `f1500aca4ec7d693`
-- `c/tests/regressions/fuzz_f76cd3ca9c868504.txt` · `handwritten-pending` · `standard.gap` · `ece2114a8eb33929`
-- `c/tests/regressions/fuzz_f76cd3ca9c868504.uem` · `handwritten-pending` · `standard.gap` · `f76cd3ca9c868504`
-- `c/tests/regressions/fuzz_f9f43333c21e7902.txt` · `handwritten-pending` · `standard.gap` · `371d74cf1732450a`
-- `c/tests/regressions/fuzz_f9f43333c21e7902.uem` · `handwritten-pending` · `standard.gap` · `f9f43333c21e7902`
-- `c/tests/regressions/fuzz_fba78542581fc2eb.txt` · `handwritten-pending` · `standard.gap` · `9231ac862dc0aadd`
-- `c/tests/regressions/fuzz_fba78542581fc2eb.uem` · `handwritten-pending` · `standard.gap` · `fba78542581fc2eb`
-- `c/tests/regressions/fuzz_fdf7eb059283fdb7.txt` · `handwritten-pending` · `standard.gap` · `2be789637445382d`
-- `c/tests/regressions/fuzz_fdf7eb059283fdb7.uem` · `handwritten-pending` · `standard.gap` · `fdf7eb059283fdb7`
+- `c/tests/golden/inv_basic.json` · `handwritten-pending` · `standard.gap` · `ae42acc75d6443ed`
+- `c/tests/golden/inv_empty_items.json` · `handwritten-pending` · `standard.gap` · `0fed4880fd5e2152`
+- `c/tests/golden/inv_half_cent.json` · `handwritten-pending` · `standard.gap` · `782a3cd0d811385b`
+- `c/tests/golden/inv_reject_qty.json` · `handwritten-pending` · `standard.gap` · `5fa4aca0c9ccbe95`
+- `c/tests/golden/ts_empty.json` · `handwritten-pending` · `standard.gap` · `8e548d089277a0f6`
+- `c/tests/golden/ts_gogo.json` · `handwritten-pending` · `standard.gap` · `762025af4f74450e`
 - `c/tests/vectors/bad_magic.uem` · `handwritten-pending` · `standard.gap` · `0ff64a815f69820e`
 - `c/tests/vectors/trailing.uem` · `handwritten-pending` · `standard.gap` · `88ab7520c9152174`
 - `c/tests/vectors/truncated.uem` · `handwritten-pending` · `standard.gap` · `33870149c489e383`
@@ -267,11 +203,16 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `c/third_party/cJSON.h` · `external-vendored` · `ok` · `0578cc29132912ed`
 - `c/third_party/sha256.c` · `external-vendored` · `ok` · `7512aca9136ce6e2`
 - `c/third_party/sha256.h` · `external-vendored` · `ok` · `ee296ea123f062e6`
-- `coverage.json` · `evidence` · `ok` · `9f99a1a762f30289`
-- `coverage_py.json` · `evidence` · `ok` · `d2ba6d0c467789e7`
+- `contract_report.json` · `handwritten-pending` · `standard.gap` · `7805a99ab3fa9825`
+- `contract_status.json` · `handwritten-pending` · `standard.gap` · `a0316a0a1a5dd18a`
+- `coverage.json` · `evidence` · `ok` · `b25fdcb040fbf20f`
+- `coverage_py.json` · `evidence` · `ok` · `254acd683642b779`
 - `docs/DEVELOPER_WORKFLOW.md` · `handwritten-pending` · `standard.gap` · `5ce70a955dc69a2c`
+- `examples/declarations/invoice_total.json` · `handwritten-pending` · `standard.gap` · `1a0479e011592752`
 - `examples/declarations/invoice_total.py` · `handwritten-pending` · `standard.gap` · `d0cb833aace2a12a`
+- `examples/declarations/text_stats_program.json` · `handwritten-pending` · `standard.gap` · `c8c1c8f23b4e780a`
 - `examples/declarations/text_stats_program.py` · `handwritten-pending` · `standard.gap` · `d9d565c596a5efdd`
+- `examples/declarations/text_stats_v2.json` · `handwritten-pending` · `standard.gap` · `ac4a679c4e32180f`
 - `examples/declarations/text_stats_v2.py` · `handwritten-pending` · `standard.gap` · `0c083c7704d22e8d`
 - `examples/one_dimension.py` · `handwritten-pending` · `standard.gap` · `48d90d21a1e77ced`
 - `examples/three_dimensions.py` · `handwritten-pending` · `standard.gap` · `a5bc88a92e9fcf54`
@@ -282,29 +223,36 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `scripts/emit_l13_report.py` · `handwritten-pending` · `standard.gap` · `3810ee0ccf9dc694`
 - `scripts/run_l13.sh` · `handwritten-pending` · `standard.gap` · `0b8a95c50aeceb72`
 - `scripts/run_standard_ten.sh` · `handwritten-pending` · `standard.gap` · `970611e014e21f56`
-- `seed/ROOT.seed.json` · `seed` · `ok` · `bcd58991e3a7b754`
+- `scripts/uc_contract` · `handwritten-pending` · `standard.gap` · `4d25b4802a3e47e7`
+- `scripts/uc_contract.py` · `handwritten-pending` · `standard.gap` · `76fad072500449d6`
+- `seed/ROOT.seed.json` · `seed` · `ok` · `375956e77f77ce47`
 - `seed/SCHEMA.json` · `seed` · `ok` · `61776cb0433eff8b`
 - `seed/SEED_SCHEMA.md` · `seed` · `ok` · `91b67ddab6a72624`
 - `seed/declarations/invoice_total.json` · `seed` · `ok` · `fd1bb8733a2176c1`
+- `seed/declarations/task_ledger.json` · `seed` · `ok` · `50bdf5541fc775f1`
 - `seed/declarations/text_stats_v2.json` · `seed` · `ok` · `9b0fd8aa94ded247`
-- `seed/stamps/generator.lock.json` · `seed` · `ok` · `808ad1904f00203c`
+- `seed/stamps/generator.lock.json` · `seed` · `ok` · `eab941fad387f2b9`
 - `tests/test_benchmark.py` · `handwritten-pending` · `standard.gap` · `4ce9240b671a4c66`
+- `tests/test_binding_mutations.py` · `handwritten-pending` · `standard.gap` · `7ad5942c665486a5`
 - `tests/test_boundary.py` · `handwritten-pending` · `standard.gap` · `bfa6a879dfec4bd1`
-- `tests/test_build_gauntlet.py` · `handwritten-pending` · `standard.gap` · `4db216ce0df2620d`
+- `tests/test_build_gauntlet.py` · `handwritten-pending` · `standard.gap` · `baa7d05da57e0fec`
 - `tests/test_clock.py` · `handwritten-pending` · `standard.gap` · `39c716bc4f3bc4df`
-- `tests/test_declaration.py` · `handwritten-pending` · `standard.gap` · `bd4be62b91c9df03`
+- `tests/test_declaration.py` · `handwritten-pending` · `standard.gap` · `1beaefa44df3657a`
 - `tests/test_dimensions.py` · `handwritten-pending` · `standard.gap` · `b2b4af310463fe7e`
-- `tests/test_event_l10.py` · `handwritten-pending` · `standard.gap` · `ae2bf6cd3ee41fc7`
+- `tests/test_event_l10.py` · `handwritten-pending` · `standard.gap` · `59e2df831a3e3790`
 - `tests/test_expr.py` · `handwritten-pending` · `standard.gap` · `1cb5e1ff6866d5f9`
 - `tests/test_generator.py` · `handwritten-pending` · `standard.gap` · `5455ca54048d663e`
 - `tests/test_invariants.py` · `handwritten-pending` · `standard.gap` · `2747eda479b3b5f6`
-- `tests/test_l11.py` · `handwritten-pending` · `standard.gap` · `b44ba8f257eb3915`
-- `tests/test_l13.py` · `handwritten-pending` · `standard.gap` · `6b482865ece5dd24`
-- `tests/test_l13_coverage.py` · `handwritten-pending` · `standard.gap` · `10b726d541f918ec`
-- `tests/test_l13_deep.py` · `handwritten-pending` · `standard.gap` · `f2a67de935d2ae1f`
+- `tests/test_l11.py` · `handwritten-pending` · `standard.gap` · `b4500532c720112d`
+- `tests/test_l13.py` · `handwritten-pending` · `standard.gap` · `c0f44f177eff4883`
+- `tests/test_l13_coverage.py` · `handwritten-pending` · `standard.gap` · `acf559d14640321d`
+- `tests/test_l13_deep.py` · `handwritten-pending` · `standard.gap` · `bf363a49551abf3e`
+- `tests/test_no_python_declarations.py` · `handwritten-pending` · `standard.gap` · `c8552d990c2dee26`
+- `tests/test_oom_mutations.py` · `handwritten-pending` · `standard.gap` · `060f8cffef0861d1`
 - `tests/test_signature.py` · `handwritten-pending` · `standard.gap` · `8e640c56a6580c13`
 - `tests/test_standard_ten.py` · `handwritten-pending` · `standard.gap` · `6daf6aec6921f2df`
-- `tests/test_uem.py` · `handwritten-pending` · `standard.gap` · `31b618bbe72e2cb1`
+- `tests/test_uem.py` · `handwritten-pending` · `standard.gap` · `124d0cb0b656702c`
+- `tests/test_unfold_stateful.py` · `handwritten-pending` · `standard.gap` · `615d9b5516ff32a5`
 - `unified/__init__.py` · `handwritten-pending` · `standard.gap` · `24a5176c9cd5a7f9`
 - `unified/__main__.py` · `handwritten-pending` · `standard.gap` · `2b9731d81c4a0fe6`
 - `unified/boundary.py` · `handwritten-pending` · `standard.gap` · `9a76b9d73f1daab0`
@@ -315,36 +263,38 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `unified/generator/__main__.py` · `handwritten-pending` · `standard.gap` · `3af36c6cc1597b0d`
 - `unified/generator/benchmark.py` · `handwritten-pending` · `standard.gap` · `5e3bef2b43e57115`
 - `unified/generator/build.py` · `handwritten-pending` · `standard.gap` · `9af504e6250e5132`
-- `unified/generator/cli.py` · `handwritten-pending` · `standard.gap` · `ce2200eb342577af`
-- `unified/generator/declaration.py` · `handwritten-pending` · `standard.gap` · `63372f8abe8918a9`
+- `unified/generator/cli.py` · `handwritten-pending` · `standard.gap` · `94385e4e1e188b74`
+- `unified/generator/declaration.py` · `handwritten-pending` · `standard.gap` · `eee7f3d9c10272f1`
 - `unified/generator/event_emit.py` · `handwritten-pending` · `standard.gap` · `7d151b2e1fb6db0f`
 - `unified/generator/expr.py` · `handwritten-pending` · `standard.gap` · `3e0971d83229403c`
 - `unified/generator/expr_emit.py` · `handwritten-pending` · `standard.gap` · `d01abd88a13899e7`
-- `unified/generator/gauntlet.py` · `handwritten-pending` · `standard.gap` · `8069ffa90df103c2`
+- `unified/generator/gauntlet.py` · `handwritten-pending` · `standard.gap` · `df5c7a7784a7a64e`
 - `unified/generator/generate.py` · `handwritten-pending` · `standard.gap` · `e2f992740b0ee252`
 - `unified/generator/names.py` · `handwritten-pending` · `standard.gap` · `04791c2fa1ca7cf6`
 - `unified/generator/render.py` · `handwritten-pending` · `standard.gap` · `c7d4a443dead9e30`
-- `unified/generator/render_declared.py` · `handwritten-pending` · `standard.gap` · `3c3ecca285f37825`
+- `unified/generator/render_declared.py` · `handwritten-pending` · `standard.gap` · `b5e91bd42c4f39c8`
+- `unified/generator/stateful_emit.py` · `handwritten-pending` · `standard.gap` · `65ee832dbffbd800`
+- `unified/generator/unfold.py` · `handwritten-pending` · `standard.gap` · `753bcfc3e7e79bde`
 - `unified/generator/validate.py` · `handwritten-pending` · `standard.gap` · `8fb3436cc6088a28`
 - `unified/generator/verify_plan.py` · `handwritten-pending` · `standard.gap` · `0e981d8721b784e0`
 - `unified/generator/write_fs.py` · `handwritten-pending` · `standard.gap` · `57e811ec50762428`
 - `unified/machine/__init__.py` · `handwritten-pending` · `standard.gap` · `a214cc6bcfe02875`
 - `unified/machine/bytecode.py` · `handwritten-pending` · `standard.gap` · `0a7fa4266ec8f067`
 - `unified/machine/canonical.py` · `handwritten-pending` · `standard.gap` · `2ac4fcb9339e5116`
-- `unified/machine/compile_decl.py` · `handwritten-pending` · `standard.gap` · `4264315a13b6bb48`
+- `unified/machine/compile_decl.py` · `handwritten-pending` · `standard.gap` · `e201c3e70b87eee4`
 - `unified/machine/gauntlet.py` · `handwritten-pending` · `standard.gap` · `910d737cd1cecc3f`
 - `unified/machine/host.py` · `physical-host-boundary` · `ok` · `46a70046d13b66d1`
 - `unified/machine/interpreter.py` · `handwritten-pending` · `standard.gap` · `123e5d0bd4804636`
-- `unified/machine/l11.py` · `handwritten-pending` · `standard.gap` · `692df24ba44d2fdc`
-- `unified/machine/l13.py` · `handwritten-pending` · `standard.gap` · `3b685965e815a0c7`
-- `unified/machine/l13_catalog.py` · `handwritten-pending` · `standard.gap` · `3379096736877fef`
+- `unified/machine/l11.py` · `handwritten-pending` · `standard.gap` · `c82c8aa82219a6a3`
+- `unified/machine/l13.py` · `handwritten-pending` · `standard.gap` · `3e9a881d2caebb42`
+- `unified/machine/l13_catalog.py` · `handwritten-pending` · `standard.gap` · `32f167e9c6a0fcae`
 - `unified/machine/measure.py` · `handwritten-pending` · `standard.gap` · `f6c3bd6f8b340780`
 - `unified/machine/opcodes.py` · `handwritten-pending` · `standard.gap` · `97cc810a83ccc046`
-- `unified/machine/primitives.py` · `handwritten-pending` · `standard.gap` · `aa9cab92faacade8`
+- `unified/machine/primitives.py` · `handwritten-pending` · `standard.gap` · `cb4ad398c7f50fec`
 - `unified/machine/thing.py` · `handwritten-pending` · `standard.gap` · `991b7864294015f9`
 - `unified/machine/validate.py` · `handwritten-pending` · `standard.gap` · `a7233a9e4015f04f`
 - `unified/standard.py` · `handwritten-pending` · `standard.gap` · `8aa45f56d2948ac5`
-- `unified/standard_audit.py` · `handwritten-pending` · `standard.gap` · `070c1e4ce5cb1f28`
+- `unified/standard_audit.py` · `handwritten-pending` · `standard.gap` · `9e2a109bcede5981`
 - `unified/standard_generate.py` · `handwritten-pending` · `standard.gap` · `78fd6e444cffdc5d`
 - `unified/thing.py` · `handwritten-pending` · `standard.gap` · `7db7669dc8e629b1`
 - `unified/verify.py` · `handwritten-pending` · `standard.gap` · `d72f0665fb484a42`

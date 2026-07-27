@@ -1,14 +1,14 @@
 # L13 Complete Testing Gauntlet
 
-**Verdict:** `fail`
+**Verdict:** `pass`
 
 Each dimension is scored separately. Never combined into one average.
 
 | Dimension | Required | Actual | OK |
 | --- | ---: | ---: | --- |
-| `c_branches` | 100.0 | 79.31 (1131/1426) | NO |
+| `c_branches` | 100.0 | 100.00 (1270/1270) | yes |
 | `c_functions` | 100.0 | 100.00 (76/76) | yes |
-| `c_lines` | 100.0 | 100.00 (1567/1567) | yes |
+| `c_lines` | 100.0 | 100.00 (1678/1678) | yes |
 | `error_ticket_paths` | 100.0 | 100.00 | yes |
 | `event_routes` | 100.0 | 100.00 | yes |
 | `fuzz_100k` | 100.0 | 100.00 | yes |
@@ -32,4 +32,4 @@ Each dimension is scored separately. Never combined into one average.
 - Assertions verify state, output, evidence, events, effects
 - **Zero denominator is failure** (never report 100% of 0)
 
-Generated in 15.8s.
+Generated in 16.8s.

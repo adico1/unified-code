@@ -25,8 +25,8 @@ from unified.machine.thing import blank_thing, value_of
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DECL_TEXT = ROOT / "examples" / "declarations" / "text_stats_v2.py"
-DECL_INV = ROOT / "examples" / "declarations" / "invoice_total.py"
+DECL_TEXT = ROOT / "examples" / "declarations" / "text_stats_v2.json"
+DECL_INV = ROOT / "examples" / "declarations" / "invoice_total.json"
 
 
 def test_opcode_table_has_16():

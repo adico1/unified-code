@@ -1,11 +1,9 @@
 {
   "bytecode": "artifacts/uem/text_stats_v2/program.uem",
   "case": "ts_empty.json",
-  "declaration": "examples/declarations/text_stats_v2.py",
+  "declaration": "examples/declarations/text_stats_v2.json",
   "error": null,
   "evidence_semantic": [
-    "boundary:inward",
-    "id:b625f4a2104df5a4",
     "boundary:inward",
     "source:ok",
     "outward:request:read_utf8",

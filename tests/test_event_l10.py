@@ -17,7 +17,7 @@ DECL = (
     Path(__file__).resolve().parents[1]
     / "examples"
     / "declarations"
-    / "text_stats_v2.py"
+    / "text_stats_v2.json"
 )
 
 

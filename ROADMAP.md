@@ -1,5 +1,35 @@
 # Roadmap
 
+## Milestone 1 — Seed-to-application product
+
+Public contract:
+
+```bash
+uc unfold seed/declarations/task_ledger.json \
+  --output /tmp/uc-task-ledger \
+  --verify \
+  --run
+```
+
+This milestone is application-scoped: one JSON seed generates the runnable
+stateful application, generated tests and acceptance sequence; verifies
+Python/C canonical equality and deterministic rebuild hashes; and installs only
+after every requested gate passes.
+
+## Milestone 2 — Root-seed fixed-point bootstrap
+
+This milestone is deliberately non-blocking for Milestone 1. Open items:
+
+- Generate the generator and complete framework from `seed/ROOT.seed.json`.
+- Generate Python/C hosts, physical target adapters, and build definitions.
+- Generate repository tests, mutations, goldens, documentation, and audit tools.
+- Account for vendored dependencies without claiming they were generated.
+- Rebuild the complete repository in a clean room from Stage 0 plus the root
+  seed.
+- Reach a whole-tree fixed point with byte-identical hashes.
+- Collapse the remaining dual-host implementation structure to the single
+  machine/host-boundary model required by Standard Ten.
+
 ## 0.1 — Kernel
 
 - Canonical thing
@@ -82,7 +112,7 @@
 - Provenance audit + clean-room partial (UEM artifacts)
 - **Not complete:** full clean-room regeneration of framework/hosts/tests/docs from seed alone (open gaps in seed)
 
-### Next / in progress
+### Next / in progress (Milestone 2)
 
 - Close `standard.gap` tickets by seed-expressing packages (no conventional fill)
 - Eliminate OOP (`_ExprFail`) via plain-data faults

@@ -436,33 +436,35 @@ def test_eval_expr_operators_comprehensive():
     )
     assert isinstance(ds, str)
     # failures
-    from unified.machine.primitives import _ExprFail
+    from unified.machine.primitives import _is_expr_fail, args_error_path
 
     try:
         eval_expr({"op": "require", "of": {"op": "literal", "value": None}, "error": "m"}, ctx)
         assert False
-    except _ExprFail as e:
-        assert e.error == "m"
+    except Exception as e:
+        assert _is_expr_fail(e)
+        err, _path = args_error_path(e)
+        assert err == "m"
     try:
         eval_expr({"op": "min_value", "bound": 5, "of": {"op": "literal", "value": 1}, "error": "lo"}, ctx)
         assert False
-    except _ExprFail:
-        pass
+    except Exception as e:
+        assert _is_expr_fail(e)
     try:
         eval_expr({"op": "max_value", "bound": 0, "of": {"op": "literal", "value": 1}, "error": "hi"}, ctx)
         assert False
-    except _ExprFail:
-        pass
+    except Exception as e:
+        assert _is_expr_fail(e)
     try:
         eval_expr({"op": "unknown_op_xyz"}, ctx)
         assert False
-    except _ExprFail:
-        pass
+    except Exception as e:
+        assert _is_expr_fail(e)
     try:
         eval_expr({"op": "ref", "name": "missing"}, ctx)
         assert False
-    except _ExprFail:
-        pass
+    except Exception as e:
+        assert _is_expr_fail(e)
 
 
 def test_compile_decl_errors_and_artifacts(tmp_path):
@@ -470,15 +472,15 @@ def test_compile_decl_errors_and_artifacts(tmp_path):
 
     bad = compile_declaration(blank_thing({}))
     assert bad["state"] == "invalid"
-    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.py"))
+    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.json"))
     write_artifacts(c, str(tmp_path / "out"))
     assert (tmp_path / "out" / "program.uem").is_file()
-    c2 = compile_declaration_path(str(ROOT / "examples/declarations/invoice_total.py"))
+    c2 = compile_declaration_path(str(ROOT / "examples/declarations/invoice_total.json"))
     assert c2["state"] != "invalid"
 
 
 def test_run_program_full_thing():
-    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.py"))
+    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.json"))
     v = dict(value_of(c))
     v["host_input"] = {"text": "x"}
     out = run_program({**c, "value": v, "state": "formed"})

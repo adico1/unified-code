@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Unified Code complete acceptance contract — single script tool.
+"""Milestone 1 application acceptance contract — single script tool.
 
-Encodes the full post-blocker plan as machine-checkable phases and criteria.
-Does not claim completeness; exits nonzero until every criterion passes.
+Repository self-hosting is reported separately as Milestone 2 and never blocks
+the seed-to-application contract.
 
 Usage:
   python3 scripts/uc_contract.py plan              # ordered work plan
@@ -13,8 +13,8 @@ Usage:
   python3 scripts/uc_contract.py conservation      # baseline conservation only
 
 Exit codes:
-  0  — entire contract green
-  1  — one or more criteria fail (report lists them)
+  0  — Milestone 1 application contract green
+  1  — one or more Milestone 1 criteria fail (report lists them)
   2  — tool/environment error
 """
 
@@ -26,7 +26,6 @@ import os
 import subprocess
 import sys
 import time
-from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -137,7 +136,7 @@ PLAN_PHASES: list[dict[str, Any]] = [
         "name": "Independent task-ledger seed proof",
         "status_key": "task_ledger_seed",
         "goal": "One seed (not text/invoice) unfolds to a usable app",
-        "seed_path": "examples/seeds/task_ledger.py",
+        "seed_path": "seed/declarations/task_ledger.json",
         "domain": [
             "add task",
             "complete task",
@@ -148,7 +147,7 @@ PLAN_PHASES: list[dict[str, Any]] = [
             "ticket only on unhandled failure",
         ],
         "proof_command": (
-            "uc unfold examples/seeds/task_ledger.py "
+            "uc unfold seed/declarations/task_ledger.json "
             "--output /tmp/uc-task-ledger --verify --run"
         ),
         "acceptance": [
@@ -159,9 +158,9 @@ PLAN_PHASES: list[dict[str, Any]] = [
     },
     {
         "id": "P4",
-        "name": "Standard Ten gap closure",
+        "name": "Milestone 2 root-seed fixed-point bootstrap",
         "status_key": "standard_ten_pass",
-        "goal": "AUDIT_STANDARD_TEN verdict pass; no illegal provenance",
+        "goal": "Later: AUDIT_STANDARD_TEN repository self-hosting verdict pass",
         "gaps": [
             "gap.seed-expresses-full-framework",
             "gap.no-app-control-flow-in-host",
@@ -211,45 +210,79 @@ PLAN_PHASES: list[dict[str, Any]] = [
 # Criterion model
 # ---------------------------------------------------------------------------
 
-@dataclass
-class Criterion:
-    id: str
-    name: str
-    phase: str
-    required: Any
-    actual: Any
-    ok: bool
-    evidence: str = ""
-    blocker: str = ""
+def Criterion(
+    id: str,
+    name: str,
+    phase: str,
+    required: Any,
+    actual: Any,
+    ok: bool,
+    evidence: str = "",
+    blocker: str = "",
+) -> dict[str, Any]:
+    """Plain-data criterion row (no class — Standard Ten rule 5)."""
+    return {
+        "id": id,
+        "name": name,
+        "phase": phase,
+        "required": required,
+        "actual": actual,
+        "ok": ok,
+        "evidence": evidence,
+        "blocker": blocker,
+    }
 
 
-@dataclass
-class ContractStatus:
-    timestamp: str
-    git_head: str
-    baseline_commit: str
-    criteria: list[Criterion] = field(default_factory=list)
-    conservation: dict[str, Any] = field(default_factory=dict)
-    phases: list[dict[str, Any]] = field(default_factory=list)
-    blockers: list[str] = field(default_factory=list)
-    contract_pass: bool = False
+def ContractStatus(
+    timestamp: str,
+    git_head: str,
+    baseline_commit: str,
+    criteria: list | None = None,
+    conservation: dict | None = None,
+    phases: list | None = None,
+    blockers: list | None = None,
+    contract_pass: bool = False,
+    self_hosting_pass: bool = False,
+    self_hosting_blockers: list | None = None,
+) -> dict[str, Any]:
+    """Plain-data contract status (no class)."""
+    return {
+        "timestamp": timestamp,
+        "git_head": git_head,
+        "baseline_commit": baseline_commit,
+        "criteria": list(criteria or []),
+        "conservation": dict(conservation or {}),
+        "phases": list(phases or []),
+        "blockers": list(blockers or []),
+        "contract_pass": bool(contract_pass),
+        "application_conformance": "pass" if contract_pass else "fail",
+        "self_hosting_pass": bool(self_hosting_pass),
+        "self_hosting_conformance": "pass" if self_hosting_pass else "open",
+        "self_hosting_blockers": list(self_hosting_blockers or []),
+    }
 
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "timestamp": self.timestamp,
-            "git_head": self.git_head,
-            "baseline_commit": self.baseline_commit,
-            "contract_pass": self.contract_pass,
-            "blockers": self.blockers,
-            "conservation": self.conservation,
-            "criteria": [asdict(c) for c in self.criteria],
-            "phases": self.phases,
-            "summary": {
-                "total": len(self.criteria),
-                "passed": sum(1 for c in self.criteria if c.ok),
-                "failed": sum(1 for c in self.criteria if not c.ok),
-            },
-        }
+
+def contract_status_to_dict(st: dict[str, Any]) -> dict[str, Any]:
+    criteria = st.get("criteria") or []
+    return {
+        "timestamp": st.get("timestamp"),
+        "git_head": st.get("git_head"),
+        "baseline_commit": st.get("baseline_commit"),
+        "contract_pass": st.get("contract_pass"),
+        "blockers": st.get("blockers"),
+        "application_conformance": st.get("application_conformance"),
+        "self_hosting_pass": st.get("self_hosting_pass"),
+        "self_hosting_conformance": st.get("self_hosting_conformance"),
+        "self_hosting_blockers": st.get("self_hosting_blockers"),
+        "conservation": st.get("conservation"),
+        "criteria": list(criteria),
+        "phases": st.get("phases"),
+        "summary": {
+            "total": len(criteria),
+            "passed": sum(1 for c in criteria if c.get("ok")),
+            "failed": sum(1 for c in criteria if not c.get("ok")),
+        },
+    }
 
 
 def _run(
@@ -361,7 +394,7 @@ def measure_uc_unfold() -> dict[str, Any]:
     has_unfold = "unfold" in text and (
         'command == "unfold"' in text or 'command=="unfold"' in text
     )
-    seed = ROOT / "examples" / "seeds" / "task_ledger.py"
+    seed = ROOT / "seed" / "declarations" / "task_ledger.json"
     # Try running uc unfold --help-ish
     r = None
     if UC.is_file():
@@ -418,14 +451,14 @@ def measure_standard_ten() -> dict[str, Any]:
 # Status assembly
 # ---------------------------------------------------------------------------
 
-def build_status() -> ContractStatus:
+def build_status() -> dict[str, Any]:
     cons = measure_conservation()
     unfold = measure_uc_unfold()
     l13 = measure_l13_snapshot()
     ten = measure_standard_ten()
     dims = l13.get("dimensions") or {}
 
-    def dim_ok(name: str, require_100: bool = True) -> Criterion:
+    def dim_ok(name: str, require_100: bool = True) -> dict[str, Any]:
         d = dims.get(name) or {}
         actual = d.get("actual")
         ok = bool(d.get("ok"))
@@ -449,7 +482,7 @@ def build_status() -> ContractStatus:
             blocker="" if ok else f"dimension {name} not at required 100%",
         )
 
-    criteria: list[Criterion] = []
+    criteria: list[dict[str, Any]] = []
 
     # Baseline frozen
     bl_ok = (
@@ -604,7 +637,7 @@ def build_status() -> ContractStatus:
     criteria.append(
         Criterion(
             "unfold.task_ledger_seed",
-            "examples/seeds/task_ledger.py exists",
+            "seed/declarations/task_ledger.json exists",
             "P3",
             True,
             unfold.get("task_ledger_seed_exists"),
@@ -627,35 +660,45 @@ def build_status() -> ContractStatus:
         )
     )
 
-    blockers = [c.blocker for c in criteria if not c.ok and c.blocker]
+    application_criteria = [c for c in criteria if c["phase"] != "P4"]
+    blockers = [
+        c["blocker"]
+        for c in application_criteria
+        if not c["ok"] and c["blocker"]
+    ]
+    self_hosting_blockers = [
+        c["blocker"]
+        for c in criteria
+        if c["phase"] == "P4" and not c["ok"] and c["blocker"]
+    ]
     # Phase rollup
     phase_status = []
     for ph in PLAN_PHASES:
         # map phase to criteria prefix
         pid = ph["id"]
-        related = [c for c in criteria if pid in c.phase or c.phase.startswith(pid)]
+        related = [c for c in criteria if pid in c["phase"] or c["phase"].startswith(pid)]
         if pid == "P0":
-            related = [c for c in criteria if c.id.startswith("baseline") or c.id.startswith("ledger")]
+            related = [c for c in criteria if c["id"].startswith("baseline") or c["id"].startswith("ledger")]
         elif pid == "P1":
-            related = [c for c in criteria if c.id.startswith("branches") or c.id == "l13.c_branches"]
+            related = [c for c in criteria if c["id"].startswith("branches") or c["id"] == "l13.c_branches"]
         elif pid == "P2":
-            related = [c for c in criteria if c.id.startswith("unfold.cli")]
+            related = [c for c in criteria if c["id"].startswith("unfold.cli")]
         elif pid == "P3":
-            related = [c for c in criteria if c.id.startswith("unfold.task")]
+            related = [c for c in criteria if c["id"].startswith("unfold.task")]
         elif pid == "P4":
-            related = [c for c in criteria if c.id.startswith("standard_ten")]
+            related = [c for c in criteria if c["id"].startswith("standard_ten")]
         elif pid == "P5":
-            related = [c for c in criteria if c.id.startswith("l13") or c.id.startswith("branches.c")]
+            related = [c for c in criteria if c["id"].startswith("l13") or c["id"].startswith("branches.c")]
         elif pid == "P6":
             related = []
-        ok = all(c.ok for c in related) if related else False
+        ok = all(c["ok"] for c in related) if related else False
         phase_status.append(
             {
                 "id": pid,
                 "name": ph["name"],
                 "ok": ok,
                 "goal": ph.get("goal"),
-                "related_failed": [c.id for c in related if not c.ok],
+                "related_failed": [c["id"] for c in related if not c["ok"]],
             }
         )
 
@@ -667,7 +710,9 @@ def build_status() -> ContractStatus:
         conservation=cons,
         phases=phase_status,
         blockers=blockers,
-        contract_pass=all(c.ok for c in criteria),
+        contract_pass=all(c["ok"] for c in application_criteria),
+        self_hosting_pass=all(c["ok"] for c in criteria if c["phase"] == "P4"),
+        self_hosting_blockers=self_hosting_blockers,
     )
     return st
 
@@ -724,13 +769,13 @@ def cmd_plan(_: argparse.Namespace) -> int:
 def cmd_status(args: argparse.Namespace) -> int:
     st = build_status()
     if args.json:
-        print(json.dumps(st.to_dict(), indent=2, sort_keys=True))
+        print(json.dumps(contract_status_to_dict(st), indent=2, sort_keys=True))
     else:
-        print(f"contract_pass: {st.contract_pass}")
-        print(f"git_head: {st.git_head}")
-        print(f"baseline: {st.baseline_commit}")
+        print(f"contract_pass: {st["contract_pass"]}")
+        print(f"git_head: {st["git_head"]}")
+        print(f"baseline: {st["baseline_commit"]}")
         print()
-        cons = st.conservation
+        cons = st["conservation"]
         print("## Conservation")
         for k in (
             "baseline_open",
@@ -748,24 +793,24 @@ def cmd_status(args: argparse.Namespace) -> int:
         print(f"  measurement_holds: {(cons.get('measurement') or {}).get('holds')}")
         print()
         print("## Phases")
-        for ph in st.phases:
+        for ph in st["phases"]:
             mark = "OK" if ph["ok"] else "FAIL"
             print(f"  [{mark}] {ph['id']} {ph['name']}")
             if ph.get("related_failed"):
                 print(f"         failed: {', '.join(ph['related_failed'])}")
         print()
         print("## Criteria")
-        for c in st.criteria:
-            mark = "OK" if c.ok else "FAIL"
-            print(f"  [{mark}] {c.id}: required={c.required!r} actual={c.actual!r}")
-            if c.blocker:
-                print(f"         blocker: {c.blocker}")
-        if st.blockers:
+        for c in st["criteria"]:
+            mark = "OK" if c["ok"] else "FAIL"
+            print(f"  [{mark}] {c["id"]}: required={c["required"]!r} actual={c["actual"]!r}")
+            if c["blocker"]:
+                print(f"         blocker: {c["blocker"]}")
+        if st["blockers"]:
             print()
             print("## Blockers")
-            for b in st.blockers:
+            for b in st["blockers"]:
                 print(f"  - {b}")
-    return 0 if st.contract_pass else 1
+    return 0 if st["contract_pass"] else 1
 
 
 def cmd_conservation(_: argparse.Namespace) -> int:
@@ -875,17 +920,17 @@ def cmd_verify(args: argparse.Namespace) -> int:
 
     # contract status after gates
     st = build_status()
-    results["contract"] = st.to_dict()
+    results["contract"] = contract_status_to_dict(st)
     results["duration_s"] = round(time.time() - t0, 3)
-    results["ok"] = results["ok"] and st.contract_pass
+    results["ok"] = results["ok"] and st["contract_pass"]
 
     out = ROOT / "contract_status.json"
     out.write_text(json.dumps(results, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"wrote {out.relative_to(ROOT)}")
-    print(f"contract_pass={st.contract_pass} steps_ok={all(s['ok'] for s in results['steps'])}")
-    if st.blockers:
+    print(f"contract_pass={st["contract_pass"]} steps_ok={all(s['ok'] for s in results['steps'])}")
+    if st["blockers"]:
         print("blockers:")
-        for b in st.blockers:
+        for b in st["blockers"]:
             print(f"  - {b}")
     return 0 if results["ok"] else 1
 
@@ -893,15 +938,15 @@ def cmd_verify(args: argparse.Namespace) -> int:
 def cmd_report(args: argparse.Namespace) -> int:
     """14-point final report structure from live data (honest incomplete)."""
     st = build_status()
-    cons = st.conservation
+    cons = st["conservation"]
     unfold = measure_uc_unfold()
     ten = measure_standard_ten()
     l13 = measure_l13_snapshot()
 
     report = {
-        "1_public_commit_sha": st.git_head,
+        "1_public_commit_sha": st["git_head"],
         "2_uc_unfold_command": (
-            "uc unfold examples/seeds/task_ledger.py "
+            "uc unfold seed/declarations/task_ledger.json "
             "--output /tmp/uc-task-ledger --verify --run"
         ),
         "2_uc_unfold_implemented": unfold.get("unfold_in_cli_source"),
@@ -935,19 +980,19 @@ def cmd_report(args: argparse.Namespace) -> int:
         "12_deterministic_rebuild_hashes": None,
         "13_git_status": _run(["git", "status", "-sb"]).stdout,
         "14_unmet_criteria": [
-            {"id": c.id, "blocker": c.blocker or c.name}
-            for c in st.criteria
-            if not c.ok
+            {"id": c["id"], "blocker": c["blocker"] or c["name"]}
+            for c in st["criteria"]
+            if not c["ok"]
         ],
         "standard_ten": ten,
         "unfold": unfold,
-        "contract_pass": st.contract_pass,
+        "contract_pass": st["contract_pass"],
         "plan_phases": [
             {"id": p["id"], "name": p["name"], "goal": p.get("goal")}
             for p in PLAN_PHASES
         ],
-        "timestamp": st.timestamp,
-        "complete_claim_allowed": False if not st.contract_pass else True,
+        "timestamp": st["timestamp"],
+        "complete_claim_allowed": False if not st["contract_pass"] else True,
     }
 
     if args.json:
@@ -975,7 +1020,7 @@ def cmd_report(args: argparse.Namespace) -> int:
     out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     if not args.json:
         print(f"\nwrote {out.relative_to(ROOT)}")
-    return 0 if st.contract_pass else 1
+    return 0 if st["contract_pass"] else 1
 
 
 def main(argv: list[str] | None = None) -> int:

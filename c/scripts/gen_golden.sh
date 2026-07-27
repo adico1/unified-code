@@ -20,16 +20,16 @@ root = Path("c/tests/golden")
 root.mkdir(parents=True, exist_ok=True)
 
 cases = [
-    ("text_stats_v2", "examples/declarations/text_stats_v2.py",
+    ("text_stats_v2", "examples/declarations/text_stats_v2.json",
      {"text": "Go go GO"}, "ts_gogo.json"),
-    ("text_stats_v2", "examples/declarations/text_stats_v2.py",
+    ("text_stats_v2", "examples/declarations/text_stats_v2.json",
      {"text": ""}, "ts_empty.json"),
-    ("invoice_total", "examples/declarations/invoice_total.py",
+    ("invoice_total", "examples/declarations/invoice_total.json",
      {"document": {"tax_rate": "0.10", "items": [
          {"description": "a", "quantity": 2, "unit_price": "10.00"},
          {"description": "b", "quantity": 1, "unit_price": "5.50"},
      ]}}, "inv_basic.json"),
-    ("invoice_total", "examples/declarations/invoice_total.py",
+    ("invoice_total", "examples/declarations/invoice_total.json",
      {"document": {"tax_rate": "0.20", "items": []}}, "inv_empty_items.json"),
 ]
 

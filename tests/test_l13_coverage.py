@@ -37,7 +37,8 @@ from unified.machine.interpreter import (
 )
 from unified.machine.opcodes import FORMAT_VERSION, MAGIC, NAME_TO_BYTE, TAG_NONE, TAG_STRING
 from unified.machine.primitives import (
-    _ExprFail,
+    _is_expr_fail,
+    args_error_path,
     _bound,
     _dig,
     _get_path,
@@ -742,28 +743,28 @@ def test_eval_expr_all_failure_and_edge_ops():
         "bindings": {},
     }
 
-    with pytest.raises(_ExprFail, match="bad-node"):
+    with pytest.raises(Exception, match="bad-node"):
         eval_expr("not-a-dict", ctx)  # line 388
 
     assert eval_expr({"op": "count", "of": {"op": "literal", "value": None}}, ctx) == 0  # 410
 
-    with pytest.raises(_ExprFail):
+    with pytest.raises(Exception):
         eval_expr(
             {"op": "as_int", "of": {"op": "literal", "value": None}, "missing_error": "mi"},
             ctx,
         )  # 422
-    with pytest.raises(_ExprFail):
+    with pytest.raises(Exception):
         eval_expr(
             {"op": "as_int", "of": {"op": "literal", "value": True}, "type_error": "ti"},
             ctx,
         )  # 424 bool
-    with pytest.raises(_ExprFail):
+    with pytest.raises(Exception):
         eval_expr(
             {"op": "as_int", "of": {"op": "literal", "value": "x"}, "type_error": "ti"},
             ctx,
         )
 
-    with pytest.raises(_ExprFail):
+    with pytest.raises(Exception):
         eval_expr(
             {
                 "op": "as_decimal",
@@ -775,12 +776,12 @@ def test_eval_expr_all_failure_and_edge_ops():
     # already Decimal returns as-is (432)
     d = Decimal("1.5")
     assert eval_expr({"op": "as_decimal", "of": {"op": "literal", "value": d}}, ctx) == d
-    with pytest.raises(_ExprFail):
+    with pytest.raises(Exception):
         eval_expr(
             {"op": "as_decimal", "of": {"op": "literal", "value": 1.2}, "type_error": "nd"},
             ctx,
         )  # 434 not str
-    with pytest.raises(_ExprFail):
+    with pytest.raises(Exception):
         eval_expr(
             {
                 "op": "as_decimal",
@@ -802,7 +803,7 @@ def test_eval_expr_all_failure_and_edge_ops():
         ctx,
     ) == Decimal("3")
 
-    with pytest.raises(_ExprFail, match="items-not-a-list"):
+    with pytest.raises(Exception, match="items-not-a-list"):
         eval_expr(
             {
                 "op": "sum_each",
@@ -812,7 +813,7 @@ def test_eval_expr_all_failure_and_edge_ops():
             ctx,
         )  # 473
 
-    with pytest.raises(_ExprFail, match="item-not-an-object"):
+    with pytest.raises(Exception, match="item-not-an-object"):
         eval_expr(
             {
                 "op": "sum_each",
@@ -858,7 +859,7 @@ def test_eval_expr_all_failure_and_edge_ops():
     assert ds == "1.00"
 
     for op in ("str_len", "line_count", "word_count", "unique_casefold_word_count"):
-        with pytest.raises(_ExprFail, match="invalid-text"):
+        with pytest.raises(Exception, match="invalid-text"):
             eval_expr({"op": op, "of": {"op": "literal", "value": 123}}, ctx)
 
 
@@ -946,11 +947,13 @@ def test_binding_eval_order_edges():
 
 
 def test_prim_ref_null_binding_present():
-    from unified.machine.primitives import eval_expr, _ExprFail
+    from unified.machine.primitives import eval_expr, _is_expr_fail, args_error_path
 
     assert eval_expr({"op": "ref", "name": "n"}, {"bindings": {"n": None}, "path": []}) is None
     try:
         eval_expr({"op": "ref", "name": "n"}, {"bindings": {}, "path": []})
         assert False
-    except _ExprFail as e:
-        assert e.error == "missing-binding"
+    except Exception as e:
+        assert _is_expr_fail(e)
+        err, _path = args_error_path(e)
+        assert err == "missing-binding"

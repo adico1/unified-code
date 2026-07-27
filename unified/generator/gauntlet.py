@@ -86,11 +86,11 @@ def run_gauntlet(thing):
             # Run against framework source + a standard declaration
             root = Path(__file__).resolve().parents[2]
             declaration_path = str(
-                root / "examples" / "declarations" / "text_stats_v2.py"
+                root / "examples" / "declarations" / "text_stats_v2.json"
             )
             if not Path(declaration_path).is_file():
                 declaration_path = str(
-                    root / "examples" / "declarations" / "text_stats_program.py"
+                    root / "examples" / "declarations" / "text_stats_program.json"
                 )
             built = run_build(
                 inward(

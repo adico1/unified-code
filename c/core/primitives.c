@@ -63,23 +63,37 @@ static int prim_require_source(uem_machine *m) {
         uem_set_state(m, "invalid");
         return uem_ev_append(m, "source:missing");
     }
-    if (cJSON_GetObjectItemCaseSensitive(m->host, "text") &&
-        cJSON_IsString(cJSON_GetObjectItemCaseSensitive(m->host, "text"))) {
-        cJSON *sf = cJSON_GetObjectItemCaseSensitive(m->host, field);
-        store_set(m, field, cJSON_CreateString(sf && cJSON_IsString(sf) ? sf->valuestring : "-"));
-        return uem_ev_append(m, "source:ok");
+    {
+        cJSON *tx = cJSON_GetObjectItemCaseSensitive(m->host, "text");
+        if (tx && cJSON_IsString(tx)) {
+            cJSON *sf = cJSON_GetObjectItemCaseSensitive(m->host, field);
+            const char *sv = "-";
+            if (sf) {
+                if (cJSON_IsString(sf)) sv = sf->valuestring;
+            }
+            store_set(m, field, cJSON_CreateString(sv));
+            return uem_ev_append(m, "source:ok");
+        }
     }
-    if (cJSON_GetObjectItemCaseSensitive(m->host, "document") &&
-        cJSON_IsObject(cJSON_GetObjectItemCaseSensitive(m->host, "document"))) {
-        cJSON *sf = cJSON_GetObjectItemCaseSensitive(m->host, field);
-        store_set(m, field, cJSON_CreateString(sf && cJSON_IsString(sf) ? sf->valuestring : "-"));
-        return uem_ev_append(m, "source:ok");
+    {
+        cJSON *doc = cJSON_GetObjectItemCaseSensitive(m->host, "document");
+        if (doc && cJSON_IsObject(doc)) {
+            cJSON *sf = cJSON_GetObjectItemCaseSensitive(m->host, field);
+            const char *sv = "-";
+            if (sf) {
+                if (cJSON_IsString(sf)) sv = sf->valuestring;
+            }
+            store_set(m, field, cJSON_CreateString(sv));
+            return uem_ev_append(m, "source:ok");
+        }
     }
     {
         cJSON *sf = cJSON_GetObjectItemCaseSensitive(m->host, field);
-        if (sf && !cJSON_IsNull(sf)) {
-            store_set(m, field, cJSON_Duplicate(sf, 1));
-            return uem_ev_append(m, "source:ok");
+        if (sf) {
+            if (!cJSON_IsNull(sf)) {
+                store_set(m, field, cJSON_Duplicate(sf, 1));
+                return uem_ev_append(m, "source:ok");
+            }
         }
     }
     {
@@ -125,8 +139,11 @@ static int prim_accept_outward(uem_machine *m) {
     if (cJSON_GetObjectItemCaseSensitive(res, "error")) {
         cJSON *er = cJSON_GetObjectItemCaseSensitive(res, "error");
         char errtxt[128];
-        snprintf(errtxt, sizeof errtxt, "%s",
-                 cJSON_IsString(er) && er->valuestring ? er->valuestring : "error");
+        /* cJSON string nodes always have non-NULL valuestring (possibly empty). */
+        if (cJSON_IsString(er))
+            snprintf(errtxt, sizeof errtxt, "%s", er->valuestring);
+        else
+            snprintf(errtxt, sizeof errtxt, "%s", "error");
         store_set(m, "error", cJSON_Duplicate(er, 1));
         if (cJSON_GetObjectItemCaseSensitive(res, "path"))
             store_set(m, "path", cJSON_Duplicate(cJSON_GetObjectItemCaseSensitive(res, "path"), 1));
@@ -219,34 +236,38 @@ static int prim_eval_expression(uem_machine *m) {
     }
     /* bindings in binding_order only (canonical CSE sequence from compile).
      * Never iterate bindings object key order — image JSON uses sort_keys. */
-    if (cJSON_IsArray(order) && cJSON_IsObject(bindings_ast)) {
-        cJSON *nm;
-        cJSON_ArrayForEach(nm, order) {
-            cJSON *node, *val = NULL;
-            cJSON *bpath = NULL;
-            if (!cJSON_IsString(nm)) continue;
-            node = cJSON_GetObjectItemCaseSensitive(bindings_ast, nm->valuestring);
-            if (!node) continue;
-            if (uem_expr_eval(m, node, root, bound, &val, err, sizeof err, &bpath) != 0) {
-                store_set(m, "error", cJSON_CreateString(err));
-                if (bpath) store_set(m, "path", bpath);
-                uem_set_state(m, "invalid");
-                cJSON_Delete(root);
-                cJSON_Delete(bound);
-                snprintf(mark, sizeof mark, "part:%s", part);
-                uem_ev_append(m, mark);
-                snprintf(mark, sizeof mark, "%s:error:%s", part, err);
-                return uem_ev_append(m, mark);
+    if (cJSON_IsArray(order)) {
+        if (cJSON_IsObject(bindings_ast)) {
+            cJSON *nm;
+            for (nm = order->child; nm != NULL; nm = nm->next) {
+                cJSON *node, *val = NULL;
+                cJSON *bpath = NULL;
+                if (!cJSON_IsString(nm)) continue;
+                node = cJSON_GetObjectItemCaseSensitive(bindings_ast, nm->valuestring);
+                if (!node) continue;
+                if (uem_expr_eval(m, node, root, bound, &val, err, sizeof err, &bpath) != 0) {
+                    store_set(m, "error", cJSON_CreateString(err));
+                    if (bpath) store_set(m, "path", bpath);
+                    uem_set_state(m, "invalid");
+                    cJSON_Delete(root);
+                    cJSON_Delete(bound);
+                    snprintf(mark, sizeof mark, "part:%s", part);
+                    uem_ev_append(m, mark);
+                    snprintf(mark, sizeof mark, "%s:error:%s", part, err);
+                    return uem_ev_append(m, mark);
+                }
+                /* eval success always yields a value pointer (possibly JSON null). */
+                cJSON_AddItemToObject(bound, nm->valuestring, val);
             }
-            /* val may be JSON null — still a present binding (distinct from missing). */
-            if (!val) val = cJSON_CreateNull();
-            cJSON_AddItemToObject(bound, nm->valuestring, val);
         }
     }
     cJSON *err_path = NULL;
     if (uem_expr_eval(m, expr, root, bound, &result, err, sizeof err, &err_path) != 0) {
         store_set(m, "error", cJSON_CreateString(err));
-        if (err_path) { store_set(m, "path", err_path); err_path = NULL; }
+        if (err_path) {
+            store_set(m, "path", err_path);
+            err_path = NULL;
+        }
         uem_set_state(m, "invalid");
         cJSON_Delete(root);
         cJSON_Delete(bound);
@@ -295,7 +316,7 @@ static int prim_verify_result(uem_machine *m) {
     }
     if (cJSON_IsArray(req)) {
         cJSON *el;
-        cJSON_ArrayForEach(el, req) {
+        for (el = req->child; el != NULL; el = el->next) {
             size_t i;
             int found = 0;
             if (!cJSON_IsString(el)) continue;
@@ -322,30 +343,35 @@ static int prim_present_json(uem_machine *m) {
     cJSON *pres = cJSON_CreateObject();
     char *text = NULL;
     int exit_code = 1;
-    if (strcmp(m->state, "valid") == 0 && cJSON_IsArray(keys)) {
-        cJSON *src = store_get(m, success_from);
-        cJSON *obj = cJSON_CreateObject();
-        cJSON *k;
-        if (cJSON_IsObject(src)) {
-            cJSON_ArrayForEach(k, keys) {
-                cJSON *v;
-                if (!cJSON_IsString(k)) continue;
-                v = cJSON_GetObjectItemCaseSensitive(src, k->valuestring);
-                if (v) cJSON_AddItemToObject(obj, k->valuestring, cJSON_Duplicate(v, 1));
+    if (strcmp(m->state, "valid") == 0) {
+        if (cJSON_IsArray(keys)) {
+            cJSON *src = store_get(m, success_from);
+            cJSON *obj = cJSON_CreateObject();
+            cJSON *k;
+            if (cJSON_IsObject(src)) {
+                for (k = keys->child; k != NULL; k = k->next) {
+                    cJSON *v;
+                    if (!cJSON_IsString(k)) continue;
+                    v = cJSON_GetObjectItemCaseSensitive(src, k->valuestring);
+                    if (v) cJSON_AddItemToObject(obj, k->valuestring, cJSON_Duplicate(v, 1));
+                }
+                text = cJSON_PrintUnformatted(obj);
+                exit_code = 0;
             }
-            text = cJSON_PrintUnformatted(obj);
-            exit_code = 0;
+            cJSON_Delete(obj);
         }
-        cJSON_Delete(obj);
     }
     if (!text) {
         cJSON *body = cJSON_CreateObject();
         cJSON *er = store_get(m, "error");
         int include_path = 0;
-        cJSON_AddStringToObject(body, "error", er && cJSON_IsString(er) ? er->valuestring : "invalid");
-        if (cJSON_IsTrue(inc) || (cJSON_IsNumber(inc) && inc->valueint)) include_path = 1;
-        /* cJSON may store JSON true as number 1 or as True type */
-        if (inc && inc->type & cJSON_True) include_path = 1;
+        if (cJSON_IsString(er))
+            cJSON_AddStringToObject(body, "error", er->valuestring);
+        else
+            cJSON_AddStringToObject(body, "error", "invalid");
+        if (cJSON_IsTrue(inc)) include_path = 1;
+        if (cJSON_IsNumber(inc) && inc->valueint) include_path = 1;
+        if (inc && (inc->type & cJSON_True)) include_path = 1;
         if (include_path) {
             cJSON *path = store_get(m, "path");
             if (path) cJSON_AddItemToObject(body, "path", cJSON_Duplicate(path, 1));
@@ -354,6 +380,7 @@ static int prim_present_json(uem_machine *m) {
         cJSON_Delete(body);
         exit_code = 1;
     }
+    /* text is set by success Print or error-body Print under normal memory. */
     cJSON_AddStringToObject(pres, "text", text ? text : "{}");
     cJSON_AddNumberToObject(pres, "exit_code", exit_code);
     uem_mem_free(text);

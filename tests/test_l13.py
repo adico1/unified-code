@@ -106,7 +106,7 @@ def test_l13_differential_bytes():
     from unified.machine.host import run_compiled
     from unified.machine.l11 import run_c_vector
 
-    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.py"))
+    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.json"))
     host = {"text": "Go go GO"}
     py = from_python_run(c, run_compiled(c, host))
     cj, err = run_c_vector(c, host)
@@ -296,7 +296,7 @@ def test_host_file_read_and_json(tmp_path):
 
     sample = tmp_path / "t.txt"
     sample.write_text("Go go GO", encoding="utf-8")
-    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.py"))
+    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.json"))
     py = from_python_run(c, run_compiled(c, {"source": str(sample)}))
     assert py["state"] == "valid"
     assert py["stats"]["unique_words"] == 1
@@ -306,7 +306,7 @@ def test_host_file_read_and_json(tmp_path):
     # invoice file
     inv = tmp_path / "i.json"
     inv.write_text(json.dumps({"tax_rate": "0.10", "items": []}), encoding="utf-8")
-    c2 = compile_declaration_path(str(ROOT / "examples/declarations/invoice_total.py"))
+    c2 = compile_declaration_path(str(ROOT / "examples/declarations/invoice_total.json"))
     ok = run_compiled(c2, {"source": str(inv)})
     assert ok["state"] == "valid"
     # directory error
@@ -414,7 +414,7 @@ def test_compile_and_measure():
     from unified.machine.thing import blank_thing
     import tempfile
 
-    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.py"))
+    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.json"))
     assert c["state"] != "invalid"
     with tempfile.TemporaryDirectory() as td:
         write_artifacts(c, td)
@@ -422,7 +422,7 @@ def test_compile_and_measure():
     m = measure_uem(
         blank_thing(
             {
-                "declaration_paths": [str(ROOT / "examples/declarations/text_stats_v2.py")],
+                "declaration_paths": [str(ROOT / "examples/declarations/text_stats_v2.json")],
                 "iterations": 2,
             }
         )
@@ -439,7 +439,7 @@ def test_gauntlet_and_l11_smoke():
 
     r = run_l11_gauntlet()
     assert value_of(r)["l11"]["verdict"] == "pass"
-    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.py"))
+    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.json"))
     g = run_uem_gauntlet(blank_thing({"compiled": c}))
     assert value_of(g).get("verdict") == "pass" or g.get("state") in {"valid", "invalid"}
 
@@ -491,7 +491,7 @@ def test_argv_and_cli_errors():
     from unified.machine.host import run_compiled
     from unified.machine.compile_decl import compile_declaration_path
 
-    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.py"))
+    c = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.json"))
     missing = run_compiled(c, {"argv": []})
     assert missing["state"] != "valid"
     extra = run_compiled(c, {"argv": ["a", "b"]})

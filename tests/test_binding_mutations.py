@@ -25,7 +25,7 @@ UEM_C = os.environ.get("UEM_C", str(ROOT / "c" / "build" / "uem-c"))
 
 
 def _compile_invoice():
-    return compile_declaration_path(str(ROOT / "examples/declarations/invoice_total.py"))
+    return compile_declaration_path(str(ROOT / "examples/declarations/invoice_total.json"))
 
 
 def _host_basic():
@@ -79,12 +79,14 @@ def test_unknown_binding_ref_at_compile():
 
 
 def test_null_binding_distinct_from_missing():
-    from unified.machine.primitives import eval_expr, _ExprFail
+    from unified.machine.primitives import eval_expr, _is_expr_fail, args_error_path
 
     assert eval_expr({"op": "ref", "name": "x"}, {"bindings": {"x": None}, "path": []}) is None
-    with pytest.raises(_ExprFail) as ei:
+    with pytest.raises(Exception) as ei:
         eval_expr({"op": "ref", "name": "x"}, {"bindings": {}, "path": []})
-    assert ei.value.error == "missing-binding"
+    assert _is_expr_fail(ei.value)
+    err, path = args_error_path(ei.value)
+    assert err == "missing-binding"
 
 
 def test_fresh_compile_invoice_valid():

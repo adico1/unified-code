@@ -1,11 +1,9 @@
 {
   "bytecode": "artifacts/uem/invoice_total/program.uem",
   "case": "inv_empty_items.json",
-  "declaration": "examples/declarations/invoice_total.py",
+  "declaration": "examples/declarations/invoice_total.json",
   "error": null,
   "evidence_semantic": [
-    "boundary:inward",
-    "id:cf2a87a8219f26e5",
     "boundary:inward",
     "source:ok",
     "outward:request:read_json",

@@ -107,6 +107,19 @@ script:
 ./scripts/uc_contract report        # honest 14-point final report
 ```
 
+Stateful seed-to-application product:
+
+```bash
+uc unfold seed/declarations/task_ledger.json \
+  --output /tmp/uc-task-ledger \
+  --verify \
+  --run
+```
+
+Full repository self-hosting is tracked separately as “Milestone 2 — Root-seed
+fixed-point bootstrap” in `ROADMAP.md`; it does not block this application
+contract.
+
 Exit code is nonzero until every criterion is green. Do not claim
 completeness while `contract_pass` is false. Writes `contract_status.json`
 / `contract_report.json` under the repo root when verify/report run.

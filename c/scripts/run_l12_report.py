@@ -33,11 +33,11 @@ from unified.machine.thing import value_of  # noqa: E402
 
 GOLDENS = [
     ("text_stats_v2", ROOT / "artifacts/uem/text_stats_v2/program.uem",
-     ROOT / "examples/declarations/text_stats_v2.py", {"text": "Go go GO"}),
+     ROOT / "examples/declarations/text_stats_v2.json", {"text": "Go go GO"}),
     ("text_stats_empty", ROOT / "artifacts/uem/text_stats_v2/program.uem",
-     ROOT / "examples/declarations/text_stats_v2.py", {"text": ""}),
+     ROOT / "examples/declarations/text_stats_v2.json", {"text": ""}),
     ("invoice_basic", ROOT / "artifacts/uem/invoice_total/program.uem",
-     ROOT / "examples/declarations/invoice_total.py",
+     ROOT / "examples/declarations/invoice_total.json",
      {"document": {
          "tax_rate": "0.10",
          "items": [
@@ -46,7 +46,7 @@ GOLDENS = [
          ],
      }}),
     ("invoice_empty", ROOT / "artifacts/uem/invoice_total/program.uem",
-     ROOT / "examples/declarations/invoice_total.py",
+     ROOT / "examples/declarations/invoice_total.json",
      {"document": {"tax_rate": "0.20", "items": []}}),
 ]
 

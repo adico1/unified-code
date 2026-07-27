@@ -12,11 +12,52 @@ No unrestricted eval of feature logic. No YAML/JSON config as source of truth.
 from __future__ import annotations
 
 import ast
+import json
+import os
 from pathlib import Path
 from typing import Any
 
+
+def _python_declarations_allowed(value: dict) -> bool:
+    """Executable Python declarations are legacy compatibility fixtures only.
+
+    Canonical JSON is the sole authoritative declaration input. Loading a
+    host-code (.py) declaration is denied unless explicitly opted in, either
+    per-call (``allow_python_declaration`` in the thing value) or process-wide
+    (``UC_ALLOW_PY_DECLARATIONS=1``). Clean-room and fixed-point proofs leave
+    both unset, so no host-code declaration can reach the build path, and there
+    is never a JSON→Python fallback (dispatch is purely by file suffix).
+    """
+    if isinstance(value, dict) and value.get("allow_python_declaration"):
+        return True
+    return os.environ.get("UC_ALLOW_PY_DECLARATIONS") == "1"
+
 from ..thing import is_thing
+from . import expr as _expr
 from .names import is_valid_feature_name, is_valid_project_name, package_name_from_project
+
+# op -> canonical expression builder (same constructors the .py declarations use)
+_EXPR_BUILDERS = {
+    "literal": _expr.literal,
+    "field": _expr.field,
+    "ref": _expr.ref,
+    "object": _expr.object_expr,
+    "count": _expr.count,
+    "as_int": _expr.as_int,
+    "as_decimal": _expr.as_decimal,
+    "require": _expr.require,
+    "min_value": _expr.min_value,
+    "max_value": _expr.max_value,
+    "mul": _expr.mul,
+    "add": _expr.add,
+    "sum_each": _expr.sum_each,
+    "quantize": _expr.quantize,
+    "decimal_str": _expr.decimal_str,
+    "str_len": _expr.str_len,
+    "line_count": _expr.line_count,
+    "word_count": _expr.word_count,
+    "unique_casefold_word_count": _expr.unique_casefold_word_count,
+}
 
 
 def load_declaration_module(thing):
@@ -68,6 +109,30 @@ def load_declaration_module(thing):
             **thing,
             "value": {**value, "error": "declaration-not-found", "declaration_path": str(file_path)},
             "evidence": (*thing["evidence"], "boundary:load_declaration_module", "load:not-found"),
+            "state": "invalid",
+        }
+
+    # Canonical declarative seed data (Standard Ten rule 4): a .json declaration
+    # carries generic expression trees / events / routes / boundaries as pure
+    # data — no executable host-language code. Same downstream normalization.
+    if file_path.suffix == ".json":
+        return _load_json_declaration(thing, value, file_path)
+
+    # Any non-JSON declaration is executable host code (legacy). Denied unless
+    # explicitly opted in — canonical JSON is the sole authoritative input.
+    if not _python_declarations_allowed(value):
+        return {
+            **thing,
+            "value": {
+                **value,
+                "error": "python-declaration-denied",
+                "declaration_path": str(file_path),
+            },
+            "evidence": (
+                *thing["evidence"],
+                "boundary:load_declaration_module",
+                "load:python-declaration-denied",
+            ),
             "state": "invalid",
         }
 
@@ -197,6 +262,149 @@ def load_declaration_module(thing):
             "load:ok",
             f"load:kind:{kind}",
         ),
+        "state": "formed",
+    }
+
+
+def _normalize_expr_node(node):
+    """Canonicalize a JSON expression node to exact .py-builder shape.
+
+    Two things differ between a hand-authored JSON node and a builder-emitted
+    one: JSON has no tuple type (the validator requires tuple ``path``), and JSON
+    preserves the source file's key order while generated code serializes nodes
+    via ``repr`` (key-order sensitive). Routing each node through the same
+    ``expr.py`` constructor the .py declarations use is the single authoritative
+    source for both — so a .json and an equivalent .py declaration yield
+    byte-identical generated output. Children are normalized first, then the
+    parent, so nested nodes reach the builder already canonical.
+    """
+    if not isinstance(node, dict) or "op" not in node:
+        return node
+    op = node["op"]
+    cfg = {}
+    for key, val in node.items():
+        if key == "op":
+            continue
+        if isinstance(val, dict) and "op" in val:
+            cfg[key] = _normalize_expr_node(val)
+        elif isinstance(val, list) and val and all(
+            isinstance(x, dict) and "op" in x for x in val
+        ):
+            cfg[key] = [_normalize_expr_node(x) for x in val]
+        elif key == "fields" and isinstance(val, dict):
+            cfg[key] = {k: _normalize_expr_node(v) for k, v in val.items()}
+        else:
+            cfg[key] = val
+    builder = _EXPR_BUILDERS.get(op)
+    if builder is None:
+        return {"op": op, **cfg}
+    built = builder(cfg)
+    result = built.get("value") if isinstance(built, dict) else None
+    if built.get("state") == "formed" and isinstance(result, dict):
+        return result
+    return {"op": op, **cfg}
+
+
+def _normalize_transformation(transformation: dict) -> dict:
+    """Canonicalize every expression node a transformation carries.
+
+    Expression nodes appear in three places: ``program`` (or its ``result``
+    alias) and each value of the ``bindings`` (CSE) map. Each is routed through
+    the builder canonicalizer so JSON key order inside a node cannot affect
+    generated bytes. The ``bindings`` map's own key order and object ``fields``
+    order are preserved: they are semantic (bindings evaluate sequentially so
+    later ones may ``ref`` earlier ones; ``fields`` fixes output order), not
+    representational.
+    """
+    out = dict(transformation)
+    for key in ("program", "result"):
+        node = out.get(key)
+        if isinstance(node, dict) and "op" in node:
+            out[key] = _normalize_expr_node(node)
+    bindings = out.get("bindings")
+    if isinstance(bindings, dict):
+        out["bindings"] = {
+            name: (_normalize_expr_node(node) if isinstance(node, dict) and "op" in node else node)
+            for name, node in bindings.items()
+        }
+    return out
+
+
+def _normalize_json_exprs(raw: dict) -> dict:
+    """Canonicalize expression nodes in every feature transformation."""
+
+    def fix_feature(feat):
+        if not isinstance(feat, dict):
+            return feat
+        transformation = feat.get("transformation")
+        if isinstance(transformation, dict):
+            feat = {**feat, "transformation": _normalize_transformation(transformation)}
+        return feat
+
+    if isinstance(raw.get("features"), list):
+        return {**raw, "features": [fix_feature(f) for f in raw["features"]]}
+    if isinstance(raw.get("transformation"), dict):  # feature-kind declaration
+        return fix_feature(raw)
+    return raw
+
+
+def _load_json_declaration(thing, value, file_path: Path):
+    """Load a pure-JSON declaration (no executable host code) and normalize it.
+
+    Mirrors the module path's normalization tail so a .json and an equivalent
+    .py declaration produce byte-identical downstream declarations.
+    """
+    ev = (*thing["evidence"], "boundary:load_declaration_module", "load:json")
+    try:
+        raw = json.loads(file_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        return {
+            **thing,
+            "value": {**value, "error": "declaration-parse-failed", "detail": str(exc)},
+            "evidence": (*ev, "load:parse-failed"),
+            "state": "invalid",
+        }
+    if not isinstance(raw, dict):
+        return {
+            **thing,
+            "value": {**value, "error": "declaration-not-map"},
+            "evidence": (*ev, "load:not-map"),
+            "state": "invalid",
+        }
+
+    # Canonicalize expression nodes (JSON lists → builder tuples) so validation
+    # and generated output match the equivalent .py declaration exactly.
+    raw = _normalize_json_exprs(raw)
+
+    # Kind from data shape: a feature carries role/transformation and no features list.
+    if "features" not in raw and ("transformation" in raw or "role" in raw):
+        kind = "feature"
+    else:
+        kind = "program"
+
+    if "project" in raw and "features" in raw:
+        program_raw = _from_nested_value(raw)
+    else:
+        program_raw = raw
+
+    normalized = normalize_feature(program_raw) if kind == "feature" else normalize_program(program_raw)
+    if not normalized.get("ok"):
+        return {
+            **thing,
+            "value": {**value, "error": normalized.get("error"), "declaration_path": str(file_path)},
+            "evidence": (*ev, "load:normalize-failed", f"load:{normalized.get('error')}"),
+            "state": "invalid",
+        }
+
+    return {
+        **thing,
+        "value": {
+            **value,
+            "declaration_path": str(file_path),
+            "kind": kind,
+            "declaration": normalized["declaration"],
+        },
+        "evidence": (*ev, "load:ok", f"load:kind:{kind}"),
         "state": "formed",
     }
 

@@ -1,0 +1,158 @@
+{
+  "boundaries": [
+    {
+      "kind": "state_read",
+      "name": "load_state",
+      "phase": "OUTWARD"
+    },
+    {
+      "kind": "state_write",
+      "name": "persist_state",
+      "phase": "OUTWARD"
+    }
+  ],
+  "cli": {
+    "script": "uc-task-ledger"
+  },
+  "composition": [
+    "inward",
+    "parse_host_argv",
+    "load_state",
+    "apply_command",
+    "persist_state",
+    "verify",
+    "present_result",
+    "outward"
+  ],
+  "description": "A deterministic, event-routed, persistent task ledger generated entirely from one JSON seed.",
+  "features": [
+    {
+      "boundaries": [],
+      "doc": "Apply one declared command to the loaded resource state without performing I/O.",
+      "errors": [
+        "invalid-title",
+        "duplicate-title",
+        "task-not-open",
+        "unknown-command"
+      ],
+      "invariants": [
+        "task order is insertion order",
+        "completion preserves task order",
+        "validation failure does not change state"
+      ],
+      "name": "apply_command",
+      "role": "transform",
+      "tests": [],
+      "transformation": {
+        "acceptance": [
+          {
+            "argv": [
+              "add",
+              "A"
+            ],
+            "expect": {
+              "added": "A",
+              "completed": false
+            }
+          },
+          {
+            "argv": [
+              "add",
+              "B"
+            ],
+            "expect": {
+              "added": "B",
+              "completed": false
+            }
+          },
+          {
+            "argv": [
+              "list"
+            ],
+            "expect": {
+              "tasks": [
+                {
+                  "completed": false,
+                  "title": "A"
+                },
+                {
+                  "completed": false,
+                  "title": "B"
+                }
+              ]
+            }
+          },
+          {
+            "argv": [
+              "complete",
+              "A"
+            ],
+            "expect": {
+              "completed": "A"
+            }
+          },
+          {
+            "argv": [
+              "list"
+            ],
+            "expect": {
+              "tasks": [
+                {
+                  "completed": true,
+                  "title": "A"
+                },
+                {
+                  "completed": false,
+                  "title": "B"
+                }
+              ]
+            }
+          },
+          {
+            "argv": [
+              "list"
+            ],
+            "expect": {
+              "tasks": [
+                {
+                  "completed": true,
+                  "title": "A"
+                },
+                {
+                  "completed": false,
+                  "title": "B"
+                }
+              ]
+            }
+          }
+        ],
+        "commands": {
+          "add": 1,
+          "complete": 1,
+          "list": 0
+        },
+        "default_state": {
+          "tasks": []
+        },
+        "kind": "stateful_resource",
+        "resource": "tasks"
+      }
+    }
+  ],
+  "name": "uc-task-ledger",
+  "package": "uc_task_ledger",
+  "presentation": {
+    "format": "canonical_json",
+    "success_from": "result"
+  },
+  "tests": [],
+  "verify": {
+    "require_evidence_contains": [
+      "boundary:inward",
+      "boundary:outward:state.read",
+      "part:apply_command",
+      "boundary:outward:state.write"
+    ],
+    "require_value_field": "result"
+  }
+}

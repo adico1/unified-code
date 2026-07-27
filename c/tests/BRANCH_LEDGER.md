@@ -17,43 +17,181 @@ still_baseline_open == 0 && new_arcs == 0
 
 ## Measurement reconciliation
 
-- **branches_hit:** 1140
-- **branches_total:** 1426
-- **missing_arcs_measured:** 286
-- **missing_arcs_in_ledger:** 286
+- **branches_hit:** 1270
+- **branches_total:** 1270
+- **missing_arcs_measured:** 0
+- **missing_arcs_in_ledger:** 0
 - **unmapped_arcs:** 0
 - **unclassified_arcs:** 0
-- Equation: `286 == 286 + 0` → **True**
+- Equation: `0 == 0 + 0` → **True**
 
 ## Baseline conservation (vs frozen open set)
 
 - **baseline_open:** 311
-- **resolved_by_test:** 25
-- **removed_by_refactor:** 0
+- **resolved_by_test:** 72
+- **removed_by_refactor:** 239
 - **new_arcs:** 0
 - **remapped_arcs:** 0 (informational)
 - **ambiguous_arcs:** 0 (must be 0)
-- **current_open:** 286
-- **still_baseline_open:** 286
+- **current_open:** 0
+- **still_baseline_open:** 0
 - Conservation: `311 == 311` (`baseline_open + new_arcs == resolved_by_test + removed_by_refactor + current_open`) → **True**
-- L13 branch eligible: **False**
+- L13 branch eligible: **True**
 - Identity: `{file}:{line}:b{branch_id}` (stable only while source layout unchanged)
-- By class: `{"reachable": 275, "short-circuit": 11}`
-- By file: `{"decimal.c": 45, "decode.c": 43, "expr.c": 65, "machine.c": 67, "primitives.c": 66}`
+- By class: `{}`
+- By file: `{}`
 
 ## Per-file hit/total
 
 | File | Hit | Total | Missing |
 | --- | ---: | ---: | ---: |
 | `alloc.c` | 42 | 42 | 0 |
-| `decimal.c` | 131 | 176 | 45 |
-| `decode.c` | 257 | 300 | 43 |
-| `expr.c` | 289 | 354 | 65 |
-| `machine.c` | 225 | 292 | 67 |
-| `primitives.c` | 196 | 262 | 66 |
+| `decimal.c` | 138 | 138 | 0 |
+| `decode.c` | 244 | 244 | 0 |
+| `expr.c` | 320 | 320 | 0 |
+| `machine.c` | 276 | 276 | 0 |
+| `primitives.c` | 250 | 250 | 0 |
 
 ## Resolved by test (baseline open → taken)
 
+- `decimal.c:111:b1`
+- `decimal.c:156:b0`
+- `decimal.c:172:b1`
+- `decimal.c:187:b0`
+- `decimal.c:28:b0`
+- `decimal.c:38:b1`
+- `decimal.c:71:b0`
+- `decimal.c:75:b1`
+- `decode.c:139:b0`
+- `decode.c:173:b1`
+- `decode.c:177:b0`
+- `decode.c:201:b0`
+- `decode.c:267:b2`
+- `decode.c:299:b0`
+- `decode.c:303:b0`
+- `decode.c:314:b0`
+- `decode.c:31:b0`
+- `expr.c:114:b2`
+- `expr.c:129:b1`
+- `expr.c:13:b1`
+- `expr.c:14:b0`
+- `expr.c:157:b1`
+- `expr.c:17:b1`
+- `expr.c:190:b1`
+- `expr.c:19:b1`
+- `expr.c:20:b1`
+- `expr.c:293:b1`
+- `expr.c:317:b1`
+- `expr.c:328:b1`
+- `expr.c:32:b1`
+- `expr.c:32:b2`
+- `expr.c:333:b1`
+- `expr.c:338:b1`
+- `expr.c:373:b1`
+- `expr.c:407:b1`
+- `expr.c:414:b1`
+- `expr.c:41:b2`
+- `expr.c:421:b0`
+- `expr.c:42:b1`
+- `expr.c:445:b1`
+- `expr.c:48:b1`
+- `machine.c:10:b1`
+- `machine.c:123:b0`
+- `machine.c:12:b0`
+- `machine.c:145:b1`
+- `machine.c:159:b0`
+- `machine.c:166:b0`
+- `machine.c:179:b1`
+- `machine.c:203:b1`
+- `machine.c:293:b1`
+- `machine.c:301:b1`
+- `machine.c:34:b0`
+- `machine.c:362:b1`
+- `machine.c:67:b0`
+- `machine.c:73:b0`
+- `primitives.c:128:b1`
+- `primitives.c:15:b1`
+- `primitives.c:227:b1`
+- `primitives.c:242:b1`
+- `primitives.c:301:b1`
+- `primitives.c:319:b1`
+- `primitives.c:375:b0`
+- `primitives.c:409:b0`
+- `primitives.c:410:b0`
+- `primitives.c:411:b0`
+- `primitives.c:41:b3`
+- `primitives.c:41:b4`
+- `primitives.c:53:b0`
+- `primitives.c:55:b0`
+- `primitives.c:57:b0`
+- `primitives.c:59:b0`
+- `primitives.c:80:b2`
+
+## Removed by refactor (baseline identity gone from gcov)
+
+- `decimal.c:109:b2`
+- `decimal.c:10:b0`
+- `decimal.c:117:b1`
+- `decimal.c:117:b2`
+- `decimal.c:139:b1`
+- `decimal.c:141:b1`
+- `decimal.c:149:b0`
+- `decimal.c:17:b2`
+- `decimal.c:181:b3`
+- `decimal.c:184:b0`
+- `decimal.c:18:b3`
+- `decimal.c:18:b5`
+- `decimal.c:191:b2`
+- `decimal.c:195:b1`
+- `decimal.c:195:b2`
+- `decimal.c:19:b2`
+- `decimal.c:19:b4`
+- `decimal.c:19:b5`
+- `decimal.c:20:b3`
+- `decimal.c:20:b5`
+- `decimal.c:21:b2`
+- `decimal.c:21:b4`
+- `decimal.c:21:b5`
+- `decimal.c:27:b3`
+- `decimal.c:28:b2`
+- `decimal.c:28:b3`
+- `decimal.c:37:b1`
+- `decimal.c:53:b0`
+- `decimal.c:73:b0`
+- `decimal.c:76:b1`
+- `decimal.c:79:b1`
+- `decimal.c:80:b1`
+- `decimal.c:82:b1`
+- `decimal.c:89:b1`
+- `decimal.c:89:b2`
+- `decimal.c:98:b2`
+- `decimal.c:99:b1`
+- `decode.c:106:b0`
+- `decode.c:10:b0`
+- `decode.c:120:b0`
+- `decode.c:125:b1`
+- `decode.c:127:b1`
+- `decode.c:129:b0`
+- `decode.c:131:b1`
+- `decode.c:133:b1`
+- `decode.c:135:b1`
+- `decode.c:142:b0`
+- `decode.c:159:b1`
+- `decode.c:160:b1`
+- `decode.c:161:b1`
+- `decode.c:165:b3`
+- `decode.c:165:b4`
+- `decode.c:173:b4`
+- `decode.c:174:b1`
+- `decode.c:178:b1`
+- `decode.c:179:b3`
+- `decode.c:181:b0`
+- `decode.c:185:b1`
+- `decode.c:190:b1`
+- `decode.c:194:b1`
+- `decode.c:194:b5`
+- `decode.c:199:b2`
+- `decode.c:200:b1`
 - `decode.c:235:b1`
 - `decode.c:235:b2`
 - `decode.c:238:b1`
@@ -62,314 +200,40 @@ still_baseline_open == 0 && new_arcs == 0
 - `decode.c:241:b6`
 - `decode.c:242:b1`
 - `decode.c:242:b2`
+- `decode.c:246:b1`
 - `decode.c:247:b1`
 - `decode.c:247:b2`
+- `decode.c:250:b1`
 - `decode.c:251:b1`
 - `decode.c:251:b2`
+- `decode.c:254:b1`
 - `decode.c:254:b3`
 - `decode.c:255:b1`
 - `decode.c:255:b2`
-- `decode.c:267:b2`
 - `decode.c:269:b2`
 - `decode.c:270:b2`
 - `decode.c:280:b1`
 - `decode.c:283:b0`
 - `decode.c:292:b0`
 - `decode.c:296:b0`
-- `decode.c:299:b0`
-- `decode.c:31:b0`
-- `machine.c:33:b1`
+- `decode.c:321:b0`
+- `decode.c:343:b1`
+- `decode.c:353:b1`
+- `decode.c:35:b4`
+- `decode.c:39:b5`
+- `decode.c:39:b6`
+- `decode.c:93:b1`
+- `decode.c:94:b1`
+- `expr.c:105:b1`
+- `expr.c:105:b3`
+- `expr.c:107:b1`
+- `expr.c:128:b1`
+- `expr.c:128:b2`
 
 ## Open ledger (current)
 
 | arc_id | missing | expression | class | required input/state | test or refactor |
 | --- | --- | --- | --- | --- | --- |
-| `decimal.c:10:b0` | taken-0% | `if (r > INT64_MAX / 10) return -1;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:17:b2` | taken-0% | `if (a == 0 \|\| b == 0) { *out = 0; return 1; }` | **reachable** | decimal state that flips: if (a == 0 \|\| b == 0)  | direct decimal unit tests |
-| `decimal.c:18:b3` | taken-0% | `if (a > 0 && b > 0 && a > INT64_MAX / b) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:18:b5` | taken-0% | `if (a > 0 && b > 0 && a > INT64_MAX / b) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:19:b2` | taken-0% | `if (a > 0 && b < 0 && b < INT64_MIN / a) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:19:b4` | never-executed | `if (a > 0 && b < 0 && b < INT64_MIN / a) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:19:b5` | never-executed | `if (a > 0 && b < 0 && b < INT64_MIN / a) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:20:b3` | taken-0% | `if (a < 0 && b > 0 && a < INT64_MIN / b) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:20:b5` | taken-0% | `if (a < 0 && b > 0 && a < INT64_MIN / b) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:21:b2` | taken-0% | `if (a < 0 && b < 0 && a < INT64_MAX / b) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:21:b4` | never-executed | `if (a < 0 && b < 0 && a < INT64_MAX / b) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:21:b5` | never-executed | `if (a < 0 && b < 0 && a < INT64_MAX / b) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:27:b3` | taken-0% | `if (b > 0 && a > INT64_MAX - b) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:28:b0` | taken-0% | `if (b < 0 && a < INT64_MIN - b) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:28:b2` | never-executed | `if (b < 0 && a < INT64_MIN - b) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:28:b3` | never-executed | `if (b < 0 && a < INT64_MIN - b) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:37:b1` | taken-0% | `if (scale < 0) return d;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:38:b1` | taken-0% | `if (!mul_ok(v, scale, &d.coeff)) return d;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:53:b0` | taken-0% | `if (*p == '+') p++;` | **reachable** | decimal string with leading +, trailing junk, empt | direct uem_dec_parse vectors |
-| `decimal.c:71:b0` | taken-0% | `while (isdigit((unsigned char)*p)) p++;` | **reachable** | decimal string with leading +, trailing junk, empt | direct uem_dec_parse vectors |
-| `decimal.c:73:b0` | taken-0% | `if (*p != 0) return d;` | **reachable** | decimal string with leading +, trailing junk, empt | direct uem_dec_parse vectors |
-| `decimal.c:75:b1` | taken-0% | `if (scale < 0) return d;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:76:b1` | taken-0% | `if (!mul_ok(intpart, scale, &scaled_int)) return d;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:79:b1` | taken-0% | `if (fscale < 0) return d;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:80:b1` | taken-0% | `if (!mul_ok(frac, fscale, &scaled_frac)) return d;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:82:b1` | taken-0% | `if (!add_ok(scaled_int, scaled_frac, &combined)) return d;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:89:b1` | taken-0% | `if (!a.ok \|\| !b.ok) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:89:b2` | taken-0% | `if (!a.ok \|\| !b.ok) return 0;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:98:b2` | taken-0% | `if (!a.ok \|\| !b.ok) return r;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:99:b1` | taken-0% | `if (!add_ok(a.coeff, b.coeff, &r.coeff)) return r;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:109:b2` | taken-0% | `if (!a.ok \|\| !b.ok) return r;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:111:b1` | taken-0% | `if (scale < 0) return r;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:117:b1` | taken-0% | `if (q > INT64_MAX \|\| q < INT64_MIN) return r;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:117:b2` | taken-0% | `if (q > INT64_MAX \|\| q < INT64_MIN) return r;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:139:b1` | taken-0% | `const char *mode = rounding ? rounding : "ROUND_HALF_UP";` | **reachable** | quantize with each rounding mode and rem==0 / rem! | quantize matrix vectors |
-| `decimal.c:141:b1` | taken-0% | `if (!a.ok) return r;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:149:b0` | taken-0% | `if (unit <= 0) return r;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:156:b0` | taken-0% | `if (rem != 0) {` | **reachable** | quantize with each rounding mode and rem==0 / rem! | quantize matrix vectors |
-| `decimal.c:172:b1` | taken-0% | `if (!mul_ok(q, unit, &r.coeff)) return r;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:181:b3` | taken-0% | `if (!a.ok \|\| !buf \|\| cap < 4) return -1;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:184:b0` | taken-0% | `if (div <= 0) return -1;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:187:b0` | taken-0% | `if (base <= 0) return -1;` | **reachable** | decimal edge: overflow, invalid scale, !ok operand | direct decimal unit tests (test_decimal) for  |
-| `decimal.c:191:b2` | taken-0% | `if (scaled < 0 && ipart == 0)` | **reachable** | negative value with zero integer part (-0.x format | decimal_str of -0.5 etc. |
-| `decimal.c:195:b1` | taken-0% | `if (n < 0 \|\| (size_t)n >= cap) return -1;` | **reachable** | decimal_str with tiny cap buffer | call format with cap < 4 and boundary cap |
-| `decimal.c:195:b2` | taken-0% | `if (n < 0 \|\| (size_t)n >= cap) return -1;` | **reachable** | decimal_str with tiny cap buffer | call format with cap < 4 and boundary cap |
-| `decode.c:10:b0` | taken-0% | `if (*off + 2 > n) return -1;` | **reachable** | crafted bytecode vector for this reject arm | decode reject vector + err string assert |
-| `decode.c:35:b4` | taken-0% | `if (i + 2 >= len \|\| (s[i+1] & 0xc0) != 0x80 \|\| (s[i+2] & 0xc0) != ` | **short-circuit** | UTF-8 sequences hitting each length/continuation f | mb_*.uem style vectors for each short-circuit |
-| `decode.c:39:b5` | taken-0% | `if (i + 3 >= len \|\| (s[i+1] & 0xc0) != 0x80 \|\| (s[i+2] & 0xc0) != ` | **short-circuit** | UTF-8 sequences hitting each length/continuation f | mb_*.uem style vectors for each short-circuit |
-| `decode.c:39:b6` | taken-0% | `if (i + 3 >= len \|\| (s[i+1] & 0xc0) != 0x80 \|\| (s[i+2] & 0xc0) != ` | **short-circuit** | UTF-8 sequences hitting each length/continuation f | mb_*.uem style vectors for each short-circuit |
-| `decode.c:93:b1` | taken-0% | `if (!m) return;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `decode.c:94:b1` | taken-0% | `if (m->instr) {` | **reachable** | partial decode free with and without instr array | OOM after machine alloc before instr alloc |
-| `decode.c:106:b0` | taken-0% | `while (ncap < *len + n + 1) ncap *= 2;` | **reachable** | empty vs non-empty collection for this loop | semantic vector with empty and multi-element  |
-| `decode.c:120:b0` | taken-0% | `if (append_str(buf, len, cap, "\"", 1)) return -1;` | **reachable** | fail_after during json_escape_append / canon_value | assert_oom_paths sweeping fail_after across i |
-| `decode.c:125:b1` | taken-0% | `if (append_str(buf, len, cap, tmp, 2)) return -1;` | **reachable** | fail_after during json_escape_append / canon_value | assert_oom_paths sweeping fail_after across i |
-| `decode.c:127:b1` | taken-0% | `if (append_str(buf, len, cap, "\\b", 2)) return -1;` | **reachable** | fail_after during json_escape_append / canon_value | assert_oom_paths sweeping fail_after across i |
-| `decode.c:129:b0` | taken-0% | `if (append_str(buf, len, cap, "\\f", 2)) return -1;` | **reachable** | fail_after during json_escape_append / canon_value | assert_oom_paths sweeping fail_after across i |
-| `decode.c:131:b1` | taken-0% | `if (append_str(buf, len, cap, "\\n", 2)) return -1;` | **reachable** | fail_after during json_escape_append / canon_value | assert_oom_paths sweeping fail_after across i |
-| `decode.c:133:b1` | taken-0% | `if (append_str(buf, len, cap, "\\r", 2)) return -1;` | **reachable** | fail_after during json_escape_append / canon_value | assert_oom_paths sweeping fail_after across i |
-| `decode.c:135:b1` | taken-0% | `if (append_str(buf, len, cap, "\\t", 2)) return -1;` | **reachable** | fail_after during json_escape_append / canon_value | assert_oom_paths sweeping fail_after across i |
-| `decode.c:139:b0` | taken-0% | `if (append_str(buf, len, cap, tmp, 6)) return -1;` | **reachable** | fail_after during json_escape_append / canon_value | assert_oom_paths sweeping fail_after across i |
-| `decode.c:142:b0` | taken-0% | `if (append_str(buf, len, cap, (const char *)p, 1)) return -1;` | **reachable** | fail_after during json_escape_append / canon_value | assert_oom_paths sweeping fail_after across i |
-| `decode.c:159:b1` | taken-0% | `if (v && cJSON_IsTrue(v)) return append_str(buf, len, cap, "true", 4);` | **reachable** | state that flips: if (v && cJSON_IsTrue(v)) return | semantic vector for true and false arms |
-| `decode.c:160:b1` | taken-0% | `if (v && cJSON_IsFalse(v)) return append_str(buf, len, cap, "false", 5` | **reachable** | state that flips: if (v && cJSON_IsFalse(v)) retur | semantic vector for true and false arms |
-| `decode.c:161:b1` | taken-0% | `if (v && cJSON_IsNumber(v)) {` | **reachable** | state that flips: if (v && cJSON_IsNumber(v)) { | semantic vector for true and false arms |
-| `decode.c:165:b3` | taken-0% | `if (d == (double)(long long)d && d >= (double)LLONG_MIN && d <= (doubl` | **reachable** | decode state that flips: if (d == (double)(long lo | decode reject / canon vector |
-| `decode.c:165:b4` | taken-0% | `if (d == (double)(long long)d && d >= (double)LLONG_MIN && d <= (doubl` | **reachable** | decode state that flips: if (d == (double)(long lo | decode reject / canon vector |
-| `decode.c:173:b1` | taken-0% | `if (v && cJSON_IsString(v)) return json_escape_append(buf, len, cap, v` | **reachable** | state that flips: if (v && cJSON_IsString(v)) retu | semantic vector for true and false arms |
-| `decode.c:173:b4` | taken-0% | `if (v && cJSON_IsString(v)) return json_escape_append(buf, len, cap, v` | **reachable** | state that flips: if (v && cJSON_IsString(v)) retu | semantic vector for true and false arms |
-| `decode.c:174:b1` | taken-0% | `if (v && cJSON_IsArray(v)) {` | **reachable** | state that flips: if (v && cJSON_IsArray(v)) { | semantic vector for true and false arms |
-| `decode.c:177:b0` | taken-0% | `if (append_str(buf, len, cap, "[", 1)) return -1;` | **reachable** | fail_after during json_escape_append / canon_value | assert_oom_paths sweeping fail_after across i |
-| `decode.c:178:b1` | taken-0% | `cJSON_ArrayForEach(ch, v) {` | **reachable** | empty vs non-empty collection for this loop | semantic vector with empty and multi-element  |
-| `decode.c:179:b3` | taken-0% | `if (!first && append_str(buf, len, cap, ",", 1)) return -1;` | **reachable** | fail_after during json_escape_append / canon_value | assert_oom_paths sweeping fail_after across i |
-| `decode.c:181:b0` | taken-0% | `if (canon_value(ch, buf, len, cap)) return -1;` | **reachable** | decode state that flips: if (canon_value(ch, buf,  | decode reject / canon vector |
-| `decode.c:185:b1` | taken-0% | `if (v && cJSON_IsObject(v)) {` | **reachable** | state that flips: if (v && cJSON_IsObject(v)) { | semantic vector for true and false arms |
-| `decode.c:190:b1` | taken-0% | `cJSON_ArrayForEach(ch, v) n++;` | **reachable** | empty vs non-empty collection for this loop | semantic vector with empty and multi-element  |
-| `decode.c:194:b1` | taken-0% | `cJSON_ArrayForEach(ch, v) keys[i++] = ch->string ? ch->string : "";` | **reachable** | empty vs non-empty collection for this loop | semantic vector with empty and multi-element  |
-| `decode.c:194:b5` | taken-0% | `cJSON_ArrayForEach(ch, v) keys[i++] = ch->string ? ch->string : "";` | **reachable** | empty vs non-empty collection for this loop | semantic vector with empty and multi-element  |
-| `decode.c:199:b2` | taken-0% | `if (i && append_str(buf, len, cap, ",", 1)) { uem_mem_free(keys); retu` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
-| `decode.c:200:b1` | taken-0% | `if (json_escape_append(buf, len, cap, keys[i])) { uem_mem_free(keys); ` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
-| `decode.c:201:b0` | taken-0% | `if (append_str(buf, len, cap, ":", 1)) { uem_mem_free(keys); return -1` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
-| `decode.c:246:b1` | taken-0% | `if (rd_u16(bytes, len, &off, &ver) \|\| ver != UEM_FORMAT_VERSION) {` | **short-circuit** | rd fail vs value mismatch independently | truncated header vs bad-version/flags vectors |
-| `decode.c:250:b1` | taken-0% | `if (rd_u16(bytes, len, &off, &flags) \|\| flags != 0) {` | **short-circuit** | rd fail vs value mismatch independently | truncated header vs bad-version/flags vectors |
-| `decode.c:254:b1` | taken-0% | `if (rd_u32(bytes, len, &off, &count) \|\| count == 0 \|\| count > UEM_` | **short-circuit** | rd fail vs value mismatch independently | truncated header vs bad-version/flags vectors |
-| `decode.c:303:b0` | taken-0% | `free_partial(m, count); if (err) snprintf(err, errlen, "invalid-utf8-i` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `decode.c:314:b0` | taken-0% | `if (err) snprintf(err, errlen, "bad-image-json");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `decode.c:321:b0` | taken-0% | `if (err) snprintf(err, errlen, "noncanonical-image");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `decode.c:343:b1` | taken-0% | `if (err) snprintf(err, errlen, "missing-stop");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `decode.c:353:b1` | taken-0% | `if (err) snprintf(err, errlen, "unknown-primitive");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `expr.c:12:b1` | taken-0% | `if (!path_arr \|\| !cJSON_IsArray(path_arr)) return NULL;` | **reachable** | state that flips: if (!path_arr \|\| !cJSON_IsArra | semantic vector for true and false arms |
-| `expr.c:12:b2` | taken-0% | `if (!path_arr \|\| !cJSON_IsArray(path_arr)) return NULL;` | **reachable** | state that flips: if (!path_arr \|\| !cJSON_IsArra | semantic vector for true and false arms |
-| `expr.c:13:b1` | taken-0% | `cJSON_ArrayForEach(el, path_arr) {` | **reachable** | expression node shape that flips: cJSON_ArrayForEa | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:14:b0` | taken-0% | `if (!cur) return NULL;` | **reachable** | expression node shape that flips: if (!cur) return | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:17:b1` | taken-0% | `if (!cJSON_IsArray(cur) \|\| idx < 0 \|\| idx >= cJSON_GetArraySize(cu` | **reachable** | state that flips: if (!cJSON_IsArray(cur) \|\| idx | semantic vector for true and false arms |
-| `expr.c:19:b1` | taken-0% | `} else if (cJSON_IsString(el)) {` | **reachable** | state that flips: } else if (cJSON_IsString(el)) { | semantic vector for true and false arms |
-| `expr.c:20:b1` | taken-0% | `if (!cJSON_IsObject(cur)) return NULL;` | **reachable** | state that flips: if (!cJSON_IsObject(cur)) return | semantic vector for true and false arms |
-| `expr.c:32:b1` | taken-0% | `if (err && errlen) snprintf(err, errlen, "%s", msg);` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `expr.c:32:b2` | taken-0% | `if (err && errlen) snprintf(err, errlen, "%s", msg);` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `expr.c:37:b1` | taken-0% | `if (g_err_path) cJSON_Delete(g_err_path);` | **reachable** | expression node shape that flips: if (g_err_path)  | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:41:b2` | taken-0% | `if (g_coll_path && cJSON_IsArray(g_coll_path)) {` | **reachable** | state that flips: if (g_coll_path && cJSON_IsArray | semantic vector for true and false arms |
-| `expr.c:42:b1` | taken-0% | `cJSON_ArrayForEach(el, g_coll_path) cJSON_AddItemToArray(full, cJSON_D` | **reachable** | expression node shape that flips: cJSON_ArrayForEa | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:47:b2` | taken-0% | `if (path && cJSON_IsArray(path)) {` | **reachable** | state that flips: if (path && cJSON_IsArray(path)) | semantic vector for true and false arms |
-| `expr.c:48:b1` | taken-0% | `cJSON_ArrayForEach(el, path) cJSON_AddItemToArray(full, cJSON_Duplicat` | **reachable** | expression node shape that flips: cJSON_ArrayForEa | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:80:b1` | taken-0% | `if (!node \|\| !cJSON_IsObject(node)) return fail(err, errlen, "bad-no` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:82:b1` | taken-0% | `if (!cJSON_IsString(opj)) return fail(err, errlen, "bad-node");` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:88:b1` | taken-0% | `*out = v ? cJSON_Duplicate(v, 1) : cJSON_CreateNull();` | **reachable** | expression node shape that flips: *out = v ? cJSON | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:94:b1` | taken-0% | `if (!cJSON_IsString(nj) \|\| !bindings) return fail(err, errlen, "miss` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:94:b2` | taken-0% | `if (!cJSON_IsString(nj) \|\| !bindings) return fail(err, errlen, "miss` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:105:b1` | taken-0% | `if (path && cJSON_IsArray(path) && cJSON_GetArraySize(path) > 0) {` | **reachable** | state that flips: if (path && cJSON_IsArray(path)  | semantic vector for true and false arms |
-| `expr.c:105:b3` | taken-0% | `if (path && cJSON_IsArray(path) && cJSON_GetArraySize(path) > 0) {` | **reachable** | state that flips: if (path && cJSON_IsArray(path)  | semantic vector for true and false arms |
-| `expr.c:107:b1` | taken-0% | `if (cJSON_IsString(first) && strcmp(first->valuestring, "item") == 0) ` | **reachable** | state that flips: if (cJSON_IsString(first) && str | semantic vector for true and false arms |
-| `expr.c:114:b2` | taken-0% | `} else if (in_each && item) {` | **reachable** | expression node shape that flips: } else if (in_ea | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:128:b1` | taken-0% | `if (!cJSON_IsObject(fields) \|\| !obj) return fail(err, errlen, "bad-o` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:128:b2` | taken-0% | `if (!cJSON_IsObject(fields) \|\| !obj) return fail(err, errlen, "bad-o` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:129:b1` | taken-0% | `cJSON_ArrayForEach(child, fields) {` | **reachable** | expression node shape that flips: cJSON_ArrayForEa | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:144:b1` | taken-0% | `if (!ofn \|\| cJSON_IsNull(ofn)) { *out = cJSON_CreateNumber(0); cJSON` | **reachable** | state that flips: if (!ofn \|\| cJSON_IsNull(ofn)) | semantic vector for true and false arms |
-| `expr.c:157:b1` | taken-0% | `if (!ofn \|\| cJSON_IsNull(ofn)) {` | **reachable** | state that flips: if (!ofn \|\| cJSON_IsNull(ofn)) | semantic vector for true and false arms |
-| `expr.c:159:b1` | taken-0% | `return fail_path(err, errlen, cJSON_IsString(ej) ? ej->valuestring : "` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:171:b1` | taken-0% | `if (!ofn \|\| cJSON_IsNull(ofn)) {` | **reachable** | state that flips: if (!ofn \|\| cJSON_IsNull(ofn)) | semantic vector for true and false arms |
-| `expr.c:175:b2` | taken-0% | `if (!cJSON_IsNumber(ofn) \|\| ofn->valuedouble != (double)ofn->valuein` | **reachable** | state that flips: if (!cJSON_IsNumber(ofn) \|\| of | semantic vector for true and false arms |
-| `expr.c:177:b0` | taken-0% | `return fail_path(err, errlen, cJSON_IsString(te) ? te->valuestring : "` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:190:b1` | taken-0% | `if (!ofn \|\| cJSON_IsNull(ofn)) {` | **reachable** | state that flips: if (!ofn \|\| cJSON_IsNull(ofn)) | semantic vector for true and false arms |
-| `expr.c:196:b0` | taken-0% | `return fail_path(err, errlen, cJSON_IsString(te) ? te->valuestring : "` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:214:b2` | taken-0% | `if (cJSON_IsObject(ofn) && cJSON_GetObjectItem(ofn, "__uem_dec__")) {` | **reachable** | state that flips: if (cJSON_IsObject(ofn) && cJSON | semantic vector for true and false arms |
-| `expr.c:229:b1` | taken-0% | `return fail_path(err, errlen, cJSON_IsString(ej) ? ej->valuestring : "` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:234:b1` | taken-0% | `return fail_path(err, errlen, cJSON_IsString(ej) ? ej->valuestring : "` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:244:b1` | taken-0% | `if (!cJSON_IsArray(values)) return fail(err, errlen, "bad-values");` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:246:b1` | taken-0% | `cJSON_ArrayForEach(child, values) {` | **reachable** | expression node shape that flips: cJSON_ArrayForEa | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:250:b2` | taken-0% | `if (cJSON_IsObject(v) && cJSON_GetObjectItem(v, "__uem_dec__")) {` | **reachable** | state that flips: if (cJSON_IsObject(v) && cJSON_G | semantic vector for true and false arms |
-| `expr.c:259:b1` | taken-0% | `if (!acc.ok) return fail(err, errlen, "num-overflow");` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:277:b1` | taken-0% | `cJSON_ArrayForEach(el, coll) {` | **reachable** | expression node shape that flips: cJSON_ArrayForEa | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:287:b2` | taken-0% | `if (cJSON_IsObject(part) && cJSON_GetObjectItem(part, "__uem_dec__")) ` | **reachable** | state that flips: if (cJSON_IsObject(part) && cJSO | semantic vector for true and false arms |
-| `expr.c:293:b1` | taken-0% | `if (!total.ok) { g_item_index = -1; g_coll_path = NULL; cJSON_Delete(c` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:312:b1` | taken-0% | `if (cJSON_IsObject(ofn) && cJSON_GetObjectItem(ofn, "__uem_dec__")) {` | **reachable** | state that flips: if (cJSON_IsObject(ofn) && cJSON | semantic vector for true and false arms |
-| `expr.c:312:b2` | taken-0% | `if (cJSON_IsObject(ofn) && cJSON_GetObjectItem(ofn, "__uem_dec__")) {` | **reachable** | state that flips: if (cJSON_IsObject(ofn) && cJSON | semantic vector for true and false arms |
-| `expr.c:317:b1` | taken-0% | `q = uem_dec_quantize(d, cJSON_IsString(exp) ? exp->valuestring : "0.01` | **reachable** | state that flips: q = uem_dec_quantize(d, cJSON_Is | semantic vector for true and false arms |
-| `expr.c:318:b1` | taken-0% | `cJSON_IsString(rnd) ? rnd->valuestring : "ROUND_HALF_UP");` | **reachable** | state that flips: cJSON_IsString(rnd) ? rnd->value | semantic vector for true and false arms |
-| `expr.c:319:b1` | taken-0% | `if (!q.ok) return fail(err, errlen, "quantize-fail");` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:328:b1` | taken-0% | `int places = cJSON_IsNumber(pl) ? pl->valueint : 2;` | **reachable** | state that flips: int places = cJSON_IsNumber(pl)  | semantic vector for true and false arms |
-| `expr.c:333:b1` | taken-0% | `if (cJSON_IsObject(ofn) && cJSON_GetObjectItem(ofn, "__uem_dec__")) {` | **reachable** | state that flips: if (cJSON_IsObject(ofn) && cJSON | semantic vector for true and false arms |
-| `expr.c:333:b2` | taken-0% | `if (cJSON_IsObject(ofn) && cJSON_GetObjectItem(ofn, "__uem_dec__")) {` | **reachable** | state that flips: if (cJSON_IsObject(ofn) && cJSON | semantic vector for true and false arms |
-| `expr.c:338:b1` | taken-0% | `if (uem_dec_format(d, places, buf, sizeof buf) != 0) return fail(err, ` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `expr.c:373:b1` | taken-0% | `if (s[0] == 0) lines = 0;` | **reachable** | expression node shape that flips: if (s[0] == 0) l | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:385:b0` | taken-0% | `if (*p == '\r' && p[1] == '\n') p += 2;` | **reachable** | expression node shape that flips: if (*p == '\r' & | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:385:b2` | never-executed | `if (*p == '\r' && p[1] == '\n') p += 2;` | **reachable** | expression node shape that flips: if (*p == '\r' & | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:385:b3` | never-executed | `if (*p == '\r' && p[1] == '\n') p += 2;` | **reachable** | expression node shape that flips: if (*p == '\r' & | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:386:b2` | taken-0% | `else if (*p == '\n' \|\| *p == '\r') p++;` | **reachable** | expression node shape that flips: else if (*p == ' | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:407:b1` | taken-0% | `while (s[i] && isspace((unsigned char)s[i])) i++;` | **reachable** | expression node shape that flips: while (s[i] && i | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:408:b0` | taken-0% | `if (!s[i]) break;` | **reachable** | expression node shape that flips: if (!s[i]) break | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:414:b1` | taken-0% | `if (len >= sizeof word) len = sizeof word - 1;` | **reachable** | expression node shape that flips: if (len >= sizeo | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:421:b0` | taken-0% | `size_t ncap = cap ? cap * 2 : 8;` | **reachable** | expression node shape that flips: size_t ncap = ca | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:423:b1` | taken-0% | `if (!ns) { /* leak on OOM path simplified */ break; }` | **reachable** | expression node shape that flips: if (!ns) { /* le | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:445:b1` | taken-0% | `if (g_err_path) { cJSON_Delete(g_err_path); g_err_path = NULL; }` | **reachable** | expression node shape that flips: if (g_err_path)  | assert_expr_error_arms / template fuzz for mi |
-| `expr.c:450:b0` | taken-0% | `} else if (g_err_path) {` | **reachable** | expression node shape that flips: } else if (g_err | assert_expr_error_arms / template fuzz for mi |
-| `machine.c:10:b1` | taken-0% | `if (!m \|\| !mark) return -1;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:10:b2` | taken-0% | `if (!m \|\| !mark) return -1;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:12:b0` | taken-0% | `size_t ncap = m->evidence_cap ? m->evidence_cap * 2 : 64;` | **reachable** | fill evidence/event queue to force growth and OOM | queue-pressure + fail_after vectors |
-| `machine.c:14:b1` | taken-0% | `if (!ne) return -1;` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
-| `machine.c:19:b1` | taken-0% | `if (!m->evidence[m->n_evidence]) return -1;` | **reachable** | fill evidence/event queue to force growth and OOM | queue-pressure + fail_after vectors |
-| `machine.c:25:b1` | taken-0% | `if (!m \|\| !st) return -1;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:25:b2` | taken-0% | `if (!m \|\| !st) return -1;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:34:b0` | taken-0% | `if (m->instr) {` | **reachable** | machine field state for: if (m->instr) { | load/store/emit/accessors with null machine a |
-| `machine.c:58:b0` | taken-0% | `for (j = 0; j < m->n_processed; j++) uem_mem_free(m->processed_ids[j])` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
-| `machine.c:65:b1` | taken-0% | `if (!m \|\| !json) return UEM_ERR_ARGS;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:65:b2` | taken-0% | `if (!m \|\| !json) return UEM_ERR_ARGS;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:67:b0` | taken-0% | `if (err) snprintf(err, errlen, "host-too-large");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:73:b0` | taken-0% | `if (err) snprintf(err, errlen, "host-json");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:82:b1` | taken-0% | `if (!m) return;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:104:b2` | taken-0% | `if (ms && *ms) {` | **reachable** | machine state that flips: if (ms && *ms) { | assert_machine_semantics vector |
-| `machine.c:106:b1` | taken-0% | `if (v > 0 && v < m->max_steps) m->max_steps = (uint32_t)v;` | **reachable** | step after STOP / host max_steps / pc out of range | assert_machine_semantics edge vectors |
-| `machine.c:112:b0` | taken-0% | `if (err) snprintf(err, errlen, "execution-after-stop");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:123:b0` | taken-0% | `if (err) snprintf(err, errlen, "pc-out-of-range");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:136:b1` | taken-0% | `const char *on = (op >= 1 && op <= 16) ? OPN[op] : "?";` | **reachable** | both arms of ternary: const char *on = (op >= 1 && | semantic vector for true and false arms |
-| `machine.c:143:b1` | taken-0% | `if (operand && strcmp(operand, "host_input") == 0) {` | **reachable** | state that flips: if (operand && strcmp(operand, " | semantic vector for true and false arms |
-| `machine.c:145:b1` | taken-0% | `m->acc = m->host ? cJSON_Duplicate(m->host, 1) : cJSON_CreateNull();` | **reachable** | both arms of ternary: m->acc = m->host ? cJSON_Dup | semantic vector for true and false arms |
-| `machine.c:146:b0` | taken-0% | `if (m->host) {` | **reachable** | machine field state for: if (m->host) { | load/store/emit/accessors with null machine a |
-| `machine.c:152:b1` | taken-0% | `} else if (operand && strncmp(operand, "image:", 6) == 0) {` | **reachable** | instruction with null operand vs non-null operand  | bytecode vector per opcode with/without opera |
-| `machine.c:155:b1` | taken-0% | `m->acc = v ? cJSON_Duplicate(v, 1) : cJSON_CreateNull();` | **reachable** | both arms of ternary: m->acc = v ? cJSON_Duplicate | semantic vector for true and false arms |
-| `machine.c:159:b0` | taken-0% | `if (operand) {` | **reachable** | machine field state for: if (operand) { | load/store/emit/accessors with null machine a |
-| `machine.c:161:b0` | taken-0% | `if (m->acc) cJSON_Delete(m->acc);` | **reachable** | machine field state for: if (m->acc) cJSON_Delete( | load/store/emit/accessors with null machine a |
-| `machine.c:162:b1` | taken-0% | `m->acc = v ? cJSON_Duplicate(v, 1) : cJSON_CreateNull();` | **reachable** | both arms of ternary: m->acc = v ? cJSON_Duplicate | semantic vector for true and false arms |
-| `machine.c:166:b0` | taken-0% | `if (operand) {` | **reachable** | machine field state for: if (operand) { | load/store/emit/accessors with null machine a |
-| `machine.c:167:b1` | taken-0% | `cJSON *v = m->acc ? cJSON_Duplicate(m->acc, 1) : cJSON_CreateNull();` | **reachable** | both arms of ternary: cJSON *v = m->acc ? cJSON_Du | semantic vector for true and false arms |
-| `machine.c:175:b0` | taken-0% | `if (operand) cJSON_DeleteItemFromObjectCaseSensitive(m->store, operand` | **reachable** | machine field state for: if (operand) cJSON_Delete | load/store/emit/accessors with null machine a |
-| `machine.c:179:b1` | taken-0% | `const char *name = operand ? operand : "event";` | **reachable** | instruction with null operand vs non-null operand  | bytecode vector per opcode with/without opera |
-| `machine.c:187:b0` | taken-0% | `if (!m->events_emitted) m->events_emitted = cJSON_CreateArray();` | **reachable** | machine field state for: if (!m->events_emitted) m | load/store/emit/accessors with null machine a |
-| `machine.c:197:b3` | taken-0% | `const char *name = operand ? operand : (m->event_name ? m->event_name ` | **reachable** | instruction with null operand vs non-null operand  | bytecode vector per opcode with/without opera |
-| `machine.c:200:b0` | taken-0% | `size_t ncap = m->q_cap ? m->q_cap * 2 : 16;` | **reachable** | fill evidence/event queue to force growth and OOM | queue-pressure + fail_after vectors |
-| `machine.c:203:b1` | taken-0% | `if (!nn \|\| !ni) return -1;` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
-| `machine.c:203:b3` | taken-0% | `if (!nn \|\| !ni) return -1;` | **reachable** | allocator fail_after N covering this call site; as | assert_oom_paths / fail_after sweep |
-| `machine.c:244:b1` | taken-0% | `if (m->event_name && cJSON_IsObject(routes))` | **reachable** | state that flips: if (m->event_name && cJSON_IsObj | semantic vector for true and false arms |
-| `machine.c:244:b2` | taken-0% | `if (m->event_name && cJSON_IsObject(routes))` | **reachable** | state that flips: if (m->event_name && cJSON_IsObj | semantic vector for true and false arms |
-| `machine.c:251:b1` | taken-0% | `snprintf(mk, sizeof mk, "event:unknown:%s",` | **reachable** | machine field state for: snprintf(mk, sizeof mk, " | load/store/emit/accessors with null machine a |
-| `machine.c:285:b1` | taken-0% | `const char *effect = operand ? operand : "effect";` | **reachable** | instruction with null operand vs non-null operand  | bytecode vector per opcode with/without opera |
-| `machine.c:291:b0` | taken-0% | `if (b) {` | **reachable** | both truthy and falsey for guard: if (b) { | semantic vector for true and false arms |
-| `machine.c:293:b1` | taken-0% | `if (cJSON_IsString(s)) sf = s->valuestring;` | **reachable** | state that flips: if (cJSON_IsString(s)) sf = s->v | semantic vector for true and false arms |
-| `machine.c:298:b1` | taken-0% | `if (m->outward_request) cJSON_Delete(m->outward_request);` | **reachable** | OUTWARD fulfill / missing result / handler error | outward inject modes (utf8/json/err/raw) |
-| `machine.c:301:b1` | taken-0% | `if (m->outward_result) { cJSON_Delete(m->outward_result); m->outward_r` | **reachable** | OUTWARD fulfill / missing result / handler error | outward inject modes (utf8/json/err/raw) |
-| `machine.c:307:b0` | taken-0% | `if (m->ticket) {` | **reachable** | OUTWARD fulfill / missing result / handler error | outward inject modes (utf8/json/err/raw) |
-| `machine.c:309:b2` | taken-0% | `if (cJSON_IsString(ext) && ext->valuestring[0]) {` | **reachable** | state that flips: if (cJSON_IsString(ext) && ext-> | semantic vector for true and false arms |
-| `machine.c:319:b0` | taken-0% | `snprintf(m->stop_reason, sizeof m->stop_reason, "%s", operand ? operan` | **reachable** | instruction with null operand vs non-null operand  | bytecode vector per opcode with/without opera |
-| `machine.c:323:b1` | taken-0% | `if (err) snprintf(err, errlen, "unknown-opcode");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:337:b1` | taken-0% | `if (!m \|\| !m->outward_request \|\| m->outward_result \|\| !m->outwar` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:337:b3` | taken-0% | `if (!m \|\| !m->outward_request \|\| m->outward_result \|\| !m->outwar` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:337:b5` | taken-0% | `if (!m \|\| !m->outward_request \|\| m->outward_result \|\| !m->outwar` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:337:b6` | taken-0% | `if (!m \|\| !m->outward_request \|\| m->outward_result \|\| !m->outwar` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:339:b1` | taken-0% | `effect = cJSON_GetObjectItemCaseSensitive(req, "effect")` | **reachable** | state that flips: effect = cJSON_GetObjectItemCase | semantic vector for true and false arms |
-| `machine.c:357:b1` | taken-0% | `if (m->outward_result) cJSON_Delete(m->outward_result);` | **reachable** | OUTWARD fulfill / missing result / handler error | outward inject modes (utf8/json/err/raw) |
-| `machine.c:362:b1` | taken-0% | `cJSON_AddStringToObject(rj, "error", ebuf[0] ? ebuf : "outward-fail");` | **reachable** | OUTWARD fulfill / missing result / handler error | outward inject modes (utf8/json/err/raw) |
-| `machine.c:363:b1` | taken-0% | `if (m->outward_result) cJSON_Delete(m->outward_result);` | **reachable** | OUTWARD fulfill / missing result / handler error | outward inject modes (utf8/json/err/raw) |
-| `machine.c:370:b1` | taken-0% | `if (!m) return UEM_ERR_ARGS;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:380:b1` | taken-0% | `if (!m) return UEM_ERR_ARGS;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:383:b2` | taken-0% | `if (st != UEM_OK && !m->halted) {` | **reachable** | machine state that flips: if (st != UEM_OK && !m-> | assert_machine_semantics vector |
-| `machine.c:401:b1` | taken-0% | `if (!m) return NULL;` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `machine.c:408:b1` | taken-0% | `cJSON_AddStringToObject(root, "stop_reason", m->stop_reason[0] ? m->st` | **reachable** | both arms of ternary: cJSON_AddStringToObject(root | semantic vector for true and false arms |
-| `machine.c:452:b1` | taken-0% | `const char *uem_program_sha256(const uem_machine *m) { return m ? m->p` | **reachable** | both arms of ternary: const char *uem_program_sha2 | semantic vector for true and false arms |
-| `machine.c:453:b1` | taken-0% | `uint32_t uem_instruction_count(const uem_machine *m) { return m ? m->n` | **reachable** | both arms of ternary: uint32_t uem_instruction_cou | semantic vector for true and false arms |
-| `machine.c:487:b0` | taken-0% | `if (fseek(f, 0, SEEK_END) != 0) { fclose(f); cJSON_Delete(src); return` | **reachable** | outward file path that fails seek/read | missing-file / unreadable path outward vector |
-| `machine.c:489:b1` | taken-0% | `if (sz < 0 \|\| sz > (long)UEM_MAX_OUT) { fclose(f); cJSON_Delete(src)` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `machine.c:489:b2` | taken-0% | `if (sz < 0 \|\| sz > (long)UEM_MAX_OUT) { fclose(f); cJSON_Delete(src)` | **reachable** | call with err=NULL and err non-NULL | both err-buffer and err-NULL vectors |
-| `machine.c:492:b1` | taken-0% | `if (!buf) { fclose(f); cJSON_Delete(src); return -1; }` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `primitives.c:15:b1` | taken-0% | `if (!name) return 0;` | **reachable** | primitive config/host that flips: if (!name) retur | assert_primitives_eval_bindings + config vari |
-| `primitives.c:41:b3` | taken-0% | `if (strcmp(m->state, "invalid") == 0 \|\| strcmp(m->state, "absent") =` | **reachable** | state that flips: if (strcmp(m->state, "invalid")  | semantic vector for true and false arms |
-| `primitives.c:41:b4` | taken-0% | `if (strcmp(m->state, "invalid") == 0 \|\| strcmp(m->state, "absent") =` | **reachable** | state that flips: if (strcmp(m->state, "invalid")  | semantic vector for true and false arms |
-| `primitives.c:53:b0` | taken-0% | `if (src_cfg) {` | **reachable** | primitive config/host that flips: if (src_cfg) { | assert_primitives_eval_bindings + config vari |
-| `primitives.c:55:b0` | taken-0% | `if (cJSON_IsString(f)) field = f->valuestring;` | **reachable** | state that flips: if (cJSON_IsString(f)) field = f | semantic vector for true and false arms |
-| `primitives.c:57:b0` | taken-0% | `if (cJSON_IsString(e)) err_missing = e->valuestring;` | **reachable** | state that flips: if (cJSON_IsString(e)) err_missi | semantic vector for true and false arms |
-| `primitives.c:59:b0` | taken-0% | `if (cJSON_IsString(e)) err_extra = e->valuestring;` | **reachable** | state that flips: if (cJSON_IsString(e)) err_extra | semantic vector for true and false arms |
-| `primitives.c:66:b2` | taken-0% | `if (cJSON_GetObjectItemCaseSensitive(m->host, "text") &&` | **reachable** | state that flips: if (cJSON_GetObjectItemCaseSensi | semantic vector for true and false arms |
-| `primitives.c:69:b2` | taken-0% | `store_set(m, field, cJSON_CreateString(sf && cJSON_IsString(sf) ? sf->` | **reachable** | state that flips: store_set(m, field, cJSON_Create | semantic vector for true and false arms |
-| `primitives.c:72:b2` | taken-0% | `if (cJSON_GetObjectItemCaseSensitive(m->host, "document") &&` | **reachable** | state that flips: if (cJSON_GetObjectItemCaseSensi | semantic vector for true and false arms |
-| `primitives.c:75:b0` | taken-0% | `store_set(m, field, cJSON_CreateString(sf && cJSON_IsString(sf) ? sf->` | **reachable** | state that flips: store_set(m, field, cJSON_Create | semantic vector for true and false arms |
-| `primitives.c:75:b2` | never-executed | `store_set(m, field, cJSON_CreateString(sf && cJSON_IsString(sf) ? sf->` | **reachable** | state that flips: store_set(m, field, cJSON_Create | semantic vector for true and false arms |
-| `primitives.c:75:b3` | never-executed | `store_set(m, field, cJSON_CreateString(sf && cJSON_IsString(sf) ? sf->` | **reachable** | state that flips: store_set(m, field, cJSON_Create | semantic vector for true and false arms |
-| `primitives.c:80:b2` | taken-0% | `if (sf && !cJSON_IsNull(sf)) {` | **reachable** | state that flips: if (sf && !cJSON_IsNull(sf)) { | semantic vector for true and false arms |
-| `primitives.c:114:b0` | taken-0% | `if (b) {` | **reachable** | primitive config/host that flips: if (b) { | assert_primitives_eval_bindings + config vari |
-| `primitives.c:117:b0` | taken-0% | `if (cJSON_IsString(n)) bname = n->valuestring;` | **reachable** | state that flips: if (cJSON_IsString(n)) bname = n | semantic vector for true and false arms |
-| `primitives.c:118:b0` | taken-0% | `if (cJSON_IsString(t)) target = t->valuestring;` | **reachable** | state that flips: if (cJSON_IsString(t)) target =  | semantic vector for true and false arms |
-| `primitives.c:128:b1` | taken-0% | `snprintf(errtxt, sizeof errtxt, "%s",` | **reachable** | primitive config/host that flips: snprintf(errtxt, | assert_primitives_eval_bindings + config vari |
-| `primitives.c:128:b2` | taken-0% | `snprintf(errtxt, sizeof errtxt, "%s",` | **reachable** | primitive config/host that flips: snprintf(errtxt, | assert_primitives_eval_bindings + config vari |
-| `primitives.c:164:b3` | taken-0% | `if (strcmp(m->state, "invalid") == 0 \|\| strcmp(m->state, "absent") =` | **reachable** | state that flips: if (strcmp(m->state, "invalid")  | semantic vector for true and false arms |
-| `primitives.c:164:b4` | taken-0% | `if (strcmp(m->state, "invalid") == 0 \|\| strcmp(m->state, "absent") =` | **reachable** | state that flips: if (strcmp(m->state, "invalid")  | semantic vector for true and false arms |
-| `primitives.c:165:b1` | taken-0% | `strcmp(m->state, "false") == 0 \|\| strcmp(m->state, "unknown") == 0) ` | **reachable** | state that flips: strcmp(m->state, "false") == 0 \ | semantic vector for true and false arms |
-| `primitives.c:174:b0` | taken-0% | `if (cJSON_IsString(ik)) input_key = ik->valuestring;` | **reachable** | state that flips: if (cJSON_IsString(ik)) input_ke | semantic vector for true and false arms |
-| `primitives.c:176:b0` | taken-0% | `if (cJSON_IsString(pn)) part = pn->valuestring;` | **reachable** | state that flips: if (cJSON_IsString(pn)) part = p | semantic vector for true and false arms |
-| `primitives.c:222:b1` | taken-0% | `if (cJSON_IsArray(order) && cJSON_IsObject(bindings_ast)) {` | **reachable** | state that flips: if (cJSON_IsArray(order) && cJSO | semantic vector for true and false arms |
-| `primitives.c:222:b2` | taken-0% | `if (cJSON_IsArray(order) && cJSON_IsObject(bindings_ast)) {` | **reachable** | state that flips: if (cJSON_IsArray(order) && cJSO | semantic vector for true and false arms |
-| `primitives.c:224:b1` | taken-0% | `cJSON_ArrayForEach(nm, order) {` | **reachable** | primitive config/host that flips: cJSON_ArrayForEa | assert_primitives_eval_bindings + config vari |
-| `primitives.c:227:b1` | taken-0% | `if (!cJSON_IsString(nm)) continue;` | **reachable** | state that flips: if (!cJSON_IsString(nm)) continu | semantic vector for true and false arms |
-| `primitives.c:242:b1` | taken-0% | `if (!val) val = cJSON_CreateNull();` | **reachable** | primitive config/host that flips: if (!val) val =  | assert_primitives_eval_bindings + config vari |
-| `primitives.c:249:b1` | taken-0% | `if (err_path) { store_set(m, "path", err_path); err_path = NULL; }` | **reachable** | primitive config/host that flips: if (err_path) {  | assert_primitives_eval_bindings + config vari |
-| `primitives.c:270:b1` | taken-0% | `const char *key = cJSON_IsString(mk) ? mk->valuestring : "result";` | **reachable** | state that flips: const char *key = cJSON_IsString | semantic vector for true and false arms |
-| `primitives.c:271:b3` | taken-0% | `if (strcmp(m->state, "invalid") == 0 \|\| strcmp(m->state, "absent") =` | **reachable** | state that flips: if (strcmp(m->state, "invalid")  | semantic vector for true and false arms |
-| `primitives.c:271:b4` | taken-0% | `if (strcmp(m->state, "invalid") == 0 \|\| strcmp(m->state, "absent") =` | **reachable** | state that flips: if (strcmp(m->state, "invalid")  | semantic vector for true and false arms |
-| `primitives.c:274:b0` | taken-0% | `if (m->acc) store_set(m, key, cJSON_Duplicate(m->acc, 1));` | **reachable** | primitive config/host that flips: if (m->acc) stor | assert_primitives_eval_bindings + config vari |
-| `primitives.c:283:b3` | taken-0% | `if (strcmp(m->state, "invalid") == 0 \|\| strcmp(m->state, "absent") =` | **reachable** | state that flips: if (strcmp(m->state, "invalid")  | semantic vector for true and false arms |
-| `primitives.c:283:b4` | taken-0% | `if (strcmp(m->state, "invalid") == 0 \|\| strcmp(m->state, "absent") =` | **reachable** | state that flips: if (strcmp(m->state, "invalid")  | semantic vector for true and false arms |
-| `primitives.c:298:b1` | taken-0% | `cJSON_ArrayForEach(el, req) {` | **reachable** | primitive config/host that flips: cJSON_ArrayForEa | assert_primitives_eval_bindings + config vari |
-| `primitives.c:301:b1` | taken-0% | `if (!cJSON_IsString(el)) continue;` | **reachable** | state that flips: if (!cJSON_IsString(el)) continu | semantic vector for true and false arms |
-| `primitives.c:318:b1` | taken-0% | `cJSON *keys = pcfg ? cJSON_GetObjectItemCaseSensitive(pcfg, "success_k` | **reachable** | state that flips: cJSON *keys = pcfg ? cJSON_GetOb | semantic vector for true and false arms |
-| `primitives.c:319:b1` | taken-0% | `cJSON *sf = pcfg ? cJSON_GetObjectItemCaseSensitive(pcfg, "success_fro` | **reachable** | state that flips: cJSON *sf = pcfg ? cJSON_GetObje | semantic vector for true and false arms |
-| `primitives.c:320:b1` | taken-0% | `cJSON *inc = pcfg ? cJSON_GetObjectItemCaseSensitive(pcfg, "include_er` | **reachable** | state that flips: cJSON *inc = pcfg ? cJSON_GetObj | semantic vector for true and false arms |
-| `primitives.c:321:b1` | taken-0% | `const char *success_from = cJSON_IsString(sf) ? sf->valuestring : "res` | **reachable** | state that flips: const char *success_from = cJSON | semantic vector for true and false arms |
-| `primitives.c:325:b3` | taken-0% | `if (strcmp(m->state, "valid") == 0 && cJSON_IsArray(keys)) {` | **reachable** | state that flips: if (strcmp(m->state, "valid") == | semantic vector for true and false arms |
-| `primitives.c:330:b1` | taken-0% | `cJSON_ArrayForEach(k, keys) {` | **reachable** | primitive config/host that flips: cJSON_ArrayForEa | assert_primitives_eval_bindings + config vari |
-| `primitives.c:332:b1` | taken-0% | `if (!cJSON_IsString(k)) continue;` | **reachable** | state that flips: if (!cJSON_IsString(k)) continue | semantic vector for true and false arms |
-| `primitives.c:334:b0` | taken-0% | `if (v) cJSON_AddItemToObject(obj, k->valuestring, cJSON_Duplicate(v, 1` | **reachable** | primitive config/host that flips: if (v) cJSON_Add | assert_primitives_eval_bindings + config vari |
-| `primitives.c:345:b3` | taken-0% | `cJSON_AddStringToObject(body, "error", er && cJSON_IsString(er) ? er->` | **reachable** | state that flips: cJSON_AddStringToObject(body, "e | semantic vector for true and false arms |
-| `primitives.c:346:b2` | taken-0% | `if (cJSON_IsTrue(inc) \|\| (cJSON_IsNumber(inc) && inc->valueint)) inc` | **reachable** | state that flips: if (cJSON_IsTrue(inc) \|\| (cJSO | semantic vector for true and false arms |
-| `primitives.c:346:b4` | never-executed | `if (cJSON_IsTrue(inc) \|\| (cJSON_IsNumber(inc) && inc->valueint)) inc` | **reachable** | state that flips: if (cJSON_IsTrue(inc) \|\| (cJSO | semantic vector for true and false arms |
-| `primitives.c:346:b5` | never-executed | `if (cJSON_IsTrue(inc) \|\| (cJSON_IsNumber(inc) && inc->valueint)) inc` | **reachable** | state that flips: if (cJSON_IsTrue(inc) \|\| (cJSO | semantic vector for true and false arms |
-| `primitives.c:348:b1` | taken-0% | `if (inc && inc->type & cJSON_True) include_path = 1;` | **reachable** | primitive config/host that flips: if (inc && inc-> | assert_primitives_eval_bindings + config vari |
-| `primitives.c:357:b1` | taken-0% | `cJSON_AddStringToObject(pres, "text", text ? text : "{}");` | **reachable** | primitive config/host that flips: cJSON_AddStringT | assert_primitives_eval_bindings + config vari |
-| `primitives.c:361:b1` | taken-0% | `if (m->presentation) cJSON_Delete(m->presentation);` | **reachable** | primitive config/host that flips: if (m->presentat | assert_primitives_eval_bindings + config vari |
-| `primitives.c:369:b1` | taken-0% | `snprintf(mark, sizeof mark, "part:%s", cJSON_IsString(pn) ? pn->values` | **reachable** | state that flips: snprintf(mark, sizeof mark, "par | semantic vector for true and false arms |
-| `primitives.c:375:b0` | taken-0% | `if (err) snprintf(err, errlen, "unknown-primitive");` | **reachable** | NULL / invalid-arg public API call | null-arg and invalid-arg vectors with exact s |
-| `primitives.c:409:b0` | taken-0% | `if (cJSON_IsString(o)) op = o->valuestring;` | **reachable** | state that flips: if (cJSON_IsString(o)) op = o->v | semantic vector for true and false arms |
-| `primitives.c:410:b0` | taken-0% | `if (cJSON_IsString(e)) et = e->valuestring;` | **reachable** | state that flips: if (cJSON_IsString(e)) et = e->v | semantic vector for true and false arms |
-| `primitives.c:411:b0` | taken-0% | `if (cJSON_IsString(ms)) msg = ms->valuestring;` | **reachable** | state that flips: if (cJSON_IsString(ms)) msg = ms | semantic vector for true and false arms |
-| `primitives.c:417:b1` | taken-0% | `if (n >= sizeof lower) n = sizeof lower - 1;` | **reachable** | primitive config/host that flips: if (n >= sizeof  | assert_primitives_eval_bindings + config vari |
-| `primitives.c:420:b5` | taken-0% | `for (i = 0; i < n; i++) if (lower[i] >= 'A' && lower[i] <= 'Z') lower[` | **reachable** | primitive config/host that flips: for (i = 0; i <  | assert_primitives_eval_bindings + config vari |
-| `primitives.c:421:b3` | taken-0% | `if (strstr(lower, "password") \|\| strstr(lower, "token") \|\| strstr(` | **short-circuit** | redact message containing each keyword independent | one vector per keyword; rewrite OR-chain to t |
-| `primitives.c:421:b5` | taken-0% | `if (strstr(lower, "password") \|\| strstr(lower, "token") \|\| strstr(` | **short-circuit** | redact message containing each keyword independent | one vector per keyword; rewrite OR-chain to t |
-| `primitives.c:421:b6` | taken-0% | `if (strstr(lower, "password") \|\| strstr(lower, "token") \|\| strstr(` | **short-circuit** | redact message containing each keyword independent | one vector per keyword; rewrite OR-chain to t |
-| `primitives.c:422:b1` | taken-0% | `strstr(lower, "authorization") \|\| strstr(lower, "api_key") \|\| strs` | **short-circuit** | redact message containing each keyword independent | one vector per keyword; rewrite OR-chain to t |
-| `primitives.c:422:b3` | taken-0% | `strstr(lower, "authorization") \|\| strstr(lower, "api_key") \|\| strs` | **short-circuit** | redact message containing each keyword independent | one vector per keyword; rewrite OR-chain to t |
-| `primitives.c:425:b1` | taken-0% | `if (n > 500) n = 500;` | **reachable** | primitive config/host that flips: if (n > 500) n = | assert_primitives_eval_bindings + config vari |
 
 ## Unclassified (must be zero)
 

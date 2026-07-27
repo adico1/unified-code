@@ -38,6 +38,10 @@ def host_main(argv=None):
         from .build import run_build
 
         result = run_build(inward(payload))
+    elif command == "unfold":
+        from .unfold import run_unfold
+
+        result = run_unfold(inward(payload))
     elif command == "gauntlet":
         from .gauntlet import run_gauntlet
 
@@ -74,6 +78,10 @@ def host_main(argv=None):
                 sys.stderr.write(f"uc: created {path}\n")
             elif value.get("write_mode") == "update_project" and path:
                 sys.stderr.write(f"uc: added {value.get('feature')!r} to {path}\n")
+            elif command == "unfold" and path:
+                sys.stderr.write(f"uc: unfolded {path}\n")
+                if value.get("install") == "ok":
+                    sys.stderr.write("uc: install ok\n")
 
     if explicit:
         return code
@@ -185,9 +193,9 @@ def _parse_argv(argv: list[str]) -> dict:
         else:
             # default: framework declaration
             root = Path(__file__).resolve().parents[2]
-            decl = root / "examples" / "declarations" / "text_stats_v2.py"
+            decl = root / "examples" / "declarations" / "text_stats_v2.json"
             if not decl.is_file():
-                decl = root / "examples" / "declarations" / "text_stats_program.py"
+                decl = root / "examples" / "declarations" / "text_stats_program.json"
             payload["mode"] = "declaration"
             payload["declaration_path"] = str(decl)
         return payload
@@ -219,6 +227,66 @@ def _parse_argv(argv: list[str]) -> dict:
                 "error": f"unknown-flag:{argv[i]}",
             }
         return {"command": "benchmark", "iterations": iterations}
+
+    if command == "unfold":
+        # uc unfold <seed> --output <directory> [--verify] [--run] [--name NAME]
+        if len(argv) < 2:
+            return {"command": "unfold", "error": "usage-unfold"}
+        seed_path = argv[1]
+        output = None
+        verify = False
+        run = False
+        fixed_point = False
+        clean_room = False
+        project_name = None
+        i = 2
+        while i < len(argv):
+            if argv[i] == "--output" and i + 1 < len(argv):
+                output = argv[i + 1]
+                i += 2
+                continue
+            if argv[i] == "--verify":
+                verify = True
+                i += 1
+                continue
+            if argv[i] == "--run":
+                run = True
+                i += 1
+                continue
+            if argv[i] == "--fixed-point":
+                fixed_point = True
+                i += 1
+                continue
+            if argv[i] == "--clean-room":
+                clean_room = True
+                i += 1
+                continue
+            if argv[i] == "--name" and i + 1 < len(argv):
+                project_name = argv[i + 1]
+                i += 2
+                continue
+            return {
+                "command": "unfold",
+                "seed_path": seed_path,
+                "error": f"unknown-flag:{argv[i]}",
+            }
+        if not output:
+            return {
+                "command": "unfold",
+                "seed_path": seed_path,
+                "error": "usage-unfold-missing-output",
+            }
+        return {
+            "command": "unfold",
+            "seed_path": seed_path,
+            "declaration_path": seed_path,
+            "output": output,
+            "verify": verify,
+            "run": run,
+            "fixed_point": fixed_point,
+            "clean_room": clean_room,
+            "project_name": project_name,
+        }
 
     return {"command": command, "error": "unknown-command"}
 

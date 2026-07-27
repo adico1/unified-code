@@ -1,8 +1,8 @@
 {
   "artifact_sha256": "2813f009eccd6cd9200d9a35fcc35513901994bfd9814895ca8120a3e98cdf79",
   "declaration_sha256": "9b0fd8aa94ded247a44b46b2ebcd5870fbd67e84a72791223695cb857381a233",
-  "generator_sha256": "75d224642212d44d41a638b1de529ea99cc2205bd0e7afc7a40313514c5e5d39",
-  "seed_sha256": "bcd58991e3a7b754a7369a0ac44dcb3b9e3c3673013e4dfcf5293d68097307cf",
+  "generator_sha256": "4a4265e56466fa36259e61da0a2c8d3d454cf7434e2d2b4fac38b873cfd34ca4",
+  "seed_sha256": "375956e77f77ce474f8deacba7d0aefe4ed90f2023b7819e357388a3eb03e5e3",
   "standard_version": "TEN-1",
   "uem_version": "UEM-16-v0.1"
 }

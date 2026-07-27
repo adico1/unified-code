@@ -244,19 +244,21 @@ def prim_eval_expression(thing):
             ctx = {**ctx, "bindings": bound}
         ctx = {**ctx, "bindings": bound}
         result = eval_expr(program, ctx)
-    except _ExprFail as exc:
-        store["error"] = exc.error
-        store["path"] = list(exc.path)
-        v["store"] = store
-        return with_state(
-            with_evidence(
-                {**thing, "value": v},
-                f"part:{part_name}",
-                f"{part_name}:error:{exc.error}",
-            ),
-            "invalid",
-        )
-    except Exception as exc:  # noqa: BLE001 — escalate as machine fault marker
+    except Exception as exc:  # noqa: BLE001 — expr fail or machine fault
+        if _is_expr_fail(exc):
+            err, epath = args_error_path(exc)
+            store["error"] = err
+            store["path"] = list(epath)
+            v["store"] = store
+            return with_state(
+                with_evidence(
+                    {**thing, "value": v},
+                    f"part:{part_name}",
+                    f"{part_name}:error:{err}",
+                ),
+                "invalid",
+            )
+        # escalate as machine fault marker
         v["machine_fault"] = {
             "operation": "eval_expression",
             "error_type": type(exc).__name__,
@@ -379,16 +381,33 @@ def _resolve_root(store, input_key):
     return store
 
 
-class _ExprFail(Exception):
-    def __init__(self, error, path=()):
-        self.error = error
-        self.path = tuple(path)
-        super().__init__(error)
+# Plain-data expression fault (no class). Marker exception carries (error, path).
+_EXPR_FAIL_MARK = "__uem_expr_fail__"
+
+
+def _expr_fail(error, path=()):
+    raise Exception((_EXPR_FAIL_MARK, error, tuple(path)))
+
+
+def _is_expr_fail(exc):
+    args = getattr(exc, "args", ())
+    return (
+        isinstance(exc, Exception)
+        and len(args) == 1
+        and isinstance(args[0], tuple)
+        and len(args[0]) == 3
+        and args[0][0] == _EXPR_FAIL_MARK
+    )
+
+
+def args_error_path(exc):
+    _mark, error, path = exc.args[0]
+    return error, path
 
 
 def eval_expr(node, ctx):
     if not isinstance(node, dict) or "op" not in node:
-        raise _ExprFail("bad-node", ctx.get("path") or ())
+        _expr_fail("bad-node", ctx.get("path") or ())
     op = node["op"]
     path = list(ctx.get("path") or ())
     if op == "literal":
@@ -397,7 +416,7 @@ def eval_expr(node, ctx):
         bindings = ctx.get("bindings") or {}
         name = node["name"]
         if name not in bindings:
-            raise _ExprFail("missing-binding", path + [name])
+            _expr_fail("missing-binding", path + [name])
         return bindings[name]
     if op == "field":
         return _get_path(ctx, node["path"])
@@ -416,42 +435,42 @@ def eval_expr(node, ctx):
         value = eval_expr(node["of"], ctx)
         err_path = list(path) + list(node.get("path") or ())
         if value is None:
-            raise _ExprFail(node.get("error", "missing"), err_path)
+            _expr_fail(node.get("error", "missing"), err_path)
         return value
     if op == "as_int":
         value = eval_expr(node["of"], ctx)
         err_path = list(path) + list(node.get("path") or ())
         if value is None:
-            raise _ExprFail(node.get("missing_error", "missing"), err_path)
+            _expr_fail(node.get("missing_error", "missing"), err_path)
         if isinstance(value, bool) or not isinstance(value, int):
-            raise _ExprFail(node.get("type_error", "invalid-integer"), err_path)
+            _expr_fail(node.get("type_error", "invalid-integer"), err_path)
         return value
     if op == "as_decimal":
         value = eval_expr(node["of"], ctx)
         err_path = list(path) + list(node.get("path") or ())
         if value is None:
-            raise _ExprFail(node.get("missing_error", "missing"), err_path)
+            _expr_fail(node.get("missing_error", "missing"), err_path)
         if isinstance(value, Decimal):
             return value
         if not isinstance(value, str):
-            raise _ExprFail(node.get("type_error", "not-decimal-string"), err_path)
+            _expr_fail(node.get("type_error", "not-decimal-string"), err_path)
         try:
             return Decimal(value)
-        except InvalidOperation as exc:
-            raise _ExprFail(node.get("type_error", "not-decimal-string"), err_path) from exc
+        except InvalidOperation:
+            _expr_fail(node.get("type_error", "not-decimal-string"), err_path)
     if op == "min_value":
         value = eval_expr(node["of"], ctx)
         bound = _bound(node["bound"])
         err_path = list(path) + list(node.get("path") or ())
         if value < bound:
-            raise _ExprFail(node.get("error", "below-minimum"), err_path)
+            _expr_fail(node.get("error", "below-minimum"), err_path)
         return value
     if op == "max_value":
         value = eval_expr(node["of"], ctx)
         bound = _bound(node["bound"])
         err_path = list(path) + list(node.get("path") or ())
         if value > bound:
-            raise _ExprFail(node.get("error", "above-maximum"), err_path)
+            _expr_fail(node.get("error", "above-maximum"), err_path)
         return value
     if op == "mul":
         total = Decimal(1)
@@ -473,14 +492,14 @@ def eval_expr(node, ctx):
         collection = eval_expr(node["collection"], ctx)
         coll_path = list(node.get("path") or path) or ["items"]
         if not isinstance(collection, list):
-            raise _ExprFail("items-not-a-list", coll_path)
+            _expr_fail("items-not-a-list", coll_path)
         item_key = node.get("item_key", "item")
         total = Decimal(0)
         index = 0
         while index < len(collection):
             item = collection[index]
             if not isinstance(item, dict):
-                raise _ExprFail("item-not-an-object", coll_path + [index])
+                _expr_fail("item-not-an-object", coll_path + [index])
             child_ctx = {
                 **ctx,
                 item_key: item,
@@ -512,28 +531,28 @@ def eval_expr(node, ctx):
     if op == "str_len":
         value = eval_expr(node["of"], ctx)
         if not isinstance(value, str):
-            raise _ExprFail("invalid-text", path)
+            _expr_fail("invalid-text", path)
         return len(value)
     if op == "line_count":
         value = eval_expr(node["of"], ctx)
         if not isinstance(value, str):
-            raise _ExprFail("invalid-text", path)
+            _expr_fail("invalid-text", path)
         return len(value.splitlines())
     if op == "word_count":
         value = eval_expr(node["of"], ctx)
         if not isinstance(value, str):
-            raise _ExprFail("invalid-text", path)
+            _expr_fail("invalid-text", path)
         return len(value.split())
     if op == "unique_casefold_word_count":
         value = eval_expr(node["of"], ctx)
         if not isinstance(value, str):
-            raise _ExprFail("invalid-text", path)
+            _expr_fail("invalid-text", path)
         # set via loop for clarity (audited iteration site)
         seen = set()
         for w in value.split():
             seen.add(w.casefold())
         return len(seen)
-    raise _ExprFail("unknown-op", path)
+    _expr_fail("unknown-op", path)
 
 
 def _bound(raw):

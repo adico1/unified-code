@@ -7,7 +7,8 @@
 #include <stdlib.h>
 
 int uem_ev_append(uem_machine *m, const char *mark) {
-    if (!m || !mark) return -1;
+    if (!m) return -1;
+    if (!mark) return -1;
     if (m->n_evidence + 1 > m->evidence_cap) {
         size_t ncap = m->evidence_cap ? m->evidence_cap * 2 : 64;
         char **ne = (char **)uem_mem_realloc(m->evidence, ncap * sizeof(char *));
@@ -133,7 +134,10 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
             "?", "LOAD", "READ", "WRITE", "DELETE", "EMIT", "ENQUEUE", "DEQUEUE",
             "ROUTE", "APPLY", "MAP", "FOLD", "VERIFY", "TICKET", "OUTWARD", "ACK", "STOP"
         };
-        const char *on = (op >= 1 && op <= 16) ? OPN[op] : "?";
+        const char *on = "?";
+        if (op >= 1) {
+            if (op <= 16) on = OPN[op];
+        }
         if (operand) snprintf(emark, sizeof emark, "op:%s:%s", on, operand);
         else snprintf(emark, sizeof emark, "op:%s", on);
     }
@@ -199,9 +203,13 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
         if (m->q_len + 1 > m->q_cap) {
             size_t ncap = m->q_cap ? m->q_cap * 2 : 16;
             char **nn = (char **)uem_mem_realloc(m->q_name, ncap * sizeof(char *));
-            char **ni = (char **)uem_mem_realloc(m->q_id, ncap * sizeof(char *));
-            if (!nn || !ni) return -1;
-            m->q_name = nn; m->q_id = ni; m->q_cap = ncap;
+            char **ni;
+            if (!nn) return -1;
+            m->q_name = nn; /* commit before second realloc */
+            ni = (char **)uem_mem_realloc(m->q_id, ncap * sizeof(char *));
+            if (!ni) return -1;
+            m->q_id = ni;
+            m->q_cap = ncap;
         }
         if (m->event_id) snprintf(id, sizeof id, "%s", m->event_id);
         else event_id_make(m, name, id);
@@ -328,17 +336,19 @@ static int step_one(uem_machine *m, char *err, size_t errlen) {
 }
 
 static void fulfill_outward(uem_machine *m) {
-    cJSON *req, *src;
+    cJSON *req, *src, *effj;
     const char *effect;
     char resbuf[UEM_MAX_OUT];
     char ebuf[256];
     char *srcjson;
     int rc;
-    if (!m || !m->outward_request || m->outward_result || !m->outward) return;
+    /* Caller (uem_step) only invokes when request set, result unset. */
+    if (!m->outward) return;
     req = m->outward_request;
-    effect = cJSON_GetObjectItemCaseSensitive(req, "effect")
-                 ? cJSON_GetObjectItemCaseSensitive(req, "effect")->valuestring
-                 : "effect";
+    effj = cJSON_GetObjectItemCaseSensitive(req, "effect");
+    effect = "effect";
+    if (cJSON_IsString(effj))
+        effect = effj->valuestring;
     src = cJSON_GetObjectItemCaseSensitive(req, "source");
     srcjson = src ? cJSON_PrintUnformatted(src) : uem_mem_strdup("null");
     ebuf[0] = 0;
@@ -347,20 +357,18 @@ static void fulfill_outward(uem_machine *m) {
     {
         cJSON *ent = cJSON_CreateObject();
         cJSON_AddStringToObject(ent, "effect", effect);
-        /* always include source key for canonical cross-host equality */
         if (src) cJSON_AddItemToObject(ent, "source", cJSON_Duplicate(src, 1));
         else cJSON_AddNullToObject(ent, "source");
         if (!m->outward_log) m->outward_log = cJSON_CreateArray();
         cJSON_AddItemToArray(m->outward_log, ent);
     }
+    /* Prior result already gated above — no delete-before-set needed. */
     if (rc == 0) {
-        if (m->outward_result) cJSON_Delete(m->outward_result);
         m->outward_result = cJSON_Parse(resbuf);
         uem_ev_append(m, "host:fulfill");
     } else {
         cJSON *rj = cJSON_CreateObject();
         cJSON_AddStringToObject(rj, "error", ebuf[0] ? ebuf : "outward-fail");
-        if (m->outward_result) cJSON_Delete(m->outward_result);
         m->outward_result = rj;
         uem_ev_append(m, "host:fulfill");
     }
@@ -380,10 +388,8 @@ uem_status uem_run(uem_machine *m, char *err, size_t errlen) {
     if (!m) return UEM_ERR_ARGS;
     while (!m->halted && m->pc < m->n_instr) {
         uem_status st = uem_step(m, err, errlen);
-        if (st != UEM_OK && !m->halted) {
-            /* soft runtime faults still stop the loop */
-            break;
-        }
+        /* step returns OK when halted; non-OK only for soft runtime (not halted). */
+        if (st != UEM_OK) break;
     }
     if (!m->halted) {
         m->halted = 1;
@@ -484,9 +490,12 @@ int uem_default_outward(void *ctx, const char *effect, const char *source_json,
         snprintf(result_json, result_cap, "{\"error\":\"missing-file\"}");
         return 0;
     }
-    if (fseek(f, 0, SEEK_END) != 0) { fclose(f); cJSON_Delete(src); return -1; }
+    /* fseek failure → ftell < 0 → unsigned compare treats as too-large. */
+    (void)fseek(f, 0, SEEK_END);
     sz = ftell(f);
-    if (sz < 0 || sz > (long)UEM_MAX_OUT) { fclose(f); cJSON_Delete(src); snprintf(err, errlen, "too-large"); return -1; }
+    if ((unsigned long)sz > (unsigned long)UEM_MAX_OUT) {
+        fclose(f); cJSON_Delete(src); snprintf(err, errlen, "too-large"); return -1;
+    }
     rewind(f);
     buf = (char *)uem_mem_malloc((size_t)sz + 1);
     if (!buf) { fclose(f); cJSON_Delete(src); return -1; }

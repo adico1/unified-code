@@ -601,11 +601,11 @@ def run_all_catalogs() -> dict:
     cases = 0
     for decl, host in (
         (
-            ROOT / "examples/declarations/text_stats_v2.py",
+            ROOT / "examples/declarations/text_stats_v2.json",
             {"text": "Go go GO"},
         ),
         (
-            ROOT / "examples/declarations/invoice_total.py",
+            ROOT / "examples/declarations/invoice_total.json",
             {
                 "document": {
                     "tax_rate": "0.10",

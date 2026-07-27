@@ -39,7 +39,7 @@ def test_l11_gauntlet():
 
 def test_canonical_domain_stable_hash():
     compiled = compile_declaration_path(
-        str(ROOT / "examples/declarations/text_stats_v2.py")
+        str(ROOT / "examples/declarations/text_stats_v2.json")
     )
     a = from_python_run(compiled, run_compiled(compiled, {"text": "Go go GO"}))
     b = from_python_run(compiled, run_compiled(compiled, {"text": "Go go GO"}))

@@ -360,12 +360,12 @@ def run_l11_gauntlet(thing=None):
     for name, decl, host in (
         (
             "domain_text_stats",
-            ROOT / "examples/declarations/text_stats_v2.py",
+            ROOT / "examples/declarations/text_stats_v2.json",
             {"text": "Go go GO"},
         ),
         (
             "domain_invoice",
-            ROOT / "examples/declarations/invoice_total.py",
+            ROOT / "examples/declarations/invoice_total.json",
             {
                 "document": {
                     "tax_rate": "0.10",
@@ -378,7 +378,7 @@ def run_l11_gauntlet(thing=None):
         ),
         (
             "domain_validation_no_ticket",
-            ROOT / "examples/declarations/invoice_total.py",
+            ROOT / "examples/declarations/invoice_total.json",
             {
                 "document": {
                     "tax_rate": "0.10",
@@ -475,7 +475,7 @@ def run_l11_gauntlet(thing=None):
                 Path(p).unlink(missing_ok=True)
 
     # Determinism
-    compiled = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.py"))
+    compiled = compile_declaration_path(str(ROOT / "examples/declarations/text_stats_v2.json"))
     h = {"text": "Go go GO"}
     a = from_python_run(compiled, run_compiled(compiled, h))
     b = from_python_run(compiled, run_compiled(compiled, h))
@@ -559,7 +559,7 @@ def run_l11_gauntlet(thing=None):
         )
 
     # Validation path must never ticket
-    inv = compile_declaration_path(str(ROOT / "examples/declarations/invoice_total.py"))
+    inv = compile_declaration_path(str(ROOT / "examples/declarations/invoice_total.json"))
     bad_host = {
         "document": {
             "tax_rate": "0.10",

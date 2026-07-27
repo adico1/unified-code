@@ -68,8 +68,8 @@
         "unified/machine/primitives.py"
       ],
       "rule": "5",
-      "status": "open",
-      "summary": "unified/machine/primitives.py defines class _ExprFail — forbidden OOP; must become plain-data fault path."
+      "status": "closed",
+      "summary": "Closed: _ExprFail class removed; expression faults are plain Exception marker tuples (no ClassDef)."
     },
     {
       "id": "gap.declarations-as-python",
