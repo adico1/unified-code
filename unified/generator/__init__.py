@@ -6,6 +6,7 @@ from .build import run_build
 from .cli import run_command
 from .gauntlet import run_gauntlet
 from .generate import generate
+from .manifestation import manifest_artifact, resolve_name
 from .thing_v2 import run_compile
 from .validate import validate
 from .verify_plan import verify_plan
@@ -14,6 +15,8 @@ from .write_fs import write_project
 __all__ = [
     "expr",
     "generate",
+    "manifest_artifact",
+    "resolve_name",
     "run_benchmark",
     "run_build",
     "run_command",
