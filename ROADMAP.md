@@ -11,15 +11,39 @@ uc unfold seed/declarations/task_ledger.json \
   --run
 ```
 
-This milestone is application-scoped: one JSON seed generates the runnable
-stateful application, generated tests and acceptance sequence; verifies
-Python/C canonical equality and deterministic rebuild hashes; and installs only
-after every requested gate passes.
+This checkpoint proved the complete task-ledger product pipeline: one JSON seed
+configures a prebuilt persistent-resource profile, generates its runnable
+application and tests, verifies Python/C canonical equality and deterministic
+rebuild hashes, and installs only after every requested gate passes.
 
-> One 158-line JSON seed deterministically unfolds into a 1,811-line
+> At checkpoint `8933e8456b67375ec2b567c0107a64d9afc3c060`, one 158-line JSON seed deterministically unfolded into a 1,811-line
 > persistent application, with zero handwritten application code, zero
 > domain/composition control-flow nodes, identical Python/C results, and
 > complete L1–L13 verification.
+
+## Milestone 1.1 — Generic seed-defined stateful behavior
+
+Issue [#11](https://github.com/adico1/unified-code/issues/11) corrects an
+overfitting defect found after the Milestone 1 checkpoint. Application-domain
+commands, fields, validation, transitions, results, errors, persistence
+identity, composition, and acceptance scenarios must originate in the seed,
+not in the generic generator.
+
+The acceptance proof uses two independent applications:
+
+```bash
+uc unfold seed/declarations/task_ledger.json \
+  --output /tmp/uc-task-ledger \
+  --verify \
+  --run
+
+uc unfold seed/declarations/score_board.json \
+  --output /tmp/uc-score-board \
+  --verify \
+  --run
+```
+
+Milestone 1.1 does not depend on or widen Milestone 2.
 
 ## Milestone 2 — Root-seed fixed-point bootstrap
 
@@ -121,7 +145,8 @@ This milestone is deliberately non-blocking for Milestone 1. Open items:
 
 - Close `standard.gap` tickets by seed-expressing packages (no conventional fill)
 - Eliminate OOP (`_ExprFail`) via plain-data faults
-- Collapse dual Python/C cores toward one UEM + thin host boundaries
+- Unify the UEM surface while preserving independent Python and C hosts for
+  L11 equivalence
 - Optional: ARM64 / RISC-V / wasm executables after vector pass on-device
 - Formal grammar and semantics toward 1.0
 

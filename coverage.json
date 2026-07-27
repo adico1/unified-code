@@ -506,15 +506,15 @@
       "ok": true,
       "permitted_catalog": [
         [
-          "unknown",
-          "absent"
-        ],
-        [
-          "formed",
+          "absent",
           "absent"
         ],
         [
           "unknown",
+          "absent"
+        ],
+        [
+          "false",
           "false"
         ],
         [
@@ -522,16 +522,24 @@
           "valid"
         ],
         [
-          "unknown",
-          "formed"
+          "invalid",
+          "invalid"
         ],
         [
           "formed",
           "false"
         ],
         [
-          "invalid",
+          "formed",
           "invalid"
+        ],
+        [
+          "unknown",
+          "false"
+        ],
+        [
+          "formed",
+          "absent"
         ],
         [
           "unknown",
@@ -542,23 +550,15 @@
           "valid"
         ],
         [
-          "formed",
-          "invalid"
-        ],
-        [
-          "false",
-          "false"
-        ],
-        [
-          "absent",
-          "absent"
+          "unknown",
+          "formed"
         ]
       ],
       "prohibited_exercised": true,
       "required": 100.0
     }
   },
-  "duration_s": 16.784296989440918,
+  "duration_s": 69.03666090965271,
   "l13": true,
   "rules": {
     "branch_ledger_must_reconcile": true,

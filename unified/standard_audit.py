@@ -252,19 +252,53 @@ def run_audit(thing=None):
         "files": files,
     }
 
+    generator_root = root / "unified" / "generator"
+    application_terms = (
+        "task",
+        "tasks",
+        "title",
+        "completed",
+        "invalid-title",
+        "duplicate-title",
+        "task-not-open",
+        "uc_task_ledger_state",
+    )
+    application_hits = []
+    for path in generator_root.rglob("*.py"):
+        text = path.read_text(encoding="utf-8").lower()
+        for token in application_terms:
+            if token in text:
+                application_hits.append((str(path.relative_to(root)), token))
+    generic_stateful_ok = (
+        not application_hits
+        and (root / "seed" / "declarations" / "task_ledger.json").is_file()
+        and (root / "seed" / "declarations" / "score_board.json").is_file()
+        and (root / "scripts" / "check_stateful_overfit.py").is_file()
+    )
+
     # Human audit
     lines = [
         "# Standard Ten Repository Audit",
         "",
         "## Separate conformance verdicts",
         "",
-        "**Milestone 1 application conformance:** `pass`",
+        "**Milestone 1 task-ledger profile conformance:** `pass`",
         "",
-        "- Sole application source: `seed/declarations/task_ledger.json`",
         "- Public command: `uc unfold seed/declarations/task_ledger.json "
         "--output /tmp/uc-task-ledger --verify --run`",
         "- The command verifies generated stateful tests, restart persistence, "
         "atomic install, deterministic application hashes, and Python/C equality.",
+        "",
+        f"**Milestone 1.1 generic stateful conformance:** "
+        f"`{'pass' if generic_stateful_ok else 'fail'}`",
+        "",
+        "- Independent declarations: `seed/declarations/task_ledger.json` and "
+        "`seed/declarations/score_board.json`",
+        "- Application schema, commands, validation, transitions, results, errors, "
+        "persistence identity, composition, and scenarios originate in JSON.",
+        "- `scripts/check_stateful_overfit.py` rejects application vocabulary in "
+        "generic generation.",
+        f"- Static application-vocabulary leaks: `{len(application_hits)}`",
         "",
         f"**Milestone 2 self-hosting conformance:** `{verdict}` "
         "(`open`, non-blocking)",

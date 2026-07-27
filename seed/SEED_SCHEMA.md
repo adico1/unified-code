@@ -59,6 +59,27 @@ Pure data. No Python. Expression trees use UEM-portable operator nodes only.
 }
 ```
 
+### Persistent state-machine declaration
+
+A `stateful_resource` transformation declares the complete application model:
+
+- `state.initial`, `state.schema`, and the expected acceptance state;
+- `persistence.environment` and `persistence.default_path`;
+- command argument types and validation errors;
+- generic `unique` and `require` guards;
+- generic `append`, `set`, and `increment` actions;
+- result expressions using `$arg`, `$literal`, `$state`, `$selected`, and
+  `$project`;
+- acceptance scenarios, rejection scenarios, and an unhandled-failure probe.
+
+The program-level `composition` sequence is authoritative. The stateful
+generator accepts only known audited boundary, feature, verification, and
+presentation parts and emits the event routes in the declared order.
+
+Application command names, resource paths, field names, error names,
+persistence identity, examples, and expected results belong only in the JSON
+declaration. The generic generator must contain none of that vocabulary.
+
 ## Package descriptor
 
 Describes a generatable module. Until the seed fully expresses the UEM host and generator, package bodies may be listed as `standard.gap` pending expression.

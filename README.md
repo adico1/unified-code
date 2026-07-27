@@ -116,6 +116,21 @@ uc unfold seed/declarations/task_ledger.json \
   --run
 ```
 
+Milestone 1.1 removes the original task-ledger profile behavior from the generic
+generator. Its independent numeric-transition proof is:
+
+```bash
+uc unfold seed/declarations/score_board.json \
+  --output /tmp/uc-score-board \
+  --verify \
+  --run
+```
+
+Both applications declare their schema, commands, arguments, validation,
+transitions, results, errors, persistence identity, composition, and acceptance
+scenarios in JSON. `scripts/check_stateful_overfit.py` rejects application
+vocabulary in generic generation.
+
 Full repository self-hosting is tracked separately as “Milestone 2 — Root-seed
 fixed-point bootstrap” in `ROADMAP.md`; it does not block this application
 contract.
