@@ -1,6 +1,7 @@
 *.egg-info/
 *.py[cod]
 .pytest_cache/
+contract_status.json
 .uc/
 .venv/
 __pycache__/

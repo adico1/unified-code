@@ -1,5 +1,5 @@
 {
-  "file_count": 244,
+  "file_count": 243,
   "files": [
     {
       "compliance": "ok",
@@ -80,8 +80,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": ".gitignore",
       "provenance": "handwritten-pending",
-      "sha256": "fa6b32e2f06f17d279fcb4ae649e1bf1459b421181f618744b15c967345ee7df",
-      "size": 147,
+      "sha256": "699c693cc407b22156d8e19756cf9ef375a72ecc63fecdbf53725b4a64e32a94",
+      "size": 168,
       "standard_ten_class_ok": false
     },
     {
@@ -100,7 +100,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "5e1806e5edc8d55cf56140cfa19e96bbd7aa9ce7e5e7882d59b575f0d4a490ab",
+      "sha256": "91f965535316985f33be30de5a8e5b01fe053326ba90da8d6e0fbf7627bb4d9d",
       "size": 25908,
       "standard_ten_class_ok": true
     },
@@ -182,7 +182,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "ce028fe7986d1bfc194d5f4e83d3e60001c40fa180706f1911b9107db1ae908a",
+      "sha256": "7fdd4aa15cb8b82a3fc2623025c376801a735204c97ed17683b93b3e68e155d0",
       "size": 154942,
       "standard_ten_class_ok": true
     },
@@ -3154,27 +3154,6 @@
       "standard_ten_class_ok": false
     },
     {
-      "compliance": "standard.gap",
-      "control_flow": {
-        "classes": 0,
-        "for": 0,
-        "if": 0,
-        "total": 0,
-        "while": 0
-      },
-      "gap_id": "gap.untracked-or-handwritten",
-      "generated": false,
-      "generation_command": null,
-      "handwritten": true,
-      "oop_classes": 0,
-      "originating_seed": "seed/ROOT.seed.json",
-      "path": "contract_status.json",
-      "provenance": "handwritten-pending",
-      "sha256": "a0316a0a1a5dd18a41bb2c047b4954f5478c4c78645613ad5bccf58ab4c68fc5",
-      "size": 15031,
-      "standard_ten_class_ok": false
-    },
-    {
       "compliance": "ok",
       "control_flow": {
         "classes": 0,
@@ -5343,7 +5322,7 @@
       "standard_ten_class_ok": false
     }
   ],
-  "illegal_provenance_count": 202,
+  "illegal_provenance_count": 201,
   "oop_files": [],
   "open_gaps": [
     {

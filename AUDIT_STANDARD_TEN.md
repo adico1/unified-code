@@ -15,8 +15,8 @@ The repository-wide figures and gaps below measure only the root-seed fixed-poin
 **Repository self-hosting verdict:** `fail`
 **standard_version:** TEN-1
 **seed_sha256:** `375956e77f77ce474f8deacba7d0aefe4ed90f2023b7819e357388a3eb03e5e3`
-**files classified:** 244
-**illegal provenance (not in allowed five classes):** 202
+**files classified:** 243
+**illegal provenance (not in allowed five classes):** 201
 **OOP class files:** 0
 **open standard.gap tickets:** 6
 
@@ -44,7 +44,7 @@ Conventional development is not an authorized fallback. Gaps below are `standard
 | `evidence` | 7 |
 | `external-vendored` | 4 |
 | `generated` | 8 |
-| `handwritten-pending` | 202 |
+| `handwritten-pending` | 201 |
 | `physical-host-boundary` | 15 |
 | `seed` | 8 |
 
@@ -57,12 +57,12 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `.coverage` · `evidence` · `ok` · `e50b891b51c6b190`
 - `.coveragerc` · `handwritten-pending` · `standard.gap` · `f4c1eac25e83d766`
 - `.github/workflows/test.yml` · `handwritten-pending` · `standard.gap` · `57cf4c45308821b0`
-- `.gitignore` · `handwritten-pending` · `standard.gap` · `fa6b32e2f06f17d2`
-- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `5e1806e5edc8d55c`
+- `.gitignore` · `handwritten-pending` · `standard.gap` · `699c693cc407b221`
+- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `91f965535316985f`
 - `GAUNTLET.md` · `evidence` · `ok` · `24771a171a844866`
 - `LAW.md` · `handwritten-pending` · `standard.gap` · `7d452c174dec7c94`
 - `LICENSE` · `handwritten-pending` · `standard.gap` · `af6b910929ec375c`
-- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `ce028fe7986d1bfc`
+- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `7fdd4aa15cb8b82a`
 - `README.md` · `handwritten-pending` · `standard.gap` · `280482f95fed2341`
 - `ROADMAP.md` · `handwritten-pending` · `standard.gap` · `1f9aa0443eb31d92`
 - `SPEC.md` · `handwritten-pending` · `standard.gap` · `fb04ba1772610eb3`
@@ -204,7 +204,6 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `c/third_party/sha256.c` · `external-vendored` · `ok` · `7512aca9136ce6e2`
 - `c/third_party/sha256.h` · `external-vendored` · `ok` · `ee296ea123f062e6`
 - `contract_report.json` · `handwritten-pending` · `standard.gap` · `7805a99ab3fa9825`
-- `contract_status.json` · `handwritten-pending` · `standard.gap` · `a0316a0a1a5dd18a`
 - `coverage.json` · `evidence` · `ok` · `b25fdcb040fbf20f`
 - `coverage_py.json` · `evidence` · `ok` · `254acd683642b779`
 - `docs/DEVELOPER_WORKFLOW.md` · `handwritten-pending` · `standard.gap` · `5ce70a955dc69a2c`
