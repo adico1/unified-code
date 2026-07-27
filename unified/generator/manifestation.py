@@ -14,7 +14,6 @@ import inspect
 import json
 import re
 import shutil
-import tempfile
 from pathlib import Path
 
 from ..thing import is_thing
@@ -587,7 +586,8 @@ def outward_seed_read(thing):
     )
 
 
-def _safe_artifact_output(thing: dict) -> dict:
+def outward_artifact_output_prepare(thing):
+    """Named filesystem boundary: validate and prepare the artifact parent."""
     value = thing.get("value") if isinstance(thing.get("value"), dict) else {}
     if (value.get("manifestation") or {}).get("phase") != "specified":
         return thing
@@ -624,7 +624,30 @@ def _safe_artifact_output(thing: dict) -> dict:
             state="invalid",
         )
     output.parent.mkdir(parents=True, exist_ok=True)
-    return _with_value(thing, {"output": str(output)})
+    return _with_value(
+        thing,
+        {"output": str(output)},
+        "boundary:artifact-output:prepare",
+    )
+
+
+def _without_transient_verification_paths(verification: object) -> object:
+    if not isinstance(verification, dict):
+        return verification
+    seedless_copy = verification.get("seedless_copy")
+    normalized_seedless = (
+        {
+            key: item
+            for key, item in seedless_copy.items()
+            if key != "path"
+        }
+        if isinstance(seedless_copy, dict)
+        else seedless_copy
+    )
+    return {
+        **verification,
+        "seedless_copy": normalized_seedless,
+    }
 
 
 def outward_compile_thing_v2(thing):
@@ -633,9 +656,10 @@ def outward_compile_thing_v2(thing):
     if (value.get("manifestation") or {}).get("phase") != "specified":
         return thing
     output = Path(value["output"])
-    work_root = Path(
-        tempfile.mkdtemp(prefix=f".{output.name}.manifestation-", dir=output.parent)
-    )
+    work_root = output.parent / f".{output.name}.manifestation-diagnostics"
+    if work_root.exists():
+        shutil.rmtree(work_root)
+    work_root.mkdir()
     canonical_seed_path = work_root / "seed.json"
     artifact_staging = work_root / "artifact"
     canonical_seed_path.write_bytes(canonical_json_bytes(value["_canonical_seed"]))
@@ -654,6 +678,15 @@ def outward_compile_thing_v2(thing):
         state="formed",
     )
     compiled = run_compile(requested)
+    compiled = _with_value(
+        compiled,
+        {
+            "diagnostics": str(work_root),
+            "verification": _without_transient_verification_paths(
+                (compiled.get("value") or {}).get("verification")
+            ),
+        },
+    )
     if compiled.get("state") != "valid":
         return _with_value(
             compiled,
@@ -756,7 +789,7 @@ def outward_artifact_publish(thing):
 def _manifestation_pipeline(thing: dict) -> dict:
     return outward_artifact_publish(
         outward_compile_thing_v2(
-            _safe_artifact_output(
+            outward_artifact_output_prepare(
                 outward_seed_read(
                     _resolution_pipeline(thing)
                 )
@@ -815,11 +848,43 @@ def manifestation_source_report(source: str | None = None) -> dict:
                     and value.value in RESOLUTION_STATUSES
                 ):
                     overloads.append(str(value.value))
+        if isinstance(node, ast.keyword) and node.arg == "state":
+            if isinstance(node.value, ast.Name) and node.value.id in {
+                "resolution",
+                "status",
+            }:
+                overloads.append(f"state-keyword:{node.value.id}")
+        if isinstance(node, (ast.Assign, ast.AnnAssign)):
+            targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+            for target in targets:
+                if (
+                    isinstance(target, ast.Subscript)
+                    and isinstance(target.slice, ast.Constant)
+                    and target.slice.value == "state"
+                ):
+                    overloads.append("state-direct-assignment")
         if isinstance(node, ast.Name) and node.id in {
             "get_close_matches",
             "SequenceMatcher",
         }:
             selection_hits.append(node.id)
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr in {"startswith", "endswith"}
+            and (
+                (
+                    isinstance(node.func.value, ast.Name)
+                    and node.func.value.id in {"query", "record"}
+                )
+                or any(
+                    isinstance(argument, ast.Name)
+                    and argument.id in {"query", "record"}
+                    for argument in node.args
+                )
+            )
+        ):
+            selection_hits.append(node.func.attr)
         if (
             isinstance(node, ast.Call)
             and isinstance(node.func, ast.Attribute)
@@ -872,7 +937,20 @@ def manifestation_mutation_report(seeds: tuple[dict, ...]) -> dict:
         )
     semantic_mutations = {
         "canonical-state-overload": '\nMUTANT = {"state": "ambiguous"}\n',
+        "canonical-state-variable-overload": (
+            "\ndef mutant(thing, status):\n"
+            "    return _with_value(thing, {}, state=status)\n"
+        ),
+        "canonical-state-direct-assignment": (
+            "\ndef mutant(thing, status):\n"
+            '    thing["state"] = status\n'
+            "    return thing\n"
+        ),
         "fuzzy-selection": "\nMUTANT = get_close_matches\n",
+        "prefix-fuzzy-selection": (
+            "\ndef mutant(query, record):\n"
+            "    return record.startswith(query)\n"
+        ),
         "silent-version-selection": '\nMUTANT = query.split("@")[0]\n',
     }
     for name, mutation in semantic_mutations.items():
