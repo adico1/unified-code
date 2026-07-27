@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 from pathlib import Path
 
 import pytest
@@ -157,7 +158,7 @@ def test_l13_physical_target_status():
         import subprocess
 
         subprocess.run(
-            [str(ROOT / ".venv" / "bin" / "python"), str(ROOT / "c" / "scripts" / "run_l12_report.py")],
+            [sys.executable, str(ROOT / "c" / "scripts" / "run_l12_report.py")],
             cwd=str(ROOT),
             check=False,
         )

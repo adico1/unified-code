@@ -100,7 +100,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "597a55947fbfb25a3a3b771cc987f017a44251fee8b7f1db245917ef2cdc37d2",
+      "sha256": "3868558ace9067fdad177d872dcd229581e0e33ef0bec3843061a53716d4c0df",
       "size": 26474,
       "standard_ten_class_ok": true
     },
@@ -120,7 +120,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "GAUNTLET.md",
       "provenance": "evidence",
-      "sha256": "c696cdad833fefe6874f5572533b0754c30480dfa2f832ef5bae9ccd6ca70718",
+      "sha256": "c7a92511986ced3901e11f72c14dd1ea624d66cb4a9dac78d70cee2c953dbc88",
       "size": 1331,
       "standard_ten_class_ok": true
     },
@@ -182,7 +182,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "28e8dcada4e22ab9ac7ba5e1ddb674d2b56d11f62f5ccdec81ea45b7d25b6d44",
+      "sha256": "b06a141f28bfc9046966e1319a2d68ab7117319d2e39561666066e5aec95a59a",
       "size": 156171,
       "standard_ten_class_ok": true
     },
@@ -1069,7 +1069,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "c/targets/manifests/l12_report_x86_64.json",
       "provenance": "evidence",
-      "sha256": "6221c100da434eb468f41bd1fa2a435cfcbd5c7981c5709451bece6ee7cab814",
+      "sha256": "a120166777848cbf95e3941af72286c445ff821600c582589370eb62276367b6",
       "size": 2498,
       "standard_ten_class_ok": true
     },
@@ -3190,7 +3190,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "coverage.json",
       "provenance": "evidence",
-      "sha256": "3ea904bc7f00a47156653d25bd002f749cf589778cc8027695a52d5d16b957d0",
+      "sha256": "7ebd8cf0e992747e532aa8f6bcfc3f0213d57293d70f8bf32bc5ca0acb34bdc6",
       "size": 14425,
       "standard_ten_class_ok": true
     },
@@ -3210,7 +3210,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "coverage_py.json",
       "provenance": "evidence",
-      "sha256": "982d1b43f375d38ca2af125fcc11c6faa246c23dd4529df5a176c581aa8f41ba",
+      "sha256": "3108a4e77baf8eea180ca47ed2f5116583d25336604155a38d2a46a546bb1285",
       "size": 102538,
       "standard_ten_class_ok": true
     },
@@ -4111,8 +4111,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_l13.py",
       "provenance": "handwritten-pending",
-      "sha256": "c0f44f177eff488370ffab2651a48659f1b3d1440c087c1666c16838f368f97b",
-      "size": 17265,
+      "sha256": "31e762324e3bf2730bf4b106834a915dd89f44bd713e8b8392d8082a8abd9d45",
+      "size": 17252,
       "standard_ten_class_ok": false
     },
     {
@@ -5118,8 +5118,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/machine/l13.py",
       "provenance": "handwritten-pending",
-      "sha256": "610780f81e6ec00d105c62a52fc4adb4d179416a4ba2ad4ee91d4759f53a7f71",
-      "size": 22375,
+      "sha256": "ab42c0defd8e02ea8959f9f380a6aa6dd18ce5391f76d7ed318496bb5383361d",
+      "size": 22303,
       "standard_ten_class_ok": false
     },
     {

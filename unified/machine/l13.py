@@ -268,7 +268,7 @@ def measure_c_coverage() -> dict:
     # 2) Public host exercise via pytest + catalogs + goldens
     _run(
         [
-            str(ROOT / ".venv" / "bin" / "python"),
+            sys.executable,
             "-m",
             "pytest",
             "tests/test_l13.py",
@@ -285,7 +285,7 @@ def measure_c_coverage() -> dict:
     )
     _run(
         [
-            str(ROOT / ".venv" / "bin" / "python"),
+            sys.executable,
             "-c",
             "from unified.machine.l13_catalog import run_all_catalogs; run_all_catalogs()",
         ],
@@ -455,7 +455,7 @@ def measure_fuzz_100k() -> dict:
     env["UEM_FUZZ_N"] = os.environ.get("UEM_FUZZ_N", "100000")
     env["UEM_FUZZ_SEED"] = os.environ.get("UEM_FUZZ_SEED", "12")
     r = _run(
-        [str(ROOT / ".venv" / "bin" / "python"), str(CROOT / "scripts" / "fuzz_l12.py")],
+        [sys.executable, str(CROOT / "scripts" / "fuzz_l12.py")],
         cwd=str(ROOT),
         env=env,
         timeout=600,

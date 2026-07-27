@@ -64,11 +64,11 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `.coveragerc` · `handwritten-pending` · `standard.gap` · `f4c1eac25e83d766`
 - `.github/workflows/test.yml` · `handwritten-pending` · `standard.gap` · `0fb38b7e50773b14`
 - `.gitignore` · `handwritten-pending` · `standard.gap` · `699c693cc407b221`
-- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `597a55947fbfb25a`
-- `GAUNTLET.md` · `evidence` · `ok` · `c696cdad833fefe6`
+- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `3868558ace9067fd`
+- `GAUNTLET.md` · `evidence` · `ok` · `c7a92511986ced39`
 - `LAW.md` · `handwritten-pending` · `standard.gap` · `7d452c174dec7c94`
 - `LICENSE` · `handwritten-pending` · `standard.gap` · `af6b910929ec375c`
-- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `28e8dcada4e22ab9`
+- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `b06a141f28bfc904`
 - `README.md` · `handwritten-pending` · `standard.gap` · `5adffec5df67ba9a`
 - `ROADMAP.md` · `handwritten-pending` · `standard.gap` · `367d3af6e5ffc703`
 - `SPEC.md` · `handwritten-pending` · `standard.gap` · `fb04ba1772610eb3`
@@ -110,7 +110,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `c/scripts/run_l11_full.sh` · `handwritten-pending` · `standard.gap` · `7d2cc34998478d50`
 - `c/scripts/run_l12_report.py` · `handwritten-pending` · `standard.gap` · `792da9de3079cbdd`
 - `c/scripts/run_tests.sh` · `handwritten-pending` · `standard.gap` · `aaf230b1f4c73ece`
-- `c/targets/manifests/l12_report_x86_64.json` · `evidence` · `ok` · `6221c100da434eb4`
+- `c/targets/manifests/l12_report_x86_64.json` · `evidence` · `ok` · `a120166777848cbf`
 - `c/tests/BRANCH_LEDGER.md` · `handwritten-pending` · `standard.gap` · `e6b7fafbe4eadeea`
 - `c/tests/branch_baseline.json` · `handwritten-pending` · `standard.gap` · `b6e5feed17b09ebf`
 - `c/tests/branch_ledger.json` · `handwritten-pending` · `standard.gap` · `388ce430646ee8d3`
@@ -211,8 +211,8 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `c/third_party/sha256.h` · `external-vendored` · `ok` · `ee296ea123f062e6`
 - `contract_report.json` · `handwritten-pending` · `standard.gap` · `7805a99ab3fa9825`
 - `contract_status.json` · `handwritten-pending` · `standard.gap` · `3ed75edf9b64810f`
-- `coverage.json` · `evidence` · `ok` · `3ea904bc7f00a471`
-- `coverage_py.json` · `evidence` · `ok` · `982d1b43f375d38c`
+- `coverage.json` · `evidence` · `ok` · `7ebd8cf0e992747e`
+- `coverage_py.json` · `evidence` · `ok` · `3108a4e77baf8eea`
 - `docs/DEVELOPER_WORKFLOW.md` · `handwritten-pending` · `standard.gap` · `5ce70a955dc69a2c`
 - `examples/declarations/invoice_total.json` · `handwritten-pending` · `standard.gap` · `1a0479e011592752`
 - `examples/declarations/invoice_total.py` · `handwritten-pending` · `standard.gap` · `d0cb833aace2a12a`
@@ -252,7 +252,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `tests/test_generator.py` · `handwritten-pending` · `standard.gap` · `5455ca54048d663e`
 - `tests/test_invariants.py` · `handwritten-pending` · `standard.gap` · `2747eda479b3b5f6`
 - `tests/test_l11.py` · `handwritten-pending` · `standard.gap` · `b4500532c720112d`
-- `tests/test_l13.py` · `handwritten-pending` · `standard.gap` · `c0f44f177eff4883`
+- `tests/test_l13.py` · `handwritten-pending` · `standard.gap` · `31e762324e3bf273`
 - `tests/test_l13_coverage.py` · `handwritten-pending` · `standard.gap` · `acf559d14640321d`
 - `tests/test_l13_deep.py` · `handwritten-pending` · `standard.gap` · `bf363a49551abf3e`
 - `tests/test_no_python_declarations.py` · `handwritten-pending` · `standard.gap` · `c8552d990c2dee26`
@@ -294,7 +294,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `unified/machine/host.py` · `physical-host-boundary` · `ok` · `46a70046d13b66d1`
 - `unified/machine/interpreter.py` · `handwritten-pending` · `standard.gap` · `123e5d0bd4804636`
 - `unified/machine/l11.py` · `handwritten-pending` · `standard.gap` · `c82c8aa82219a6a3`
-- `unified/machine/l13.py` · `handwritten-pending` · `standard.gap` · `610780f81e6ec00d`
+- `unified/machine/l13.py` · `handwritten-pending` · `standard.gap` · `ab42c0defd8e02ea`
 - `unified/machine/l13_catalog.py` · `handwritten-pending` · `standard.gap` · `32f167e9c6a0fcae`
 - `unified/machine/measure.py` · `handwritten-pending` · `standard.gap` · `f6c3bd6f8b340780`
 - `unified/machine/opcodes.py` · `handwritten-pending` · `standard.gap` · `97cc810a83ccc046`
