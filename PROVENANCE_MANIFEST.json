@@ -17,7 +17,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": ".coverage",
       "provenance": "evidence",
-      "sha256": "5a0079b2e4d8cac78ff09989821c41ab90a9d38e30858fca0b0f5040da744ed6",
+      "sha256": "0582dadf4a76f6edbdf77ade4e10ec21aa536c305d636968f4de82fee07ec33d",
       "size": 143360,
       "standard_ten_class_ok": true
     },
@@ -100,8 +100,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "ceb0b18df5eb55dddf82a3b646a98ae97c099a01b873a54d31845cac8fefb7f8",
-      "size": 26819,
+      "sha256": "77f09a4f06fb40494b9c14f44d0e209892ccb8fbff528cd14f85cebdbb2eb87a",
+      "size": 26917,
       "standard_ten_class_ok": true
     },
     {
@@ -120,7 +120,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "GAUNTLET.md",
       "provenance": "evidence",
-      "sha256": "9db4ac8d28eeb5adb0f6ef0cdddbf8dd0e48f7bd0391f4210023212af40d5330",
+      "sha256": "82dd4e6dd71de69e8c6de6e2816eb7b2177578d9c41cb64839d5d3e6b27c8ad9",
       "size": 1331,
       "standard_ten_class_ok": true
     },
@@ -182,8 +182,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "5b9749121ae2f63a3889306efc04e4536d63f5dc320c7f9f27f36ae19a40559d",
-      "size": 157422,
+      "sha256": "1625306dc8b100f160e92c2c00968c23fa3018182483315f3a2cc2e5add5eea5",
+      "size": 158097,
       "standard_ten_class_ok": true
     },
     {
@@ -203,8 +203,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "README.md",
       "provenance": "handwritten-pending",
-      "sha256": "9474dc4af62b69d70c9f7ac644605705299d0303c4e8691de46cc31cde4d0d30",
-      "size": 9638,
+      "sha256": "3aa93174bd0379404d2ac0bf730c4ca570d52ed3a76ba84a7c5ddfd9b658beb5",
+      "size": 10011,
       "standard_ten_class_ok": false
     },
     {
@@ -224,8 +224,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "ROADMAP.md",
       "provenance": "handwritten-pending",
-      "sha256": "a788774e61d215714258e0f91fadf55419d25db91ff0f67576d9576b0e97a71a",
-      "size": 5863,
+      "sha256": "b34e2c9c65b54d350be1eed440fb0b67e343113a51429a8fd0017b9f7374e227",
+      "size": 6057,
       "standard_ten_class_ok": false
     },
     {
@@ -286,8 +286,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "UEM_SPEC.md",
       "provenance": "handwritten-pending",
-      "sha256": "6b26b0764348b17e791c7c9180b659f558c7bb543a707d1f43c85b305f3bbe6d",
-      "size": 14479,
+      "sha256": "6bfacbc86a486bebb3ad201929358731f4bf8fe83007423d9abd987f38eaede0",
+      "size": 15381,
       "standard_ten_class_ok": false
     },
     {
@@ -728,10 +728,10 @@
       "control_flow": {
         "classes": 0,
         "for": 13,
-        "if": 40,
+        "if": 43,
         "switch": 0,
         "total": 0,
-        "while": 1
+        "while": 2
       },
       "generated": false,
       "generation_command": null,
@@ -740,8 +740,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "c/core/stateful.c",
       "provenance": "physical-host-boundary",
-      "sha256": "42596e3affdef15f67101e16ca4556a11f87fde29859ab9ee0cfef97c0a34394",
-      "size": 13261,
+      "sha256": "aa2b4c2cf8b7f58e1d8b2d8d24450f6ebe2034caffefb8c9ca0023dd687fd929",
+      "size": 14043,
       "standard_ten_class_ok": true
     },
     {
@@ -1090,7 +1090,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "c/targets/manifests/l12_report_x86_64.json",
       "provenance": "evidence",
-      "sha256": "2e551948dbfdd8ec02e5ee38a1799270a8ec0a2bd304174a3592bd28ec13033a",
+      "sha256": "103a46f650e14a4bc41a9d8cd4e8270a5ad24e5f8118985a17955f3b8c4968cb",
       "size": 2498,
       "standard_ten_class_ok": true
     },
@@ -1196,8 +1196,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "c/tests/core_coverage_harness.c",
       "provenance": "handwritten-pending",
-      "sha256": "00349e9b8efff005739dbbc9708e568261fc235ef5abf135818c3bc518b07546",
-      "size": 197576,
+      "sha256": "95989eaac5381d96515b70d331447fdb28e26f3ce9593cd1ebea7d57518c5030",
+      "size": 200620,
       "standard_ten_class_ok": false
     },
     {
@@ -3211,7 +3211,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "coverage.json",
       "provenance": "evidence",
-      "sha256": "c0c85941468886561df63c60b75c6e5c7695be22a7ea07d98c8250f553647b0d",
+      "sha256": "d1ee69712e13e6b9d45b32da67f7dfe09ce21795d6e6a6f54bc5dda2796221ab",
       "size": 15413,
       "standard_ten_class_ok": true
     },
@@ -3231,8 +3231,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "coverage_py.json",
       "provenance": "evidence",
-      "sha256": "bdd9a8f5d745b67b5a37d87249574bde10b081f67d19d8ee2cf4ae66b7ef1a4f",
-      "size": 112605,
+      "sha256": "3c7d91adbf12debde095a39466a92051d67a9ed5195fc919f98cc4a506b0105c",
+      "size": 114317,
       "standard_ten_class_ok": true
     },
     {
@@ -4141,10 +4141,10 @@
       "control_flow": {
         "classes": 0,
         "comp": 11,
-        "for": 1,
+        "for": 5,
         "if": 1,
         "match": 0,
-        "total": 18,
+        "total": 22,
         "try": 5,
         "while": 0
       },
@@ -4156,8 +4156,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_l13_coverage.py",
       "provenance": "handwritten-pending",
-      "sha256": "56d875967b4c5517ea3850c576ab61bb07fcd6c7fcc18c774763fee8ae812089",
-      "size": 33809,
+      "sha256": "e28ca779a05fe5c287982983757e863cc3f5ff244fbbe25b72bfdf6ed455aab4",
+      "size": 35518,
       "standard_ten_class_ok": false
     },
     {
@@ -4308,11 +4308,11 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 5,
+        "comp": 7,
         "for": 2,
         "if": 1,
         "match": 0,
-        "total": 8,
+        "total": 10,
         "try": 0,
         "while": 0
       },
@@ -4324,8 +4324,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_unfold_stateful.py",
       "provenance": "handwritten-pending",
-      "sha256": "655e78cf2e7501463f0c05b9df270bcbe4dc6a6a8a9101f12bfac1a5282ba6bc",
-      "size": 6422,
+      "sha256": "ceb9cd3ac3e9d05090ee2fca40273c499ba50d6424c04349861463bfc79120cb",
+      "size": 7502,
       "standard_ten_class_ok": false
     },
     {
@@ -4766,9 +4766,9 @@
         "classes": 0,
         "comp": 1,
         "for": 11,
-        "if": 17,
+        "if": 18,
         "match": 0,
-        "total": 30,
+        "total": 31,
         "try": 1,
         "while": 0
       },
@@ -4780,8 +4780,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/overfit.py",
       "provenance": "handwritten-pending",
-      "sha256": "eee6e1cc3414beb212b237792dd740aa53f8ea2f89e218d1bae9d82db1f1739f",
-      "size": 5780,
+      "sha256": "c1fccbcfd277faa1446681132364129ea61e2ff9481ea5574e9838c549e20512",
+      "size": 6545,
       "standard_ten_class_ok": false
     },
     {
@@ -4852,8 +4852,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/stateful_emit.py",
       "provenance": "handwritten-pending",
-      "sha256": "45b18f8ada141d9d47bfc6c0ab2b38d82eacebe79b710533dba59c374ee7c791",
-      "size": 23122,
+      "sha256": "5fde3760ae713587b1c1e85b4c242f82f1fdabd6c1d5269ad000fbd38e827258",
+      "size": 24826,
       "standard_ten_class_ok": false
     },
     {
@@ -5123,11 +5123,11 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 3,
-        "for": 8,
-        "if": 23,
+        "comp": 5,
+        "for": 9,
+        "if": 24,
         "match": 0,
-        "total": 38,
+        "total": 42,
         "try": 4,
         "while": 0
       },
@@ -5139,8 +5139,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/machine/l11.py",
       "provenance": "handwritten-pending",
-      "sha256": "ea3e82ec9a5a3a0288e331a48955f46e1d69cbd2c08e570319694818f4b9f06a",
-      "size": 21718,
+      "sha256": "511327326cbe6cdcbf58331116efcb7b35547961d59d4f89ae9cf4782c587408",
+      "size": 25189,
       "standard_ten_class_ok": false
     },
     {
@@ -5267,12 +5267,12 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 6,
+        "comp": 8,
         "for": 6,
-        "if": 22,
+        "if": 26,
         "match": 0,
-        "total": 35,
-        "try": 1,
+        "total": 40,
+        "try": 0,
         "while": 0
       },
       "gap_id": "gap.untracked-or-handwritten",
@@ -5283,8 +5283,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/machine/stateful.py",
       "provenance": "handwritten-pending",
-      "sha256": "2e06be30c4fdb4da72d5dd61ab6ca689e7a17735c4514dc3e7688dddc82acd1f",
-      "size": 4641,
+      "sha256": "3a856e3f0ef47ab5a3476b23e6bb21ec85d91e598454ef53e0b9dcf96b45e478",
+      "size": 5366,
       "standard_ten_class_ok": false
     },
     {
@@ -5363,11 +5363,11 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 3,
+        "comp": 4,
         "for": 11,
         "if": 37,
         "match": 0,
-        "total": 52,
+        "total": 53,
         "try": 1,
         "while": 0
       },
@@ -5379,8 +5379,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/standard_audit.py",
       "provenance": "handwritten-pending",
-      "sha256": "fdeedd06bb56a23c596eee46eb7ac08b1e32b2a21819a733b5d30336a0fc9b04",
-      "size": 14758,
+      "sha256": "67738b2208dcd8da1d7e97011a325cf8f72320f1caf87de4482b6ca615e7d1d3",
+      "size": 15639,
       "standard_ten_class_ok": false
     },
     {

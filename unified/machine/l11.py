@@ -486,6 +486,113 @@ def run_l11_gauntlet(thing=None):
             if sequential and not rejected:
                 state = envelope.get("resource_state")
 
+    # Frozen scalar profile — the same boundary values are parsed independently
+    # by Python UEM and C UEM before any application guard or action runs.
+    scalar_image = {
+        "stateful": {
+            "commands": {
+                "integer": {
+                    "arguments": [{"name": "value", "type": "integer"}],
+                    "guards": [],
+                    "actions": [],
+                    "result": {"$arg": "value"},
+                },
+                "non-empty": {
+                    "arguments": [
+                        {
+                            "name": "value",
+                            "type": "string",
+                            "non_empty": True,
+                        }
+                    ],
+                    "guards": [],
+                    "actions": [],
+                    "result": {"$arg": "value"},
+                },
+            }
+        },
+        "verify": {
+            "require_value_field": "stats",
+            "require_evidence_contains": [],
+        },
+    }
+    scalar_compiled = _enc(
+        (
+            ("APPLY", "state_transition"),
+            ("VERIFY", "result"),
+            ("STOP", None),
+        ),
+        scalar_image,
+    )
+    scalar_vectors = (
+        *(
+            ("integer", raw, expected, None)
+            for raw, expected in (
+                ("0", 0),
+                ("-0", 0),
+                ("1", 1),
+                ("-1", -1),
+                ("999999999999999", 999999999999999),
+                ("-999999999999999", -999999999999999),
+            )
+        ),
+        *(
+            ("integer", raw, None, "invalid-argument")
+            for raw in (
+                "",
+                "+1",
+                " 1",
+                "1 ",
+                "01",
+                "-01",
+                "1_000",
+                "١",
+                "1000000000000000",
+                "-1000000000000000",
+                "9999999999999999",
+                "10000000000000000",
+            )
+        ),
+        ("non-empty", "", None, "invalid-argument"),
+        ("non-empty", " \t\n\v\f\r", None, "invalid-argument"),
+        ("non-empty", "\u00a0", "\u00a0", None),
+        ("non-empty", "\u2003", "\u2003", None),
+        ("non-empty", " x ", " x ", None),
+    )
+    for index, (command, raw, expected_result, expected_error) in enumerate(
+        scalar_vectors
+    ):
+        host = {
+            "resource_state": {},
+            "command": command,
+            "arguments": [raw],
+        }
+        py_c = from_python_run(
+            scalar_compiled, run_compiled(scalar_compiled, host)
+        )
+        c_c, err = run_c_vector(scalar_compiled, host)
+        vector_name = f"stateful-scalar:{index}"
+        if c_c is None:
+            ok(f"diff:{vector_name}", False, err)
+            continue
+        envelope = py_c.get("stats") or {}
+        diffs = compare_canonical(py_c, c_c)
+        semantic = (
+            envelope.get("result") == expected_result
+            and envelope.get("error") == expected_error
+            and envelope.get("resource_state") == {}
+            and envelope.get("state_changed") is False
+            and py_c.get("ticket") is None
+            and c_c.get("ticket") is None
+        )
+        ok(
+            f"diff:{vector_name}",
+            not diffs and semantic,
+            f"full:{canonical_sha256(py_c)[:16]}"
+            if not diffs and semantic
+            else (diffs[:8] or ["semantic-mismatch"]),
+        )
+
     # Opcode vectors
     for name, instr, image, host, limits in opcode_vectors():
         if limits == "reject":

@@ -114,8 +114,12 @@ def derive_application_vocabulary(seed_paths) -> dict[str, str]:
             for error in feature.get("errors") or ():
                 _add(vocabulary, error, components=True)
             for command in (transformation.get("commands") or {}):
-                if command.lower() not in GENERIC_SCHEMA_ALLOWLIST:
-                    vocabulary[command.lower()] = "literal"
+                term = command.lower()
+                vocabulary[term] = (
+                    "stateful-command"
+                    if term in GENERIC_SCHEMA_ALLOWLIST
+                    else "literal"
+                )
             _collect_command_vocabulary(
                 transformation.get("commands") or {}, vocabulary
             )
@@ -129,7 +133,22 @@ def derive_application_vocabulary(seed_paths) -> dict[str, str]:
     return dict(sorted(vocabulary.items()))
 
 
-def _matches(text: str, term: str, mode: str) -> bool:
+def _matches(path: Path, text: str, term: str, mode: str) -> bool:
+    if mode == "stateful-command":
+        if "stateful" not in path.name:
+            return False
+        quoted = rf"['\"]{re.escape(term)}['\"]"
+        equality = (
+            rf"(?:\bcommand\b|\.get\(['\"]command['\"]\))"
+            rf".{{0,160}}(?:==|!=).{{0,160}}{quoted}"
+            rf"|{quoted}.{{0,160}}(?:==|!=).{{0,160}}"
+            rf"(?:\bcommand\b|\.get\(['\"]command['\"]\))"
+        )
+        c_comparison = (
+            rf"strcmp\s*\([^)]*\bcommand\b[^)]*{quoted}[^)]*\)"
+            rf"|strcmp\s*\([^)]*{quoted}[^)]*\bcommand\b[^)]*\)"
+        )
+        return bool(re.search(equality + "|" + c_comparison, text, flags=re.S))
     if mode == "literal":
         return bool(
             re.search(
@@ -168,7 +187,7 @@ def vocabulary_hits(roots, seed_paths, display_root=None) -> list[tuple[str, str
                 path, path.read_text(encoding="utf-8")
             ).lower()
             for term, mode in vocabulary.items():
-                if _matches(text, term, mode):
+                if _matches(path, text, term, mode):
                     display = str(path)
                     if display_root:
                         try:

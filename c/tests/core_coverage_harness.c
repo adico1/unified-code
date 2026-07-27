@@ -3979,6 +3979,51 @@ static void test_stateful_matrix(void) {
     );
     run_stateful_soft(
         "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":{\"$arg\":\"x\"}}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"999999999999999\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":{\"$arg\":\"x\"}}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"-999999999999999\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"1000000000000000\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"-1000000000000000\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"-\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"01\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"+1\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"1_000\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"\\u0661\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"type\":\"integer\"}],"
         "\"guards\":[],\"actions\":[],\"result\":null}}}}",
         "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"1x\"]}"
     );
@@ -4006,6 +4051,16 @@ static void test_stateful_matrix(void) {
         "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"non_empty\":true}],"
         "\"guards\":[],\"actions\":[],\"result\":null}}}}",
         "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"   \"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"non_empty\":true}],"
+        "\"guards\":[],\"actions\":[],\"result\":null}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\" \\t\\n\\u000b\\f\\r\"]}"
+    );
+    run_stateful_soft(
+        "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"non_empty\":true}],"
+        "\"guards\":[],\"actions\":[],\"result\":{\"$arg\":\"x\"}}}}}",
+        "{\"resource_state\":{},\"command\":\"c\",\"arguments\":[\"\\u00a0\"]}"
     );
     run_stateful_soft(
         "{\"stateful\":{\"commands\":{\"c\":{\"arguments\":[{\"name\":\"x\",\"minimum\":2}],"

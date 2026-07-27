@@ -135,21 +135,21 @@
           },
           {
             "branch_metric": "gcov-arc-enumeration",
-            "branches_hit": 208,
+            "branches_hit": 234,
             "branches_pct": 100.0,
-            "branches_total": 208,
-            "functions_hit": 12,
-            "functions_total": 12,
+            "branches_total": 234,
+            "functions_hit": 14,
+            "functions_total": 14,
             "gcno": "stateful.gcno",
-            "lines_hit": 241,
+            "lines_hit": 257,
             "lines_pct": 100.0,
-            "lines_total": 241,
+            "lines_total": 257,
             "source": "core/stateful.c"
           }
         ],
-        "hit": 1480,
+        "hit": 1506,
         "metric": "gcov-arc-enumeration",
-        "total": 1480
+        "total": 1506
       },
       "required": 100.0
     },
@@ -157,8 +157,8 @@
       "actual": 100.0,
       "ok": true,
       "raw": {
-        "hit": 88,
-        "total": 88
+        "hit": 90,
+        "total": 90
       },
       "required": 100.0
     },
@@ -248,20 +248,20 @@
           },
           {
             "branch_metric": "gcov-arc-enumeration",
-            "branches_hit": 208,
+            "branches_hit": 234,
             "branches_pct": 100.0,
-            "branches_total": 208,
-            "functions_hit": 12,
-            "functions_total": 12,
+            "branches_total": 234,
+            "functions_hit": 14,
+            "functions_total": 14,
             "gcno": "stateful.gcno",
-            "lines_hit": 241,
+            "lines_hit": 257,
             "lines_pct": 100.0,
-            "lines_total": 241,
+            "lines_total": 257,
             "source": "core/stateful.c"
           }
         ],
-        "hit": 1920,
-        "total": 1920
+        "hit": 1936,
+        "total": 1936
       },
       "required": 100.0
     },
@@ -538,40 +538,32 @@
       "ok": true,
       "permitted_catalog": [
         [
-          "valid",
-          "valid"
+          "formed",
+          "false"
         ],
         [
-          "false",
-          "false"
+          "formed",
+          "invalid"
+        ],
+        [
+          "unknown",
+          "invalid"
+        ],
+        [
+          "formed",
+          "absent"
         ],
         [
           "absent",
           "absent"
         ],
         [
-          "formed",
+          "valid",
           "valid"
         ],
         [
-          "formed",
-          "false"
-        ],
-        [
-          "formed",
-          "absent"
-        ],
-        [
-          "unknown",
-          "absent"
-        ],
-        [
           "unknown",
           "false"
-        ],
-        [
-          "formed",
-          "invalid"
         ],
         [
           "invalid",
@@ -579,18 +571,26 @@
         ],
         [
           "unknown",
-          "invalid"
+          "absent"
+        ],
+        [
+          "formed",
+          "valid"
         ],
         [
           "unknown",
           "formed"
+        ],
+        [
+          "false",
+          "false"
         ]
       ],
       "prohibited_exercised": true,
       "required": 100.0
     }
   },
-  "duration_s": 82.20260095596313,
+  "duration_s": 37.26819086074829,
   "l13": true,
   "rules": {
     "branch_ledger_must_reconcile": true,

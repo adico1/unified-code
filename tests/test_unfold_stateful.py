@@ -148,15 +148,51 @@ def test_anti_overfitting_scan_detects_injected_vocabulary(tmp_path):
     injected = source / "generic.py"
     seeds = (SEED, SECOND_SEED)
     vocabulary = derive_application_vocabulary(seeds)
-    assert {"duplicate-title", "task-not-open", "duplicate-player", "unknown-player"} <= set(
-        vocabulary
-    )
-    for term in vocabulary:
-        injected.write_text(f'DOMAIN = "{term}"\n', encoding="utf-8")
+    assert {
+        "add",
+        "duplicate-title",
+        "task-not-open",
+        "duplicate-player",
+        "unknown-player",
+    } <= set(vocabulary)
+    assert vocabulary["add"] == "stateful-command"
+    for term, mode in vocabulary.items():
+        injected = source / (
+            "stateful.py" if mode == "stateful-command" else "generic.py"
+        )
+        mutation = (
+            f'if command == "{term}":\n    pass\n'
+            if mode == "stateful-command"
+            else f'DOMAIN = "{term}"\n'
+        )
+        injected.write_text(mutation, encoding="utf-8")
         assert any(
             token == term
             for _, token in vocabulary_hits((source,), seeds, display_root=ROOT)
         )
+
+
+def test_contextual_add_command_mutation_is_detected_but_expression_is_allowed(
+    tmp_path,
+):
+    from unified.generator.overfit import vocabulary_hits
+
+    seeds = (SEED, SECOND_SEED)
+    source = tmp_path / "generic"
+    source.mkdir()
+    stateful = source / "stateful.py"
+    c_stateful = source / "stateful.c"
+    expression = source / "expr.py"
+    stateful.write_text('if command == "add":\n    pass\n', encoding="utf-8")
+    c_stateful.write_text(
+        'if (strcmp(command, "add") == 0) { return; }\n',
+        encoding="utf-8",
+    )
+    expression.write_text('EXPRESSION_OPERATORS = {"add"}\n', encoding="utf-8")
+    hits = vocabulary_hits((source,), seeds, display_root=ROOT)
+    assert any(path.endswith("stateful.py") and term == "add" for path, term in hits)
+    assert any(path.endswith("stateful.c") and term == "add" for path, term in hits)
+    assert not any(path.endswith("expr.py") and term == "add" for path, term in hits)
 
 
 def test_atomic_refusal_preserves_installed_output(tmp_path):

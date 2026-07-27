@@ -365,6 +365,32 @@ This module is pure: no filesystem, environment, stdout, or ticket I/O.
 import copy
 
 
+SCALAR_INTEGER_MAX = 999_999_999_999_999
+SCALAR_INTEGER_MIN = -SCALAR_INTEGER_MAX
+ASCII_WHITESPACE = frozenset(" \\t\\n\\v\\f\\r")
+
+
+def _canonical_integer(raw):
+    if not isinstance(raw, str) or not raw:
+        return None
+    negative = raw.startswith("-")
+    digits = raw[1:] if negative else raw
+    if not digits or len(digits) > 16:
+        return None
+    if (len(digits) > 1 and digits[0] == "0") or any(
+        digit not in "0123456789" for digit in digits
+    ):
+        return None
+    magnitude = int(digits)
+    if magnitude > SCALAR_INTEGER_MAX:
+        return None
+    return -magnitude if negative else magnitude
+
+
+def _ascii_whitespace_only(value):
+    return not value or all(character in ASCII_WHITESPACE for character in value)
+
+
 def _path(root, path):
     current = root
     for key in path:
@@ -401,15 +427,16 @@ def _argument(raw, rule):
     if kind == "string":
         parsed = raw if isinstance(raw, str) else None
     elif kind == "integer":
-        try:
-            parsed = int(raw)
-        except (TypeError, ValueError):
-            parsed = None
+        parsed = _canonical_integer(raw)
     else:
         parsed = None
     if parsed is None:
         return None, rule.get("error", "invalid-argument")
-    if rule.get("non_empty") and isinstance(parsed, str) and not parsed.strip():
+    if (
+        rule.get("non_empty")
+        and isinstance(parsed, str)
+        and _ascii_whitespace_only(parsed)
+    ):
         return None, rule.get("error", "invalid-argument")
     if "minimum" in rule and parsed < rule["minimum"]:
         return None, rule.get("error", "invalid-argument")
@@ -587,6 +614,7 @@ from pathlib import Path
 
 from {package}.cli import host_main
 from {package}.compose import program
+from {package}.state_runtime import _argument
 
 
 ACCEPTANCE = {config["acceptance"]!r}
@@ -632,6 +660,39 @@ def test_declared_validation_failures_create_no_ticket_or_state(tmp_path, capsys
         assert payload == case["expect"]
         assert not state.exists()
         assert not (root / ".uc-tickets").exists()
+
+
+def test_canonical_scalar_profile():
+    integer = {{"type": "integer"}}
+    non_empty = {{"type": "string", "non_empty": True}}
+    for raw, expected in (
+        ("0", 0),
+        ("-0", 0),
+        ("1", 1),
+        ("-1", -1),
+        ("999999999999999", 999999999999999),
+        ("-999999999999999", -999999999999999),
+    ):
+        assert _argument(raw, integer) == (expected, None)
+    for raw in (
+        "",
+        "+1",
+        " 1",
+        "1 ",
+        "01",
+        "-01",
+        "1_000",
+        "١",
+        "1000000000000000",
+        "-1000000000000000",
+        "9999999999999999",
+        "10000000000000000",
+    ):
+        assert _argument(raw, integer) == (None, "invalid-argument")
+    for raw in ("", " \\t\\n\\v\\f\\r"):
+        assert _argument(raw, non_empty) == (None, "invalid-argument")
+    for raw in ("\\u00a0", "\\u2003", " x "):
+        assert _argument(raw, non_empty) == (raw, None)
 
 
 def test_unhandled_failure_is_redacted_and_deduplicated(tmp_path, monkeypatch):

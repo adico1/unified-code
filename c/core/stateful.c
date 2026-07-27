@@ -1,9 +1,9 @@
 #include "machine_internal.h"
-#include <ctype.h>
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#define UEM_SCALAR_INTEGER_MAX 999999999999999ULL
 
 typedef struct {
     const char *name;
@@ -117,6 +117,33 @@ static const char *rule_error(cJSON *rule, const char *fallback) {
     return cJSON_IsString(error) ? error->valuestring : fallback;
 }
 
+static int ascii_whitespace(unsigned char value) {
+    return value == ' ' || value == '\t' || value == '\n'
+        || value == '\v' || value == '\f' || value == '\r';
+}
+
+static int canonical_integer(const char *raw, double *parsed) {
+    const unsigned char *cursor = (const unsigned char *)raw;
+    unsigned long long magnitude = 0;
+    int negative = 0;
+    if (*cursor == '\0') return 0;
+    if (*cursor == '-') {
+        negative = 1;
+        cursor++;
+    }
+    if (*cursor == '\0' || (*cursor == '0' && cursor[1] != '\0')) return 0;
+    while (*cursor) {
+        unsigned int digit;
+        if (*cursor < '0' || *cursor > '9') return 0;
+        digit = (unsigned int)(*cursor - '0');
+        if (magnitude > (UEM_SCALAR_INTEGER_MAX - digit) / 10ULL) return 0;
+        magnitude = magnitude * 10ULL + digit;
+        cursor++;
+    }
+    *parsed = negative ? -(double)magnitude : (double)magnitude;
+    return 1;
+}
+
 static cJSON *parse_argument(cJSON *raw, cJSON *rule, const char **error) {
     cJSON *kind = cJSON_GetObjectItemCaseSensitive(rule, "type");
     const char *type = cJSON_IsString(kind) ? kind->valuestring : "string";
@@ -124,15 +151,9 @@ static cJSON *parse_argument(cJSON *raw, cJSON *rule, const char **error) {
     if (strcmp(type, "string") == 0 && cJSON_IsString(raw)) {
         parsed = cJSON_Duplicate(raw, 1);
     } else if (strcmp(type, "integer") == 0 && cJSON_IsString(raw)) {
-        char *end = NULL;
-        long value;
-        errno = 0;
-        value = strtol(raw->valuestring, &end, 10);
-        if (end != raw->valuestring) {
-            if (errno == 0) {
-                if (*end == '\0') parsed = cJSON_CreateNumber((double)value);
-            }
-        }
+        double value;
+        if (canonical_integer(raw->valuestring, &value))
+            parsed = cJSON_CreateNumber(value);
     }
     if (!parsed) {
         *error = rule_error(rule, "invalid-argument");
@@ -142,7 +163,7 @@ static cJSON *parse_argument(cJSON *raw, cJSON *rule, const char **error) {
         cJSON *non_empty = cJSON_GetObjectItemCaseSensitive(rule, "non_empty");
         if (cJSON_IsTrue(non_empty) && cJSON_IsString(parsed)) {
             const unsigned char *cursor = (const unsigned char *)parsed->valuestring;
-            while (*cursor && isspace(*cursor)) cursor++;
+            while (*cursor && ascii_whitespace(*cursor)) cursor++;
             if (*cursor == '\0') {
                 cJSON_Delete(parsed);
                 *error = rule_error(rule, "invalid-argument");

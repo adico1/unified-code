@@ -108,6 +108,14 @@ def test_stateful_transition_expression_and_defensive_paths():
                 "actions": [],
                 "result": {"$arg": "value"},
             },
+            "non-empty": {
+                "arguments": [
+                    {"name": "value", "type": "string", "non_empty": True}
+                ],
+                "guards": [],
+                "actions": [],
+                "result": {"$arg": "value"},
+            },
         }
     }
     state = {"rows": [{"value": 1}]}
@@ -130,6 +138,62 @@ def test_stateful_transition_expression_and_defensive_paths():
     assert transition(
         base, {"resource_state": state, "command": "integer", "arguments": ["x"]}
     )["error"] == "invalid-argument"
+    for raw, expected in (
+        ("0", 0),
+        ("-0", 0),
+        ("1", 1),
+        ("-1", -1),
+        ("999999999999999", 999999999999999),
+        ("-999999999999999", -999999999999999),
+    ):
+        assert transition(
+            base,
+            {
+                "resource_state": state,
+                "command": "integer",
+                "arguments": [raw],
+            },
+        )["result"] == expected
+    for raw in (
+        "",
+        "+1",
+        " 1",
+        "1 ",
+        "01",
+        "-01",
+        "1_000",
+        "١",
+        "1000000000000000",
+        "-1000000000000000",
+        "9999999999999999",
+        "10000000000000000",
+    ):
+        assert transition(
+            base,
+            {
+                "resource_state": state,
+                "command": "integer",
+                "arguments": [raw],
+            },
+        )["error"] == "invalid-argument"
+    for raw in ("", " \t\n\v\f\r"):
+        assert transition(
+            base,
+            {
+                "resource_state": state,
+                "command": "non-empty",
+                "arguments": [raw],
+            },
+        )["error"] == "invalid-argument"
+    for raw in ("\u00a0", "\u2003", " x "):
+        assert transition(
+            base,
+            {
+                "resource_state": state,
+                "command": "non-empty",
+                "arguments": [raw],
+            },
+        )["result"] == raw
     assert transition(
         base, {"resource_state": state, "command": "missing", "arguments": []}
     )["error"] == "unknown-command"

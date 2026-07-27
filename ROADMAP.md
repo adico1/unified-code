@@ -49,6 +49,9 @@ Both hosts now execute one generic UEM transition program derived from each
 seed. Every step compares resulting state, result, evidence, errors, and ticket
 status. Declared duplicate/missing-resource errors are exercised inside the
 persisted sequence, followed by successful recovery commands and restart.
+Generated Python, Python UEM, and C UEM also share the frozen scalar input
+profile in `UEM_SPEC.md`, with differential minimum, maximum, overflow, syntax,
+Unicode-digit, and whitespace vectors.
 
 ## Milestone 2 — Root-seed fixed-point bootstrap
 
