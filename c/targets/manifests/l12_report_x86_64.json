@@ -6,7 +6,7 @@
   "native_evaluation": {
     "cases": 4,
     "details": [],
-    "execution_p95_ns": 26875804,
+    "execution_p95_ns": 12061221,
     "malformed_rejected": 4,
     "malformed_total": 4,
     "mismatches": 0
@@ -21,7 +21,7 @@
       "compiler_version": "Apple clang version 17.0.0 (clang-1700.0.13.3)",
       "endianness": "little",
       "executable_size": 75896,
-      "execution_p95_ns": 26875804,
+      "execution_p95_ns": 12061221,
       "golden_suite_sha256": "48ef29b7e1c6002b4aa809f3bfc575b272aaa62617a4a7b97b81753258bf766a",
       "hardware_identity": "macOS-15.2-x86_64-i386-64bit-Mach-O machine=x86_64 processor=i386",
       "note": "Native hardware execution of unchanged goldens.",

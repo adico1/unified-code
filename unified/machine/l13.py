@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+import shlex
 import subprocess
 import sys
 import time
@@ -328,8 +329,9 @@ def measure_c_coverage() -> dict:
             missing_gcno.append(stem)
             continue
         # Apple clang: -o path/to/uem-c-stem.gcno (note file, not directory)
+        gcov = shlex.split(os.environ.get("GCOV", "gcov"))
         r = _run(
-            ["gcov", "-b", "-o", str(gcno), str(cfile)],
+            [*gcov, "-b", "-o", str(gcno), str(cfile)],
             cwd=str(CROOT),
             timeout=60,
         )
