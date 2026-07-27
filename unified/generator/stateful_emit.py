@@ -1,10 +1,4 @@
-"""Render the generic stateful-resource application profile.
-
-The application declaration supplies command names, field names, defaults, and
-acceptance cases.  Generated domain/composition modules only connect audited
-primitives; selection, iteration, and filesystem effects live in the generated
-runtime and OUTWARD boundary modules respectively.
-"""
+"""Render application-neutral persistent state machines from declarations."""
 
 from __future__ import annotations
 
@@ -31,59 +25,120 @@ def is_stateful_resource(declaration: dict) -> bool:
 def render_stateful_files(declaration: dict, boundary_base: str) -> dict[str, str]:
     package = declaration["package"]
     feature = next(
-        feature
-        for feature in declaration["features"]
-        if feature["transformation"].get("kind") == "stateful_resource"
+        item
+        for item in declaration["features"]
+        if item["transformation"].get("kind") == "stateful_resource"
     )
-    config = dict(feature["transformation"])
+    config = _canonical(dict(feature["transformation"]))
     config.pop("kind", None)
-    config = _canonical(config)
-    config_literal = repr(config)
+    _validate_config(config)
     feature_name = feature["name"]
     script = (declaration.get("cli") or {}).get("script", declaration["name"])
     acceptance = {
         "script": script,
         "package": package,
-        "commands": list(config.get("acceptance") or ()),
+        "commands": config["acceptance"],
     }
     return {
         f"{package}/boundary.py": _boundary(boundary_base, config),
-        f"{package}/parts.py": _parts(feature_name, config_literal),
-        f"{package}/compose.py": _compose(feature_name),
+        f"{package}/parts.py": _parts(feature_name, repr(config)),
+        f"{package}/compose.py": _compose(feature_name, declaration["composition"]),
         f"{package}/state_runtime.py": _state_runtime(),
         f"{package}/cli.py": _cli(package),
         f"{package}/core.py": _core(),
-        "tests/test_stateful.py": _tests(package, feature_name, config),
+        "tests/test_stateful.py": _tests(package, config),
         ".uc/acceptance.json": json.dumps(
             acceptance, ensure_ascii=False, indent=2, sort_keys=True
         )
         + "\n",
-        "README.md": _readme(declaration, script),
+        "README.md": _readme(declaration, script, config),
     }
 
 
+def _validate_config(config: dict) -> None:
+    required = (
+        "acceptance",
+        "commands",
+        "failure_probe",
+        "persistence",
+        "rejections",
+        "state",
+    )
+    missing = tuple(key for key in required if key not in config)
+    if missing:
+        raise ValueError(f"stateful declaration missing: {missing!r}")
+    if not isinstance(config["commands"], dict) or not config["commands"]:
+        raise ValueError("stateful commands must be a non-empty map")
+    persistence = config["persistence"]
+    if not isinstance(persistence, dict):
+        raise ValueError("stateful persistence must be a map")
+    for key in ("environment", "default_path"):
+        if not isinstance(persistence.get(key), str) or not persistence[key]:
+            raise ValueError(f"stateful persistence.{key} must be text")
+    state = config["state"]
+    if not isinstance(state, dict) or not isinstance(state.get("initial"), dict):
+        raise ValueError("stateful state.initial must be a map")
+    for name, command in config["commands"].items():
+        if not isinstance(name, str) or not name:
+            raise ValueError("stateful command names must be text")
+        if not isinstance(command, dict):
+            raise ValueError(f"stateful command {name!r} must be a map")
+        if not isinstance(command.get("arguments", []), list):
+            raise ValueError(f"stateful command {name!r} arguments must be a sequence")
+        if not isinstance(command.get("guards", []), list):
+            raise ValueError(f"stateful command {name!r} guards must be a sequence")
+        if not isinstance(command.get("actions", []), list):
+            raise ValueError(f"stateful command {name!r} actions must be a sequence")
+        if "result" not in command:
+            raise ValueError(f"stateful command {name!r} missing result")
+
+
 def _parts(feature_name: str, config_literal: str) -> str:
-    return f'''"""Generated domain parts. Thing→Thing; no explicit control flow."""
+    return f'''"""Generated domain part. Thing→Thing; no explicit control flow."""
 
 
 def {feature_name}(thing):
-    """Apply one declared state transition through the audited primitive."""
+    """Apply one seed-declared transition through the audited primitive."""
     from .state_runtime import apply_stateful_resource
     return apply_stateful_resource(thing, {config_literal}, {feature_name!r})
 '''
 
 
-def _compose(feature_name: str) -> str:
-    return f'''"""Generated event composition. Routing is data; no explicit control flow."""
+def _compose(feature_name: str, composition) -> str:
+    names = tuple(composition)
+    known = {
+        "inward": ("boundary", "inward"),
+        "parse_host_argv": ("boundary", "parse_host_argv"),
+        "load_state": ("boundary", "load_state"),
+        feature_name: ("parts", feature_name),
+        "persist_state": ("boundary", "persist_state"),
+        "verify": ("core", "verify"),
+        "present_result": ("boundary", "present_result"),
+        "outward": ("boundary", "outward"),
+    }
+    unknown = tuple(name for name in names if name not in known)
+    if unknown:
+        raise ValueError(f"stateful composition has unsupported parts: {unknown!r}")
+    imports = []
+    for module in ("boundary", "core", "parts"):
+        members = tuple(
+            symbol for name, (owner, symbol) in known.items() if owner == module and name in names
+        )
+        if members:
+            imports.append(f"from .{module} import {', '.join(members)}")
+    routes = []
+    route_pairs = []
+    for index, name in enumerate(names):
+        event = "program.start" if index == 0 else f"flow.{index}"
+        next_event = "program.done" if index + 1 == len(names) else f"flow.{index + 1}"
+        routes.append(
+            f"def route_{index}(thing):\n"
+            f"    return call_part(thing, {known[name][1]}, {next_event!r})\n"
+        )
+        route_pairs.append(f"    {event!r}: route_{index},")
+    return f'''"""Generated event composition. The seed-declared order is authoritative."""
 
-from .boundary import (
-    inward,
-    load_state,
-    outward,
-    parse_host_argv,
-    persist_state,
-    present_result,
-)
+{chr(10).join(imports)}
 from .event_runtime import (
     ack_ticket,
     call_part,
@@ -96,50 +151,9 @@ from .event_runtime import (
     preserve_for_retry,
     until_quiet,
 )
-from .parts import {feature_name}
 
 
-def start(thing):
-    return enqueue(emit(thing, "step.inward"), "step.inward")
-
-
-def step_inward(thing):
-    return call_part(thing, inward, "step.parse")
-
-
-def step_parse(thing):
-    return call_part(thing, parse_host_argv, "step.load")
-
-
-def step_load(thing):
-    return call_part(thing, load_state, "step.apply")
-
-
-def step_apply(thing):
-    return call_part(thing, {feature_name}, "step.persist")
-
-
-def step_persist(thing):
-    return call_part(thing, persist_state, "step.verify")
-
-
-def step_verify(thing):
-    from .core import verify
-    return call_part(thing, verify, "step.present")
-
-
-def step_present(thing):
-    return call_part(thing, present_result, "step.outward")
-
-
-def step_outward(thing):
-    return call_part(thing, outward, "program.done")
-
-
-def reject(thing):
-    return enqueue(emit(thing, "program.done"), "program.done")
-
-
+{chr(10).join(routes)}
 def failed(thing):
     return enqueue(emit(outward(thing), "program.done"), "program.done")
 
@@ -149,16 +163,8 @@ def done(thing):
 
 
 ROUTES = {{
-    "program.start": start,
-    "step.inward": step_inward,
-    "step.parse": step_parse,
-    "step.load": step_load,
-    "step.apply": step_apply,
-    "step.persist": step_persist,
-    "step.verify": step_verify,
-    "step.present": step_present,
-    "step.outward": step_outward,
-    "validation.failed": reject,
+{chr(10).join(route_pairs)}
+    "validation.failed": done,
     "exception.unhandled": construct_ticket,
     "ticket.persist.requested": outward_ticket_store,
     "ticket.persisted": fail_with_ticket,
@@ -177,19 +183,24 @@ def program(thing):
 
 
 def _boundary(boundary_base: str, config: dict) -> str:
-    default_state = config.get("default_state", {"tasks": []})
-    commands = config.get(
-        "commands", {"add": 1, "complete": 1, "list": 0}
-    )
+    initial = config["state"]["initial"]
+    schema = config["state"].get("schema", [])
+    persistence = config["persistence"]
+    arity = {
+        name: len(command.get("arguments") or ())
+        for name, command in config["commands"].items()
+    }
     return boundary_base + f'''
 
 
-STATE_DEFAULT = {default_state!r}
-COMMAND_ARITY = {commands!r}
+STATE_INITIAL = {initial!r}
+STATE_SCHEMA = {schema!r}
+COMMAND_ARITY = {arity!r}
+PERSISTENCE = {persistence!r}
 
 
 def parse_host_argv(thing):
-    """INWARD host grammar boundary for one stateful command."""
+    """INWARD host grammar boundary for one declared command."""
     import os
 
     if not is_thing(thing):
@@ -199,7 +210,7 @@ def parse_host_argv(thing):
     if not isinstance(argv, (list, tuple)):
         return {{**thing, "value": {{"error": "invalid-argv"}}, "state": "invalid"}}
     args = list(argv)
-    state_path = os.environ.get("UC_TASK_LEDGER_STATE", ".uc-task-ledger.json")
+    state_path = os.environ.get(PERSISTENCE["environment"], PERSISTENCE["default_path"])
     if len(args) >= 2 and args[0] == "--state":
         state_path = args[1]
         args = args[2:]
@@ -241,8 +252,36 @@ def parse_host_argv(thing):
     }}
 
 
+def _path_value(root, path):
+    current = root
+    for key in path:
+        if not isinstance(current, dict) or key not in current:
+            return None
+        current = current[key]
+    return current
+
+
+def _valid_state(value):
+    if not isinstance(value, dict):
+        return False
+    type_map = {{
+        "array": list,
+        "object": dict,
+        "string": str,
+        "integer": int,
+        "boolean": bool,
+    }}
+    for entry in STATE_SCHEMA:
+        expected = type_map.get(entry.get("type"))
+        actual = _path_value(value, entry.get("path") or ())
+        if expected is None or not isinstance(actual, expected):
+            return False
+    return True
+
+
 def load_state(thing):
     """OUTWARD read boundary. Missing storage is the declared initial state."""
+    import copy
     import json
 
     if thing.get("state") in {{"invalid", "absent", "false"}}:
@@ -252,8 +291,8 @@ def load_state(thing):
     if path.exists():
         state_data = json.loads(path.read_text(encoding="utf-8"))
     else:
-        state_data = {default_state!r}
-    if not isinstance(state_data, dict) or not isinstance(state_data.get("tasks"), list):
+        state_data = copy.deepcopy(STATE_INITIAL)
+    if not _valid_state(state_data):
         return {{
             **thing,
             "value": {{**value, "error": "invalid-state"}},
@@ -269,7 +308,7 @@ def load_state(thing):
 
 
 def persist_state(thing):
-    """OUTWARD atomic write boundary; pure validation failures never write."""
+    """OUTWARD atomic write boundary; validation failures never write."""
     import json
     import os
 
@@ -318,11 +357,101 @@ def present_result(thing):
 
 
 def _state_runtime() -> str:
-    return '''"""Audited state-transition primitive.
+    return '''"""Audited generic transition-expression primitive.
 
-Selection and iteration are centralized here and tested through generated
-mutations.  It is pure: no filesystem, environment, stdout, or ticket I/O.
+This module is pure: no filesystem, environment, stdout, or ticket I/O.
 """
+
+import copy
+
+
+def _path(root, path):
+    current = root
+    for key in path:
+        current = current[key]
+    return current
+
+
+def _value(spec, context):
+    if isinstance(spec, dict) and set(spec) == {"$arg"}:
+        return context["arguments"][spec["$arg"]]
+    if isinstance(spec, dict) and set(spec) == {"$literal"}:
+        return copy.deepcopy(spec["$literal"])
+    if isinstance(spec, dict) and set(spec) == {"$state"}:
+        return copy.deepcopy(_path(context["state"], spec["$state"]))
+    if isinstance(spec, dict) and set(spec) == {"$selected"}:
+        selected = context["selected"][spec["$selected"]["name"]]
+        return copy.deepcopy(selected.get(spec["$selected"]["field"]))
+    if isinstance(spec, dict) and set(spec) == {"$project"}:
+        node = spec["$project"]
+        rows = _path(context["state"], node["path"])
+        return [
+            {field: copy.deepcopy(row.get(field)) for field in node["fields"]}
+            for row in rows
+        ]
+    if isinstance(spec, dict):
+        return {key: _value(value, context) for key, value in spec.items()}
+    if isinstance(spec, list):
+        return [_value(item, context) for item in spec]
+    return copy.deepcopy(spec)
+
+
+def _argument(raw, rule):
+    kind = rule.get("type", "string")
+    if kind == "string":
+        parsed = raw if isinstance(raw, str) else None
+    elif kind == "integer":
+        try:
+            parsed = int(raw)
+        except (TypeError, ValueError):
+            parsed = None
+    else:
+        parsed = None
+    if parsed is None:
+        return None, rule.get("error", "invalid-argument")
+    if rule.get("non_empty") and isinstance(parsed, str) and not parsed.strip():
+        return None, rule.get("error", "invalid-argument")
+    if "minimum" in rule and parsed < rule["minimum"]:
+        return None, rule.get("error", "invalid-argument")
+    return parsed, None
+
+
+def _matches(row, where, context):
+    return all(
+        row.get(clause["field"]) == _value(clause["equals"], context)
+        for clause in where
+    )
+
+
+def _guard(rule, context):
+    kind = rule["kind"]
+    rows = _path(context["state"], rule["path"])
+    matches = [row for row in rows if _matches(row, rule["where"], context)]
+    if kind == "unique":
+        return rule.get("error") if matches else None
+    if kind == "require":
+        if not matches:
+            return rule.get("error")
+        context["selected"][rule["as"]] = matches[0]
+        return None
+    return "invalid-guard"
+
+
+def _action(rule, context):
+    kind = rule["kind"]
+    if kind == "append":
+        _path(context["state"], rule["path"]).append(_value(rule["value"], context))
+        return True
+    target = context["selected"][rule["target"]]
+    if kind == "set":
+        for field, spec in rule["values"].items():
+            target[field] = _value(spec, context)
+        return True
+    if kind == "increment":
+        for field, spec in rule["values"].items():
+            target[field] = target.get(field, 0) + _value(spec, context)
+        return True
+    return False
 
 
 def apply_stateful_resource(thing, config, part_name):
@@ -330,53 +459,46 @@ def apply_stateful_resource(thing, config, part_name):
     evidence = (*tuple(thing.get("evidence") or ()), f"part:{part_name}")
     if thing.get("state") != "formed":
         return {**thing, "evidence": (*evidence, f"{part_name}:skipped")}
-    resource = dict(value.get("resource_state") or {})
-    tasks = [dict(task) for task in resource.get("tasks") or ()]
-    command = value.get("command")
-    arguments = list(value.get("arguments") or ())
-    result = None
-    changed = False
-    error = None
-    if command == "add":
-        title = arguments[0] if arguments else ""
-        if not isinstance(title, str) or not title.strip():
-            error = "invalid-title"
-        elif any(task.get("title") == title for task in tasks):
-            error = "duplicate-title"
-        else:
-            task = {"completed": False, "title": title}
-            tasks.append(task)
-            result = {"added": title, "completed": False}
-            changed = True
-    elif command == "complete":
-        title = arguments[0] if arguments else ""
-        selected = next(
-            (task for task in tasks if task.get("title") == title and not task.get("completed")),
-            None,
-        )
-        if selected is None:
-            error = "task-not-open"
-        else:
-            selected["completed"] = True
-            result = {"completed": title}
-            changed = True
-    elif command == "list":
-        result = {"tasks": [{"completed": bool(task.get("completed")), "title": task.get("title")} for task in tasks]}
-    else:
-        error = "unknown-command"
-    if error is not None:
+    command = config["commands"].get(value.get("command"))
+    if command is None:
         return {
             **thing,
-            "value": {**value, "error": error},
+            "value": {**value, "error": "unknown-command"},
             "evidence": (*evidence, f"{part_name}:validation-failed"),
             "state": "invalid",
         }
-    resource["tasks"] = tasks
+    raw_arguments = tuple(value.get("arguments") or ())
+    arguments = {}
+    for raw, rule in zip(raw_arguments, command.get("arguments") or ()):
+        parsed, error = _argument(raw, rule)
+        if error is not None:
+            return {
+                **thing,
+                "value": {**value, "error": error},
+                "evidence": (*evidence, f"{part_name}:validation-failed"),
+                "state": "invalid",
+            }
+        arguments[rule["name"]] = parsed
+    state = copy.deepcopy(value.get("resource_state") or {})
+    context = {"arguments": arguments, "selected": {}, "state": state}
+    for rule in command.get("guards") or ():
+        error = _guard(rule, context)
+        if error is not None:
+            return {
+                **thing,
+                "value": {**value, "error": error},
+                "evidence": (*evidence, f"{part_name}:validation-failed"),
+                "state": "invalid",
+            }
+    changed = False
+    for rule in command.get("actions") or ():
+        changed = _action(rule, context) or changed
+    result = _value(command["result"], context)
     return {
         **thing,
         "value": {
             **value,
-            "resource_state": resource,
+            "resource_state": state,
             "result": result,
             "state_changed": changed,
         },
@@ -387,7 +509,7 @@ def apply_stateful_resource(thing, config, part_name):
 
 
 def _core() -> str:
-    return '''"""Generated verification Part."""
+    return '''"""Generated verification part."""
 
 from .boundary import is_thing
 
@@ -454,8 +576,7 @@ if __name__ == "__main__":
 '''
 
 
-def _tests(package: str, feature_name: str, config: dict) -> str:
-    acceptance = list(config.get("acceptance") or ())
+def _tests(package: str, config: dict) -> str:
     return f'''"""Generated stateful acceptance, failure, and source-law tests."""
 
 from __future__ import annotations
@@ -468,7 +589,10 @@ from {package}.cli import host_main
 from {package}.compose import program
 
 
-ACCEPTANCE = {acceptance!r}
+ACCEPTANCE = {config["acceptance"]!r}
+REJECTIONS = {config["rejections"]!r}
+EXPECT_STATE = {config["state"].get("expect")!r}
+FAILURE_PROBE = {config["failure_probe"]!r}
 
 
 def _invoke(state, argv, capsys):
@@ -478,42 +602,39 @@ def _invoke(state, argv, capsys):
 
 
 def test_complete_stateful_proof_and_restart(tmp_path, capsys):
-    state = tmp_path / "ledger.json"
+    state = tmp_path / "state.json"
     outputs = []
     for case in ACCEPTANCE:
         code, payload = _invoke(state, case["argv"], capsys)
         assert code == case.get("exit", 0)
         assert payload == case["expect"]
         outputs.append(payload)
-    assert json.loads(state.read_text(encoding="utf-8")) == {{
-        "tasks": [
-            {{"completed": True, "title": "A"}},
-            {{"completed": False, "title": "B"}},
-        ]
-    }}
+    assert json.loads(state.read_text(encoding="utf-8")) == EXPECT_STATE
     assert outputs[-1] == outputs[-2]
 
 
-def test_validation_failure_creates_no_ticket_or_state(tmp_path, capsys):
-    state = tmp_path / "ledger.json"
-    code, payload = _invoke(state, ["add", ""], capsys)
-    assert code == 1
-    assert payload["error"] == "invalid-title"
-    assert not state.exists()
-    assert not (tmp_path / ".uc-tickets").exists()
+def test_declared_validation_failures_create_no_ticket_or_state(tmp_path, capsys):
+    for index, case in enumerate(REJECTIONS):
+        root = tmp_path / str(index)
+        state = root / "state.json"
+        code, payload = _invoke(state, case["argv"], capsys)
+        assert code == case.get("exit", 1)
+        assert payload == case["expect"]
+        assert not state.exists()
+        assert not (root / ".uc-tickets").exists()
 
 
 def test_unhandled_failure_is_redacted_and_deduplicated(tmp_path, monkeypatch):
     from {package} import state_runtime
 
-    state = tmp_path / "ledger.json"
+    state = tmp_path / "state.json"
 
     def explode(*_args):
         raise RuntimeError("token=super-secret")
 
     monkeypatch.setattr(state_runtime, "apply_stateful_resource", explode)
-    first = program({{"argv": ["--state", str(state), "list"]}})
-    second = program({{"argv": ["--state", str(state), "list"]}})
+    first = program({{"argv": ["--state", str(state), *FAILURE_PROBE]}})
+    second = program({{"argv": ["--state", str(state), *FAILURE_PROBE]}})
     assert first["state"] == second["state"] == "invalid"
     tickets = list((tmp_path / ".uc-tickets").glob("*.json"))
     assert len(tickets) == 1
@@ -531,19 +652,19 @@ def test_domain_and_composition_have_no_explicit_control_flow():
 '''
 
 
-def _readme(declaration: dict, script: str) -> str:
+def _readme(declaration: dict, script: str, config: dict) -> str:
+    examples = "\n".join(
+        f"{script} --state state.json " + " ".join(case["argv"])
+        for case in config["acceptance"]
+    )
     return f'''# {declaration["name"]}
 
-{declaration.get("description", "Generated stateful application")}
+{declaration.get("description", "Generated persistent application")}
 
-This application, its tests, routing, persistence boundaries, and acceptance
-sequence are generated from the JSON seed.
+This application, its tests, routing, persistence identity, transition rules,
+and acceptance sequence are generated from the JSON seed.
 
 ```bash
-{script} --state ledger.json add A
-{script} --state ledger.json add B
-{script} --state ledger.json list
-{script} --state ledger.json complete A
-{script} --state ledger.json list
+{examples}
 ```
 '''

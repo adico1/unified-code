@@ -33,6 +33,7 @@ JSON_DECLARATIONS = [
     DECLS / "text_stats_v2.json",
     DECLS / "invoice_total.json",
     SEEDS / "task_ledger.json",
+    SEEDS / "score_board.json",
 ]
 
 

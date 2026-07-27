@@ -257,8 +257,8 @@ sys.path.insert(0, {str(project_path)!r})
 import {pkg} as app
 if hasattr(app, "program") and callable(app.program):
     samples = [
-        {{"source": "-", "text": "", "document": {{"tasks": []}}}},
-        {{"source": "-", "text": "x", "document": {{"tasks": [{{"id": "1", "title": "t"}}]}}}},
+        {{"source": "-", "text": "", "document": {{"items": []}}}},
+        {{"source": "-", "text": "x", "document": {{"items": [{{"id": "1", "name": "x"}}]}}}},
         {{"source": "-", "text": "hello"}},
     ]
     last = None
@@ -309,8 +309,8 @@ def _verify_python_c_result(result_payload) -> dict:
         from unified.machine.thing import blank_thing, value_of
 
         declaration = {
-            "name": "uc-task-ledger-result-proof",
-            "package": "uc_task_ledger_result_proof",
+            "name": "uc-canonical-result-proof",
+            "package": "uc_canonical_result_proof",
             "features": (
                 {
                     "name": "canonical_result",
