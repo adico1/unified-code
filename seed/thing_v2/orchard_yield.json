@@ -1,0 +1,120 @@
+{
+  "acceptance": [
+    {
+      "expect": {
+        "error": null,
+        "evidence": [
+          "boundary:inward",
+          "stage:01_outer_to_inner",
+          "stage:02_inner_to_core",
+          "stage:03_core_prepare",
+          "stage:04_core_processing",
+          "stage:05_core_collect",
+          "stage:06_core_to_inner",
+          "stage:07_inner_to_outer",
+          "boundary:outward"
+        ],
+        "output": "{\"harvest\":14}",
+        "state": "valid"
+      },
+      "outer_input": "{\"bundles\":4}",
+      "runtime_params": {
+        "weight": 3
+      }
+    },
+    {
+      "expect": {
+        "error": "foreign-core-failure",
+        "evidence": [
+          "boundary:inward",
+          "stage:01_outer_to_inner",
+          "stage:02_inner_to_core",
+          "stage:03_core_prepare",
+          "stage:04_core_processing:error",
+          "boundary:outward"
+        ],
+        "output": null,
+        "state": "invalid"
+      },
+      "outer_input": "{\"bundles\":-1}",
+      "runtime_params": {
+        "weight": 3
+      }
+    }
+  ],
+  "application": {
+    "description": "Compile a foreign-API fixture adapter into a seedless seven-stage harvest projection.",
+    "name": "orchard-yield",
+    "package": "orchard_yield"
+  },
+  "compile_time_constants": {
+    "bias": 2,
+    "fixture_failure_below": 0
+  },
+  "computation_seed": {
+    "coefficient": 1,
+    "input_field": "bundles",
+    "operation": "affine",
+    "output_field": "harvest",
+    "runtime_parameter": "weight"
+  },
+  "core": {
+    "mode": "foreign_fixture"
+  },
+  "evidence_requirements": {
+    "exact": [
+      "boundary:inward",
+      "stage:01_outer_to_inner",
+      "stage:02_inner_to_core",
+      "stage:03_core_prepare",
+      "stage:04_core_processing",
+      "stage:05_core_collect",
+      "stage:06_core_to_inner",
+      "stage:07_inner_to_outer",
+      "boundary:outward"
+    ]
+  },
+  "foreign_dependency": {
+    "effect": "pure",
+    "license": "CC0-1.0",
+    "name": "thing-v2-incompatible-api-fixture",
+    "sha256": "5547e379183d6a30356d964f98e42d9d9228e57c3dd4275d61fa5d166bca5fe9",
+    "source": "generated proof fixture; not a production third-party integration",
+    "version": "1"
+  },
+  "formats": {
+    "core_input": {
+      "kind": "number"
+    },
+    "core_output": {
+      "kind": "number"
+    },
+    "inner_input": {
+      "kind": "object"
+    },
+    "inner_output": {
+      "kind": "object"
+    },
+    "outer_input": {
+      "kind": "json_text"
+    },
+    "outer_output": {
+      "kind": "json_text"
+    }
+  },
+  "runtime_parameter_schema": {
+    "weight": {
+      "maximum": 100,
+      "minimum": 1,
+      "type": "number"
+    }
+  },
+  "selected_adapters": {
+    "outer_input": "json_text",
+    "outer_output": "json_text"
+  },
+  "thing_v2": 2,
+  "validation": {
+    "input_type": "number"
+  }
+}

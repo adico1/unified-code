@@ -1,0 +1,141 @@
+{
+  "acceptance": [
+    {
+      "expect": {
+        "error": null,
+        "evidence": [
+          "boundary:inward",
+          "stage:01_outer_to_inner",
+          "stage:02_inner_to_core",
+          "stage:03_core_prepare",
+          "stage:04_core_processing",
+          "stage:05_core_collect",
+          "stage:06_core_to_inner",
+          "stage:07_inner_to_outer",
+          "boundary:outward"
+        ],
+        "output": {
+          "velocity": 31
+        },
+        "state": "valid"
+      },
+      "outer_input": {
+        "distance": 5
+      },
+      "runtime_params": {
+        "duration": 3
+      }
+    },
+    {
+      "expect": {
+        "error": null,
+        "evidence": [
+          "boundary:inward",
+          "stage:01_outer_to_inner",
+          "stage:02_inner_to_core",
+          "stage:03_core_prepare",
+          "stage:04_core_processing",
+          "stage:05_core_collect",
+          "stage:06_core_to_inner",
+          "stage:07_inner_to_outer",
+          "boundary:outward"
+        ],
+        "output": {
+          "velocity": 17
+        },
+        "state": "valid"
+      },
+      "outer_input": {
+        "distance": 2
+      },
+      "runtime_params": {
+        "duration": 4
+      }
+    },
+    {
+      "expect": {
+        "error": "invalid-core-input",
+        "evidence": [
+          "boundary:inward",
+          "stage:01_outer_to_inner",
+          "stage:02_inner_to_core:error",
+          "boundary:outward"
+        ],
+        "output": null,
+        "state": "invalid"
+      },
+      "outer_input": {
+        "unknown-distance": 2
+      },
+      "runtime_params": {
+        "duration": 4
+      }
+    }
+  ],
+  "application": {
+    "description": "Compile a seed-defined trajectory measurement into a seedless seven-stage runtime.",
+    "name": "trajectory-meter",
+    "package": "trajectory_meter"
+  },
+  "compile_time_constants": {
+    "bias": 1
+  },
+  "computation_seed": {
+    "coefficient": 2,
+    "input_field": "distance",
+    "operation": "affine",
+    "output_field": "velocity",
+    "runtime_parameter": "duration"
+  },
+  "core": {
+    "mode": "native"
+  },
+  "evidence_requirements": {
+    "exact": [
+      "boundary:inward",
+      "stage:01_outer_to_inner",
+      "stage:02_inner_to_core",
+      "stage:03_core_prepare",
+      "stage:04_core_processing",
+      "stage:05_core_collect",
+      "stage:06_core_to_inner",
+      "stage:07_inner_to_outer",
+      "boundary:outward"
+    ]
+  },
+  "formats": {
+    "core_input": {
+      "kind": "number"
+    },
+    "core_output": {
+      "kind": "number"
+    },
+    "inner_input": {
+      "kind": "object"
+    },
+    "inner_output": {
+      "kind": "object"
+    },
+    "outer_input": {
+      "kind": "object"
+    },
+    "outer_output": {
+      "kind": "object"
+    }
+  },
+  "runtime_parameter_schema": {
+    "duration": {
+      "maximum": 100,
+      "minimum": 1,
+      "type": "number"
+    }
+  },
+  "selected_adapters": {
+    "outer_input": "object",
+    "outer_output": "object"
+  },
+  "thing_v2": 2,
+  "validation": {
+    "input_type": "number"
+  }
+}

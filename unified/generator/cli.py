@@ -42,6 +42,10 @@ def host_main(argv=None):
         from .unfold import run_unfold
 
         result = run_unfold(inward(payload))
+    elif command == "compile":
+        from .thing_v2 import run_compile
+
+        result = run_compile(inward(payload))
     elif command == "gauntlet":
         from .gauntlet import run_gauntlet
 
@@ -80,6 +84,10 @@ def host_main(argv=None):
                 sys.stderr.write(f"uc: added {value.get('feature')!r} to {path}\n")
             elif command == "unfold" and path:
                 sys.stderr.write(f"uc: unfolded {path}\n")
+                if value.get("install") == "ok":
+                    sys.stderr.write("uc: install ok\n")
+            elif command == "compile" and path:
+                sys.stderr.write(f"uc: compiled {path}\n")
                 if value.get("install") == "ok":
                     sys.stderr.write("uc: install ok\n")
 
@@ -286,6 +294,49 @@ def _parse_argv(argv: list[str]) -> dict:
             "fixed_point": fixed_point,
             "clean_room": clean_room,
             "project_name": project_name,
+        }
+
+    if command == "compile":
+        # uc compile <thing-v2-seed.json> --output <directory> --verify
+        if len(argv) < 2:
+            return {"command": "compile", "error": "usage-compile"}
+        seed_path = argv[1]
+        output = None
+        verify = False
+        i = 2
+        while i < len(argv):
+            if argv[i] == "--output" and i + 1 < len(argv):
+                output = argv[i + 1]
+                i += 2
+                continue
+            if argv[i] == "--verify":
+                verify = True
+                i += 1
+                continue
+            return {
+                "command": "compile",
+                "seed_path": seed_path,
+                "error": f"unknown-flag:{argv[i]}",
+            }
+        if not output:
+            return {
+                "command": "compile",
+                "seed_path": seed_path,
+                "error": "usage-compile-missing-output",
+            }
+        if not verify:
+            return {
+                "command": "compile",
+                "seed_path": seed_path,
+                "output": output,
+                "verify": False,
+                "error": "usage-compile-requires-verify",
+            }
+        return {
+            "command": "compile",
+            "seed_path": seed_path,
+            "output": output,
+            "verify": True,
         }
 
     return {"command": command, "error": "unknown-command"}

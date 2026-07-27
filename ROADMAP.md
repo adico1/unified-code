@@ -53,6 +53,18 @@ Generated Python, Python UEM, and C UEM also share the frozen scalar input
 profile in `UEM_SPEC.md`, with differential minimum, maximum, overflow, syntax,
 Unicode-digit, and whitespace vectors.
 
+## Thing v2 — Focused compile-time specialization
+
+Thing v2 adds a bounded seed compiler without widening Milestone 2. It
+specializes seven explicit pipeline stages, supports native and foreign-fixture
+core modes, verifies the generated application without its seed, records
+dependency-aware deterministic hashes, and atomically installs only after every
+gate passes. See [THING_V2.md](THING_V2.md).
+
+This proof is intentionally limited to its declared numeric/affine seed
+language. It does not claim arbitrary programs, production compatibility with
+all foreign libraries, self-hosting, GUI/browser generation, or all hardware.
+
 ## Milestone 2 — Root-seed fixed-point bootstrap
 
 This milestone is deliberately non-blocking for Milestone 1. Open items:
