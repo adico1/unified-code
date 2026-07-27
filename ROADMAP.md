@@ -16,6 +16,11 @@ stateful application, generated tests and acceptance sequence; verifies
 Python/C canonical equality and deterministic rebuild hashes; and installs only
 after every requested gate passes.
 
+> One 158-line JSON seed deterministically unfolds into a 1,811-line
+> persistent application, with zero handwritten application code, zero
+> domain/composition control-flow nodes, identical Python/C results, and
+> complete L1–L13 verification.
+
 ## Milestone 2 — Root-seed fixed-point bootstrap
 
 This milestone is deliberately non-blocking for Milestone 1. Open items:
@@ -27,8 +32,8 @@ This milestone is deliberately non-blocking for Milestone 1. Open items:
 - Rebuild the complete repository in a clean room from Stage 0 plus the root
   seed.
 - Reach a whole-tree fixed point with byte-identical hashes.
-- Collapse the remaining dual-host implementation structure to the single
-  machine/host-boundary model required by Standard Ten.
+- Unify the UEM surface while preserving independent Python and C hosts for
+  L11 equivalence.
 
 ## 0.1 — Kernel
 
