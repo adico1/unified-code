@@ -70,7 +70,7 @@
       "id": "uem-gauntlet",
       "handler": "command",
       "requires": [],
-      "argv": ["uc", "gauntlet", "examples/declarations/text_stats_v2.json"]
+      "argv": ["{python}", "-m", "unified.generator.cli", "gauntlet", "examples/declarations/text_stats_v2.json"]
     }
   ],
   "proof_nodes": [

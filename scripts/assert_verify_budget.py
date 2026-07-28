@@ -4,11 +4,15 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 
 
 def audited_assertion_boundary():
     completed = subprocess.run(
-        ["uc", "verify-all"], capture_output=True, text=True, check=True
+        [sys.executable, "-m", "unified.generator.cli", "verify-all"],
+        capture_output=True,
+        text=True,
+        check=True,
     )
     result = json.loads(completed.stdout)
     value = result["value"]
