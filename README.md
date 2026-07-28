@@ -146,7 +146,9 @@ contract.
 The bounded pre-bootstrap trust boundary and deterministic Stage-1 handoff are
 specified in [STAGE0.md](STAGE0.md). The structured root-seed declaration now
 generates the first isolated runnable framework/generator surface described in
-[STAGE1.md](STAGE1.md), without widening the application-language surface.
+[STAGE1.md](STAGE1.md), without widening the application-language surface. Its
+isolated byte-identical two-stage proof is documented in
+[STAGE1_FIXED_POINT.md](STAGE1_FIXED_POINT.md).
 
 ### Thing v2 — compile-time specialization
 
