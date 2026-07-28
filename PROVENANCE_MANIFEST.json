@@ -1,5 +1,5 @@
 {
-  "file_count": 284,
+  "file_count": 286,
   "files": [
     {
       "compliance": "ok",
@@ -121,8 +121,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "5b31263c9a24af73ae247e60ee67de62239a2613ff2b9ea82d1bfd7dac2c6122",
-      "size": 30174,
+      "sha256": "dc2f3af605d9f3bcb20e8607c73b1fe28d1a063c24b83d9372bad894a79e1fe1",
+      "size": 30353,
       "standard_ten_class_ok": true
     },
     {
@@ -141,7 +141,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "GAUNTLET.md",
       "provenance": "evidence",
-      "sha256": "d82b3ba344f260458860a2f7454f802245ee1597d64b10cc827961443b626062",
+      "sha256": "0fa0d5bc6bb62286eb26a5d92b5e0e959c22b76b52042eb68479c2a70167076a",
       "size": 1331,
       "standard_ten_class_ok": true
     },
@@ -224,8 +224,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "6289c5eb7aa10749bc94da245515ce5146da21e7ccf3dee659ee2f16f75c871f",
-      "size": 179044,
+      "sha256": "35b093a1e404b6e485c91a08ed390cfa151532f6f16275e55c04bc0b825e1726",
+      "size": 180317,
       "standard_ten_class_ok": true
     },
     {
@@ -245,8 +245,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "README.md",
       "provenance": "handwritten-pending",
-      "sha256": "3edd4dbb64601c037fc8f211755bd955a29a6dbc4880b37a7ce1f058d28249c9",
-      "size": 11839,
+      "sha256": "276ad1198feb95b8d5105f7e1a6cb81a444b953b36832bd434c55cef31926e95",
+      "size": 11887,
       "standard_ten_class_ok": false
     },
     {
@@ -266,8 +266,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "ROADMAP.md",
       "provenance": "handwritten-pending",
-      "sha256": "2b3a0abe00d0a2d09a436bc3088156ba4745037c89b22429cf1149783bb2664d",
-      "size": 8342,
+      "sha256": "8425980061922e0201857bf395101bf09ac7503e31f8f11bdf0efc3cb4c2cf08",
+      "size": 8391,
       "standard_ten_class_ok": false
     },
     {
@@ -287,8 +287,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "ROOT_CONVERGENCE.md",
       "provenance": "handwritten-pending",
-      "sha256": "17aaa7a7e692fe4ae5fbc64c65b6bf5e06b43c6b36d65b18a3d4e2b46e8901fa",
-      "size": 4379,
+      "sha256": "a2a6a6142608d173fde4dc9e6e644a1e6e9d40c7e28b04258ab9f07b2be37eb1",
+      "size": 4481,
       "standard_ten_class_ok": false
     },
     {
@@ -329,8 +329,29 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "STAGE0.md",
       "provenance": "handwritten-pending",
-      "sha256": "6465ad129375333ab9b30a9dab61d22e883a98056187bbf499c0e9d27a48173c",
-      "size": 7640,
+      "sha256": "9e2bae9dd4ed3f3adf24d7b89a4265149de2b6ffc96dde7e1af30d4eb23532aa",
+      "size": 8413,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "STAGE1.md",
+      "provenance": "handwritten-pending",
+      "sha256": "1d1905da481412dd5eeab62f42c3da6d6f26018aaf371f1eac9a0d7735af8c73",
+      "size": 3073,
       "standard_ten_class_ok": false
     },
     {
@@ -431,7 +452,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "artifacts/uem/invoice_total/program.symbolic.json.stamp.json",
       "provenance": "generated",
-      "sha256": "d44578b02edc54de049c241ba613f8ea0e0da6ebdbf5fab11906da69c45380b5",
+      "sha256": "db995be5d8230b5eb8e7f663f6de1fbdc90e8c1b97602dd0de3d4736ca7f9698",
       "size": 422,
       "standard_ten_class_ok": true
     },
@@ -471,7 +492,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "artifacts/uem/invoice_total/program.uem.stamp.json",
       "provenance": "generated",
-      "sha256": "b6e0134ac7043ea5157d86a30a3115b63df59170ee0598abd9195a865a57be98",
+      "sha256": "5805e26e7ad32e68caed753bcb1757ec5889a3389f5d12df445f014277d440e9",
       "size": 422,
       "standard_ten_class_ok": true
     },
@@ -511,7 +532,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "artifacts/uem/text_stats_v2/program.symbolic.json.stamp.json",
       "provenance": "generated",
-      "sha256": "6c0850565dc2628e77cc5ab176abd428ce1d936df30eda44fb5abaf230ff6a84",
+      "sha256": "4de434b81d37047e95a7c3c08a6fa4a932dc663390f9f06fe53a43e91192ee31",
       "size": 422,
       "standard_ten_class_ok": true
     },
@@ -551,7 +572,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "artifacts/uem/text_stats_v2/program.uem.stamp.json",
       "provenance": "generated",
-      "sha256": "a756042213f3087c56e79175824f04ee3e506945312af615dee6b1da5e1273e3",
+      "sha256": "488bfbba6c1b9296f33001e466ff6554766978f0e976e444f6e2b97169745e98",
       "size": 422,
       "standard_ten_class_ok": true
     },
@@ -559,12 +580,12 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 9,
-        "for": 4,
-        "if": 53,
+        "comp": 15,
+        "for": 6,
+        "if": 64,
         "match": 0,
-        "total": 72,
-        "try": 6,
+        "total": 94,
+        "try": 9,
         "while": 0
       },
       "gap_id": "gap.untracked-or-handwritten",
@@ -575,8 +596,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "bootstrap/stage0.py",
       "provenance": "handwritten-pending",
-      "sha256": "d87135e64f318afc75fb3d50eecaa83e13c4beec3ce33aaae1d13071dfb170b9",
-      "size": 19920,
+      "sha256": "d1ba66af02b606e209421ed786eb0e0795e1fc847107ecb3cb6b99959c7b6514",
+      "size": 35749,
       "standard_ten_class_ok": false
     },
     {
@@ -1219,7 +1240,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "c/targets/manifests/l12_report_x86_64.json",
       "provenance": "evidence",
-      "sha256": "b209e4f77c4c65c7312a9259173e2e6dcf286ad1f2790180e51d123de62264bc",
+      "sha256": "ba140efcd572d4c121413126b045fc27e408a91ec0dfc5cd00cac5b29f412525",
       "size": 2498,
       "standard_ten_class_ok": true
     },
@@ -3340,8 +3361,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "coverage.json",
       "provenance": "evidence",
-      "sha256": "aa765976bbe5113aea2f746ad8a20a3f114f7ce9601387751f2055820bff22ca",
-      "size": 15413,
+      "sha256": "b6130a10546454152b31effb85ae5e067af4e8fa46a066c25b41a075ecadbdce",
+      "size": 15414,
       "standard_ten_class_ok": true
     },
     {
@@ -3360,7 +3381,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "coverage_py.json",
       "provenance": "evidence",
-      "sha256": "32dc40e949e898e3b8c55e15a606498d400d71f0e6ddb5ebfa4f3348597e5b1a",
+      "sha256": "f6277200dfe9e536bd68af7bcbbdbc79ffd4fd79a92cd74babdf4fa0de8cbce2",
       "size": 114317,
       "standard_ten_class_ok": true
     },
@@ -3893,8 +3914,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/ROOT.seed.json",
       "provenance": "seed",
-      "sha256": "375956e77f77ce474f8deacba7d0aefe4ed90f2023b7819e357388a3eb03e5e3",
-      "size": 5287,
+      "sha256": "9b145882d8aaa29dfec413ce78e72e86998349a5d7e63118b0daf361b26d25c2",
+      "size": 7696,
       "standard_ten_class_ok": true
     },
     {
@@ -3933,8 +3954,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/SCHEMA.json",
       "provenance": "seed",
-      "sha256": "61776cb0433eff8bdbecdcc85c07222c3a2c14f6794d38dbaffc46cab1d2bd62",
-      "size": 3189,
+      "sha256": "2682d4a51151cdb488288f37b3220b0c1edf1b57b0a362ef24659c063484d218",
+      "size": 6775,
       "standard_ten_class_ok": true
     },
     {
@@ -3993,8 +4014,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/STAGE0_SCHEMA.json",
       "provenance": "seed",
-      "sha256": "3c4493b7a786f15b670646f8c83ec814126c3b2916754270fc4a257c24a49cdb",
-      "size": 3655,
+      "sha256": "3113d916ee2295241781e734aede3f3aafbcf8c7de5238013553c7babbb836aa",
+      "size": 3760,
       "standard_ten_class_ok": true
     },
     {
@@ -4273,8 +4294,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/stage0/TRUSTED_INPUTS.json",
       "provenance": "seed",
-      "sha256": "88be59852432932aec5516e4c7a9c9d38adec9bb820402d0ab01eb9287be8bc4",
-      "size": 2610,
+      "sha256": "be794e079a807d00c6c2758d61ddc370692e45409ba436a1552d8b365159c92f",
+      "size": 2703,
       "standard_ten_class_ok": true
     },
     {
@@ -4863,6 +4884,30 @@
       "provenance": "handwritten-pending",
       "sha256": "d02db1119138989bb18827e73e35e0117f813a784e00eddb1ca9efe908cf423c",
       "size": 16234,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 4,
+        "for": 2,
+        "if": 0,
+        "match": 0,
+        "total": 6,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_stage1_bootstrap.py",
+      "provenance": "handwritten-pending",
+      "sha256": "b6d347ce57acefade03d4d694f58baf38fd3cfba2db37be4193c9a6e67bf16d0",
+      "size": 9872,
       "standard_ten_class_ok": false
     },
     {
@@ -6209,7 +6254,7 @@
       "standard_ten_class_ok": false
     }
   ],
-  "illegal_provenance_count": 222,
+  "illegal_provenance_count": 224,
   "oop_files": [],
   "open_gaps": [
     {
@@ -6276,7 +6321,7 @@
       "summary": "Clean-room regeneration cannot yet emit the full repository from seed alone."
     }
   ],
-  "seed_sha256": "375956e77f77ce474f8deacba7d0aefe4ed90f2023b7819e357388a3eb03e5e3",
+  "seed_sha256": "9b145882d8aaa29dfec413ce78e72e86998349a5d7e63118b0daf361b26d25c2",
   "standard_version": "TEN-1",
   "uem_version": "UEM-16-v0.1",
   "verdict": "fail"

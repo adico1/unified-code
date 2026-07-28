@@ -167,6 +167,7 @@ ROOT.seed
 → byte-identical root fixed point
 ```
 
-The current executable verifier judges that future proof. It does not fabricate
-Stage1-A or Stage1-B, replace the missing Stage-1 generator, or close the
-existing root-seed `standard.gap`.
+The convergence verifier judges that future proof. The bounded generated
+Stage1-A surface is described in [STAGE1.md](STAGE1.md); it does not by itself
+close the isolated fixed-point, generated-host, generated-verification,
+dependency-provenance, or complete-repository `standard.gap` work.

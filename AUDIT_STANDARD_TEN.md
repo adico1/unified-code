@@ -23,9 +23,9 @@ The repository-wide figures and gaps below measure only the root-seed fixed-poin
 
 **Repository self-hosting verdict:** `fail`
 **standard_version:** TEN-1
-**seed_sha256:** `375956e77f77ce474f8deacba7d0aefe4ed90f2023b7819e357388a3eb03e5e3`
-**files classified:** 284
-**illegal provenance (not in allowed five classes):** 222
+**seed_sha256:** `9b145882d8aaa29dfec413ce78e72e86998349a5d7e63118b0daf361b26d25c2`
+**files classified:** 286
+**illegal provenance (not in allowed five classes):** 224
 **OOP class files:** 0
 **open standard.gap tickets:** 6
 
@@ -53,7 +53,7 @@ Conventional development is not an authorized fallback. Gaps below are `standard
 | `evidence` | 7 |
 | `external-vendored` | 4 |
 | `generated` | 8 |
-| `handwritten-pending` | 222 |
+| `handwritten-pending` | 224 |
 | `physical-host-boundary` | 16 |
 | `seed` | 27 |
 
@@ -68,29 +68,30 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `.github/workflows/test.yml` · `handwritten-pending` · `standard.gap` · `daf9dc9485d797c6`
 - `.gitignore` · `handwritten-pending` · `standard.gap` · `699c693cc407b221`
 - `APPLICATION_ASSEMBLY.md` · `handwritten-pending` · `standard.gap` · `8bacd4ab1df79455`
-- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `5b31263c9a24af73`
-- `GAUNTLET.md` · `evidence` · `ok` · `d82b3ba344f26045`
+- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `dc2f3af605d9f3bc`
+- `GAUNTLET.md` · `evidence` · `ok` · `0fa0d5bc6bb62286`
 - `LAW.md` · `handwritten-pending` · `standard.gap` · `7d452c174dec7c94`
 - `LICENSE` · `handwritten-pending` · `standard.gap` · `af6b910929ec375c`
 - `MANIFESTATION.md` · `handwritten-pending` · `standard.gap` · `4d94d666eea3c4c3`
-- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `6289c5eb7aa10749`
-- `README.md` · `handwritten-pending` · `standard.gap` · `3edd4dbb64601c03`
-- `ROADMAP.md` · `handwritten-pending` · `standard.gap` · `2b3a0abe00d0a2d0`
-- `ROOT_CONVERGENCE.md` · `handwritten-pending` · `standard.gap` · `17aaa7a7e692fe4a`
+- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `35b093a1e404b6e4`
+- `README.md` · `handwritten-pending` · `standard.gap` · `276ad1198feb95b8`
+- `ROADMAP.md` · `handwritten-pending` · `standard.gap` · `8425980061922e02`
+- `ROOT_CONVERGENCE.md` · `handwritten-pending` · `standard.gap` · `a2a6a6142608d173`
 - `SPEC.md` · `handwritten-pending` · `standard.gap` · `fb04ba1772610eb3`
-- `STAGE0.md` · `handwritten-pending` · `standard.gap` · `6465ad129375333a`
+- `STAGE0.md` · `handwritten-pending` · `standard.gap` · `9e2bae9dd4ed3f3a`
+- `STAGE1.md` · `handwritten-pending` · `standard.gap` · `1d1905da481412dd`
 - `STANDARD_TEN.md` · `seed` · `ok` · `d7152599e81fa3e1`
 - `THING_V2.md` · `handwritten-pending` · `standard.gap` · `da567f98a7b53f54`
 - `UEM_SPEC.md` · `handwritten-pending` · `standard.gap` · `6bfacbc86a486beb`
 - `artifacts/uem/invoice_total/program.symbolic.json` · `generated` · `ok` · `a1899fe0c2f6ac40`
-- `artifacts/uem/invoice_total/program.symbolic.json.stamp.json` · `generated` · `ok` · `d44578b02edc54de`
+- `artifacts/uem/invoice_total/program.symbolic.json.stamp.json` · `generated` · `ok` · `db995be5d8230b5e`
 - `artifacts/uem/invoice_total/program.uem` · `generated` · `ok` · `cf2a87a8219f26e5`
-- `artifacts/uem/invoice_total/program.uem.stamp.json` · `generated` · `ok` · `b6e0134ac7043ea5`
+- `artifacts/uem/invoice_total/program.uem.stamp.json` · `generated` · `ok` · `5805e26e7ad32e68`
 - `artifacts/uem/text_stats_v2/program.symbolic.json` · `generated` · `ok` · `2813f009eccd6cd9`
-- `artifacts/uem/text_stats_v2/program.symbolic.json.stamp.json` · `generated` · `ok` · `6c0850565dc2628e`
+- `artifacts/uem/text_stats_v2/program.symbolic.json.stamp.json` · `generated` · `ok` · `4de434b81d37047e`
 - `artifacts/uem/text_stats_v2/program.uem` · `generated` · `ok` · `b625f4a2104df5a4`
-- `artifacts/uem/text_stats_v2/program.uem.stamp.json` · `generated` · `ok` · `a756042213f3087c`
-- `bootstrap/stage0.py` · `handwritten-pending` · `standard.gap` · `d87135e64f318afc`
+- `artifacts/uem/text_stats_v2/program.uem.stamp.json` · `generated` · `ok` · `488bfbba6c1b9296`
+- `bootstrap/stage0.py` · `handwritten-pending` · `standard.gap` · `d1ba66af02b606e2`
 - `c/.gitignore` · `handwritten-pending` · `standard.gap` · `2dc3b312a4902f53`
 - `c/Makefile` · `handwritten-pending` · `standard.gap` · `f40326d9bf9dd16c`
 - `c/README.md` · `handwritten-pending` · `standard.gap` · `84a0d2f879ecac82`
@@ -120,7 +121,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `c/scripts/run_l11_full.sh` · `handwritten-pending` · `standard.gap` · `7d2cc34998478d50`
 - `c/scripts/run_l12_report.py` · `handwritten-pending` · `standard.gap` · `59a553ecb2c3b355`
 - `c/scripts/run_tests.sh` · `handwritten-pending` · `standard.gap` · `aaf230b1f4c73ece`
-- `c/targets/manifests/l12_report_x86_64.json` · `evidence` · `ok` · `b209e4f77c4c65c7`
+- `c/targets/manifests/l12_report_x86_64.json` · `evidence` · `ok` · `ba140efcd572d4c1`
 - `c/tests/BRANCH_LEDGER.md` · `handwritten-pending` · `standard.gap` · `64fbcd45154a4a28`
 - `c/tests/branch_baseline.json` · `handwritten-pending` · `standard.gap` · `b6e5feed17b09ebf`
 - `c/tests/branch_ledger.json` · `handwritten-pending` · `standard.gap` · `8aef627633bf693d`
@@ -221,8 +222,8 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `c/third_party/sha256.h` · `external-vendored` · `ok` · `ee296ea123f062e6`
 - `contract_report.json` · `handwritten-pending` · `standard.gap` · `7805a99ab3fa9825`
 - `contract_status.json` · `handwritten-pending` · `standard.gap` · `3ed75edf9b64810f`
-- `coverage.json` · `evidence` · `ok` · `aa765976bbe5113a`
-- `coverage_py.json` · `evidence` · `ok` · `32dc40e949e898e3`
+- `coverage.json` · `evidence` · `ok` · `b6130a1054645415`
+- `coverage_py.json` · `evidence` · `ok` · `f6277200dfe9e536`
 - `docs/DEVELOPER_WORKFLOW.md` · `handwritten-pending` · `standard.gap` · `5ce70a955dc69a2c`
 - `examples/declarations/invoice_total.json` · `handwritten-pending` · `standard.gap` · `1a0479e011592752`
 - `examples/declarations/invoice_total.py` · `handwritten-pending` · `standard.gap` · `d0cb833aace2a12a`
@@ -246,12 +247,12 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `seed/APPLICATION_SUITE_SCHEMA.json` · `seed` · `ok` · `8bc208989d14af8e`
 - `seed/APPLICATION_V3_SCHEMA.json` · `seed` · `ok` · `d02d5401b7f15aa3`
 - `seed/MANIFESTATION_SCHEMA.json` · `seed` · `ok` · `a7d6ea56ac0856de`
-- `seed/ROOT.seed.json` · `seed` · `ok` · `375956e77f77ce47`
+- `seed/ROOT.seed.json` · `seed` · `ok` · `9b145882d8aaa29d`
 - `seed/ROOT_CONVERGENCE_SCHEMA.json` · `seed` · `ok` · `c99da7eb29b85967`
-- `seed/SCHEMA.json` · `seed` · `ok` · `61776cb0433eff8b`
+- `seed/SCHEMA.json` · `seed` · `ok` · `2682d4a51151cdb4`
 - `seed/SEED_SCHEMA.md` · `seed` · `ok` · `a9ffff6174d42540`
 - `seed/STAGE0_GENERATION_MANIFEST_SCHEMA.json` · `seed` · `ok` · `2edb45ebc6918a22`
-- `seed/STAGE0_SCHEMA.json` · `seed` · `ok` · `3c4493b7a786f15b`
+- `seed/STAGE0_SCHEMA.json` · `seed` · `ok` · `3113d916ee229524`
 - `seed/STAGE1_HANDOFF_SCHEMA.json` · `seed` · `ok` · `fa64bccd2d4cc1a9`
 - `seed/THING_V2_SCHEMA.json` · `seed` · `ok` · `ec5fae5c8435f9c7`
 - `seed/application_suite.json` · `seed` · `ok` · `592473b5a7388e7c`
@@ -265,7 +266,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `seed/declarations/task_ledger.json` · `seed` · `ok` · `cb27a8826900d431`
 - `seed/declarations/text_stats_v2.json` · `seed` · `ok` · `9b0fd8aa94ded247`
 - `seed/registry.json` · `seed` · `ok` · `2d33cdacbb5a7c4a`
-- `seed/stage0/TRUSTED_INPUTS.json` · `seed` · `ok` · `88be59852432932a`
+- `seed/stage0/TRUSTED_INPUTS.json` · `seed` · `ok` · `be794e079a807d00`
 - `seed/stamps/generator.lock.json` · `seed` · `ok` · `eab941fad387f2b9`
 - `seed/thing_v2/orchard_yield.json` · `seed` · `ok` · `dbef860d09797957`
 - `seed/thing_v2/trajectory_meter.json` · `seed` · `ok` · `7d6a462785e2f846`
@@ -291,6 +292,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `tests/test_oom_mutations.py` · `handwritten-pending` · `standard.gap` · `060f8cffef0861d1`
 - `tests/test_signature.py` · `handwritten-pending` · `standard.gap` · `8e640c56a6580c13`
 - `tests/test_stage0.py` · `handwritten-pending` · `standard.gap` · `d02db1119138989b`
+- `tests/test_stage1_bootstrap.py` · `handwritten-pending` · `standard.gap` · `b6d347ce57acefad`
 - `tests/test_standard_ten.py` · `handwritten-pending` · `standard.gap` · `6daf6aec6921f2df`
 - `tests/test_thing_v2.py` · `handwritten-pending` · `standard.gap` · `71daee0236721782`
 - `tests/test_uem.py` · `handwritten-pending` · `standard.gap` · `124d0cb0b656702c`

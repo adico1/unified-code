@@ -26,6 +26,9 @@
     "validate-path",
     "read-trusted-input",
     "plan-stage1-handoff",
+    "interpret-stage1-declaration",
+    "render-stage1-boilerplate",
+    "hash-stage1-tree",
     "atomic-publish"
   ],
   "prohibited_capabilities": [
@@ -44,19 +47,19 @@
       "role": "root-seed",
       "path": "seed/ROOT.seed.json",
       "hash_mode": "canonical-json",
-      "sha256": "fa29d06d3f2f79a7c26042d9dd9b897dee9919cc6899ab4dd0426125061ce625"
+      "sha256": "1dcaa5b6bb6f7744e8ca7be82586aa57939f2b3b5a9845ce2261d42139119f94"
     },
     {
       "role": "root-seed-schema",
       "path": "seed/SCHEMA.json",
       "hash_mode": "canonical-json",
-      "sha256": "52064d8f23fd0fbb73ceb52666c74cc7731884fd8ff9cb9c5bb82208bded6e2a"
+      "sha256": "eb1f3ea100ce03d50d83e67f16a7e4d387ebf3ad93e6edbad30079722163a3de"
     },
     {
       "role": "stage0-contract-schema",
       "path": "seed/STAGE0_SCHEMA.json",
       "hash_mode": "canonical-json",
-      "sha256": "e817086a7d52546b58594ed805b32b1f8ca47900cfea67bf1b15d1edc87526ca"
+      "sha256": "fc296d5816838ca3d6ffacf725e4929a62e614d1fe1bbfbcd86b7954eec97365"
     },
     {
       "role": "stage1-handoff-schema",
@@ -74,7 +77,7 @@
       "role": "stage0-executable",
       "path": "bootstrap/stage0.py",
       "hash_mode": "raw-bytes",
-      "sha256": "d87135e64f318afc75fb3d50eecaa83e13c4beec3ce33aaae1d13071dfb170b9"
+      "sha256": "d1ba66af02b606e209421ed786eb0e0795e1fc847107ecb3cb6b99959c7b6514"
     }
   ],
   "external_dependencies": [],

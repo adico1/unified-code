@@ -32,4 +32,4 @@ Each dimension is scored separately. Never combined into one average.
 - Assertions verify state, output, evidence, events, effects
 - **Zero denominator is failure** (never report 100% of 0)
 
-Generated in 19.6s.
+Generated in 25.8s.

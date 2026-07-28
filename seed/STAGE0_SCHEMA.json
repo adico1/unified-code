@@ -55,6 +55,9 @@
         "validate-path",
         "read-trusted-input",
         "plan-stage1-handoff",
+        "interpret-stage1-declaration",
+        "render-stage1-boilerplate",
+        "hash-stage1-tree",
         "atomic-publish"
       ]
     },

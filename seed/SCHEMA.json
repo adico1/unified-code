@@ -13,7 +13,8 @@
     "vendored",
     "laws",
     "standard_ten",
-    "gaps"
+    "gaps",
+    "stage1"
   ],
   "additionalProperties": false,
   "properties": {
@@ -90,6 +91,147 @@
       "items": { "type": "string" }
     },
     "standard_ten": { "const": true },
+    "stage1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format_version",
+        "framework",
+        "generator",
+        "uem"
+      ],
+      "properties": {
+        "format_version": {
+          "const": "UC-STAGE1-SEED-1"
+        },
+        "framework": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "standard_version",
+            "thing_fields",
+            "thing_states",
+            "laws"
+          ],
+          "properties": {
+            "standard_version": {
+              "const": "TEN-1"
+            },
+            "thing_fields": {
+              "const": [
+                "value",
+                "depths",
+                "axes",
+                "evidence",
+                "state"
+              ]
+            },
+            "thing_states": {
+              "const": [
+                "unknown",
+                "absent",
+                "false",
+                "formed",
+                "valid",
+                "invalid"
+              ]
+            },
+            "laws": {
+              "type": "array",
+              "minItems": 13,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "generator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "boilerplate",
+            "operations",
+            "outputs"
+          ],
+          "properties": {
+            "boilerplate": {
+              "const": "UC-STAGE1-PY-1"
+            },
+            "operations": {
+              "const": [
+                "canonicalize-json",
+                "resolve-seed-node",
+                "render-canonical-json",
+                "render-stage1-runner",
+                "hash-file",
+                "hash-tree",
+                "write-manifest",
+                "atomic-publish"
+              ]
+            },
+            "outputs": {
+              "type": "array",
+              "minItems": 3,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path",
+                  "seed_node",
+                  "encoding"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "seed_node": {
+                    "type": "string",
+                    "pattern": "^/stage1/"
+                  },
+                  "encoding": {
+                    "const": "canonical-json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "uem": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "machine",
+            "format_version",
+            "opcodes",
+            "primitive_registry_version",
+            "primitives"
+          ],
+          "properties": {
+            "machine": {
+              "const": "UEM-16"
+            },
+            "format_version": {
+              "const": 1
+            },
+            "opcodes": {
+              "type": "array",
+              "minItems": 16
+            },
+            "primitive_registry_version": {
+              "const": 2
+            },
+            "primitives": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
     "gaps": {
       "type": "array",
       "items": {

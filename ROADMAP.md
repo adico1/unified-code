@@ -85,7 +85,8 @@ This milestone is deliberately non-blocking for Milestone 1. Open items:
 
 - Define and prove the minimal Stage-0 trusted-input and deterministic handoff
   contract ([STAGE0.md](STAGE0.md)).
-- Generate the generator and complete framework from `seed/ROOT.seed.json`.
+- Stage1-A: generate the bounded runnable framework/generator surface from
+  `seed/ROOT.seed.json` ([STAGE1.md](STAGE1.md)).
 - Generate Python/C hosts, physical target adapters, and build definitions.
 - Generate repository tests, mutations, goldens, documentation, and audit tools.
 - Account for vendored dependencies without claiming they were generated.
