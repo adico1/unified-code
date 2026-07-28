@@ -15,10 +15,10 @@ uc assemble seed/application_suite.json \
 
 The operation validates every seed, derives a canonical specification and plan,
 generates seven Thing v2 stages plus runtime boundaries, tests, manifests,
-documentation and entry points, builds and tests the trees, installs isolated
-copies, executes restart scenarios, compares Python, JavaScript and a real
-browser canvas/keyboard/render path, injects a replacement-stage publication
-failure, and atomically publishes only after all ten depths pass.
+documentation, CLI entry points and graphical launchers, builds and tests the
+trees, installs isolated copies, executes restart scenarios, compares CLI and
+GUI behavior in a real Chromium-family browser, injects a replacement-stage
+publication failure, and atomically publishes only after all ten depths pass.
 
 For these Python/browser targets, build means parsing every generated Python
 source and executable plus running the JavaScript host syntax gate before tests
@@ -38,13 +38,16 @@ Application names, commands, fields, validation values, persistence identity,
 numeric operation names, event names, geometry and acceptance results live in
 the seeds. They do not select application-named generator branches.
 
-The anti-overfitting scanner derives vocabulary from all five seeds. Its 155
-literal injections validate that the scanner detects each term on every
+The anti-overfitting scanner derives backend and GUI vocabulary from all five
+seeds. Its literal injections validate that the scanner detects each term on every
 permanent compiler/boilerplate surface; they are scanner self-tests, not
-behavioral generator mutations. The behavioral anti-overfitting proof clones
-the suite, renames all five identities, operation names, events, dependency
-references and world roles, then generates and executes all five renamed
-applications.
+behavioral generator mutations. Separate behavioral and source-law mutations
+cover control removal, action/result divergence, missing error presentation,
+filesystem authority, session capability, loopback binding and runtime seed
+access. The behavioral anti-overfitting proof clones the suite, renames all five
+identities, operation names, events, dependency references, world roles, UI
+titles, labels, control IDs, action names and result targets, then generates,
+launches and executes all five renamed applications.
 
 Each generated public stage is `part(thing) -> thing`. Generated stage and
 composition files have zero explicit conditions, loops, matching,
@@ -55,17 +58,24 @@ audited generated capability runtime and process/browser boundaries.
 
 | Seed | Product proof |
 |---|---|
-| `file_reader.json` | content, deterministic metadata, empty/missing/unavailable/encoding distinction and path authority |
-| `file_editor.json` | preview, replace/append/insert/delete, atomic save, rejection preservation and process restart |
-| `math_library.json` | reusable Standard Ten library interface with ten required bounded operations |
-| `calculator.json` | precedence, parentheses, unary negative, division, invalid token, overflow and pinned library identity |
-| `pong_game.json` | persisted event/tick state, collision/point transition, exact replay, JavaScript/Python equality and real-browser canvas, keyboard-event and rendered-frame proof |
+| `file_reader.json` | content, metadata and errors through a generated authorized-root reader |
+| `file_editor.json` | load, edit, preview, atomic save, reload and text-operation controls |
+| `math_library.json` | reusable Standard Ten library plus generated operation playground |
+| `calculator.json` | generated keypad and keyboard expression interface consuming the pinned library |
+| `pong_game.json` | generated responsive canvas, two-player controls, automatic ticks and deterministic replay |
 
 Every tree contains canonical specification, application plan, seven stages,
 domain specialization data, composition, audited runtime, CLI entry point,
 installation/dependency/evidence manifests, generated tests, acceptance data,
-documentation and deterministic identity. Browser targets also contain
-generated HTML, CSS and JavaScript.
+documentation and deterministic identity. Every installation contains generated
+`browser/index.html`, `browser/style.css`, `browser/browser.js` and
+`bin/<application>-gui`.
+
+The generated GUI host binds only to `127.0.0.1`, chooses an available port,
+uses an unguessable per-launch capability, accepts only the generated
+application request endpoint, preserves the declared filesystem root and opens
+the default browser. It requires no seed, registry, generator or repository at
+runtime.
 
 The installed runtime reads no source seed, registry or repository module.
 Manual application runtime and manual application-test line counts are both
@@ -91,9 +101,9 @@ Any zero denominator or failed application prevents publication.
 
 ## Honest boundary
 
-This is a bounded application language, not a proof of arbitrary programs or
-all GUI toolkits and hardware. Pong proves one generated browser adapter in a
-real Chromium-family browser, including a real window, canvas pixel reads,
-keyboard events and changed rendered frames. It does not prove cross-browser
-portability or human visual quality. Stage‑0, name-to-manifestation and the
-root-seed fixed point remain separate support tracks.
+This is a bounded application and GUI language, not a proof of arbitrary
+programs, every GUI toolkit or hardware. The five proofs exercise one generated
+web frontend and loopback host in a Chromium-family browser. They do not prove
+cross-browser portability, native desktop widgets or mobile packaging. Stage‑0,
+name-to-manifestation and the root-seed fixed point remain separate support
+tracks.

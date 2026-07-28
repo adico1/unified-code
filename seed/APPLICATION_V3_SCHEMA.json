@@ -3,7 +3,7 @@
   "$id": "uc-application-v3",
   "type": "object",
   "additionalProperties": false,
-  "required": ["application_version", "application", "interface", "program", "boundaries", "persistence", "formats", "acceptance"],
+  "required": ["application_version", "application", "interface", "program", "boundaries", "persistence", "formats", "ui", "acceptance"],
   "properties": {
     "application_version": {"const": "UC-APPLICATION-3"},
     "application": {
@@ -44,6 +44,113 @@
       "additionalProperties": false,
       "required": ["application", "interface"],
       "properties": {"application": {"type": "string"}, "interface": {"const": "library"}}
+    },
+    "ui": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["page", "theme", "layout", "actions", "bindings", "keyboard", "responsive", "proof"],
+      "properties": {
+        "page": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "title", "description", "requires_root"],
+          "properties": {
+            "id": {"type": "string", "minLength": 1},
+            "title": {"type": "string", "minLength": 1},
+            "description": {"type": "string", "minLength": 1},
+            "requires_root": {"type": "boolean"}
+          }
+        },
+        "theme": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["background", "surface", "text", "muted", "primary", "danger"],
+          "properties": {
+            "background": {"type": "string"},
+            "surface": {"type": "string"},
+            "text": {"type": "string"},
+            "muted": {"type": "string"},
+            "primary": {"type": "string"},
+            "danger": {"type": "string"}
+          }
+        },
+        "layout": {
+          "type": "object",
+          "required": ["sections"],
+          "properties": {
+            "sections": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["id", "title", "components"],
+                "properties": {
+                  "id": {"type": "string"},
+                  "title": {"type": "string"},
+                  "wide": {"type": "boolean"},
+                  "class": {"type": "string"},
+                  "components": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "required": ["id", "type", "label"],
+                      "properties": {
+                        "id": {"type": "string"},
+                        "type": {"enum": ["button", "canvas", "file_path", "label", "list", "number", "output", "select", "status", "table", "text", "textarea"]},
+                        "label": {"type": "string"},
+                        "accessible_name": {"type": "string"},
+                        "action": {"type": "string"},
+                        "options": {"type": "array"},
+                        "width": {"type": "integer"},
+                        "height": {"type": "integer"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "actions": {"type": "object", "minProperties": 1},
+        "bindings": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["result", "error", "status", "root"],
+          "properties": {
+            "result": {"type": "array"},
+            "error": {"type": "object"},
+            "status": {"type": "object"},
+            "root": {"type": "object"},
+            "canvas": {"type": ["object", "null"]}
+          }
+        },
+        "keyboard": {"type": "array"},
+        "automation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "interval_ms", "while"],
+          "properties": {
+            "action": {"type": "string"},
+            "interval_ms": {"type": "integer", "minimum": 1},
+            "while": {"type": "string"}
+          }
+        },
+        "responsive": {
+          "type": "object",
+          "required": ["breakpoint_px"],
+          "properties": {"breakpoint_px": {"type": "integer", "minimum": 1}}
+        },
+        "proof": {
+          "type": "object",
+          "required": ["fixtures", "steps", "expected_error"],
+          "properties": {
+            "fixtures": {"type": "array"},
+            "steps": {"type": "array", "minItems": 3},
+            "expected_error": {"type": "string"}
+          }
+        }
+      }
     },
     "acceptance": {"type": "array", "minItems": 1}
   }

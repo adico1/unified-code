@@ -40,6 +40,98 @@
   "boundaries": {"clock": "tick", "input": "event", "presentation": ["headless", "browser"], "persistence": "OUTWARD", "acceptance_deadline_seconds": 10},
   "persistence": {"mode": "atomic-json", "identity": "world-state.json"},
   "formats": {"outer_input": "event-object", "outer_output": "frame-state"},
+  "ui": {
+    "page": {
+      "id": "arcade-court",
+      "title": "Pong",
+      "description": "A deterministic two-player match driven by declared events and ticks.",
+      "requires_root": false
+    },
+    "theme": {"background": "#04070d", "surface": "#101a2b", "text": "#ffffff", "muted": "#9fb4ce", "primary": "#5df2c1", "danger": "#ff7b91"},
+    "layout": {
+      "sections": [
+        {
+          "id": "arcade-controls",
+          "title": "Match controls",
+          "components": [
+            {"id": "arcade-root", "type": "label", "label": "Runtime root", "accessible_name": "Runtime root"},
+            {"id": "arcade-start", "type": "button", "label": "Start", "accessible_name": "Start match", "action": "start-match", "primary": true},
+            {"id": "arcade-pause", "type": "button", "label": "Pause", "accessible_name": "Pause match", "action": "pause-match"},
+            {"id": "arcade-resume", "type": "button", "label": "Resume", "accessible_name": "Resume match", "action": "resume-match"},
+            {"id": "arcade-reset", "type": "button", "label": "Reset", "accessible_name": "Reset match", "action": "reset-match"},
+            {"id": "arcade-left-up", "type": "button", "label": "Left up (W)", "accessible_name": "Move left paddle up", "action": "left-up"},
+            {"id": "arcade-left-down", "type": "button", "label": "Left down (S)", "accessible_name": "Move left paddle down", "action": "left-down"},
+            {"id": "arcade-right-up", "type": "button", "label": "Right up (↑)", "accessible_name": "Move right paddle up", "action": "right-up"},
+            {"id": "arcade-right-down", "type": "button", "label": "Right down (↓)", "accessible_name": "Move right paddle down", "action": "right-down"},
+            {"id": "arcade-instructions", "type": "label", "label": "Keyboard controls", "accessible_name": "Keyboard control instructions", "value": "W/S moves the left paddle; arrow keys move the right paddle; Space starts; P pauses; R resets."},
+            {"id": "arcade-score", "type": "output", "label": "Score", "accessible_name": "Match score"},
+            {"id": "arcade-status", "type": "status", "label": "Status", "accessible_name": "Match status"},
+            {"id": "arcade-error", "type": "output", "label": "Error", "accessible_name": "Match error"}
+          ]
+        },
+        {
+          "id": "arcade-screen",
+          "title": "Playing field",
+          "wide": true,
+          "components": [
+            {"id": "arcade-canvas", "type": "canvas", "label": "Pong playing field", "accessible_name": "Pong playing field", "width": 800, "height": 480}
+          ]
+        }
+      ]
+    },
+    "actions": {
+      "start-match": {"mode": "request", "request": {"event": "start"}},
+      "pause-match": {"mode": "request", "request": {"event": "pause"}},
+      "resume-match": {"mode": "request", "request": {"event": "resume"}},
+      "reset-match": {"mode": "request", "request": {"event": "reset"}},
+      "advance-frame": {"mode": "request", "request": {"event": "tick", "ticks": 1}},
+      "left-up": {"mode": "request", "request": {"event": "tick", "ticks": 1, "inputs": [{"actor": "left", "delta": -5}]}},
+      "left-down": {"mode": "request", "request": {"event": "tick", "ticks": 1, "inputs": [{"actor": "left", "delta": 4}]}},
+      "right-up": {"mode": "request", "request": {"event": "tick", "ticks": 1, "inputs": [{"actor": "right", "delta": -4}]}},
+      "right-down": {"mode": "request", "request": {"event": "tick", "ticks": 1, "inputs": [{"actor": "right", "delta": 4}]}}
+    },
+    "bindings": {
+      "result": [
+        {"source": "output.counters", "target": "arcade-score", "property": "text"}
+      ],
+      "error": {"target": "arcade-error", "property": "text"},
+      "status": {"target": "arcade-status", "property": "text", "success": "Frame accepted", "failure": "Frame rejected"},
+      "root": {"target": "arcade-root", "property": "text"},
+      "canvas": {
+        "target": "arcade-canvas",
+        "background": "#05080f",
+        "scale_x": 8,
+        "scale_y": 8,
+        "shapes": [
+          {"collection": "actors", "x": "x", "y": "y", "width": "width", "height": "height", "color": "#ffffff"},
+          {"path": "mover", "x": "x", "y": "y", "width": "size", "height": "size", "color": "#5df2c1"}
+        ],
+        "text": [{"path": "counters", "join": " : ", "x": 380, "y": 24, "color": "#ffffff"}]
+      }
+    },
+    "keyboard": [
+      {"key": " ", "action": "start-match"},
+      {"key": "p", "action": "pause-match"},
+      {"key": "r", "action": "reset-match"},
+      {"key": "w", "action": "left-up"},
+      {"key": "s", "action": "left-down"},
+      {"key": "ArrowUp", "action": "right-up"},
+      {"key": "ArrowDown", "action": "right-down"}
+    ],
+    "responsive": {"breakpoint_px": 820},
+    "automation": {"action": "advance-frame", "interval_ms": 32, "while": "output.active"},
+    "proof": {
+      "fixtures": [],
+      "steps": [
+        {"control": "arcade-start", "expect": {"target": "arcade-status", "equals": "Frame accepted"}},
+        {"keyboard": "w", "expect": {"target": "arcade-score", "equals": "left"}},
+        {"keyboard": "ArrowDown", "expect": {"target": "arcade-status", "equals": "Frame accepted"}},
+        {"control": "arcade-pause", "expect": {"target": "arcade-status", "equals": "Frame accepted"}},
+        {"control": "arcade-reset", "expect": {"target": "arcade-score", "equals": "left"}}
+      ],
+      "expected_error": ""
+    }
+  },
   "acceptance": [
     {
       "id": "deterministic-replay",

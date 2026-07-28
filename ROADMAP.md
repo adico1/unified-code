@@ -196,7 +196,10 @@ This milestone is deliberately non-blocking for Milestone 1. Open items:
   reusable math library, calculator, and Pong.
 - Each application seed specializes the seven-stage Thing v2 pipeline and
   generates its runtime, tests, manifests, evidence, installation surface, and
-  executable entry point.
+  CLI and graphical entry points.
+- All five seeds declare their complete GUI vocabulary. The generic renderer
+  generates responsive frontend files and a capability-protected loopback host;
+  real-browser interaction and CLI/GUI equality are ten-depth gates.
 - The bounded acceptance operation and ten-depth proof are specified in
   [APPLICATION_ASSEMBLY.md](APPLICATION_ASSEMBLY.md).
 - This product milestone does not replace or expand Milestone 2 bootstrap work.

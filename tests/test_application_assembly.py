@@ -112,15 +112,26 @@ def test_five_applications_generate_install_execute_and_pass_ten_depths(tmp_path
         assert all((output / "applications" / name / path).is_file() for path in manifest["seven_generated_files"])
         assert (output / "installation" / name / "tests" / "test_generated.py").is_file()
         assert (output / "installation" / name / "bin" / name).is_file()
-    assert reports["pong-game"]["verification"]["javascript_headless_differential"]["ok"]
-    graphical = reports["pong-game"]["verification"]["graphical_browser"]
-    assert graphical["ok"]
-    assert graphical["checks"]["canvas_created"]
-    assert graphical["checks"]["keyboard_events"]
-    assert graphical["checks"]["frames_nonblank"]
-    assert graphical["checks"]["distinct_frames"]
-    assert graphical["frames_rendered"] == 3
-    assert graphical["distinct_frames"] >= 2
+        assert (output / "installation" / name / "bin" / f"{name}-gui").is_file()
+        assert (output / "installation" / name / "browser" / "index.html").is_file()
+        assert (output / "installation" / name / "browser" / "style.css").is_file()
+        assert (output / "installation" / name / "browser" / "browser.js").is_file()
+    for name, report in reports.items():
+        assert report["verification"]["javascript_headless_differential"]["ok"]
+        graphical = report["verification"]["graphical_browser"]
+        assert graphical["ok"], (name, graphical)
+        assert graphical["checks"]["meaningful_title"]
+        assert graphical["checks"]["required_controls"]
+        assert graphical["checks"]["accessible_names"]
+        assert graphical["checks"]["three_interactions"]
+        assert graphical["checks"]["backend_requests"]
+        assert graphical["checks"]["visible_assertions"]
+        assert graphical["checks"]["visible_error"]
+        assert graphical["checks"]["nonblank_render"]
+        assert graphical["checks"]["repeated_exact"]
+        assert graphical["checks"]["cli_gui_equal"]
+        assert graphical["checks"]["clean_stop"]
+        assert graphical["checks"]["copied_installation"]
     assert all(
         report["verification"]["atomic_install"]["ok"]
         for report in reports.values()
@@ -255,6 +266,10 @@ def test_generator_vocabulary_scanner_injections_and_renamed_behavior():
         report["scanner_injections_detected"]
         == report["scanner_injections_total"]
     )
+    behavioral = report["gui_behavioral_mutations"]
+    assert behavioral["proof_kind"] == "behavioral-contract-and-source-law-mutations"
+    assert behavioral["ok"]
+    assert behavioral["detected"] == behavioral["total"] == 35
 
 
 def test_atomic_publish_failure_during_replacement_restores_previous_tree(tmp_path):
@@ -327,6 +342,40 @@ def test_all_renamed_seeds_assemble_and_invalid_rebuild_preserves_output(tmp_pat
                 *(initial.get("counters") or {}),
             }
         }
+        ui_values = {
+            seed["ui"]["page"]["id"],
+            seed["ui"]["page"]["title"],
+            seed["ui"]["page"]["description"],
+            *seed["ui"]["actions"],
+        }
+        ui_keys = set(seed["ui"]["actions"])
+        for section in seed["ui"]["layout"]["sections"]:
+            ui_values.update((section["id"], section["title"]))
+            for component in section["components"]:
+                ui_keys.add(component["id"])
+                ui_values.update(
+                    item
+                    for item in (
+                        component.get("id"),
+                        component.get("label"),
+                        component.get("accessible_name"),
+                        component.get("action"),
+                    )
+                    if item and len(item) > 1
+                )
+        value_mapping.update(
+            {
+                item: "unseen-" + item
+                for item in ui_values
+                if item not in value_mapping
+            }
+        )
+        key_mapping.update(
+            {
+                item: value_mapping[item]
+                for item in ui_keys
+            }
+        )
         renamed_names[application["name"]] = value_mapping[application["name"]]
         vocabulary_maps[application["name"]] = value_mapping
         seed = renamed_vocabulary(seed, value_mapping, key_mapping)
