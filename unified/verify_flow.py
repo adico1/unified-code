@@ -345,6 +345,16 @@ def audited_scheduler_primitive(thing, graph, cache_root):
     complete = passed == len(verdicts)
     within_budget = verification_seconds <= graph["budget_seconds"]
     state = "valid" if complete and within_budget else "invalid"
+    failed_nodes = [
+        {
+            "id": item["id"],
+            "returncode": item["returncode"],
+            "stdout_tail": item["stdout_tail"],
+            "stderr_tail": item["stderr_tail"],
+        }
+        for item in bootstrap_evidence["results"]
+        if item["returncode"] != 0
+    ]
     evidence = {
         "structure_hash": structure_hash,
         "ordered_verdicts": verdicts,
@@ -370,6 +380,7 @@ def audited_scheduler_primitive(thing, graph, cache_root):
                 "events": list(FLOW_EVENTS if state == "valid" else (*FLOW_EVENTS[:-1], "verification.failed")),
                 "proof_nodes": len(verdicts),
                 "proofs_passed": passed,
+                "failed_nodes": failed_nodes,
                 "bootstrap_seconds": bootstrap_seconds,
                 "verification_seconds": verification_seconds,
                 "total_seconds": bootstrap_seconds + verification_seconds,
@@ -381,7 +392,14 @@ def audited_scheduler_primitive(thing, graph, cache_root):
                 "evidence_hash": evidence_hash,
                 **source_report,
             },
-            "evidence": (*thing["evidence"], *FLOW_EVENTS),
+            "evidence": (
+                *thing["evidence"],
+                *(
+                    FLOW_EVENTS
+                    if state == "valid"
+                    else (*FLOW_EVENTS[:-1], "proof.failed", "verification.failed")
+                ),
+            ),
             "state": state,
         }
     )
