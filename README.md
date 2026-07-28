@@ -165,6 +165,13 @@ deterministic manifest, affected-file churn contract, anti-overfitting
 mutations, and honest limitations are specified in
 [THING_V2.md](THING_V2.md).
 
+### Five applications, one assembly
+
+The application-generation milestone unfolds a file reader, file editor,
+reusable math library, calculator consuming that library, and deterministic
+browser/headless game from five seeds with one command. See
+[APPLICATION_ASSEMBLY.md](APPLICATION_ASSEMBLY.md).
+
 Exit code is nonzero until every criterion is green. Do not claim
 completeness while `contract_pass` is false. Writes `contract_status.json`
 / `contract_report.json` under the repo root when verify/report run.

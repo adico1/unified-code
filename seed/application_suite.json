@@ -1,0 +1,10 @@
+{
+  "assembly_version": "UC-ASSEMBLY-1",
+  "applications": [
+    {"seed": "seed/applications/file_reader.json"},
+    {"seed": "seed/applications/file_editor.json"},
+    {"seed": "seed/applications/math_library.json"},
+    {"seed": "seed/applications/calculator.json"},
+    {"seed": "seed/applications/pong_game.json"}
+  ]
+}

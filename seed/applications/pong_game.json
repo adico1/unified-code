@@ -1,0 +1,161 @@
+{
+  "application_version": "UC-APPLICATION-3",
+  "application": {"name": "pong-game", "package": "pong_game", "description": "Deterministic event-driven graphical world replay."},
+  "interface": {"cli": true, "library": false, "browser": true},
+  "program": {
+    "engine": "world",
+    "operations": {"transition": {"primitive": "world_advance"}},
+    "window": {"width": 800, "height": 480},
+    "field": {"width": 100, "height": 60},
+    "horizontal_roles": ["left", "right"],
+    "controls": {
+      "Space": {"event": "start"},
+      "KeyP": {"event": "pause"},
+      "KeyR": {"event": "reset"},
+      "ArrowUp": {"event": "tick", "ticks": 1, "inputs": [{"actor": "right", "delta": -4}]},
+      "ArrowDown": {"event": "tick", "ticks": 1, "inputs": [{"actor": "right", "delta": 4}]},
+      "KeyW": {"event": "tick", "ticks": 1, "inputs": [{"actor": "left", "delta": -4}]},
+      "KeyS": {"event": "tick", "ticks": 1, "inputs": [{"actor": "left", "delta": 4}]}
+    },
+    "presentation": {"background": "#05080f", "foreground": "#ffffff"},
+    "events": {"start": "start", "pause": "pause", "resume": "resume", "advance": "tick", "point": "score", "reset": "reset", "stop": "stop"},
+    "state_file": "world-state.json",
+    "initial_state": {
+      "active": false,
+      "tick": 0,
+      "actors": {
+        "left": {"x": 2, "y": 20, "width": 4, "height": 20},
+        "right": {"x": 94, "y": 0, "width": 4, "height": 2}
+      },
+      "mover": {"x": 98, "y": 30, "vx": 3, "vy": 2, "size": 2},
+      "counters": {"left": 0, "right": 0}
+    }
+  },
+  "boundaries": {"clock": "tick", "input": "event", "presentation": ["headless", "browser"], "persistence": "OUTWARD", "acceptance_deadline_seconds": 10},
+  "persistence": {"mode": "atomic-json", "identity": "world-state.json"},
+  "formats": {"outer_input": "event-object", "outer_output": "frame-state"},
+  "acceptance": [
+    {
+      "id": "deterministic-replay",
+      "fixtures": [],
+      "steps": [
+        {
+          "request": {"event": "start"},
+          "expect": {
+            "state": "valid",
+            "output": {
+              "active": true, "tick": 0,
+              "actors": {"left": {"x": 2, "y": 20, "width": 4, "height": 20}, "right": {"x": 94, "y": 0, "width": 4, "height": 2}},
+              "mover": {"x": 98, "y": 30, "vx": 3, "vy": 2, "size": 2},
+              "counters": {"left": 0, "right": 0}
+            },
+            "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"event": "tick", "ticks": 1, "inputs": [{"actor": "left", "delta": -5}]},
+          "expect": {
+            "state": "valid",
+            "output": {
+              "active": true, "tick": 1,
+              "actors": {"left": {"x": 2, "y": 15, "width": 4, "height": 20}, "right": {"x": 94, "y": 0, "width": 4, "height": 2}},
+              "mover": {"x": 98, "y": 30, "vx": 3, "vy": 2, "size": 2},
+              "counters": {"left": 1, "right": 0},
+              "events": ["score"],
+              "trace": [{
+                "active": true, "tick": 1,
+                "actors": {"left": {"x": 2, "y": 15, "width": 4, "height": 20}, "right": {"x": 94, "y": 0, "width": 4, "height": 2}},
+                "mover": {"x": 98, "y": 30, "vx": 3, "vy": 2, "size": 2},
+                "counters": {"left": 1, "right": 0},
+                "events": ["score"]
+              }]
+            },
+            "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"event": "pause"},
+          "expect": {
+            "state": "valid",
+            "output": {
+              "active": false, "tick": 1,
+              "actors": {"left": {"x": 2, "y": 15, "width": 4, "height": 20}, "right": {"x": 94, "y": 0, "width": 4, "height": 2}},
+              "mover": {"x": 98, "y": 30, "vx": 3, "vy": 2, "size": 2},
+              "counters": {"left": 1, "right": 0},
+              "events": ["score"],
+              "trace": [{
+                "active": true, "tick": 1,
+                "actors": {"left": {"x": 2, "y": 15, "width": 4, "height": 20}, "right": {"x": 94, "y": 0, "width": 4, "height": 2}},
+                "mover": {"x": 98, "y": 30, "vx": 3, "vy": 2, "size": 2},
+                "counters": {"left": 1, "right": 0},
+                "events": ["score"]
+              }]
+            },
+            "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"event": "resume"},
+          "expect": {
+            "state": "valid",
+            "output": {
+              "active": true, "tick": 1,
+              "actors": {"left": {"x": 2, "y": 15, "width": 4, "height": 20}, "right": {"x": 94, "y": 0, "width": 4, "height": 2}},
+              "mover": {"x": 98, "y": 30, "vx": 3, "vy": 2, "size": 2},
+              "counters": {"left": 1, "right": 0},
+              "events": ["score"],
+              "trace": [{
+                "active": true, "tick": 1,
+                "actors": {"left": {"x": 2, "y": 15, "width": 4, "height": 20}, "right": {"x": 94, "y": 0, "width": 4, "height": 2}},
+                "mover": {"x": 98, "y": 30, "vx": 3, "vy": 2, "size": 2},
+                "counters": {"left": 1, "right": 0},
+                "events": ["score"]
+              }]
+            },
+            "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"event": "stop"},
+          "expect": {
+            "state": "valid",
+            "output": {
+              "active": false, "tick": 1,
+              "actors": {"left": {"x": 2, "y": 15, "width": 4, "height": 20}, "right": {"x": 94, "y": 0, "width": 4, "height": 2}},
+              "mover": {"x": 98, "y": 30, "vx": 3, "vy": 2, "size": 2},
+              "counters": {"left": 1, "right": 0},
+              "events": ["score"],
+              "trace": [{
+                "active": true, "tick": 1,
+                "actors": {"left": {"x": 2, "y": 15, "width": 4, "height": 20}, "right": {"x": 94, "y": 0, "width": 4, "height": 2}},
+                "mover": {"x": 98, "y": 30, "vx": 3, "vy": 2, "size": 2},
+                "counters": {"left": 1, "right": 0},
+                "events": ["score"]
+              }]
+            },
+            "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"event": "reset"},
+          "expect": {
+            "state": "valid",
+            "output": {
+              "active": false, "tick": 0,
+              "actors": {"left": {"x": 2, "y": 20, "width": 4, "height": 20}, "right": {"x": 94, "y": 0, "width": 4, "height": 2}},
+              "mover": {"x": 98, "y": 30, "vx": 3, "vy": 2, "size": 2},
+              "counters": {"left": 0, "right": 0}
+            },
+            "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        }
+      ]
+    }
+  ]
+}

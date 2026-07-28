@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "uc-application-v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["application_version", "application", "interface", "program", "boundaries", "persistence", "formats", "acceptance"],
+  "properties": {
+    "application_version": {"const": "UC-APPLICATION-3"},
+    "application": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "package", "description"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "package": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "description": {"type": "string"}
+      }
+    },
+    "interface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cli", "library", "browser"],
+      "properties": {"cli": {"type": "boolean"}, "library": {"type": "boolean"}, "browser": {"type": "boolean"}}
+    },
+    "program": {
+      "type": "object",
+      "required": ["engine", "operations"],
+      "properties": {
+        "engine": {"enum": ["document", "numeric", "expression", "world"]},
+        "operations": {"type": "object", "minProperties": 1}
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "required": ["acceptance_deadline_seconds"],
+      "properties": {
+        "acceptance_deadline_seconds": {"type": "integer", "minimum": 1}
+      }
+    },
+    "persistence": {"type": "object"},
+    "formats": {"type": "object"},
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application", "interface"],
+      "properties": {"application": {"type": "string"}, "interface": {"const": "library"}}
+    },
+    "acceptance": {"type": "array", "minItems": 1}
+  }
+}

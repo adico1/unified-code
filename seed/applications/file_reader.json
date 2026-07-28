@@ -1,0 +1,78 @@
+{
+  "application_version": "UC-APPLICATION-3",
+  "application": {"name": "file-reader", "package": "file_reader", "description": "Read declared text resources through an OUTWARD boundary."},
+  "interface": {"cli": true, "library": false, "browser": false},
+  "program": {
+    "engine": "document",
+    "operations": {"read": {"primitive": "bytes_load"}},
+    "encoding": "utf-8"
+  },
+  "boundaries": {"filesystem": "OUTWARD", "authority": "runtime-root", "acceptance_deadline_seconds": 10},
+  "persistence": {"mode": "none"},
+  "formats": {"outer_input": "json-object", "outer_output": "json-object"},
+  "acceptance": [
+    {
+      "id": "content",
+      "fixtures": [{"path": "message.txt", "text": "hello\n"}],
+      "steps": [
+        {
+          "request": {"action": "read", "path": "message.txt"},
+          "expect": {
+            "state": "valid",
+            "output": {"content": "hello\n", "empty": false, "encoding": "utf-8", "sha256": "5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03", "size": 6},
+            "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "empty",
+      "fixtures": [{"path": "empty.txt", "text": ""}],
+      "steps": [
+        {
+          "request": {"action": "read", "path": "empty.txt"},
+          "expect": {
+            "state": "valid",
+            "output": {"content": "", "empty": true, "encoding": "utf-8", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "size": 0},
+            "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "missing",
+      "fixtures": [],
+      "steps": [
+        {
+          "request": {"action": "read", "path": "missing.txt"},
+          "expect": {
+            "state": "invalid", "output": null, "error": "resource-missing",
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing:error", "boundary:outward"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "invalid-and-unavailable",
+      "fixtures": [{"path": "invalid.txt", "hex": "ff"}, {"path": "folder", "directory": true}],
+      "steps": [
+        {
+          "request": {"action": "read", "path": "invalid.txt"},
+          "expect": {
+            "state": "invalid", "output": null, "error": "invalid-encoding",
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing:error", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"action": "read", "path": "folder"},
+          "expect": {
+            "state": "invalid", "output": null, "error": "resource-unavailable",
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing:error", "boundary:outward"]
+          }
+        }
+      ]
+    }
+  ]
+}

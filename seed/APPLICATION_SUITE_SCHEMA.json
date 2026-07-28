@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "uc-application-suite-1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["assembly_version", "applications"],
+  "properties": {
+    "assembly_version": {"const": "UC-ASSEMBLY-1"},
+    "applications": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["seed"],
+        "properties": {"seed": {"type": "string", "pattern": "^seed/applications/[a-z0-9_]+\\.json$"}}
+      }
+    }
+  }
+}
