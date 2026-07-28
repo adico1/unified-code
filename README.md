@@ -169,7 +169,9 @@ mutations, and honest limitations are specified in
 
 The application-generation milestone unfolds a file reader, file editor,
 reusable math library, calculator consuming that library, and deterministic
-browser/headless game from five seeds with one command. See
+browser/headless game from five seeds with one command. All five now generate
+responsive browser interfaces and loopback-only graphical launchers from their
+declarative `ui` sections, with real-browser CLI/GUI differential proof. See
 [APPLICATION_ASSEMBLY.md](APPLICATION_ASSEMBLY.md).
 
 Qualified names can resolve through a pinned, content-addressed registry to

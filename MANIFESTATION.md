@@ -248,7 +248,7 @@ A failure contains no evidence for later phases.
 ```bash
 uc manifest uc://applications/trajectory-meter@1 \
   --registry seed/registry.json \
-  --snapshot 83b50b02ff3a97edd12e22f62b5dc978b1e38fb5b272967e3007e57049cbaff4 \
+  --snapshot 4f00f74c969913d89d977e774c2011de803fa37307741e4b14bd542352080f00 \
   --output /tmp/uc-manifested-trajectory
 ```
 
@@ -256,7 +256,7 @@ The result exposes:
 
 ```json
 {
-  "registry_snapshot_sha256": "83b50b02ff3a97edd12e22f62b5dc978b1e38fb5b272967e3007e57049cbaff4",
+  "registry_snapshot_sha256": "4f00f74c969913d89d977e774c2011de803fa37307741e4b14bd542352080f00",
   "canonical_name": "uc://applications/trajectory-meter@1",
   "seed_id": "thing-v2:trajectory-meter@1",
   "seed_sha256": "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49",
@@ -315,4 +315,5 @@ Not implemented or modified:
 - Thing v2 semantics;
 - UEM host equivalence;
 - Milestone 2 or root-seed self-hosting;
-- new GUI/browser generator semantics.
+- manifestation-layer GUI/browser routing semantics (Application v3 GUI
+  generation remains a separate assembly concern).

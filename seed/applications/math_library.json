@@ -1,7 +1,7 @@
 {
   "application_version": "UC-APPLICATION-3",
   "application": {"name": "math-library", "package": "math_library", "description": "Generated reusable bounded integer operations."},
-  "interface": {"cli": true, "library": true, "browser": false},
+  "interface": {"cli": true, "library": true, "browser": true},
   "program": {
     "engine": "numeric",
     "range": [-1000000, 1000000],
@@ -26,6 +26,67 @@
   "boundaries": {"effects": "none", "acceptance_deadline_seconds": 10},
   "persistence": {"mode": "none"},
   "formats": {"outer_input": "json-object", "outer_output": "json-object"},
+  "ui": {
+    "page": {
+      "id": "numeric-playground",
+      "title": "Math Library Playground",
+      "description": "Exercise the reusable generated bounded-integer library directly.",
+      "requires_root": false
+    },
+    "theme": {"background": "#0c1220", "surface": "#17233a", "text": "#f7fbff", "muted": "#aebbd0", "primary": "#66e3ff", "danger": "#ff8899"},
+    "layout": {
+      "sections": [
+        {
+          "id": "numeric-contract",
+          "title": "Exported contract",
+          "components": [
+            {"id": "numeric-root", "type": "label", "label": "Runtime root", "accessible_name": "Runtime root"},
+            {"id": "numeric-identity", "type": "label", "label": "Library identity", "accessible_name": "Exported library identity", "derived": "export_identity", "readonly": true},
+            {"id": "numeric-grammar", "type": "label", "label": "Grammar", "accessible_name": "Numeric grammar", "value": "JSON integer; booleans rejected"},
+            {"id": "numeric-range", "type": "label", "label": "Range", "accessible_name": "Numeric range", "value": "-1000000 through 1000000"}
+          ]
+        },
+        {
+          "id": "numeric-operation",
+          "title": "Operation",
+          "components": [
+            {"id": "numeric-operation-select", "type": "select", "label": "Operation", "accessible_name": "Math operation", "options": [
+              {"value": "add", "label": "Add"}, {"value": "subtract", "label": "Subtract"}, {"value": "multiply", "label": "Multiply"},
+              {"value": "divide", "label": "Divide"}, {"value": "remainder", "label": "Remainder"}, {"value": "power", "label": "Power"},
+              {"value": "absolute", "label": "Absolute"}, {"value": "negate", "label": "Negate"}, {"value": "minimum", "label": "Minimum"},
+              {"value": "maximum", "label": "Maximum"}, {"value": "sum", "label": "Sum"}
+            ]},
+            {"id": "numeric-argument-a", "type": "number", "label": "Argument one", "accessible_name": "First numeric argument"},
+            {"id": "numeric-argument-b", "type": "number", "label": "Argument two", "accessible_name": "Second numeric argument"},
+            {"id": "numeric-execute", "type": "button", "label": "Execute", "accessible_name": "Execute operation", "action": "execute-operation", "primary": true},
+            {"id": "numeric-result", "type": "output", "label": "Result", "accessible_name": "Operation result"},
+            {"id": "numeric-status", "type": "status", "label": "Status", "accessible_name": "Operation status"},
+            {"id": "numeric-error", "type": "output", "label": "Error", "accessible_name": "Operation error"}
+          ]
+        }
+      ]
+    },
+    "actions": {
+      "execute-operation": {"mode": "request", "request": {"operation": {"$control": "numeric-operation-select"}, "arguments": [{"$number": "numeric-argument-a"}, {"$number": "numeric-argument-b"}]}}
+    },
+    "bindings": {
+      "result": [{"source": "output.result", "target": "numeric-result", "property": "text"}],
+      "error": {"target": "numeric-error", "property": "text"},
+      "status": {"target": "numeric-status", "property": "text", "success": "Execution complete", "failure": "Execution rejected"},
+      "root": {"target": "numeric-root", "property": "text"}
+    },
+    "keyboard": [{"key": "Enter", "action": "execute-operation"}],
+    "responsive": {"breakpoint_px": 720},
+    "proof": {
+      "fixtures": [],
+      "steps": [
+        {"set": {"numeric-operation-select": "multiply", "numeric-argument-a": 7, "numeric-argument-b": 5}, "control": "numeric-execute", "expect": {"target": "numeric-result", "equals": "35"}},
+        {"set": {"numeric-operation-select": "divide", "numeric-argument-a": 7, "numeric-argument-b": 0}, "control": "numeric-execute", "expect": {"target": "numeric-error", "equals": "zero-divisor"}},
+        {"set": {"numeric-operation-select": "multiply", "numeric-argument-a": 1000000, "numeric-argument-b": 1000000}, "keyboard": "Enter", "expect": {"target": "numeric-error", "equals": "range-overflow"}}
+      ],
+      "expected_error": "zero-divisor"
+    }
+  },
   "acceptance": [
     {
       "id": "operations",

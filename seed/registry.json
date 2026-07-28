@@ -1,7 +1,7 @@
 {
   "records": [
     {
-      "artifact_tree_sha256": "d166414bbe69c961111354d524e1765c8d79e89d8ca9f000e544db404ef06db1",
+      "artifact_tree_sha256": "53651d1c1646cd5b34a563173a3731b1112d51cf2521c34dd709a5d652714308",
       "canonical_name": "uc://applications/file-reader@1",
       "compiler_route": "application-v3",
       "compiler_version": "UC-APPLICATION-3",
@@ -9,10 +9,10 @@
       "route_options": {"product_key": "file-reader", "suite_ref": "application_suite.json"},
       "seed_id": "application-v3:file-reader@1",
       "seed_path": "applications/file_reader.json",
-      "seed_sha256": "c6d62202dc4b173098b0fbf9863feef735011e8be03f4e1c9dea206c2b78cb0a"
+      "seed_sha256": "4e9e705b0db2f06305c8d831feb82af0a6fa7fe7c1a5680d395945ec781db67d"
     },
     {
-      "artifact_tree_sha256": "84b241724efd9aa6e794a9f4733b997d437287677c35e41147b36d60c552d895",
+      "artifact_tree_sha256": "b49eadd443bfcfe42e7c508903bac85cb5ca2a138ced3afd6d0e7a402115a1bf",
       "canonical_name": "uc://applications/file-editor@1",
       "compiler_route": "application-v3",
       "compiler_version": "UC-APPLICATION-3",
@@ -20,10 +20,10 @@
       "route_options": {"product_key": "file-editor", "suite_ref": "application_suite.json"},
       "seed_id": "application-v3:file-editor@1",
       "seed_path": "applications/file_editor.json",
-      "seed_sha256": "ebb4a4f4c4f6e799387bc228f4f3564e53fd35e869ff388df3bd34fd83410c50"
+      "seed_sha256": "9bf7887567c3f3ababd58dfed8fa18d3fe1f653670ecf99f9b17999b3b304779"
     },
     {
-      "artifact_tree_sha256": "6fea0dedf582df2e4a1851766a081ca01780d6498b2f1a0bd3439c5b3ce04ea6",
+      "artifact_tree_sha256": "1e1eb98be97e36e397b699d910ce39d13594f58742fa9b0e510230b6e7d6772d",
       "canonical_name": "uc://applications/math-library@1",
       "compiler_route": "application-v3",
       "compiler_version": "UC-APPLICATION-3",
@@ -31,10 +31,10 @@
       "route_options": {"product_key": "math-library", "suite_ref": "application_suite.json"},
       "seed_id": "application-v3:math-library@1",
       "seed_path": "applications/math_library.json",
-      "seed_sha256": "f6742868745ea349b073e266df13f39d477b8fb1a51995307ae39887f21a27eb"
+      "seed_sha256": "367d5a1275cbc0c8b6ab9f63eea1457efd8c9f5d0b8c0da989de06a621821a3b"
     },
     {
-      "artifact_tree_sha256": "a4494e8b2a67cf15da9b217068d42ea37fb4631c1d3f62309babd10dc0a31701",
+      "artifact_tree_sha256": "866c8ae2b198b233d1bdf905006585bb125d3db635d6e1ceb21d7604eb321d10",
       "canonical_name": "uc://applications/calculator@1",
       "compiler_route": "application-v3",
       "compiler_version": "UC-APPLICATION-3",
@@ -42,10 +42,10 @@
       "route_options": {"product_key": "calculator", "suite_ref": "application_suite.json"},
       "seed_id": "application-v3:calculator@1",
       "seed_path": "applications/calculator.json",
-      "seed_sha256": "5912e1468a08a5501547ecb3aef8266b200de73359e82071fdff846826443039"
+      "seed_sha256": "5989bfd7255f1c820e54c02df006bf23f273f2a2732fcf4a6cb57e9c36103723"
     },
     {
-      "artifact_tree_sha256": "34b42733687479f1f7935bdede4550ec674ae33a841def266304f0af47f21f87",
+      "artifact_tree_sha256": "d49f2769ba4105c94e1544adbf8fd677e1d8ea05ff9500db112202ea2461b9ba",
       "canonical_name": "uc://applications/pong-game@1",
       "compiler_route": "application-v3",
       "compiler_version": "UC-APPLICATION-3",
@@ -53,7 +53,7 @@
       "route_options": {"product_key": "pong-game", "suite_ref": "application_suite.json"},
       "seed_id": "application-v3:pong-game@1",
       "seed_path": "applications/pong_game.json",
-      "seed_sha256": "b996527ff00ad440d862871489dc705b5b73dbcb6ae5497ad9560c33307f12dd"
+      "seed_sha256": "9889b360cda2b8342e5426af50f9da849b5dd68395a81ef48b62d708b15c4e9c"
     },
     {
       "artifact_tree_sha256": "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841",
@@ -116,6 +116,6 @@
       "seed_sha256": "d2e2bf262b2b637c66aa2e93c26f84d6798d4903e51cfb6eb8ae64a37c05cdab"
     }
   ],
-  "registry_snapshot_sha256": "83b50b02ff3a97edd12e22f62b5dc978b1e38fb5b272967e3007e57049cbaff4",
+  "registry_snapshot_sha256": "4f00f74c969913d89d977e774c2011de803fa37307741e4b14bd542352080f00",
   "registry_version": 1
 }

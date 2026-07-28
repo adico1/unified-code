@@ -40,7 +40,7 @@ SEED_ROOT = ROOT / "seed"
 NATIVE_SEED = SEED_ROOT / "thing_v2" / "trajectory_meter.json"
 FOREIGN_SEED = SEED_ROOT / "thing_v2" / "orchard_yield.json"
 QUALIFIED_NAME = "uc://applications/trajectory-meter@1"
-SNAPSHOT = "83b50b02ff3a97edd12e22f62b5dc978b1e38fb5b272967e3007e57049cbaff4"
+SNAPSHOT = "4f00f74c969913d89d977e774c2011de803fa37307741e4b14bd542352080f00"
 ARTIFACT_SHA = "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841"
 SEED_SHA = "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
 SUCCESS_EVIDENCE = (
@@ -189,6 +189,28 @@ def test_registry_covers_every_current_product_and_only_generic_routes():
         assert record["compiler_version"] == ROUTE_VERSIONS[record["compiler_route"]]
         seed = _load(SEED_ROOT / record["seed_path"])
         assert canonical_seed_sha256(seed) == record["seed_sha256"]
+
+
+def test_all_eleven_registered_products_match_direct_compiler_identities(tmp_path):
+    registry = _load(REGISTRY_PATH)
+    results = {}
+    for record in registry["records"]:
+        output = tmp_path / record["canonical_name"].rsplit("/", 1)[-1].replace("@", "-")
+        result = manifest_artifact(
+            inward(
+                _request(
+                    output,
+                    name=record["canonical_name"],
+                )
+            )
+        )
+        assert result["state"] == "valid", (record["canonical_name"], result["value"])
+        assert result["value"]["artifact_tree_sha256"] == record["artifact_tree_sha256"]
+        assert result["value"]["manifestation"]["artifact_id"] == (
+            "sha256:" + record["artifact_tree_sha256"]
+        )
+        results[record["canonical_name"]] = result["value"]["artifact_tree_sha256"]
+    assert len(results) == 11
 
 
 def test_all_registered_seed_vocabulary_is_absent_from_manifestation_runtime():

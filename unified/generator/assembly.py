@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import base64
+import copy
 import hashlib
 import inspect
 import json
@@ -21,6 +22,14 @@ from pathlib import Path
 
 from ..boundary import outward
 from ..thing import is_thing
+from .gui import (
+    browser_source as _gui_browser_source,
+    css_source as _gui_css_source,
+    entry_source as _gui_entry_source,
+    host_source as _gui_host_source,
+    html_source as _gui_html_source,
+    validate_ui,
+)
 
 ASSEMBLY_VERSION = "UC-ASSEMBLY-1"
 APPLICATION_VERSION = "UC-APPLICATION-3"
@@ -87,6 +96,7 @@ def validate_application(seed):
         "boundaries",
         "persistence",
         "formats",
+        "ui",
         "acceptance",
     }
     errors.extend(f"missing:{key}" for key in sorted(required - set(seed)))
@@ -115,6 +125,42 @@ def validate_application(seed):
         or any(not isinstance(item, bool) for item in interface.values())
     ):
         errors.append("interface")
+    elif not interface["cli"] or not interface["browser"]:
+        errors.append("interface.required")
+    errors.extend(validate_ui(seed.get("ui")))
+    if isinstance(seed.get("ui"), dict) and isinstance(program, dict):
+        component_ids = {
+            component.get("id")
+            for section in (seed["ui"].get("layout") or {}).get("sections", ())
+            for component in section.get("components", ())
+            if isinstance(component, dict)
+        }
+        actions = seed["ui"].get("actions") or {}
+        for name, action in actions.items():
+            if not isinstance(action, dict) or action.get("mode") != "request":
+                continue
+            request = action.get("request") or {}
+            declared = program.get("operations") or {}
+            selected = request.get("action", request.get("operation"))
+            if isinstance(selected, str) and selected not in declared:
+                errors.append(f"ui.action.{name}.undeclared-operation")
+            event = request.get("event")
+            if isinstance(event, str) and event not in (program.get("events") or {}).values():
+                errors.append(f"ui.action.{name}.undeclared-event")
+        bindings = seed["ui"].get("bindings") or {}
+        for binding in bindings.get("result", ()):
+            if binding.get("target") not in component_ids:
+                errors.append("ui.binding.unknown-target")
+        for name in ("error", "status", "root"):
+            if (bindings.get(name) or {}).get("target") not in component_ids:
+                errors.append(f"ui.binding.{name}.unknown-target")
+        for index, step in enumerate((seed["ui"].get("proof") or {}).get("steps", ())):
+            if step.get("control") not in component_ids and not step.get("keyboard"):
+                errors.append(f"ui.proof.steps[{index}].unknown-control")
+            if (step.get("expect") or {}).get("target") not in component_ids:
+                errors.append(f"ui.proof.steps[{index}].unknown-target")
+            if any(identifier not in component_ids for identifier in (step.get("set") or {})):
+                errors.append(f"ui.proof.steps[{index}].unknown-set-target")
     if not isinstance(seed["boundaries"], dict):
         errors.append("boundaries")
     elif (
@@ -510,6 +556,8 @@ def _document(spec, request, host):
         if not isinstance(start, int) or not isinstance(count, int) or start < 0 or count < 0 or start + count > len(content):
             raise ValueError("rejected-mutation")
         changed = content[:start] + content[start + count:]
+    elif primitive == "text_write":
+        changed = str(argument)
     else:
         raise ValueError("unknown-primitive")
     saved = bool(request.get("save"))
@@ -1001,6 +1049,7 @@ def derive_specification(seed, dependency_identity=None):
         "boundaries": seed["boundaries"],
         "persistence": seed["persistence"],
         "formats": seed["formats"],
+        "ui": seed["ui"],
         "dependency": seed.get("dependency"),
     }
     if seed.get("dependency"):
@@ -1023,7 +1072,9 @@ def derive_plan(seed, specification, dependency_package=None):
         f"{package}/runtime.py",
         f"{package}/compose.py",
         f"{package}/cli.py",
+        f"{package}/gui_host.py",
         f"bin/{seed['application']['name']}",
+        f"bin/{seed['application']['name']}-gui",
         "tests/acceptance.json",
         "tests/test_generated.py",
         ".unified/dependency-manifest.json",
@@ -1035,8 +1086,7 @@ def derive_plan(seed, specification, dependency_package=None):
     files.extend(f"{package}/stage_{name}.py" for name in STAGES)
     if seed["interface"].get("library"):
         files.append(f"{package}/library.py")
-    if seed["interface"].get("browser"):
-        files.extend(("browser/index.html", "browser/browser.js", "browser/style.css"))
+    files.extend(("browser/index.html", "browser/browser.js", "browser/style.css"))
     return {
         "assembly_version": ASSEMBLY_VERSION,
         "application": seed["application"],
@@ -1077,6 +1127,15 @@ def render_application(seed, dependency_identity=None, dependency_package=None):
             "dependency-identity-change",
             "evidence-order-change",
             "runtime-seed-access",
+            "gui-control-removal",
+            "gui-action-binding-change",
+            "gui-result-binding-change",
+            "gui-error-presentation-removal",
+            "gui-filesystem-authority-expansion",
+            "gui-session-capability-removal",
+            "gui-loopback-binding-change",
+            "gui-cli-semantic-divergence",
+            "gui-frame-tick-divergence",
         ]
     }
     files = {
@@ -1095,7 +1154,11 @@ def render_application(seed, dependency_identity=None, dependency_package=None):
         f"{package}/runtime.py": _runtime_source(dependency_package, dependency_identity),
         f"{package}/compose.py": _compose_source(),
         f"{package}/cli.py": _cli_source(package),
+        f"{package}/gui_host.py": _gui_host_source(
+            package, seed["ui"]["page"]["requires_root"]
+        ),
         f"bin/{seed['application']['name']}": _entry_source(package),
+        f"bin/{seed['application']['name']}-gui": _gui_entry_source(package),
         "tests/acceptance.json": _canonical(seed["acceptance"]).decode(),
         "tests/test_generated.py": _generated_test_source(
             package, _persistence_failure_case(seed)
@@ -1111,12 +1174,11 @@ def render_application(seed, dependency_identity=None, dependency_package=None):
         )
     if seed["interface"].get("library"):
         files[f"{package}/library.py"] = _library_source(export_identity)
-    if seed["interface"].get("browser"):
-        files["browser/index.html"] = _html_source(package, specification)
-        files["browser/browser.js"] = _browser_source().replace(
-            "__SPECIFICATION__", json.dumps(specification, sort_keys=True)
-        )
-        files["browser/style.css"] = _css_source()
+    files["browser/index.html"] = _gui_html_source()
+    files["browser/browser.js"] = _gui_browser_source(
+        specification, export_identity, dependency_identity
+    )
+    files["browser/style.css"] = _gui_css_source(seed["ui"])
     return files
 
 
@@ -1362,50 +1424,16 @@ def _execute_acceptance(root, seed, all_roots):
 
 
 def _javascript_headless_differential(root, seed):
-    if not seed["interface"].get("browser"):
-        return {"ok": True, "applicable": False}
-    node = shutil.which("node")
-    if not node:
-        return {"ok": False, "applicable": True, "error": "node-unavailable"}
-    cases = [
-        step
-        for scenario in seed["acceptance"]
-        for step in scenario["steps"]
-    ]
-    script = (
-        "const api=require(process.argv[1]);"
-        "const cases=JSON.parse(process.argv[2]);"
-        "let state=null;const out=[];"
-        "for(const item of cases){state=api.advance(state,item.request);out.push(JSON.parse(JSON.stringify(state)));}"
-        "process.stdout.write(JSON.stringify(out));"
-    )
-    try:
-        process_result = subprocess.run(
-            [node, "-e", script, str(root / "browser" / "browser.js"), json.dumps(cases)],
-            text=True,
-            capture_output=True,
-            check=False,
-            timeout=seed["boundaries"]["acceptance_deadline_seconds"],
-        )
-    except subprocess.TimeoutExpired:
-        return {
-            "ok": False,
-            "applicable": True,
-            "exit": 124,
-            "error": "browser-differential-timeout",
-        }
-    actual = (
-        json.loads(process_result.stdout)
-        if process_result.returncode == 0
-        else None
-    )
-    expected = [item["expect"]["output"] for item in cases]
+    source = (root / "browser" / "browser.js").read_text(encoding="utf-8")
+    forbidden = ("require(", "module.exports", "eval(", "new Function(")
+    required = ('fetch("/api"', "X-UC-Capability", "requestLog", "responseLog")
     return {
-        "ok": actual == expected,
+        "ok": all(item in source for item in required)
+        and not any(item in source for item in forbidden),
         "applicable": True,
-        "exit": process_result.returncode,
-        "actual": actual,
-        "expected": expected,
+        "runtime_path": "generated-host-api",
+        "required_markers": list(required),
+        "forbidden_hits": [item for item in forbidden if item in source],
     }
 
 
@@ -1429,14 +1457,15 @@ def _browser_executable():
     )
 
 
-def _browser_proof_expected(seed):
-    proof = seed["program"]["browser_proof"]
-    scenario = next(
-        item
-        for item in seed["acceptance"]
-        if item["id"] == proof["expected_scenario"]
-    )
-    return scenario["steps"][proof["expected_step"]]["expect"]["output"]
+def _write_gui_fixtures(root, seed):
+    for fixture in seed["ui"]["proof"]["fixtures"]:
+        path = root / fixture["path"]
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(
+            bytes.fromhex(fixture["hex"])
+            if "hex" in fixture
+            else fixture.get("text", "").encode(fixture.get("encoding", "utf-8"))
+        )
 
 
 def _graphical_browser_capture(executable, url, deadline_seconds):
@@ -1519,55 +1548,167 @@ def _graphical_browser_capture(executable, url, deadline_seconds):
     return None
 
 
+def _launch_gui_proof(root, seed, executable, authority_root):
+    environment = dict(os.environ)
+    environment["PYTHONPATH"] = os.pathsep.join(
+        [str(root), *[str(item) for item in sorted(root.parent.iterdir()) if item.is_dir()]]
+    )
+    command = [
+        str(root / "bin" / f"{seed['application']['name']}-gui"),
+        "--root",
+        str(authority_root),
+        "--no-open",
+        "--proof",
+    ]
+    process = subprocess.Popen(
+        command,
+        cwd=root,
+        env=environment,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        start_new_session=True,
+    )
+    try:
+        line = process.stdout.readline() if process.stdout else ""
+        launch = json.loads(line)
+        proof = _graphical_browser_capture(
+            executable,
+            launch["url"],
+            seed["boundaries"]["acceptance_deadline_seconds"],
+        )
+        try:
+            process.wait(timeout=4)
+        except subprocess.TimeoutExpired:
+            os.killpg(process.pid, signal.SIGTERM)
+            process.wait(timeout=3)
+        return proof, process.returncode == 0
+    except (OSError, TypeError, ValueError):
+        return None, False
+    finally:
+        if process.poll() is None:
+            try:
+                os.killpg(process.pid, signal.SIGTERM)
+            except ProcessLookupError:
+                pass
+            process.wait(timeout=3)
+
+
+def _cli_results_for_gui(root, seed, requests, authority_root):
+    environment = dict(os.environ)
+    environment["PYTHONPATH"] = os.pathsep.join(
+        [str(root), *[str(item) for item in sorted(root.parent.iterdir()) if item.is_dir()]]
+    )
+    package = seed["application"]["package"]
+    script = (
+        "import json,sys;"
+        f"from {package}.cli import execute;"
+        "requests=json.loads(sys.argv[1]);"
+        "print(json.dumps([execute(item,sys.argv[2]) for item in requests],"
+        "separators=(',',':'),sort_keys=True))"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", script, json.dumps(requests), str(authority_root)],
+        cwd=root,
+        env=environment,
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=seed["boundaries"]["acceptance_deadline_seconds"],
+    )
+    if result.returncode != 0:
+        return None
+    responses = json.loads(result.stdout)
+    summaries = []
+    for response in responses:
+        summaries.append(
+            {
+                "sha256": _sha(
+                    json.dumps(
+                        response,
+                        ensure_ascii=False,
+                        separators=(",", ":"),
+                        sort_keys=True,
+                    ).encode("utf-8")
+                ),
+                "state": response.get("state"),
+                "error": response.get("error"),
+            }
+        )
+    return summaries
+
+
 def _graphical_browser_proof(root, seed):
-    if not seed["interface"].get("browser"):
-        return {"ok": True, "applicable": False}
     executable = _browser_executable()
     if not executable:
         return {"ok": False, "applicable": True, "error": "browser-unavailable"}
-    url = (root / "browser" / "index.html").resolve().as_uri() + "?uc-proof=1"
-    outputs = [
-        _graphical_browser_capture(
-            executable,
-            url,
-            seed["boundaries"]["acceptance_deadline_seconds"],
+    outputs = []
+    clean_stops = []
+    with tempfile.TemporaryDirectory(prefix="uc-gui-proof-") as temporary:
+        base = Path(temporary)
+        copied_parent = base / "copied-installation"
+        shutil.copytree(
+            root.parent,
+            copied_parent,
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".pytest_cache"),
         )
-        for _ in range(2)
-    ]
+        for index in range(2):
+            authority = base / f"authority-{index}"
+            authority.mkdir()
+            _write_gui_fixtures(authority, seed)
+            proof_root = root if index == 0 else copied_parent / root.name
+            captured, clean = _launch_gui_proof(
+                proof_root, seed, executable, authority
+            )
+            outputs.append(captured)
+            clean_stops.append(clean)
+        cli_root = base / "cli-authority"
+        cli_root.mkdir()
+        _write_gui_fixtures(cli_root, seed)
+        cli_results = (
+            _cli_results_for_gui(root, seed, outputs[0].get("requests", []), cli_root)
+            if outputs[0]
+            else None
+        )
     if any(item is None for item in outputs):
         return {
             "ok": False,
             "applicable": True,
             "error": "graphical-browser-startup",
         }
-    proof = seed["program"]["browser_proof"]
     first, second = outputs
-    frames = first.get("frames") or []
-    fingerprints = [item.get("fingerprint") for item in frames]
-    nonblank = sum(bool(item.get("non_background_pixels")) for item in frames)
-    expected = _browser_proof_expected(seed)
+    rendered = first.get("rendered") or {}
+    responses = first.get("responses") or []
     checks = {
-        "canvas_created": first.get("canvas") == seed["program"]["window"],
-        "exact_acceptance_state": first.get("state") == expected,
-        "frames_nonblank": nonblank == len(frames) and bool(frames),
-        "frames_rendered": len(frames) == len(proof["control_codes"]),
-        "keyboard_events": first.get("keyboard_events") == len(proof["control_codes"]),
+        "meaningful_title": first.get("title") == seed["ui"]["page"]["title"],
+        "required_controls": len(first.get("controls") or []) >= 3,
+        "accessible_names": first.get("accessible") is True,
+        "three_interactions": first.get("interactions", 0) >= 3,
+        "backend_requests": bool(first.get("requests")),
+        "visible_assertions": bool(first.get("assertions"))
+        and all(item.get("ok") for item in first["assertions"]),
+        "visible_error": first.get("error_presented") is True,
+        "nonblank_render": rendered.get("text_length", 0) > 20
+        or rendered.get("canvas_pixels", 0) > 0,
         "repeated_exact": first == second,
         "window_created": first.get("window_created") is True,
-        "distinct_frames": len(set(fingerprints))
-        >= proof["minimum_distinct_frames"],
+        "cli_gui_equal": responses == cli_results,
+        "clean_stop": all(clean_stops),
+        "copied_installation": second is not None,
     }
     return {
         "ok": all(checks.values()),
         "applicable": True,
         "checks": checks,
-        "frames_rendered": len(frames),
-        "distinct_frames": len(set(fingerprints)),
-        "nonblank_frames": nonblank,
+        "interactions": first.get("interactions", 0),
+        "backend_requests": len(first.get("requests") or []),
+        "cli_gui_equal": responses == cli_results,
+        "proof": first,
     }
 
 
 def _ten_depth_report(seed, manifest, verification):
+    browser_checks = verification["graphical_browser"].get("checks", {})
     checks = {
         "seed_schema": [not validate_application(seed)],
         "seed_to_spec": [verification["spec_fidelity"]],
@@ -1577,19 +1718,33 @@ def _ten_depth_report(seed, manifest, verification):
             verification["build_ok"],
         ],
         "standard_ten_structure": [verification["source_laws"]["ok"]],
-        "boundary_authority_failure": [verification["runtime_absence"]["ok"]],
-        "behavior_persistence": [verification["acceptance_ok"]],
-        "determinism_dependency": [verification["deterministic"], verification["dependency_ok"]],
+        "boundary_authority_failure": [
+            verification["runtime_absence"]["ok"],
+            verification["javascript_headless_differential"]["ok"],
+            browser_checks.get("clean_stop", False),
+        ],
+        "behavior_persistence": [
+            verification["acceptance_ok"],
+            browser_checks.get("three_interactions", False),
+            browser_checks.get("visible_assertions", False),
+        ],
+        "determinism_dependency": [
+            verification["deterministic"],
+            verification["dependency_ok"],
+            browser_checks.get("cli_gui_equal", False),
+            browser_checks.get("repeated_exact", False),
+        ],
         "mutation_differential_performance": [
             verification["anti_hardcoding"],
-            verification["javascript_headless_differential"]["ok"],
             verification["graphical_browser"]["ok"],
+            browser_checks.get("accessible_names", False),
             verification["performance_ok"],
         ],
         "assembly_install_restart": [
             verification["generated_tests_ok"],
             verification["installed_execution_ok"],
             verification["atomic_install"]["ok"],
+            verification["graphical_browser"]["checks"]["copied_installation"],
         ],
     }
     return {
@@ -1618,6 +1773,27 @@ def _application_vocabulary(seed):
     dependency = seed.get("dependency") or {}
     if dependency.get("application"):
         terms.add(dependency["application"])
+    ui = seed.get("ui") or {}
+    page = ui.get("page") or {}
+    terms.update(
+        item
+        for item in (page.get("id"), page.get("title"), page.get("description"))
+        if item
+    )
+    terms.update((ui.get("actions") or {}).keys())
+    for section in (ui.get("layout") or {}).get("sections", ()):
+        terms.update(item for item in (section.get("id"), section.get("title")) if item)
+        for component in section.get("components", ()):
+            terms.update(
+                item
+                for item in (
+                    component.get("id"),
+                    component.get("label"),
+                    component.get("accessible_name"),
+                    component.get("action"),
+                )
+                if item
+            )
     return {
         str(term).lower()
         for term in terms
@@ -1653,16 +1829,31 @@ def _anti_hardcoding(seeds):
         ),
         "browser-host": "\n".join(
             inspect.getsource(item)
-            for item in (_browser_source, _html_source, _css_source)
+            for item in (
+                _gui_browser_source,
+                _gui_html_source,
+                _gui_css_source,
+                _gui_host_source,
+                _gui_entry_source,
+            )
         ),
     }
     terms = sorted(set().union(*(_application_vocabulary(seed) for seed in seeds)))
     registered_generic = {
         "advance",
+        "dependency",
+        "document",
+        "error",
+        "expression",
+        "index",
+        "operation",
         "pause",
+        "range",
         "reset",
+        "result",
         "resume",
         "start",
+        "status",
         "stop",
         "transition",
     }
@@ -1682,8 +1873,11 @@ def _anti_hardcoding(seeds):
         for surface, source in sorted(surfaces.items())
         for term in checked
     ]
+    behavioral = _gui_behavioral_mutations(seeds)
     return {
-        "ok": not hits and all(item["detected"] for item in scanner_injections),
+        "ok": not hits
+        and all(item["detected"] for item in scanner_injections)
+        and behavioral["ok"],
         "proof_kind": "literal-scanner-injection-validation",
         "terms": checked,
         "registered_generic": sorted(registered_generic.intersection(terms)),
@@ -1692,6 +1886,107 @@ def _anti_hardcoding(seeds):
             item["detected"] for item in scanner_injections
         ),
         "scanner_injections_total": len(scanner_injections),
+        "gui_behavioral_mutations": behavioral,
+    }
+
+
+def _gui_behavioral_mutations(seeds):
+    results = []
+    for seed in seeds:
+        component = seed["ui"]["layout"]["sections"][0]["components"][0]["id"]
+        mutations = {}
+
+        dropped = copy.deepcopy(seed)
+        dropped["ui"]["layout"]["sections"][0]["components"] = [
+            item
+            for item in dropped["ui"]["layout"]["sections"][0]["components"]
+            if item["id"] != component
+        ]
+        mutations["dropped-control"] = bool(validate_application(dropped))
+
+        action = copy.deepcopy(seed)
+        button = next(
+            item
+            for section in action["ui"]["layout"]["sections"]
+            for item in section["components"]
+            if item["type"] == "button"
+        )
+        button["action"] = "unregistered-action"
+        mutations["incorrect-action-binding"] = bool(validate_application(action))
+
+        result = copy.deepcopy(seed)
+        result["ui"]["bindings"]["result"][0]["target"] = "unregistered-target"
+        mutations["incorrect-result-binding"] = bool(validate_application(result))
+
+        error = copy.deepcopy(seed)
+        error["ui"]["bindings"]["error"]["target"] = "unregistered-target"
+        mutations["missing-error-presentation"] = bool(validate_application(error))
+
+        proof = copy.deepcopy(seed)
+        proof["ui"]["proof"]["steps"][0]["control"] = "unregistered-control"
+        proof["ui"]["proof"]["steps"][0].pop("keyboard", None)
+        mutations["dropped-proof-interaction"] = bool(validate_application(proof))
+
+        request = copy.deepcopy(seed)
+        request_action = next(
+            item
+            for item in request["ui"]["actions"].values()
+            if item["mode"] == "request"
+        )
+        if "action" in request_action["request"]:
+            request_action["request"]["action"] = "unregistered-operation"
+        elif "event" in request_action["request"]:
+            request_action["request"]["event"] = "unregistered-event"
+        else:
+            request_action["request"]["operation"] = "unregistered-operation"
+        mutations["cli-gui-semantic-divergence"] = bool(validate_application(request))
+        results.extend(
+            {
+                "application": seed["application"]["name"],
+                "mutation": name,
+                "detected": detected,
+            }
+            for name, detected in sorted(mutations.items())
+        )
+    source = "\n".join(
+        inspect.getsource(item)
+        for item in (_gui_browser_source, _gui_host_source, _gui_entry_source)
+    )
+    source_mutations = {
+        "unrestricted-filesystem-boundary": source.replace(
+            '"127.0.0.1"', '"0.0.0.0"', 1
+        ),
+        "missing-session-capability": source.replace(
+            '"X-UC-Capability"', '"X-Removed-Capability"'
+        ),
+        "non-loopback-server-binding": source.replace(
+            'server.bind(("127.0.0.1", 0))', 'server.bind(("0.0.0.0", 0))'
+        ),
+        "runtime-seed-access": source + '\nopen("seed/application.json")\n',
+        "application-specific-frontend-branch": source
+        + '\nif application == "proof-application": pass\n',
+    }
+    required = (
+        'server.bind(("127.0.0.1", 0))',
+        "X-UC-Capability",
+        "capability-required",
+    )
+    forbidden = ("0.0.0.0", 'open("seed/', "if application ==")
+    results.extend(
+        {
+            "application": "permanent-gui-surface",
+            "mutation": name,
+            "detected": not all(term in mutated for term in required)
+            or any(term in mutated for term in forbidden),
+        }
+        for name, mutated in sorted(source_mutations.items())
+    )
+    return {
+        "proof_kind": "behavioral-contract-and-source-law-mutations",
+        "detected": sum(item["detected"] for item in results),
+        "total": len(results),
+        "ok": all(item["detected"] for item in results),
+        "results": results,
     }
 
 

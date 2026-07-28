@@ -1,7 +1,7 @@
 {
   "application_version": "UC-APPLICATION-3",
   "application": {"name": "calculator", "package": "calculator_app", "description": "Generated expression interface consuming the generated numeric library."},
-  "interface": {"cli": true, "library": false, "browser": false},
+  "interface": {"cli": true, "library": false, "browser": true},
   "dependency": {"application": "math-library", "interface": "library"},
   "program": {
     "engine": "expression",
@@ -12,6 +12,102 @@
   "boundaries": {"dependency": "generated-library", "acceptance_deadline_seconds": 10},
   "persistence": {"mode": "none"},
   "formats": {"outer_input": "json-object", "outer_output": "json-object"},
+  "ui": {
+    "page": {
+      "id": "calculator-desk",
+      "title": "Calculator",
+      "description": "Evaluate expressions through the generated math-library dependency.",
+      "requires_root": false
+    },
+    "theme": {"background": "#11131a", "surface": "#232631", "text": "#ffffff", "muted": "#b8bdca", "primary": "#ffcc66", "danger": "#ff7f8f"},
+    "layout": {
+      "sections": [
+        {
+          "id": "calculator-identity",
+          "title": "Dependency",
+          "components": [
+            {"id": "calculator-root", "type": "label", "label": "Runtime root", "accessible_name": "Runtime root"},
+            {"id": "calculator-library", "type": "label", "label": "Math library identity", "accessible_name": "Generated math library identity", "derived": "dependency_identity", "readonly": true},
+            {"id": "calculator-status", "type": "status", "label": "Status", "accessible_name": "Calculator status"},
+            {"id": "calculator-error", "type": "output", "label": "Error", "accessible_name": "Calculator error"}
+          ]
+        },
+        {
+          "id": "calculator-controls",
+          "title": "Expression",
+          "wide": true,
+          "class": "uc-keypad",
+          "components": [
+            {"id": "calculator-display", "type": "text", "label": "Expression", "accessible_name": "Expression and result display"},
+            {"id": "calculator-left", "type": "button", "label": "(", "accessible_name": "Left parenthesis", "action": "append-left"},
+            {"id": "calculator-right", "type": "button", "label": ")", "accessible_name": "Right parenthesis", "action": "append-right"},
+            {"id": "calculator-clear", "type": "button", "label": "Clear", "accessible_name": "Clear expression", "action": "clear-expression"},
+            {"id": "calculator-backspace", "type": "button", "label": "Backspace", "accessible_name": "Backspace", "action": "backspace-expression"},
+            {"id": "calculator-0", "type": "button", "label": "0", "accessible_name": "Digit zero", "action": "append-0"},
+            {"id": "calculator-1", "type": "button", "label": "1", "accessible_name": "Digit one", "action": "append-1"},
+            {"id": "calculator-2", "type": "button", "label": "2", "accessible_name": "Digit two", "action": "append-2"},
+            {"id": "calculator-3", "type": "button", "label": "3", "accessible_name": "Digit three", "action": "append-3"},
+            {"id": "calculator-4", "type": "button", "label": "4", "accessible_name": "Digit four", "action": "append-4"},
+            {"id": "calculator-5", "type": "button", "label": "5", "accessible_name": "Digit five", "action": "append-5"},
+            {"id": "calculator-6", "type": "button", "label": "6", "accessible_name": "Digit six", "action": "append-6"},
+            {"id": "calculator-7", "type": "button", "label": "7", "accessible_name": "Digit seven", "action": "append-7"},
+            {"id": "calculator-8", "type": "button", "label": "8", "accessible_name": "Digit eight", "action": "append-8"},
+            {"id": "calculator-9", "type": "button", "label": "9", "accessible_name": "Digit nine", "action": "append-9"},
+            {"id": "calculator-add", "type": "button", "label": "+", "accessible_name": "Add operator", "action": "append-add"},
+            {"id": "calculator-subtract", "type": "button", "label": "−", "accessible_name": "Subtract operator", "action": "append-subtract"},
+            {"id": "calculator-multiply", "type": "button", "label": "×", "accessible_name": "Multiply operator", "action": "append-multiply"},
+            {"id": "calculator-divide", "type": "button", "label": "÷", "accessible_name": "Divide operator", "action": "append-divide"},
+            {"id": "calculator-equals", "type": "button", "label": "=", "accessible_name": "Evaluate expression", "action": "evaluate-expression", "primary": true},
+            {"id": "calculator-result", "type": "output", "label": "Result", "accessible_name": "Calculation result"}
+          ]
+        }
+      ]
+    },
+    "actions": {
+      "append-left": {"mode": "append", "target": "calculator-display", "value": "("},
+      "append-right": {"mode": "append", "target": "calculator-display", "value": ")"},
+      "clear-expression": {"mode": "clear", "target": "calculator-display", "value": ""},
+      "backspace-expression": {"mode": "backspace", "target": "calculator-display"},
+      "append-0": {"mode": "append", "target": "calculator-display", "value": "0"},
+      "append-1": {"mode": "append", "target": "calculator-display", "value": "1"},
+      "append-2": {"mode": "append", "target": "calculator-display", "value": "2"},
+      "append-3": {"mode": "append", "target": "calculator-display", "value": "3"},
+      "append-4": {"mode": "append", "target": "calculator-display", "value": "4"},
+      "append-5": {"mode": "append", "target": "calculator-display", "value": "5"},
+      "append-6": {"mode": "append", "target": "calculator-display", "value": "6"},
+      "append-7": {"mode": "append", "target": "calculator-display", "value": "7"},
+      "append-8": {"mode": "append", "target": "calculator-display", "value": "8"},
+      "append-9": {"mode": "append", "target": "calculator-display", "value": "9"},
+      "append-add": {"mode": "append", "target": "calculator-display", "value": "+"},
+      "append-subtract": {"mode": "append", "target": "calculator-display", "value": "-"},
+      "append-multiply": {"mode": "append", "target": "calculator-display", "value": "*"},
+      "append-divide": {"mode": "append", "target": "calculator-display", "value": "/"},
+      "evaluate-expression": {"mode": "request", "request": {"expression": {"$control": "calculator-display"}}}
+    },
+    "bindings": {
+      "result": [{"source": "output.result", "target": "calculator-result", "property": "text"}],
+      "error": {"target": "calculator-error", "property": "text"},
+      "status": {"target": "calculator-status", "property": "text", "success": "Calculation complete", "failure": "Calculation rejected"},
+      "root": {"target": "calculator-root", "property": "text"}
+    },
+    "keyboard": [{"key": "Enter", "action": "evaluate-expression"}, {"key": "Backspace", "action": "backspace-expression"}, {"key": "Escape", "action": "clear-expression"}],
+    "responsive": {"breakpoint_px": 680},
+    "proof": {
+      "fixtures": [],
+      "steps": [
+        {"control": "calculator-left", "expect": {"target": "calculator-display", "equals": "("}},
+        {"control": "calculator-2", "expect": {"target": "calculator-display", "equals": "(2"}},
+        {"control": "calculator-add", "expect": {"target": "calculator-display", "equals": "(2+"}},
+        {"control": "calculator-3", "expect": {"target": "calculator-display", "equals": "(2+3"}},
+        {"control": "calculator-right", "expect": {"target": "calculator-display", "equals": "(2+3)"}},
+        {"control": "calculator-multiply", "expect": {"target": "calculator-display", "equals": "(2+3)*"}},
+        {"control": "calculator-4", "expect": {"target": "calculator-display", "equals": "(2+3)*4"}},
+        {"control": "calculator-equals", "expect": {"target": "calculator-result", "equals": "20"}},
+        {"set": {"calculator-display": "9/0"}, "keyboard": "Enter", "expect": {"target": "calculator-error", "equals": "zero-divisor"}}
+      ],
+      "expected_error": "zero-divisor"
+    }
+  },
   "acceptance": [
     {
       "id": "expressions",
