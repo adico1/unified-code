@@ -5,6 +5,7 @@ from __future__ import annotations
 import ast
 import atexit
 import base64
+import concurrent.futures
 import copy
 import hashlib
 import inspect
@@ -60,6 +61,7 @@ ENGINES = frozenset(("document", "numeric", "expression", "world"))
 NAME_RE = re.compile(r"^[a-z][a-z0-9-]*$")
 PACKAGE_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 _BROWSER_SESSION = {}
+_ASSEMBLY_PROOF_CACHE = {}
 
 
 def _canonical(value):
@@ -1745,6 +1747,30 @@ def _graphical_browser_proof(root, seed):
     }
 
 
+def audited_graphical_suite_boundary(roots, seed_by_name):
+    executable = _browser_executable()
+    if executable is None:
+        return {
+            root.name: {"ok": False, "applicable": True, "error": "browser-unavailable"}
+            for root in roots
+        }
+    deadline = max(
+        seed_by_name[root.name]["boundaries"]["acceptance_deadline_seconds"]
+        for root in roots
+    )
+    audited_browser_bootstrap_boundary(executable, deadline)
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=max(1, len(roots))
+    ) as workers:
+        futures = {
+            root.name: workers.submit(
+                _graphical_browser_proof, root, seed_by_name[root.name]
+            )
+            for root in roots
+        }
+        return {name: future.result() for name, future in futures.items()}
+
+
 def _ten_depth_report(seed, manifest, verification):
     browser_checks = verification["graphical_browser"].get("checks", {})
     checks = {
@@ -2080,6 +2106,97 @@ def _atomic_preservation_probe(parent):
     return {"ok": all(checks.values()), "checks": checks}
 
 
+def audited_assembly_cache_key_boundary(suite, source_root):
+    authorities = {
+        entry["seed"]: _sha(
+            _canonical(
+                json.loads((source_root / entry["seed"]).read_text(encoding="utf-8"))
+            )
+        )
+        for entry in suite["applications"]
+    }
+    return _sha(
+        _canonical(
+            {
+                "assembly_version": ASSEMBLY_VERSION,
+                "suite": suite,
+                "authorities": authorities,
+            }
+        )
+    )
+
+
+def audited_directory_identity_boundary(root):
+    return _sha(
+        _canonical(
+            {
+                path.relative_to(root).as_posix(): _sha(path.read_bytes())
+                for path in sorted(root.rglob("*"))
+                if path.is_file()
+                and "__pycache__" not in path.parts
+                and ".pytest_cache" not in path.parts
+            }
+        )
+    )
+
+
+def audited_assembly_cache_admission_boundary(thing, value, output, cache_key):
+    cached = _ASSEMBLY_PROOF_CACHE.get(cache_key)
+    if cached is None:
+        return None
+    cache_root = Path(cached["tree"])
+    if (
+        not cache_root.is_dir()
+        or audited_directory_identity_boundary(cache_root) != cached["tree_identity"]
+    ):
+        return _failure(
+            thing,
+            value,
+            "assembly-cache-identity-stale",
+            "assembly:cache-rejected",
+        )
+    output.parent.mkdir(parents=True, exist_ok=True)
+    staging = Path(
+        tempfile.mkdtemp(prefix="." + output.name + ".uc-cache-", dir=output.parent)
+    )
+    shutil.copytree(cache_root, staging, dirs_exist_ok=True)
+    _atomic_publish(staging, output)
+    return outward(
+        {
+            **thing,
+            "value": {
+                **value,
+                "output": str(output),
+                "manifest": copy.deepcopy(cached["manifest"]),
+                "applications": sorted(cached["manifest"]["applications"]),
+                "verdict": "pass",
+                "cache_identity": cached["tree_identity"],
+            },
+            "evidence": (
+                *thing["evidence"],
+                "assembly:authority-verified",
+                "assembly:cache-admitted",
+                "assembly:verified",
+            ),
+            "state": "valid",
+        }
+    )
+
+
+def audited_assembly_cache_publish_boundary(cache_key, output, manifest):
+    cache_parent = Path(tempfile.mkdtemp(prefix="uc-assembly-cache-"))
+    cache_tree = cache_parent / "tree"
+    shutil.copytree(output, cache_tree)
+    identity = audited_directory_identity_boundary(cache_tree)
+    _ASSEMBLY_PROOF_CACHE[cache_key] = {
+        "owner": cache_parent,
+        "tree": str(cache_tree),
+        "tree_identity": identity,
+        "manifest": copy.deepcopy(manifest),
+    }
+    return identity
+
+
 def run_assemble(thing):
     """One suite seed in; five generated, verified, installed applications out."""
     value = dict(thing.get("value") or {}) if isinstance(thing, dict) else {}
@@ -2110,6 +2227,12 @@ def run_assemble(thing):
         return _failure(thing, {**value, "validation_errors": errors}, "invalid-suite", "assembly:seed-rejected")
     if output == source_root or source_root in output.parents or output in source_root.parents:
         return _failure(thing, value, "unsafe-output", "assembly:rejected")
+    cache_key = audited_assembly_cache_key_boundary(suite, source_root)
+    cached = audited_assembly_cache_admission_boundary(
+        thing, value, output, cache_key
+    )
+    if cached is not None:
+        return cached
 
     seeds = []
     for entry in suite["applications"]:
@@ -2149,6 +2272,7 @@ def run_assemble(thing):
         tests = _run_generated_tests(roots)
         anti = _anti_hardcoding([seed for _, seed in seeds])
         atomic_install = _atomic_preservation_probe(staging_parent)
+        graphical_proofs = audited_graphical_suite_boundary(roots, seed_by_name)
         application_reports = {}
         for root in roots:
             name = root.name
@@ -2194,7 +2318,7 @@ def run_assemble(thing):
                 "javascript_headless_differential": _javascript_headless_differential(
                     root, seed
                 ),
-                "graphical_browser": _graphical_browser_proof(root, seed),
+                "graphical_browser": graphical_proofs[name],
                 "generated_tests_ok": tests[name]["ok"],
                 "installed_execution_ok": all(item["ok"] for item in installed),
                 "atomic_install": atomic_install,
@@ -2229,6 +2353,9 @@ def run_assemble(thing):
                 "assembly:verification-failed",
             )
         _atomic_publish(staging, output)
+        cache_identity = audited_assembly_cache_publish_boundary(
+            cache_key, output, suite_manifest
+        )
         return outward(
             {
                 **thing,
@@ -2238,6 +2365,7 @@ def run_assemble(thing):
                     "manifest": suite_manifest,
                     "applications": sorted(manifests),
                     "verdict": "pass",
+                    "cache_identity": cache_identity,
                 },
                 "evidence": (*thing["evidence"], "assembly:validated", "assembly:generated", "assembly:installed", "assembly:verified"),
                 "state": "valid",
