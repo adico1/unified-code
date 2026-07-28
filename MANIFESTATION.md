@@ -130,10 +130,10 @@ qualified name
 No fuzzy comparison, prefix selection, closest-name lookup, AI inference,
 implicit version selection, or host-dependent selection is permitted.
 
-A short name is never sufficient by itself. In the proof registry,
-`trajectory-meter` is explicitly ambiguous because versions `1` and `2` are
-both present. A short name with one current record still remains unresolved
-because no version policy was pinned.
+A short name is never sufficient by itself. A short name with one current
+record remains unresolved because no version policy was pinned. Ambiguity is
+proved with a test-only registry fixture containing two explicit versions; no
+unbacked identity is added to the production registry.
 
 ## Canonical registry
 
@@ -166,10 +166,8 @@ stateful-unfold → UC-UNFOLD-1
 expression-uem  → UEM-16-v0.1
 ```
 
-The registry covers the five Application v3 products, two Thing v2 products,
-two stateful products, and two expression/UEM products. The extra
-`trajectory-meter@2` address exists only to prove explicit short-name
-ambiguity.
+The registry covers exactly the five Application v3 products, two Thing v2
+products, two stateful products, and two expression/UEM products.
 
 The registry snapshot hash covers this canonical projection:
 
@@ -250,7 +248,7 @@ A failure contains no evidence for later phases.
 ```bash
 uc manifest uc://applications/trajectory-meter@1 \
   --registry seed/registry.json \
-  --snapshot e72bb04c2d1df8ee50422529a03e396d5bd21ef6a2d34b68d5ad3176c51cc2e2 \
+  --snapshot 83b50b02ff3a97edd12e22f62b5dc978b1e38fb5b272967e3007e57049cbaff4 \
   --output /tmp/uc-manifested-trajectory
 ```
 
@@ -258,7 +256,7 @@ The result exposes:
 
 ```json
 {
-  "registry_snapshot_sha256": "e72bb04c2d1df8ee50422529a03e396d5bd21ef6a2d34b68d5ad3176c51cc2e2",
+  "registry_snapshot_sha256": "83b50b02ff3a97edd12e22f62b5dc978b1e38fb5b272967e3007e57049cbaff4",
   "canonical_name": "uc://applications/trajectory-meter@1",
   "seed_id": "thing-v2:trajectory-meter@1",
   "seed_sha256": "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49",

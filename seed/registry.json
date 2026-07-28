@@ -66,16 +66,6 @@
       "seed_sha256": "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
     },
     {
-      "artifact_tree_sha256": "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841",
-      "canonical_name": "uc://applications/trajectory-meter@2",
-      "compiler_route": "thing-v2",
-      "compiler_version": "THING-V2-1",
-      "product_family": "thing-v2",
-      "seed_id": "thing-v2:trajectory-meter@2",
-      "seed_path": "thing_v2/trajectory_meter.json",
-      "seed_sha256": "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
-    },
-    {
       "artifact_tree_sha256": "fbd0f362dee131c0148cb064ed8c5bae651c11ad800531dba7df49ee87da5be9",
       "canonical_name": "uc://applications/orchard-yield@1",
       "compiler_route": "thing-v2",
@@ -126,6 +116,6 @@
       "seed_sha256": "d2e2bf262b2b637c66aa2e93c26f84d6798d4903e51cfb6eb8ae64a37c05cdab"
     }
   ],
-  "registry_snapshot_sha256": "e72bb04c2d1df8ee50422529a03e396d5bd21ef6a2d34b68d5ad3176c51cc2e2",
+  "registry_snapshot_sha256": "83b50b02ff3a97edd12e22f62b5dc978b1e38fb5b272967e3007e57049cbaff4",
   "registry_version": 1
 }
