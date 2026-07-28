@@ -89,6 +89,8 @@ This milestone is deliberately non-blocking for Milestone 1. Open items:
   `seed/ROOT.seed.json` ([STAGE1.md](STAGE1.md)).
 - Prove generated Stage1-A regenerates a byte-identical Stage1-B in an isolated
   process ([STAGE1_FIXED_POINT.md](STAGE1_FIXED_POINT.md)).
+- Keep the complete proof inventory under the event-driven
+  [`uc verify-all`](VERIFY_FLOW.md) tool-bootstrap-plus-five-second budget.
 - Generate Python/C hosts, physical target adapters, and build definitions.
 - Generate repository tests, mutations, goldens, documentation, and audit tools.
 - Account for vendored dependencies without claiming they were generated.

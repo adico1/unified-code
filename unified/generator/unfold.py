@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import tempfile
@@ -139,7 +140,12 @@ def _run_verify(project_path: Path) -> dict:
     tests = project_path / "tests"
     if not tests.is_dir():
         return {"ok": True, "detail": "no-tests-dir", "exit": 0}
-    py = _repo_root() / ".venv" / "bin" / "python"
+    configured_python = os.environ.get("UC_PYTHON")
+    py = (
+        Path(configured_python)
+        if configured_python
+        else _repo_root() / ".venv" / "bin" / "python"
+    )
     if not py.is_file():
         py = Path("python3")
     try:

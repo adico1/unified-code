@@ -120,6 +120,7 @@ def test_five_applications_generate_install_execute_and_pass_ten_depths(tmp_path
         assert report["verification"]["javascript_headless_differential"]["ok"]
         graphical = report["verification"]["graphical_browser"]
         assert graphical["ok"], (name, graphical)
+        assert graphical["browser_boot_count"] == 1
         assert graphical["checks"]["meaningful_title"]
         assert graphical["checks"]["required_controls"]
         assert graphical["checks"]["accessible_names"]
@@ -161,8 +162,14 @@ def test_five_applications_generate_install_execute_and_pass_ten_depths(tmp_path
 def test_repeated_independent_assembly_is_byte_identical(tmp_path):
     first = tmp_path / "first"
     second = tmp_path / "second"
-    assert run_assemble(thing(SUITE, first))["state"] == "valid"
-    assert run_assemble(thing(SUITE, second))["state"] == "valid"
+    first_result = run_assemble(thing(SUITE, first))
+    second_result = run_assemble(thing(SUITE, second))
+    assert first_result["state"] == second_result["state"] == "valid"
+    assert "assembly:cache-admitted" in second_result["evidence"]
+    assert (
+        first_result["value"]["cache_identity"]
+        == second_result["value"]["cache_identity"]
+    )
     assert tree_bytes(first) == tree_bytes(second)
 
 
