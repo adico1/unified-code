@@ -209,6 +209,8 @@ def audited_command_node_primitive(node):
         "duration_seconds": time.monotonic() - started,
         "stdout_sha256": hashlib.sha256(completed.stdout).hexdigest(),
         "stderr_sha256": hashlib.sha256(completed.stderr).hexdigest(),
+        "stdout_tail": completed.stdout.decode("utf-8", errors="replace")[-20000:],
+        "stderr_tail": completed.stderr.decode("utf-8", errors="replace")[-20000:],
     }
 
 
