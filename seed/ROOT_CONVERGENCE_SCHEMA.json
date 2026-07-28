@@ -1,0 +1,273 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "uc-root-convergence-schema-1",
+  "title": "Unified Code Root Convergence Trace",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format_version",
+    "generation_bound",
+    "authority",
+    "generations"
+  ],
+  "properties": {
+    "format_version": {
+      "const": "UC-ROOT-CONVERGENCE-1"
+    },
+    "generation_bound": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "components",
+        "watcher_registry"
+      ],
+      "properties": {
+        "components": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "identity",
+              "content_sha256"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "identity": {
+                "type": "string",
+                "minLength": 1
+              },
+              "content_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        },
+        "watcher_registry": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "depths",
+              "observes",
+              "required_evidence"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "depths": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10
+                }
+              },
+              "observes": {
+                "type": "string",
+                "minLength": 1
+              },
+              "required_evidence": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "generations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/generation"
+      }
+    }
+  },
+  "$defs": {
+    "generation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "semantic_structure",
+        "audit"
+      ],
+      "properties": {
+        "semantic_structure": {
+          "$ref": "#/$defs/semantic_structure"
+        },
+        "audit": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ordered_verdicts",
+            "measurements",
+            "environment_identity"
+          ],
+          "properties": {
+            "ordered_verdicts": {
+              "type": "array"
+            },
+            "measurements": {
+              "type": "object"
+            },
+            "environment_identity": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "semantic_structure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority_bundle_sha256",
+        "depths",
+        "projections",
+        "watchers",
+        "letters",
+        "laws"
+      ],
+      "properties": {
+        "authority_bundle_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "depths": {
+          "const": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        "projections": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "authority_bundle_sha256",
+              "semantic"
+            ],
+            "properties": {
+              "authority_bundle_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "semantic": {}
+            }
+          }
+        },
+        "watchers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "status",
+              "evidence"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "enum": [
+                  "resolved",
+                  "unresolved"
+                ]
+              },
+              "evidence": {
+                "type": "array"
+              }
+            }
+          }
+        },
+        "letters": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "verdict"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "verdict": {
+                "enum": [
+                  "valid",
+                  "missing",
+                  "foreign",
+                  "duplicate",
+                  "misplaced",
+                  "unresolved"
+                ]
+              }
+            }
+          }
+        },
+        "laws": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "enum": [
+                  "pass",
+                  "fail"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

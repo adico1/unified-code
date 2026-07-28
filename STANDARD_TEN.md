@@ -48,6 +48,18 @@ Tests, gauntlets, mutations, traceability and coverage are generated from the sa
 
 ---
 
+## Root convergence — בלימה
+
+Standard Ten always contains exactly ten semantic depths. Generation passes
+repeat only until the first valid deterministic root fixed point. Projection
+convergence and root convergence remain distinct.
+
+The normative stopping, cycle, watcher, letter and authority laws are defined
+in [ROOT_CONVERGENCE.md](ROOT_CONVERGENCE.md). No root completion may be
+claimed unless every projection and the shared pinned authority converge.
+
+---
+
 ## Non-fallback law
 
 > Conventional development is not an authorized fallback. When Standard Ten cannot express a requested feature, implementation must stop with `standard.gap` and open a design ticket. It must not introduce handwritten application logic, OOP, imperative control flow, parallel interface implementations, domain-specific generator branches, or untracked files.
