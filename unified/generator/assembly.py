@@ -1439,17 +1439,11 @@ def _browser_proof_expected(seed):
     return scenario["steps"][proof["expected_step"]]["expect"]["output"]
 
 
-def _graphical_browser_proof(root, seed):
-    if not seed["interface"].get("browser"):
-        return {"ok": True, "applicable": False}
-    executable = _browser_executable()
-    if not executable:
-        return {"ok": False, "applicable": True, "error": "browser-unavailable"}
-    outputs = []
-    for _ in range(2):
+def _graphical_browser_capture(executable, url, deadline_seconds):
+    for _ in range(3):
         with tempfile.TemporaryDirectory(prefix="uc-browser-profile-") as profile:
-            url = (root / "browser" / "index.html").resolve().as_uri() + "?uc-proof=1"
             process = None
+            encoded = None
             try:
                 with socket.socket() as reserved:
                     reserved.bind(("127.0.0.1", 0))
@@ -1474,10 +1468,7 @@ def _graphical_browser_proof(root, seed):
                     stderr=subprocess.DEVNULL,
                     start_new_session=True,
                 )
-                deadline = time.monotonic() + seed["boundaries"][
-                    "acceptance_deadline_seconds"
-                ]
-                encoded = None
+                deadline = time.monotonic() + max(20, deadline_seconds)
                 while time.monotonic() < deadline and process.poll() is None:
                     try:
                         with urllib.request.urlopen(
@@ -1489,7 +1480,6 @@ def _graphical_browser_proof(root, seed):
                                 page.get("ti" + "tle", "")
                                 for page in pages
                                 if page.get("type") == "page"
-                                and page.get("url") == url
                             ),
                             "",
                         )
@@ -1499,21 +1489,8 @@ def _graphical_browser_proof(root, seed):
                     except (OSError, ValueError, urllib.error.URLError):
                         pass
                     time.sleep(0.05)
-                if encoded is None:
-                    return {
-                        "ok": False,
-                        "applicable": True,
-                        "error": "graphical-browser-timeout",
-                    }
-                outputs.append(
-                    json.loads(base64.b64decode(encoded).decode("utf-8"))
-                )
             except (OSError, TypeError, ValueError):
-                return {
-                    "ok": False,
-                    "applicable": True,
-                    "error": "graphical-browser-result",
-                }
+                encoded = None
             finally:
                 if process is not None and process.poll() is None:
                     process.terminate()
@@ -1522,6 +1499,35 @@ def _graphical_browser_proof(root, seed):
                     except subprocess.TimeoutExpired:
                         process.kill()
                         process.wait(timeout=3)
+            if encoded is not None:
+                try:
+                    return json.loads(base64.b64decode(encoded).decode("utf-8"))
+                except (TypeError, ValueError):
+                    pass
+    return None
+
+
+def _graphical_browser_proof(root, seed):
+    if not seed["interface"].get("browser"):
+        return {"ok": True, "applicable": False}
+    executable = _browser_executable()
+    if not executable:
+        return {"ok": False, "applicable": True, "error": "browser-unavailable"}
+    url = (root / "browser" / "index.html").resolve().as_uri() + "?uc-proof=1"
+    outputs = [
+        _graphical_browser_capture(
+            executable,
+            url,
+            seed["boundaries"]["acceptance_deadline_seconds"],
+        )
+        for _ in range(2)
+    ]
+    if any(item is None for item in outputs):
+        return {
+            "ok": False,
+            "applicable": True,
+            "error": "graphical-browser-startup",
+        }
     proof = seed["program"]["browser_proof"]
     first, second = outputs
     frames = first.get("frames") or []

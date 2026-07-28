@@ -68,11 +68,11 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `.github/workflows/test.yml` · `handwritten-pending` · `standard.gap` · `daf9dc9485d797c6`
 - `.gitignore` · `handwritten-pending` · `standard.gap` · `699c693cc407b221`
 - `APPLICATION_ASSEMBLY.md` · `handwritten-pending` · `standard.gap` · `3e38d0d4fdee2910`
-- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `b303913513b77660`
+- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `cdb64ee4c33b495e`
 - `GAUNTLET.md` · `evidence` · `ok` · `8c8bf24b4fc74e6f`
 - `LAW.md` · `handwritten-pending` · `standard.gap` · `7d452c174dec7c94`
 - `LICENSE` · `handwritten-pending` · `standard.gap` · `af6b910929ec375c`
-- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `f2f35bd5233a00a9`
+- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `a022bae17a2026f0`
 - `README.md` · `handwritten-pending` · `standard.gap` · `f80b55e477efcd5e`
 - `ROADMAP.md` · `handwritten-pending` · `standard.gap` · `8d3392ad2e16d077`
 - `SPEC.md` · `handwritten-pending` · `standard.gap` · `fb04ba1772610eb3`
@@ -296,7 +296,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `unified/dimension.py` · `handwritten-pending` · `standard.gap` · `3aa73e22a6b6a45d`
 - `unified/generator/__init__.py` · `handwritten-pending` · `standard.gap` · `9b7e11e9e44d45cd`
 - `unified/generator/__main__.py` · `handwritten-pending` · `standard.gap` · `3af36c6cc1597b0d`
-- `unified/generator/assembly.py` · `handwritten-pending` · `standard.gap` · `208e1d4802b46e63`
+- `unified/generator/assembly.py` · `handwritten-pending` · `standard.gap` · `025018dda71a29fa`
 - `unified/generator/benchmark.py` · `handwritten-pending` · `standard.gap` · `5e3bef2b43e57115`
 - `unified/generator/build.py` · `handwritten-pending` · `standard.gap` · `9af504e6250e5132`
 - `unified/generator/cli.py` · `handwritten-pending` · `standard.gap` · `89815baf4a63b790`
