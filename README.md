@@ -173,8 +173,9 @@ browser/headless game from five seeds with one command. See
 [APPLICATION_ASSEMBLY.md](APPLICATION_ASSEMBLY.md).
 
 Qualified names can resolve through a pinned, content-addressed registry to
-one verified Thing v2 artifact without implicit version selection. The bounded
-resolution and artifact lifecycle are specified in
+one verified artifact through the current Application v3, Thing v2, stateful,
+or expression/UEM compiler route without implicit version selection. The
+bounded resolution and artifact lifecycle are specified in
 [MANIFESTATION.md](MANIFESTATION.md).
 
 Exit code is nonzero until every criterion is green. Do not claim

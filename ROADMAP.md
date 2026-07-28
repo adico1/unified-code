@@ -68,7 +68,8 @@ all foreign libraries, self-hosting, GUI/browser generation, or all hardware.
 ## Name-to-manifestation — Qualified identity resolution
 
 A pinned canonical registry now resolves one explicit qualified application
-name to one verified seed and one deterministic Thing v2 artifact tree. It
+name to one verified seed and one deterministic artifact tree through the
+registered Application v3, Thing v2, stateful-unfold, or expression/UEM route. It
 implements resolution and artifact manifestation only; deployment, execution,
 temporal, delivery and scheduling machines remain separate and unimplemented.
 See [MANIFESTATION.md](MANIFESTATION.md).

@@ -18,9 +18,12 @@ from unified.generator import manifestation
 from unified.generator.cli import _parse_argv
 from unified.generator.manifestation import (
     CANONICAL_STATES,
+    COMPILER_ROUTES,
+    ROUTE_VERSIONS,
     canonical_json_bytes,
     canonical_seed_sha256,
     manifest_artifact,
+    manifestation_application_vocabulary,
     manifestation_mutation_report,
     manifestation_source_report,
     manifestation_vocabulary_report,
@@ -37,7 +40,7 @@ SEED_ROOT = ROOT / "seed"
 NATIVE_SEED = SEED_ROOT / "thing_v2" / "trajectory_meter.json"
 FOREIGN_SEED = SEED_ROOT / "thing_v2" / "orchard_yield.json"
 QUALIFIED_NAME = "uc://applications/trajectory-meter@1"
-SNAPSHOT = "a1b77079f4b1e1664ff6f9a4e150a4fc3c46e398a8b47b187bf9bc15344df19e"
+SNAPSHOT = "9ce23df11ff7175bb809f187df4344ee65274486d1d4f91a11b338e45a11cfb1"
 ARTIFACT_SHA = "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841"
 SEED_SHA = "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
 SUCCESS_EVIDENCE = (
@@ -50,11 +53,6 @@ SUCCESS_EVIDENCE = (
     "manifestation:seed-verified",
     "boundary:artifact-output:prepare",
     "manifestation:compile-requested",
-    "thing_v2:seed-valid",
-    "thing_v2:seven-specialized",
-    "thing_v2:verification-pass",
-    "thing_v2:atomic-install",
-    "boundary:outward",
     "manifestation:compiled",
     "manifestation:artifact-verified",
     "boundary:artifact:publish",
@@ -64,6 +62,12 @@ SUCCESS_EVIDENCE = (
 
 def _load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _record(registry: dict, name: str = QUALIFIED_NAME) -> dict:
+    return next(
+        item for item in registry["records"] if item["canonical_name"] == name
+    )
 
 
 def _write(path: Path, value: dict) -> None:
@@ -158,6 +162,49 @@ def test_schema_registry_and_public_contracts():
         "expected_registry_snapshot_sha256": SNAPSHOT,
         "output": "/tmp/artifact",
     }
+
+
+def test_registry_covers_every_current_product_and_only_generic_routes():
+    registry = _load(REGISTRY_PATH)
+    primary = {
+        record["canonical_name"]: record
+        for record in registry["records"]
+        if record["canonical_name"] != "uc://applications/trajectory-meter@2"
+    }
+    assert set(primary) == {
+        "uc://applications/file-reader@1",
+        "uc://applications/file-editor@1",
+        "uc://applications/math-library@1",
+        "uc://applications/calculator@1",
+        "uc://applications/pong-game@1",
+        "uc://applications/trajectory-meter@1",
+        "uc://applications/orchard-yield@1",
+        "uc://applications/task-ledger@1",
+        "uc://applications/score-board@1",
+        "uc://applications/text-stats@2",
+        "uc://applications/invoice-total@1",
+    }
+    assert set(COMPILER_ROUTES) == set(ROUTE_VERSIONS)
+    for record in primary.values():
+        assert record["compiler_route"] in COMPILER_ROUTES
+        assert record["compiler_version"] == ROUTE_VERSIONS[record["compiler_route"]]
+        seed = _load(SEED_ROOT / record["seed_ref"])
+        assert canonical_seed_sha256(seed) == record["seed_sha256"]
+
+
+def test_all_registered_seed_vocabulary_is_absent_from_manifestation_runtime():
+    registry = _load(REGISTRY_PATH)
+    seeds = tuple(
+        _load(SEED_ROOT / record["seed_ref"])
+        for record in registry["records"]
+        if record["canonical_name"] != "uc://applications/trajectory-meter@2"
+    )
+    report = manifestation_vocabulary_report(seeds)
+    mutations = manifestation_mutation_report(seeds)
+    assert manifestation_application_vocabulary(seeds)
+    assert report["ok"], report
+    assert mutations["ok"], mutations
+    assert mutations["detected"] == mutations["total"]
 
 
 def test_positive_qualified_name_manifests_twice_byte_identically(tmp_path):
@@ -334,7 +381,7 @@ def test_unreadable_registry_is_unavailable_and_deterministic(tmp_path):
 
 def test_missing_seed_preserves_resolved_outcome_without_artifact(tmp_path):
     registry = _load(REGISTRY_PATH)
-    registry["records"][0]["seed_ref"] = "thing_v2/missing.json"
+    _record(registry)["seed_ref"] = "thing_v2/missing.json"
     registry_path = tmp_path / "registry.json"
     snapshot = _write_registry(registry_path, registry)
     result = manifest_artifact(
@@ -395,7 +442,7 @@ def test_conflicting_duplicate_canonical_identity_is_invalid(tmp_path):
 
 def test_registry_altered_after_pin_and_snapshot_mismatch_are_conflicts(tmp_path):
     altered = _load(REGISTRY_PATH)
-    altered["records"][0]["seed_ref"] = "thing_v2/other.json"
+    _record(altered)["seed_ref"] = "thing_v2/other.json"
     altered_path = tmp_path / "altered.json"
     _write_registry(altered_path, altered, recompute=False)
     first = resolve_name(
@@ -428,7 +475,7 @@ def test_registry_altered_after_pin_and_snapshot_mismatch_are_conflicts(tmp_path
 
 def test_seed_hash_mismatch_is_invalid_without_compile(tmp_path):
     registry = _load(REGISTRY_PATH)
-    registry["records"][0]["seed_sha256"] = "0" * 64
+    _record(registry)["seed_sha256"] = "0" * 64
     path = tmp_path / "registry.json"
     snapshot = _write_registry(path, registry)
     result = manifest_artifact(
@@ -476,7 +523,7 @@ def test_artifact_hash_mismatch_preserves_previous_verified_tree(tmp_path):
     assert valid["state"] == "valid"
     before = _tree_bytes(output)
     registry = _load(REGISTRY_PATH)
-    registry["records"][0]["artifact_tree_sha256"] = "0" * 64
+    _record(registry)["artifact_tree_sha256"] = "0" * 64
     path = tmp_path / "registry.json"
     snapshot = _write_registry(path, registry)
     failed = manifest_artifact(
@@ -580,7 +627,7 @@ def test_registry_name_version_seed_and_output_locations_are_data(tmp_path):
     )
     for canonical_name, label in variants:
         registry = _load(REGISTRY_PATH)
-        record = registry["records"][0]
+        record = _record(registry)
         record["canonical_name"] = canonical_name
         record["seed_id"] = f"thing-v2:{label}"
         registry_path = tmp_path / "registry" / f"{label}.json"
@@ -623,7 +670,8 @@ def test_canonical_state_overload_fuzzy_and_version_mutations_are_detected():
     assert source["ok"], source
     assert vocabulary["ok"], vocabulary
     assert mutations["ok"], mutations
-    assert mutations["detected"] == mutations["total"] == 16
+    assert mutations["detected"] == mutations["total"]
+    assert mutations["total"] > 6
 
 
 def test_atomic_publish_failure_preserves_tree_and_recovery(

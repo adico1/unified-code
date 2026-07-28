@@ -3,9 +3,6 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "properties": {
-    "compiler_version": {
-      "const": "THING-V2-1"
-    },
     "records": {
       "items": {
         "$ref": "#/$defs/record"
@@ -22,7 +19,6 @@
   },
   "required": [
     "registry_version",
-    "compiler_version",
     "registry_snapshot_sha256",
     "records"
   ],
@@ -39,8 +35,24 @@
           "pattern": "^uc://applications/[a-z][a-z0-9-]*@[1-9][0-9]*$",
           "type": "string"
         },
+        "compiler_route": {
+          "enum": [
+            "application-v3",
+            "expression-uem",
+            "stateful-unfold",
+            "thing-v2"
+          ]
+        },
         "compiler_version": {
-          "const": "THING-V2-1"
+          "minLength": 1,
+          "type": "string"
+        },
+        "product_family": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "route_options": {
+          "type": "object"
         },
         "seed_id": {
           "minLength": 1,
@@ -56,9 +68,11 @@
       },
       "required": [
         "canonical_name",
+        "product_family",
         "seed_id",
         "seed_ref",
         "seed_sha256",
+        "compiler_route",
         "compiler_version",
         "artifact_tree_sha256"
       ],

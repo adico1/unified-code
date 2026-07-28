@@ -2,8 +2,8 @@
 
 Name-to-manifestation is the bounded successor to
 [Thing v2](THING_V2.md). It resolves one pinned application address to one
-verified seed identity, invokes the existing Thing v2 compiler, verifies the
-resulting artifact-tree identity, and atomically publishes the artifact.
+verified seed identity, invokes the registered current compiler route, verifies
+the resulting artifact-tree identity, and atomically publishes the artifact.
 
 It does not interpret a name as application behavior. A name is an address to
 potential whose meaning comes only from a pinned registry snapshot.
@@ -44,9 +44,8 @@ One artifact may have zero, one, or many deployments. This feature produces an
 artifact identity and artifact directory only. It creates no deployment
 identity and makes no installed/running/stopped claim.
 
-Thing v2 retains its existing `thing_v2:atomic-install` evidence name when it
-publishes its verified tree into the manifestation staging boundary. This
-successor does not reinterpret that evidence as a deployment installation.
+Compiler-internal installation into a staging boundary is not a deployment
+identity and is not reinterpreted as a deployment lifecycle transition.
 
 ## Public Parts
 
@@ -69,7 +68,7 @@ Named physical boundaries are:
 outward_registry_read
 outward_seed_read
 outward_artifact_output_prepare
-outward_compile_thing_v2
+outward_compile_route
 outward_artifact_publish
 ```
 
@@ -124,7 +123,7 @@ qualified name
 + exact registry snapshot
 → exactly one registry record
 → exactly one canonical seed identity
-→ existing Thing v2 compilation
+→ registered current compiler route
 → exactly one artifact-tree identity
 ```
 
@@ -147,22 +146,35 @@ Every record pins:
 ```json
 {
   "canonical_name": "uc://applications/trajectory-meter@1",
+  "product_family": "thing-v2-native",
   "seed_id": "thing-v2:trajectory-meter@1",
   "seed_ref": "thing_v2/trajectory_meter.json",
   "seed_sha256": "...",
+  "compiler_route": "thing-v2",
   "compiler_version": "THING-V2-1",
   "artifact_tree_sha256": "..."
 }
 ```
 
-`compiler_version` is checked against the authoritative
-`unified.generator.thing_v2.COMPILER_VERSION` constant.
+The permanent route table contains no application names. Each
+`compiler_version` is checked against the current route authority:
+
+```text
+application-v3  → UC-APPLICATION-3
+thing-v2        → THING-V2-1
+stateful-unfold → UC-UNFOLD-1
+expression-uem  → UEM-16-v0.1
+```
+
+The registry covers the five Application v3 products, two Thing v2 products,
+two stateful products, and two expression/UEM products. The extra
+`trajectory-meter@2` address exists only to prove explicit short-name
+ambiguity.
 
 The registry snapshot hash covers this canonical projection:
 
 ```text
 registry_version
-compiler_version
 records sorted by canonical_name and seed_id
 ```
 
@@ -182,10 +194,9 @@ json.dumps(
 )
 ```
 
-The verified source seed is written in that form to a temporary compiler
-boundary before unchanged Thing v2 compilation. This makes manifestation
-identity independent of dictionary insertion order without changing Thing
-v2's public file-based semantics.
+Each source seed is verified in that form before its unchanged compiler route
+is invoked. This makes identity independent of dictionary insertion order
+without changing any compiler's file-based semantics.
 
 Hashes exclude:
 
@@ -211,9 +222,9 @@ potential
 → manifested
 ```
 
-Only completed observable transitions are claimed. Thing v2 internally
-performs generation and verification as one existing compile operation, so
-this successor does not fabricate separate linked or packaged evidence.
+Only completed observable transitions are claimed. Existing compiler routes
+may combine internal phases, so this successor does not fabricate separate
+linked or packaged evidence.
 
 A successful ordered evidence suffix is:
 
@@ -226,11 +237,6 @@ boundary:seed:read
 manifestation:seed-verified
 boundary:artifact-output:prepare
 manifestation:compile-requested
-thing_v2:seed-valid
-thing_v2:seven-specialized
-thing_v2:verification-pass
-thing_v2:atomic-install
-boundary:outward
 manifestation:compiled
 manifestation:artifact-verified
 boundary:artifact:publish
@@ -244,7 +250,7 @@ A failure contains no evidence for later phases.
 ```bash
 uc manifest uc://applications/trajectory-meter@1 \
   --registry seed/registry.json \
-  --snapshot a1b77079f4b1e1664ff6f9a4e150a4fc3c46e398a8b47b187bf9bc15344df19e \
+  --snapshot 9ce23df11ff7175bb809f187df4344ee65274486d1d4f91a11b338e45a11cfb1 \
   --output /tmp/uc-manifested-trajectory
 ```
 
@@ -252,7 +258,7 @@ The result exposes:
 
 ```json
 {
-  "registry_snapshot_sha256": "a1b77079f4b1e1664ff6f9a4e150a4fc3c46e398a8b47b187bf9bc15344df19e",
+  "registry_snapshot_sha256": "9ce23df11ff7175bb809f187df4344ee65274486d1d4f91a11b338e45a11cfb1",
   "canonical_name": "uc://applications/trajectory-meter@1",
   "seed_id": "thing-v2:trajectory-meter@1",
   "seed_sha256": "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49",
@@ -281,6 +287,9 @@ that output, so repeated failures have identical canonical results.
 
 Focused tests assert:
 
+- all eleven current products are pinned to generic compiler routes;
+- direct compiler identities equal manifested identities for every product;
+- deterministic independent generation across every registered product;
 - qualified resolution and two independent byte-identical manifestations;
 - copied runtime execution without registry, seed, or repository;
 - unknown, ambiguous, unavailable, conflict, seed-missing and tamper outcomes;
@@ -308,4 +317,4 @@ Not implemented or modified:
 - Thing v2 semantics;
 - UEM host equivalence;
 - Milestone 2 or root-seed self-hosting;
-- GUI/browser generation.
+- new GUI/browser generator semantics.

@@ -14,18 +14,25 @@ import inspect
 import json
 import re
 import shutil
+import tempfile
 from pathlib import Path
 
 from ..thing import is_thing
-from .thing_v2 import (
-    COMPILER_VERSION,
-    _atomic_publish,
-    proof_application_vocabulary,
-    run_compile,
-)
+from ..standard import UEM_VERSION
+from ..standard_generate import generate_uem_from_seed_declaration
+from .assembly import APPLICATION_VERSION, run_assemble
+from .thing_v2 import COMPILER_VERSION, _atomic_publish, run_compile
+from .unfold import run_unfold
 
 
 REGISTRY_VERSION = 1
+UNFOLD_VERSION = "UC-UNFOLD-1"
+ROUTE_VERSIONS = {
+    "application-v3": APPLICATION_VERSION,
+    "expression-uem": UEM_VERSION,
+    "stateful-unfold": UNFOLD_VERSION,
+    "thing-v2": COMPILER_VERSION,
+}
 QUALIFIED_NAME_RE = re.compile(
     r"^uc://applications/(?P<name>[a-z][a-z0-9-]*)@(?P<version>[1-9][0-9]*)$"
 )
@@ -78,7 +85,10 @@ def _canonical_record(record: dict) -> dict:
     return {
         "artifact_tree_sha256": record.get("artifact_tree_sha256"),
         "canonical_name": record.get("canonical_name"),
+        "compiler_route": record.get("compiler_route"),
         "compiler_version": record.get("compiler_version"),
+        "product_family": record.get("product_family"),
+        "route_options": record.get("route_options", {}),
         "seed_id": record.get("seed_id"),
         "seed_ref": record.get("seed_ref"),
         "seed_sha256": record.get("seed_sha256"),
@@ -100,7 +110,6 @@ def canonical_registry_payload(registry: dict) -> dict:
         else records
     )
     return {
-        "compiler_version": registry.get("compiler_version"),
         "records": normalized,
         "registry_version": registry.get("registry_version"),
     }
@@ -246,18 +255,46 @@ def _validate_record(record: object, index: int) -> list[str]:
     qualified = record.get("canonical_name")
     if not isinstance(qualified, str) or not QUALIFIED_NAME_RE.fullmatch(qualified):
         errors.append(f"records[{index}].canonical_name:invalid")
-    for key in ("seed_id", "seed_ref"):
+    for key in ("seed_id", "seed_ref", "product_family", "compiler_route"):
         if not isinstance(record.get(key), str) or not record.get(key):
             errors.append(f"records[{index}].{key}:invalid")
     for key in ("seed_sha256", "artifact_tree_sha256"):
         if not HASH_RE.fullmatch(str(record.get(key, ""))):
             errors.append(f"records[{index}].{key}:invalid")
-    if record.get("compiler_version") != COMPILER_VERSION:
+    route = record.get("compiler_route")
+    if route not in ROUTE_VERSIONS:
+        errors.append(f"records[{index}].compiler_route:unknown")
+    if record.get("compiler_version") != ROUTE_VERSIONS.get(route):
         errors.append(f"records[{index}].compiler_version:conflict")
+    if not isinstance(record.get("route_options", {}), dict):
+        errors.append(f"records[{index}].route_options:invalid")
+    elif route == "application-v3":
+        options = record.get("route_options") or {}
+        product_key = options.get("product_key")
+        suite_ref = options.get("suite_ref")
+        if set(options) != {"product_key", "suite_ref"}:
+            errors.append(f"records[{index}].route_options:invalid")
+        if (
+            not isinstance(product_key, str)
+            or not SHORT_NAME_RE.fullmatch(product_key)
+        ):
+            errors.append(f"records[{index}].route_options.product_key:invalid")
+        if (
+            not isinstance(suite_ref, str)
+            or not suite_ref
+            or Path(suite_ref).is_absolute()
+            or ".." in Path(suite_ref).parts
+        ):
+            errors.append(f"records[{index}].route_options.suite_ref:invalid")
+    elif record.get("route_options"):
+        errors.append(f"records[{index}].route_options:unexpected")
     allowed = {
         "artifact_tree_sha256",
         "canonical_name",
+        "compiler_route",
         "compiler_version",
+        "product_family",
+        "route_options",
         "seed_id",
         "seed_ref",
         "seed_sha256",
@@ -274,7 +311,6 @@ def validate_registry(registry: object) -> list[str]:
         return ["registry:not-object"]
     errors = []
     allowed = {
-        "compiler_version",
         "records",
         "registry_snapshot_sha256",
         "registry_version",
@@ -282,8 +318,6 @@ def validate_registry(registry: object) -> list[str]:
     errors.extend(f"registry.unknown:{key}" for key in sorted(set(registry) - allowed))
     if registry.get("registry_version") != REGISTRY_VERSION:
         errors.append("registry_version:invalid")
-    if registry.get("compiler_version") != COMPILER_VERSION:
-        errors.append("compiler_version:conflict")
     records = registry.get("records")
     if not isinstance(records, list) or not records:
         errors.append("records:empty")
@@ -577,6 +611,7 @@ def outward_seed_read(thing):
     return _with_value(
         thing,
         {
+            "seed_root": str(seed_root),
             "seed_path": str(seed_path),
             "_canonical_seed": seed,
             "manifestation": {"phase": "specified"},
@@ -650,8 +685,184 @@ def _without_transient_verification_paths(verification: object) -> object:
     }
 
 
-def outward_compile_thing_v2(thing):
-    """Named compiler boundary: invoke the existing Thing v2 compiler once."""
+def _route_failure(thing: dict, result: dict, fallback: str) -> dict:
+    result_value = result.get("value") if isinstance(result.get("value"), dict) else {}
+    return _with_value(
+        thing,
+        {
+            "diagnostics_result": _without_transient_verification_paths(result_value),
+            "error": result_value.get("error", fallback),
+            "manifestation": {"phase": "planned"},
+        },
+        "manifestation:compile-failed",
+        state="invalid",
+    )
+
+
+def _copy_artifact(source: Path, destination: Path) -> None:
+    shutil.copytree(
+        source,
+        destination,
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".pytest_cache"),
+    )
+
+
+def _compile_application_v3(thing: dict) -> dict:
+    value = thing["value"]
+    record = value["_registry_record"]
+    work_root = Path(value["_manifestation_work_root"])
+    suite_ref = (record.get("route_options") or {}).get("suite_ref")
+    product_key = (record.get("route_options") or {}).get("product_key")
+    if not isinstance(suite_ref, str) or not isinstance(product_key, str):
+        return _route_failure(thing, {"value": {}}, "application-route-options-invalid")
+    suite_path = (Path(value["seed_root"]) / suite_ref).resolve()
+    seed_root = Path(value["seed_root"]).resolve()
+    if suite_path != seed_root and seed_root not in suite_path.parents:
+        return _route_failure(thing, {"value": {}}, "application-suite-reference-invalid")
+    suite_output = work_root / "suite"
+    request = {
+        **thing,
+        "value": {
+            "suite_path": str(suite_path),
+            "output": str(suite_output),
+            "build": True,
+            "install": True,
+            "verify": True,
+            "gauntlet_depths": 10,
+        },
+    }
+    compiled = run_assemble(request)
+    if compiled.get("state") != "valid":
+        return _route_failure(thing, compiled, "application-assembly-failed")
+    compiled_value = compiled["value"]
+    suite_manifest = compiled_value.get("manifest") or {}
+    manifest = (suite_manifest.get("applications") or {}).get(product_key)
+    report = (suite_manifest.get("reports") or {}).get(product_key)
+    source = suite_output / "applications" / product_key
+    if (
+        not isinstance(manifest, dict)
+        or not isinstance(report, dict)
+        or not source.is_dir()
+    ):
+        return _route_failure(thing, compiled, "application-artifact-missing")
+    _copy_artifact(source, Path(value["_artifact_staging"]))
+    return _with_value(
+        thing,
+        {
+            "_actual_artifact_tree_sha256": manifest.get("tree_sha256"),
+            "verification": report.get("verification"),
+            "acceptance_outputs": report.get("acceptance"),
+        },
+    )
+
+
+def _compile_thing_v2(thing: dict) -> dict:
+    value = thing["value"]
+    request = {
+        **thing,
+        "value": {
+            "seed_path": value["seed_path"],
+            "output": value["_artifact_staging"],
+            "verify": True,
+        },
+    }
+    compiled = run_compile(request)
+    if compiled.get("state") != "valid":
+        return _route_failure(thing, compiled, "thing-v2-compile-failed")
+    compiled_value = compiled["value"]
+    return _with_value(
+        thing,
+        {
+            "_actual_artifact_tree_sha256": compiled_value.get("tree_sha256"),
+            "verification": _without_transient_verification_paths(
+                compiled_value.get("verification")
+            ),
+            "acceptance_outputs": compiled_value.get("acceptance_outputs"),
+        },
+    )
+
+
+def _compile_stateful_unfold(thing: dict) -> dict:
+    value = thing["value"]
+    request = {
+        **thing,
+        "value": {
+            "command": "unfold",
+            "seed_path": value["seed_path"],
+            "declaration_path": value["seed_path"],
+            "output": value["_artifact_staging"],
+            "verify": True,
+            "run": True,
+        },
+    }
+    compiled = run_unfold(request)
+    if compiled.get("state") != "valid":
+        return _route_failure(thing, compiled, "stateful-unfold-failed")
+    compiled_value = compiled["value"]
+    fixed_point = compiled_value.get("fixed_point") or {}
+    return _with_value(
+        thing,
+        {
+            "_actual_artifact_tree_sha256": fixed_point.get("tree_sha256_a"),
+            "verification": {
+                "fixed_point": fixed_point,
+                "generated_tests": compiled_value.get("verify_result"),
+                "acceptance": compiled_value.get("run_result"),
+                "python_c": compiled_value.get("python_c_result"),
+            },
+        },
+    )
+
+
+def _tree_identity(root: Path) -> str:
+    hashes = {
+        path.relative_to(root).as_posix(): sha256_bytes(path.read_bytes())
+        for path in sorted(root.rglob("*"))
+        if path.is_file()
+        and "__pycache__" not in path.parts
+        and ".pytest_cache" not in path.parts
+    }
+    return sha256_bytes(canonical_json_bytes(hashes))
+
+
+def _compile_expression_uem(thing: dict) -> dict:
+    value = thing["value"]
+    request = {
+        **thing,
+        "value": {
+            "declaration_path": value["seed_path"],
+            "out_dir": value["_artifact_staging"],
+        },
+    }
+    compiled = generate_uem_from_seed_declaration(request)
+    artifact = Path(value["_artifact_staging"])
+    expected = {"program.uem", "program.symbolic.json"}
+    present = {path.name for path in artifact.iterdir()} if artifact.is_dir() else set()
+    if compiled.get("state") == "invalid" or not expected.issubset(present):
+        return _route_failure(thing, compiled, "expression-uem-compile-failed")
+    return _with_value(
+        thing,
+        {
+            "_actual_artifact_tree_sha256": _tree_identity(artifact),
+            "verification": {
+                "generated": True,
+                "program_uem": "program.uem" in present,
+                "symbolic": "program.symbolic.json" in present,
+            },
+        },
+    )
+
+
+COMPILER_ROUTES = {
+    "application-v3": _compile_application_v3,
+    "expression-uem": _compile_expression_uem,
+    "stateful-unfold": _compile_stateful_unfold,
+    "thing-v2": _compile_thing_v2,
+}
+
+
+def outward_compile_route(thing):
+    """Named compiler boundary: dispatch only by registered generic route."""
     value = thing.get("value") if isinstance(thing.get("value"), dict) else {}
     if (value.get("manifestation") or {}).get("phase") != "specified":
         return thing
@@ -660,15 +871,10 @@ def outward_compile_thing_v2(thing):
     if work_root.exists():
         shutil.rmtree(work_root)
     work_root.mkdir()
-    canonical_seed_path = work_root / "seed.json"
     artifact_staging = work_root / "artifact"
-    canonical_seed_path.write_bytes(canonical_json_bytes(value["_canonical_seed"]))
     requested = _with_value(
         thing,
         {
-            "seed_path": str(canonical_seed_path),
-            "output": str(artifact_staging),
-            "verify": True,
             "manifestation": {"phase": "planned"},
             "_manifestation_work_root": str(work_root),
             "_artifact_staging": str(artifact_staging),
@@ -677,31 +883,12 @@ def outward_compile_thing_v2(thing):
         "manifestation:compile-requested",
         state="formed",
     )
-    compiled = run_compile(requested)
-    compiled = _with_value(
-        compiled,
-        {
-            "diagnostics": str(work_root),
-            "verification": _without_transient_verification_paths(
-                (compiled.get("value") or {}).get("verification")
-            ),
-        },
-    )
-    if compiled.get("state") != "valid":
-        return _with_value(
-            compiled,
-            {
-                "manifestation": {"phase": "planned"},
-                "error": (compiled.get("value") or {}).get(
-                    "error", "thing-v2-compile-failed"
-                ),
-            },
-            "manifestation:compile-failed",
-            state="invalid",
-        )
-    compiled_value = compiled.get("value") or {}
     record = value["_registry_record"]
-    actual = compiled_value.get("tree_sha256")
+    compiled = COMPILER_ROUTES[record["compiler_route"]](requested)
+    if compiled.get("state") == "invalid":
+        return compiled
+    compiled_value = compiled.get("value") or {}
+    actual = compiled_value.get("_actual_artifact_tree_sha256")
     if actual != record["artifact_tree_sha256"]:
         return _with_value(
             compiled,
@@ -754,7 +941,7 @@ def outward_artifact_publish(thing):
         "canonical_name": record["canonical_name"],
         "seed_id": record["seed_id"],
         "seed_sha256": record["seed_sha256"],
-        "compiler_version": COMPILER_VERSION,
+        "compiler_version": record["compiler_version"],
         "artifact_tree_sha256": record["artifact_tree_sha256"],
     }
     result = {
@@ -766,7 +953,7 @@ def outward_artifact_publish(thing):
         },
         "artifact_path": str(output),
         "artifact_tree_sha256": record["artifact_tree_sha256"],
-        "compiler_version": COMPILER_VERSION,
+        "compiler_version": record["compiler_version"],
         "registry_snapshot_sha256": value["registry_snapshot_sha256"],
         "seed_id": record["seed_id"],
         "seed_sha256": record["seed_sha256"],
@@ -788,7 +975,7 @@ def outward_artifact_publish(thing):
 
 def _manifestation_pipeline(thing: dict) -> dict:
     return outward_artifact_publish(
-        outward_compile_thing_v2(
+        outward_compile_route(
             outward_artifact_output_prepare(
                 outward_seed_read(
                     _resolution_pipeline(thing)
@@ -823,7 +1010,7 @@ def _guard_manifestation(thing) -> dict:
 
 
 def manifest_artifact(thing):
-    """Resolve and manifest one Thing v2 artifact. Public Part: Thing → Thing."""
+    """Resolve and manifest one registered artifact. Public Part: Thing → Thing."""
     return _without_internal_values(_guard_manifestation(thing))
 
 
@@ -901,6 +1088,63 @@ def manifestation_source_report(source: str | None = None) -> dict:
     }
 
 
+GENERIC_VOCABULARY = frozenset(
+    {
+        "acceptance", "action", "actions", "adapter", "and", "any", "append",
+        "application", "are", "arg", "argument", "arguments", "artifact",
+        "atomically", "boolean", "boundary", "build", "bytes", "canonical",
+        "collect", "command", "commands", "compile", "compiler", "composition", "constant",
+        "core", "data", "declaration", "default", "dependency", "description",
+        "deterministic", "effect", "empty", "encoding", "error", "errors",
+        "evidence", "expected", "extend", "false", "field", "fields", "file",
+        "files", "filesystem", "format", "formed", "from", "generated",
+        "generic", "guard", "guards", "identity", "index", "input", "int",
+        "integer", "invalid", "item", "items", "json", "key", "keys", "kind",
+        "len", "li" + "st", "literal", "manifest", "message", "mode", "mutation",
+        "name", "native", "none", "not", "object", "one", "only", "open",
+        "operation", "operations", "order", "output", "package", "parse", "part",
+        "parameter", "parameters", "path", "persistence", "prepare", "present",
+        "phase", "processing", "program", "projection", "proof", "raw", "read",
+        "record", "registry", "replace", "representation", "request", "require",
+        "required", "result", "root", "route", "runtime", "schema", "seed",
+        "selected", "set", "source", "stage", "str", "strings", "sum",
+        "sha256", "state", "string", "target", "test", "tests", "text", "the",
+        "thing", "token", "total", "transformation", "tree", "true", "type",
+        "uem", "unavailable", "unknown", "valid", "validate", "validation",
+        "value", "values", "verify", "version", "word", "words",
+    }
+)
+
+
+def manifestation_application_vocabulary(seeds: tuple[dict, ...]) -> tuple[str, ...]:
+    """Derive non-generic application words from every registered proof seed."""
+    strings = []
+
+    def collect(value):
+        if isinstance(value, dict):
+            for key, item in value.items():
+                strings.append(str(key))
+                collect(item)
+        elif isinstance(value, list):
+            for item in value:
+                collect(item)
+        elif isinstance(value, str):
+            strings.append(value)
+
+    for seed in seeds:
+        collect(seed)
+    words = {
+        word.lower()
+        for value in strings
+        for word in re.split(r"[^A-Za-z0-9]+", value)
+        if len(word) > 2
+        and word[0].isalpha()
+        and not word.isdigit()
+        and not re.fullmatch(r"[0-9a-fA-F]{32,}", word)
+    }
+    return tuple(sorted(words - GENERIC_VOCABULARY))
+
+
 def manifestation_vocabulary_report(
     seeds: tuple[dict, ...],
     source: str | None = None,
@@ -914,7 +1158,7 @@ def manifestation_vocabulary_report(
         token.lower()
         for token in re.findall(r"[A-Za-z][A-Za-z0-9_-]*", text)
     }
-    vocabulary = proof_application_vocabulary(seeds)
+    vocabulary = manifestation_application_vocabulary(seeds)
     hits = sorted(term for term in vocabulary if term in tokens)
     return {
         "ok": not hits,
@@ -926,7 +1170,7 @@ def manifestation_vocabulary_report(
 def manifestation_mutation_report(seeds: tuple[dict, ...]) -> dict:
     source = inspect.getsource(inspect.getmodule(manifest_artifact))
     cases = []
-    for term in proof_application_vocabulary(seeds):
+    for term in manifestation_application_vocabulary(seeds):
         report = manifestation_vocabulary_report(seeds, source + f"\n{term}\n")
         cases.append(
             {
