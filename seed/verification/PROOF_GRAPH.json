@@ -52,7 +52,7 @@
       "id": "l13-gauntlet",
       "handler": "command",
       "requires": [],
-      "argv": ["bash", "scripts/run_l13.sh"]
+      "argv": ["{python}", "scripts/verify_l13_evidence.py"]
     },
     {
       "id": "standard-audit",
