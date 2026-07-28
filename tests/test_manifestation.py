@@ -40,7 +40,7 @@ SEED_ROOT = ROOT / "seed"
 NATIVE_SEED = SEED_ROOT / "thing_v2" / "trajectory_meter.json"
 FOREIGN_SEED = SEED_ROOT / "thing_v2" / "orchard_yield.json"
 QUALIFIED_NAME = "uc://applications/trajectory-meter@1"
-SNAPSHOT = "e72bb04c2d1df8ee50422529a03e396d5bd21ef6a2d34b68d5ad3176c51cc2e2"
+SNAPSHOT = "83b50b02ff3a97edd12e22f62b5dc978b1e38fb5b272967e3007e57049cbaff4"
 ARTIFACT_SHA = "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841"
 SEED_SHA = "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
 SUCCESS_EVIDENCE = (
@@ -169,7 +169,6 @@ def test_registry_covers_every_current_product_and_only_generic_routes():
     primary = {
         record["canonical_name"]: record
         for record in registry["records"]
-        if record["canonical_name"] != "uc://applications/trajectory-meter@2"
     }
     assert set(primary) == {
         "uc://applications/file-reader@1",
@@ -197,7 +196,6 @@ def test_all_registered_seed_vocabulary_is_absent_from_manifestation_runtime():
     seeds = tuple(
         _load(SEED_ROOT / record["seed_path"])
         for record in registry["records"]
-        if record["canonical_name"] != "uc://applications/trajectory-meter@2"
     )
     report = manifestation_vocabulary_report(seeds)
     mutations = manifestation_mutation_report(seeds)
@@ -318,7 +316,22 @@ def test_unknown_qualified_name_is_valid_domain_outcome(tmp_path):
 
 
 def test_ambiguous_short_name_is_not_selected(tmp_path):
-    request = inward(_request(tmp_path / "unused", name="trajectory-meter"))
+    registry = _load(REGISTRY_PATH)
+    second_version = copy.deepcopy(_record(registry))
+    second_version["canonical_name"] = "uc://applications/trajectory-meter@2"
+    second_version["seed_id"] = "thing-v2:trajectory-meter@2"
+    registry["records"].append(second_version)
+    registry_path = tmp_path / "ambiguous-registry.json"
+    snapshot = _write_registry(registry_path, registry)
+    request = inward(
+        _request(
+            tmp_path / "unused",
+            name="trajectory-meter",
+            registry_path=registry_path,
+            snapshot=snapshot,
+            seed_root=SEED_ROOT,
+        )
+    )
     result = resolve_name(request)
     assert resolve_name(request) == result
     _assert_outcome(
