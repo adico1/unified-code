@@ -1,5 +1,10 @@
 """Unified Code experimental kernel."""
 
+import time as _time
+
+TOOL_BOOT_STARTED_NS = _time.monotonic_ns()
+VERIFICATION_STARTED_NS = _time.monotonic_ns()
+
 from .boundary import host_render, inward, outward
 from .clock import LIMIT_NS, clock_end, clock_start
 from .depth import (

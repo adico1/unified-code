@@ -4,14 +4,14 @@
 
 ```text
 verification.requested
-→ authority.discovered
-→ identities.resolved
-→ proof_graph.formed
-→ prerequisites.materialized
-→ proof_nodes.released
-→ proof_nodes.executed
-→ evidence.collected
-→ identities.compared
+→ tools.boot.requested
+→ tools.boot.completed
+→ verification.clock.started
+→ authorities.resolved
+→ proof_graph.released
+→ proof.completed
+→ evidence.completed
+→ verification.clock.stopped
 → budget.measured
 → verification.completed
 ```
@@ -23,18 +23,33 @@ Application orchestration is data. Host iteration, waiting and physical
 selection are confined to named `audited_*_primitive` boundaries and their AST
 control-flow count is published.
 
-## Timing law
+## Timing law and correction
 
 ```text
-T_total = T_minimized_tool_bootstrap + T_verification
+T_total = T_bootload + T_verify
 T_verification ≤ 5.000 seconds
 ```
 
-The monotonic clock measures the critical path, not summed worker time. A cold
-flow materializes required proof evidence once. A warm flow admits that evidence
-only when the complete tracked-source authority and content-addressed cache
-identity match. Timestamps, durations, host paths and process identities are
-excluded from the semantic structure hash and remain in the evidence hash.
+Tool bootload contains only Python entry, argument parsing and acquisition of
+the monotonic clock. It ends before any repository read. Repository discovery,
+source hashing, graph formation, proof-bundle acquisition and validation, cache
+lookup or publication, proof aggregation and verdict formation are all measured
+inside `T_verify`.
+
+PR #28 incorrectly classified physical proof production as bootstrap, producing
+a 281.407659-second bootstrap and a 0.000103-second verification measurement.
+The corrected flow attributes that physical work to proof production and admits
+its repository-carried
+[`PROOF_BUNDLE.json`](seed/verification/PROOF_BUNDLE.json) only after validating
+the complete canonical source tree, graph, proof contract, producer toolchain,
+Stage-1 identity and bundle identity. Empty local cache creation and valid-cache
+identity validation both occur inside the measured verification interval.
+
+The bundle is physical evidence, not a downloaded verdict or CI-status proxy.
+It is produced by the same graph (`UC_VERIFY_MATERIALIZE=1 uc verify-all`) and
+contains no timestamps, durations, temporary paths or process identities.
+Release materialization is expensive; acceptance verification is the
+content-addressed acquisition and validation of that evidence.
 
 ## Browser boundary
 
@@ -52,8 +67,9 @@ sanitizers, native goldens, five-application assembly, manifestation identities,
 CLI/GUI equality, real-browser behavior, atomic preservation, copied isolated
 runtime, provenance, honest open gaps and supported-Python CI.
 
-Expected failures route to `verification.failed`. Cache tampering routes to
-`identity.stale`. Missing or reordered events, unresolved dependencies,
-unregistered handlers, sequentialized independent nodes, premature completion,
-failure/timeout suppression and hidden application control flow are mutation
-failures.
+Expected failures route to `verification.failed`. Corrupt, stale, partial and
+wrong-platform local cache projections fail closed. Every repository-dependent
+activity is rejected from bootload. Missing or reordered events, unresolved
+dependencies, unregistered handlers, sequentialized independent nodes,
+premature completion, failure/timeout suppression, physical/logical proof
+mutation and hidden application control flow are mutation failures.

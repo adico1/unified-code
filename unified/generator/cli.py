@@ -8,17 +8,16 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from ..boundary import host_render, inward
-from ..clock import LIMIT_NS
-from .generate import generate
-from .validate import validate
-from .verify_plan import verify_plan
-from .write_fs import write_project
+from .. import TOOL_BOOT_STARTED_NS, VERIFICATION_STARTED_NS
 
 
 def run_command(thing):
     """Generator pipeline for new/add. One thing in, one thing out."""
     from ..boundary import outward
+    from .generate import generate
+    from .validate import validate
+    from .verify_plan import verify_plan
+    from .write_fs import write_project
 
     return outward(write_project(verify_plan(generate(validate(thing)))))
 
@@ -29,6 +28,12 @@ def host_main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
     payload = _parse_argv(argv)
     command = payload.get("command")
+    if command == "verify-all":
+        payload["_tool_boot_started_ns"] = TOOL_BOOT_STARTED_NS
+        payload["_verification_started_ns"] = VERIFICATION_STARTED_NS
+
+    from ..boundary import host_render, inward
+    from ..clock import LIMIT_NS
 
     if command == "benchmark":
         from .benchmark import run_benchmark
