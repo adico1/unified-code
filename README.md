@@ -298,6 +298,8 @@ Compact rules live in [STANDARD_TEN.md](STANDARD_TEN.md). Run:
 | --- | --- |
 | `STANDARD_TEN.md` | Ten rules + non-fallback law |
 | `seed/ROOT.seed.json` | Canonical seed |
+| [`ROOT_CONVERGENCE.md`](ROOT_CONVERGENCE.md) | Projection/root fixed-point, watcher, authority and בלימה law |
+| `seed/ROOT_CONVERGENCE_SCHEMA.json` | Executable convergence-trace contract |
 | `seed/declarations/*.json` | Pure-data app declarations |
 | `PROVENANCE_MANIFEST.json` | Every file classified |
 | `AUDIT_STANDARD_TEN.md` | Human audit + open `standard.gap` |

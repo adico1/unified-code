@@ -54,6 +54,10 @@ def host_main(argv=None):
         from .manifestation import manifest_artifact
 
         result = manifest_artifact(inward(payload))
+    elif command == "converge":
+        from ..convergence import run_convergence
+
+        result = run_convergence(inward(payload))
     elif command == "gauntlet":
         from .gauntlet import run_gauntlet
 
@@ -426,6 +430,14 @@ def _parse_argv(argv: list[str]) -> dict:
             "registry_path": registry_path,
             "expected_registry_snapshot_sha256": snapshot,
             "output": output,
+        }
+
+    if command == "converge":
+        if len(argv) != 2:
+            return {"command": "converge", "error": "usage-converge"}
+        return {
+            "command": "converge",
+            "trace_path": argv[1],
         }
 
     return {"command": command, "error": "unknown-command"}

@@ -76,6 +76,11 @@ See [MANIFESTATION.md](MANIFESTATION.md).
 
 ## Milestone 2 — Root-seed fixed-point bootstrap
 
+The frozen projection/root convergence, watcher, authority, cycle and stopping
+law is specified in [ROOT_CONVERGENCE.md](ROOT_CONVERGENCE.md) and enforced by
+`uc converge`. This verifier does not close the Stage-1 generation or
+whole-repository regeneration gaps.
+
 This milestone is deliberately non-blocking for Milestone 1. Open items:
 
 - Define and prove the minimal Stage-0 trusted-input and deterministic handoff
