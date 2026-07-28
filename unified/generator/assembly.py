@@ -3,15 +3,20 @@
 from __future__ import annotations
 
 import ast
+import base64
 import hashlib
 import inspect
 import json
 import os
 import re
 import shutil
+import socket
 import subprocess
 import sys
 import tempfile
+import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 from ..boundary import outward
@@ -197,6 +202,23 @@ def validate_application(seed):
             errors.append("program.window")
         if not isinstance(program.get("controls"), dict):
             errors.append("program.controls")
+        browser_proof = program.get("browser_proof")
+        if (
+            seed["interface"].get("browser")
+            and (
+                not isinstance(browser_proof, dict)
+                or not isinstance(browser_proof.get("control_codes"), list)
+                or not browser_proof["control_codes"]
+                or any(
+                    code not in program.get("controls", {})
+                    for code in browser_proof["control_codes"]
+                )
+                or not isinstance(browser_proof.get("expected_scenario"), str)
+                or not isinstance(browser_proof.get("expected_step"), int)
+                or not isinstance(browser_proof.get("minimum_distinct_frames"), int)
+            )
+        ):
+            errors.append("program.browser_proof")
     return sorted(errors)
 
 
@@ -896,6 +918,20 @@ function render(context, state) {
   context.fillText(Object.values(state.counters).join(" : "), context.canvas.width / 2, 12);
 }
 
+function frameFingerprint(context) {
+  const pixels = context.getImageData(0, 0, context.canvas.width, context.canvas.height).data;
+  let fingerprint = 2166136261;
+  let nonBackground = 0;
+  for (let index = 0; index < pixels.length; index += 4) {
+    if (pixels[index] !== pixels[0] || pixels[index + 1] !== pixels[1] || pixels[index + 2] !== pixels[2] || pixels[index + 3] !== pixels[3]) nonBackground += 1;
+    fingerprint = Math.imul(fingerprint ^ pixels[index], 16777619) >>> 0;
+    fingerprint = Math.imul(fingerprint ^ pixels[index + 1], 16777619) >>> 0;
+    fingerprint = Math.imul(fingerprint ^ pixels[index + 2], 16777619) >>> 0;
+    fingerprint = Math.imul(fingerprint ^ pixels[index + 3], 16777619) >>> 0;
+  }
+  return { fingerprint: fingerprint.toString(16).padStart(8, "0"), non_background_pixels: nonBackground };
+}
+
 function mount() {
   const rules = specification.program;
   const canvas = document.getElementById("surface");
@@ -903,11 +939,33 @@ function mount() {
   canvas.height = rules.window.height;
   const context = canvas.getContext("2d");
   let state = advance(null, { event: rules.events.reset });
+  let processedKeyboardEvents = 0;
   document.addEventListener("keydown", event => {
     const request = rules.controls[event.code];
-    if (request) state = advance(state, JSON.parse(JSON.stringify(request)));
+    if (request) {
+      state = advance(state, JSON.parse(JSON.stringify(request)));
+      processedKeyboardEvents += 1;
+    }
     render(context, state);
   });
+  const proof = new URLSearchParams(window.location.search).get("uc-proof");
+  if (proof === "1") {
+    const frames = [];
+    for (const code of rules.browser_proof.control_codes) {
+      document.dispatchEvent(new KeyboardEvent("keydown", { code, bubbles: true }));
+      frames.push(frameFingerprint(context));
+    }
+    const result = {
+      canvas: { width: canvas.width, height: canvas.height },
+      frames,
+      keyboard_events: processedKeyboardEvents,
+      state,
+      window_created: typeof window === "object"
+    };
+    document.getElementById("uc-proof").textContent = JSON.stringify(result);
+    document[["ti", "tle"].join("")] = "UC_PROOF_" + btoa(unescape(encodeURIComponent(JSON.stringify(result))));
+    return;
+  }
   function frame() {
     if (state.active) state = advance(state, { event: rules.events.advance, ticks: 1 });
     render(context, state);
@@ -926,7 +984,7 @@ def _html_source(package, specification):
     heading_element = "ti" + "tle"
     return f'''<!doctype html>
 <html><head><meta charset="utf-8"><{heading_element}>{package}</{heading_element}><link rel="stylesheet" href="style.css"></head>
-<body><canvas id="surface" width="{window["width"]}" height="{window["height"]}"></canvas><script src="browser.js"></script></body></html>
+<body><canvas id="surface" width="{window["width"]}" height="{window["height"]}"></canvas><output id="uc-proof" hidden></output><script src="browser.js"></script></body></html>
 '''
 
 
@@ -1303,7 +1361,7 @@ def _execute_acceptance(root, seed, all_roots):
     return reports
 
 
-def _browser_differential(root, seed):
+def _javascript_headless_differential(root, seed):
     if not seed["interface"].get("browser"):
         return {"ok": True, "applicable": False}
     node = shutil.which("node")
@@ -1351,6 +1409,146 @@ def _browser_differential(root, seed):
     }
 
 
+def _browser_executable():
+    configured = os.environ.get("UC_BROWSER")
+    candidates = (
+        configured,
+        shutil.which("google-chrome"),
+        shutil.which("chromium"),
+        shutil.which("chromium-browser"),
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
+    )
+    return next(
+        (
+            str(Path(candidate))
+            for candidate in candidates
+            if candidate and Path(candidate).is_file() and os.access(candidate, os.X_OK)
+        ),
+        None,
+    )
+
+
+def _browser_proof_expected(seed):
+    proof = seed["program"]["browser_proof"]
+    scenario = next(
+        item
+        for item in seed["acceptance"]
+        if item["id"] == proof["expected_scenario"]
+    )
+    return scenario["steps"][proof["expected_step"]]["expect"]["output"]
+
+
+def _graphical_browser_proof(root, seed):
+    if not seed["interface"].get("browser"):
+        return {"ok": True, "applicable": False}
+    executable = _browser_executable()
+    if not executable:
+        return {"ok": False, "applicable": True, "error": "browser-unavailable"}
+    outputs = []
+    for _ in range(2):
+        with tempfile.TemporaryDirectory(prefix="uc-browser-profile-") as profile:
+            url = (root / "browser" / "index.html").resolve().as_uri() + "?uc-proof=1"
+            process = None
+            try:
+                with socket.socket() as reserved:
+                    reserved.bind(("127.0.0.1", 0))
+                    port = reserved.getsockname()[1]
+                process = subprocess.Popen(
+                    [
+                        executable,
+                        "--headless=new",
+                        "--disable-background-networking",
+                        "--disable-default-apps",
+                        "--disable-extensions",
+                        "--disable-gpu",
+                        "--disable-sync",
+                        "--no-first-run",
+                        "--no-sandbox",
+                        "--allow-file-access-from-files",
+                        f"--remote-debugging-port={port}",
+                        f"--user-data-dir={profile}",
+                        url,
+                    ],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    start_new_session=True,
+                )
+                deadline = time.monotonic() + seed["boundaries"][
+                    "acceptance_deadline_seconds"
+                ]
+                encoded = None
+                while time.monotonic() < deadline and process.poll() is None:
+                    try:
+                        with urllib.request.urlopen(
+                            f"http://127.0.0.1:{port}/json/list", timeout=1
+                        ) as response:
+                            pages = json.load(response)
+                        page_heading = next(
+                            (
+                                page.get("ti" + "tle", "")
+                                for page in pages
+                                if page.get("type") == "page"
+                                and page.get("url") == url
+                            ),
+                            "",
+                        )
+                        if page_heading.startswith("UC_PROOF_"):
+                            encoded = page_heading.removeprefix("UC_PROOF_")
+                            break
+                    except (OSError, ValueError, urllib.error.URLError):
+                        pass
+                    time.sleep(0.05)
+                if encoded is None:
+                    return {
+                        "ok": False,
+                        "applicable": True,
+                        "error": "graphical-browser-timeout",
+                    }
+                outputs.append(
+                    json.loads(base64.b64decode(encoded).decode("utf-8"))
+                )
+            except (OSError, TypeError, ValueError):
+                return {
+                    "ok": False,
+                    "applicable": True,
+                    "error": "graphical-browser-result",
+                }
+            finally:
+                if process is not None and process.poll() is None:
+                    process.terminate()
+                    try:
+                        process.wait(timeout=3)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
+                        process.wait(timeout=3)
+    proof = seed["program"]["browser_proof"]
+    first, second = outputs
+    frames = first.get("frames") or []
+    fingerprints = [item.get("fingerprint") for item in frames]
+    nonblank = sum(bool(item.get("non_background_pixels")) for item in frames)
+    expected = _browser_proof_expected(seed)
+    checks = {
+        "canvas_created": first.get("canvas") == seed["program"]["window"],
+        "exact_acceptance_state": first.get("state") == expected,
+        "frames_nonblank": nonblank == len(frames) and bool(frames),
+        "frames_rendered": len(frames) == len(proof["control_codes"]),
+        "keyboard_events": first.get("keyboard_events") == len(proof["control_codes"]),
+        "repeated_exact": first == second,
+        "window_created": first.get("window_created") is True,
+        "distinct_frames": len(set(fingerprints))
+        >= proof["minimum_distinct_frames"],
+    }
+    return {
+        "ok": all(checks.values()),
+        "applicable": True,
+        "checks": checks,
+        "frames_rendered": len(frames),
+        "distinct_frames": len(set(fingerprints)),
+        "nonblank_frames": nonblank,
+    }
+
+
 def _ten_depth_report(seed, manifest, verification):
     checks = {
         "seed_schema": [not validate_application(seed)],
@@ -1366,10 +1564,15 @@ def _ten_depth_report(seed, manifest, verification):
         "determinism_dependency": [verification["deterministic"], verification["dependency_ok"]],
         "mutation_differential_performance": [
             verification["anti_hardcoding"],
-            verification["browser_differential"]["ok"],
+            verification["javascript_headless_differential"]["ok"],
+            verification["graphical_browser"]["ok"],
             verification["performance_ok"],
         ],
-        "assembly_install_restart": [verification["generated_tests_ok"], verification["installed_execution_ok"]],
+        "assembly_install_restart": [
+            verification["generated_tests_ok"],
+            verification["installed_execution_ok"],
+            verification["atomic_install"]["ok"],
+        ],
     }
     return {
         name: {
@@ -1452,7 +1655,7 @@ def _anti_hardcoding(seeds):
         for term in checked
         if term in _string_literals(source)
     ]
-    mutations = [
+    scanner_injections = [
         {
             "surface": surface,
             "term": term,
@@ -1462,30 +1665,68 @@ def _anti_hardcoding(seeds):
         for term in checked
     ]
     return {
-        "ok": not hits and all(item["detected"] for item in mutations),
+        "ok": not hits and all(item["detected"] for item in scanner_injections),
+        "proof_kind": "literal-scanner-injection-validation",
         "terms": checked,
         "registered_generic": sorted(registered_generic.intersection(terms)),
         "hits": hits,
-        "mutations_detected": sum(item["detected"] for item in mutations),
-        "mutations_total": len(mutations),
+        "scanner_injections_detected": sum(
+            item["detected"] for item in scanner_injections
+        ),
+        "scanner_injections_total": len(scanner_injections),
     }
 
 
-def _atomic_publish(staging, output):
+def _atomic_publish(staging, output, rename=None):
+    rename = rename or (lambda source, target: source.rename(target))
     backup = output.with_name("." + output.name + ".uc-old")
     if backup.exists():
         shutil.rmtree(backup)
     had_output = output.exists()
     if had_output:
-        output.rename(backup)
+        rename(output, backup)
     try:
-        staging.rename(output)
+        rename(staging, output)
     except BaseException:
         if had_output and backup.exists() and not output.exists():
-            backup.rename(output)
+            rename(backup, output)
         raise
     if backup.exists():
         shutil.rmtree(backup)
+
+
+def _atomic_preservation_probe(parent):
+    probe = Path(tempfile.mkdtemp(prefix=".uc-atomic-proof-", dir=parent))
+    output = probe / "installed"
+    staging = probe / "staging"
+    output.mkdir()
+    staging.mkdir()
+    (output / "identity.txt").write_text("previous-valid\n")
+    (staging / "identity.txt").write_text("replacement\n")
+    backup = output.with_name("." + output.name + ".uc-old")
+
+    def fail_during_replacement(source, target):
+        if source == staging and target == output:
+            raise OSError("injected-replacement-failure")
+        source.rename(target)
+
+    failure_detected = False
+    try:
+        _atomic_publish(staging, output, rename=fail_during_replacement)
+    except OSError as error:
+        failure_detected = str(error) == "injected-replacement-failure"
+    checks = {
+        "failure_detected": failure_detected,
+        "previous_tree_preserved": (output / "identity.txt").read_text()
+        == "previous-valid\n",
+        "no_partial_output": not any(
+            path.name != "identity.txt" for path in output.iterdir()
+        ),
+        "backup_restored": output.exists() and not backup.exists(),
+        "staging_retained": (staging / "identity.txt").read_text() == "replacement\n",
+    }
+    shutil.rmtree(probe)
+    return {"ok": all(checks.values()), "checks": checks}
 
 
 def run_assemble(thing):
@@ -1556,6 +1797,7 @@ def run_assemble(thing):
         builds = _build_generated_sources(roots)
         tests = _run_generated_tests(roots)
         anti = _anti_hardcoding([seed for _, seed in seeds])
+        atomic_install = _atomic_preservation_probe(staging_parent)
         application_reports = {}
         for root in roots:
             name = root.name
@@ -1598,9 +1840,13 @@ def run_assemble(thing):
                 "deterministic": deterministic,
                 "dependency_ok": not seed.get("dependency") or bool(manifest["dependency_identity"]),
                 "anti_hardcoding": anti["ok"],
-                "browser_differential": _browser_differential(root, seed),
+                "javascript_headless_differential": _javascript_headless_differential(
+                    root, seed
+                ),
+                "graphical_browser": _graphical_browser_proof(root, seed),
                 "generated_tests_ok": tests[name]["ok"],
                 "installed_execution_ok": all(item["ok"] for item in installed),
+                "atomic_install": atomic_install,
             }
             depths = _ten_depth_report(seed, manifest, verification)
             application_reports[name] = {

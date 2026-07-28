@@ -14,8 +14,14 @@
       "KeyR": {"event": "reset"},
       "ArrowUp": {"event": "tick", "ticks": 1, "inputs": [{"actor": "right", "delta": -4}]},
       "ArrowDown": {"event": "tick", "ticks": 1, "inputs": [{"actor": "right", "delta": 4}]},
-      "KeyW": {"event": "tick", "ticks": 1, "inputs": [{"actor": "left", "delta": -4}]},
+      "KeyW": {"event": "tick", "ticks": 1, "inputs": [{"actor": "left", "delta": -5}]},
       "KeyS": {"event": "tick", "ticks": 1, "inputs": [{"actor": "left", "delta": 4}]}
+    },
+    "browser_proof": {
+      "control_codes": ["Space", "KeyW", "KeyP"],
+      "expected_scenario": "deterministic-replay",
+      "expected_step": 2,
+      "minimum_distinct_frames": 2
     },
     "presentation": {"background": "#05080f", "foreground": "#ffffff"},
     "events": {"start": "start", "pause": "pause", "resume": "resume", "advance": "tick", "point": "score", "reset": "reset", "stop": "stop"},

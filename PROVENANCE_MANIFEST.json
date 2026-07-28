@@ -101,8 +101,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "APPLICATION_ASSEMBLY.md",
       "provenance": "handwritten-pending",
-      "sha256": "6bf6edfaa67a6eff2e66bc3fe3bfa9c930d256ea890dd1f8f1b49a462d3537c6",
-      "size": 4320,
+      "sha256": "3e38d0d4fdee2910bfc98718d3d6b995f94a373a9dbd53a9e80ec7767e4a6d48",
+      "size": 4730,
       "standard_ten_class_ok": false
     },
     {
@@ -121,7 +121,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "c3b1435bbc61f4ce4170d7ac9efd55a5cc3b7ccb49d7811e62edce380744f6dc",
+      "sha256": "b303913513b776601bcea87117f4629d3764a3600a92356e59ce5f2b5975696d",
       "size": 29301,
       "standard_ten_class_ok": true
     },
@@ -203,8 +203,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "5aa212779ce28c3ffa5e3a1408fb322269e999f2b183a5599b4dcba1e4122f65",
-      "size": 172827,
+      "sha256": "f2f35bd5233a00a9a38675550a1e261e1e24186ae3d9d8cc99bab50f828a595a",
+      "size": 172829,
       "standard_ten_class_ok": true
     },
     {
@@ -4071,8 +4071,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/applications/pong_game.json",
       "provenance": "seed",
-      "sha256": "ac6d89d628e634759eb1c098df7623bfa4b6370d3f11ab7439b4c0ee318a295a",
-      "size": 8120,
+      "sha256": "86ab7de1537a837dd56759efc0c77e517a5a0754329456474345f98670e77f5a",
+      "size": 8312,
       "standard_ten_class_ok": true
     },
     {
@@ -4239,11 +4239,11 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 20,
+        "comp": 21,
         "for": 4,
         "if": 2,
         "match": 0,
-        "total": 26,
+        "total": 27,
         "try": 0,
         "while": 0
       },
@@ -4255,8 +4255,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_application_assembly.py",
       "provenance": "handwritten-pending",
-      "sha256": "f643fd48fd0e415a8b3e80b127825d84f11984027cd295ac4adee09bb5d6ccaa",
-      "size": 13677,
+      "sha256": "02f83f854734fb38ac18390a7927c22c9024ddd830751626b1736dc673778d89",
+      "size": 14760,
       "standard_ten_class_ok": false
     },
     {
@@ -5007,13 +5007,13 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 56,
-        "for": 22,
-        "if": 64,
+        "comp": 63,
+        "for": 23,
+        "if": 71,
         "match": 0,
-        "total": 152,
-        "try": 8,
-        "while": 2
+        "total": 172,
+        "try": 12,
+        "while": 3
       },
       "gap_id": "gap.untracked-or-handwritten",
       "generated": false,
@@ -5023,8 +5023,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/assembly.py",
       "provenance": "handwritten-pending",
-      "sha256": "6d5b0252eaacfb8119202bddd8d33c2da58d9867134d43edbe80af1c02a7c11f",
-      "size": 62484,
+      "sha256": "208e1d4802b46e6321b4962511d994c04e46802b33adf0f015edc372fb8546a0",
+      "size": 72697,
       "standard_ten_class_ok": false
     },
     {

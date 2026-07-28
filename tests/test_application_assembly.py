@@ -15,6 +15,7 @@ from unified.generator.assembly import (
     DEPTHS,
     STAGES,
     _canonical,
+    _atomic_preservation_probe,
     _file_hashes,
     _ordered_seeds,
     _sha,
@@ -111,7 +112,19 @@ def test_five_applications_generate_install_execute_and_pass_ten_depths(tmp_path
         assert all((output / "applications" / name / path).is_file() for path in manifest["seven_generated_files"])
         assert (output / "installation" / name / "tests" / "test_generated.py").is_file()
         assert (output / "installation" / name / "bin" / name).is_file()
-    assert reports["pong-game"]["verification"]["browser_differential"]["ok"]
+    assert reports["pong-game"]["verification"]["javascript_headless_differential"]["ok"]
+    graphical = reports["pong-game"]["verification"]["graphical_browser"]
+    assert graphical["ok"]
+    assert graphical["checks"]["canvas_created"]
+    assert graphical["checks"]["keyboard_events"]
+    assert graphical["checks"]["frames_nonblank"]
+    assert graphical["checks"]["distinct_frames"]
+    assert graphical["frames_rendered"] == 3
+    assert graphical["distinct_frames"] >= 2
+    assert all(
+        report["verification"]["atomic_install"]["ok"]
+        for report in reports.values()
+    )
     assert reports["calculator"]["manifest"]["dependency_identity"] == reports["math-library"]["manifest"]["export_identity"]
 
     fixture = tmp_path / "entry-fixture"
@@ -219,7 +232,7 @@ def test_dependency_order_is_derived_and_cycles_are_rejected(tmp_path):
     assert "applications:dependency-cycle" in validate_suite(suite, tmp_path)
 
 
-def test_generator_has_zero_named_application_vocabulary_and_mutations_pass():
+def test_generator_vocabulary_scanner_injections_and_renamed_behavior():
     source = (ROOT / "unified" / "generator" / "assembly.py").read_text().lower()
     forbidden = {
         "file_reader",
@@ -236,8 +249,26 @@ def test_generator_has_zero_named_application_vocabulary_and_mutations_pass():
     assert output["state"] == "valid"
     report = output["value"]["manifest"]["anti_hardcoding"]
     assert report["ok"]
-    assert report["mutations_total"] > 0
-    assert report["mutations_detected"] == report["mutations_total"]
+    assert report["proof_kind"] == "literal-scanner-injection-validation"
+    assert report["scanner_injections_total"] > 0
+    assert (
+        report["scanner_injections_detected"]
+        == report["scanner_injections_total"]
+    )
+
+
+def test_atomic_publish_failure_during_replacement_restores_previous_tree(tmp_path):
+    report = _atomic_preservation_probe(tmp_path)
+    assert report == {
+        "ok": True,
+        "checks": {
+            "failure_detected": True,
+            "previous_tree_preserved": True,
+            "no_partial_output": True,
+            "backup_restored": True,
+            "staging_retained": True,
+        },
+    }
 
 
 def renamed_vocabulary(value, value_mapping, key_mapping):
