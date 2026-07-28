@@ -1,0 +1,94 @@
+{
+  "contract_version": "UC-STAGE0-1",
+  "canonicalization": "UC-CANONICAL-JSON-1",
+  "runtime": {
+    "implementation": "cpython-stdlib",
+    "minimum_version": "3.11",
+    "allowed_modules": [
+      "hashlib",
+      "json",
+      "pathlib",
+      "shutil",
+      "sys"
+    ]
+  },
+  "limits": {
+    "maximum_input_bytes": 1048576,
+    "maximum_input_count": 6,
+    "maximum_json_depth": 32,
+    "maximum_path_bytes": 256
+  },
+  "allowed_operations": [
+    "canonicalize-json",
+    "sha256",
+    "validate-contract",
+    "validate-root-seed",
+    "validate-path",
+    "read-trusted-input",
+    "plan-stage1-handoff",
+    "atomic-publish"
+  ],
+  "prohibited_capabilities": [
+    "application-domain-behavior",
+    "dynamic-code-loading",
+    "environment-dependent-selection",
+    "fuzzy-name-resolution",
+    "network-access",
+    "process-execution",
+    "randomness",
+    "time-dependent-output",
+    "unverified-input-copy"
+  ],
+  "trusted_inputs": [
+    {
+      "role": "root-seed",
+      "path": "seed/ROOT.seed.json",
+      "hash_mode": "canonical-json",
+      "sha256": "fa29d06d3f2f79a7c26042d9dd9b897dee9919cc6899ab4dd0426125061ce625"
+    },
+    {
+      "role": "root-seed-schema",
+      "path": "seed/SCHEMA.json",
+      "hash_mode": "canonical-json",
+      "sha256": "52064d8f23fd0fbb73ceb52666c74cc7731884fd8ff9cb9c5bb82208bded6e2a"
+    },
+    {
+      "role": "stage0-contract-schema",
+      "path": "seed/STAGE0_SCHEMA.json",
+      "hash_mode": "canonical-json",
+      "sha256": "e817086a7d52546b58594ed805b32b1f8ca47900cfea67bf1b15d1edc87526ca"
+    },
+    {
+      "role": "stage1-handoff-schema",
+      "path": "seed/STAGE1_HANDOFF_SCHEMA.json",
+      "hash_mode": "canonical-json",
+      "sha256": "8d4f6ab172758d50fd1732c243fe77207f72ff83683fca6643c523897b078e7a"
+    },
+    {
+      "role": "stage0-generation-manifest-schema",
+      "path": "seed/STAGE0_GENERATION_MANIFEST_SCHEMA.json",
+      "hash_mode": "canonical-json",
+      "sha256": "56e9d66d027cb87fd15c814ce1fe58f097cb1f047ff0b97c38fc648eb3fb76cf"
+    },
+    {
+      "role": "stage0-executable",
+      "path": "bootstrap/stage0.py",
+      "hash_mode": "raw-bytes",
+      "sha256": "d87135e64f318afc75fb3d50eecaa83e13c4beec3ce33aaae1d13071dfb170b9"
+    }
+  ],
+  "external_dependencies": [],
+  "stage1_handoff": {
+    "format_version": "UC-STAGE1-HANDOFF-1",
+    "handoff_file": "stage1-handoff.json",
+    "generation_manifest_file": "generation-manifest.json",
+    "required_fields": [
+      "format_version",
+      "stage0",
+      "root_seed",
+      "trusted_inputs",
+      "external_dependencies",
+      "stage1_output"
+    ]
+  }
+}
