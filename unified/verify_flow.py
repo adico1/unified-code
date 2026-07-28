@@ -197,6 +197,8 @@ def audited_command_node_primitive(node):
             env={
                 **os.environ,
                 "PYTHON": sys.executable,
+                "UC_PYTHON": sys.executable,
+                "UC_VERIFY_AUTHORITY_ROOT": str(ROOT),
                 "PYTHONPATH": str(work),
                 "PYTHONDONTWRITEBYTECODE": "1",
             },
@@ -209,8 +211,8 @@ def audited_command_node_primitive(node):
         "duration_seconds": time.monotonic() - started,
         "stdout_sha256": hashlib.sha256(completed.stdout).hexdigest(),
         "stderr_sha256": hashlib.sha256(completed.stderr).hexdigest(),
-        "stdout_tail": completed.stdout.decode("utf-8", errors="replace")[-20000:],
-        "stderr_tail": completed.stderr.decode("utf-8", errors="replace")[-20000:],
+        "stdout_tail": completed.stdout.decode("utf-8", errors="replace")[-100000:],
+        "stderr_tail": completed.stderr.decode("utf-8", errors="replace")[-100000:],
     }
 
 
@@ -232,18 +234,19 @@ def audited_scheduler_primitive(thing, graph, cache_root):
             "evidence": (*thing["evidence"], "verification.failed"),
             "state": "invalid",
         }
+    authority_root = Path(os.environ.get("UC_VERIFY_AUTHORITY_ROOT", ROOT))
     tracked = subprocess.run(
         ["git", "ls-files", "-z"],
-        cwd=ROOT,
+        cwd=authority_root,
         capture_output=True,
         check=True,
     ).stdout.split(b"\0")
     authority_paths = tuple(
-        ROOT / raw.decode("utf-8") for raw in tracked if raw
+        authority_root / raw.decode("utf-8") for raw in tracked if raw
     )
     source_identity = _sha(
         {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(
+            path.relative_to(authority_root).as_posix(): hashlib.sha256(
                 path.read_bytes()
             ).hexdigest()
             for path in authority_paths
