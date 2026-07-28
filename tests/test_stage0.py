@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-import hashlib
 import ast
+import hashlib
+import importlib.util
 import json
 import shutil
 import subprocess
@@ -12,9 +13,14 @@ from pathlib import Path
 
 import pytest
 
-import bootstrap.stage0 as stage0
-
 REPO = Path(__file__).resolve().parents[1]
+STAGE0_SPEC = importlib.util.spec_from_file_location(
+    "uc_stage0_contract", REPO / "bootstrap" / "stage0.py"
+)
+assert STAGE0_SPEC is not None and STAGE0_SPEC.loader is not None
+stage0 = importlib.util.module_from_spec(STAGE0_SPEC)
+STAGE0_SPEC.loader.exec_module(stage0)
+
 CONTRACT = REPO / "seed" / "stage0" / "TRUSTED_INPUTS.json"
 EXPECTED_EVIDENCE = (
     "boundary:contract:read",
