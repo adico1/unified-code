@@ -36,6 +36,9 @@ ALLOWED_OPERATIONS = (
     "validate-path",
     "read-trusted-input",
     "plan-stage1-handoff",
+    "interpret-stage1-declaration",
+    "render-stage1-boilerplate",
+    "hash-stage1-tree",
     "atomic-publish",
 )
 PROHIBITED_CAPABILITIES = (
@@ -49,6 +52,240 @@ PROHIBITED_CAPABILITIES = (
     "time-dependent-output",
     "unverified-input-copy",
 )
+
+STAGE1_OPERATIONS = (
+    "canonicalize-json",
+    "resolve-seed-node",
+    "render-canonical-json",
+    "render-stage1-runner",
+    "hash-file",
+    "hash-tree",
+    "write-manifest",
+    "atomic-publish",
+)
+
+STAGE1_TEMPLATE = '''#!/usr/bin/env python3
+"""Generated seed-defined Stage-1 framework/generator runner."""
+
+import hashlib
+import json
+import shutil
+import sys
+from pathlib import Path, PurePosixPath
+
+BOILERPLATE_ID = "UC-STAGE1-PY-1"
+OPERATIONS = (
+    "canonicalize-json",
+    "resolve-seed-node",
+    "render-canonical-json",
+    "render-stage1-runner",
+    "hash-file",
+    "hash-tree",
+    "write-manifest",
+    "atomic-publish",
+)
+TEMPLATE = __TEMPLATE_REPR__
+
+
+def canonical(value):
+    return (json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\\n").encode("utf-8")
+
+
+def pairs_without_duplicates(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("duplicate-json-key")
+        result[key] = value
+    return result
+
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+def safe_path(raw):
+    path = PurePosixPath(raw)
+    if not raw or path.is_absolute() or any(part in ("", ".", "..") for part in path.parts):
+        raise ValueError("invalid-output-path")
+    return path
+
+
+def resolve(root, pointer):
+    parts = pointer.split("/")[1:]
+    if not pointer.startswith("/") or not parts:
+        raise ValueError("unsupported-seed-node")
+    value = root
+    for part in parts:
+        if not isinstance(value, dict) or part not in value:
+            raise ValueError("unsupported-seed-node")
+        value = value[part]
+    return value
+
+
+def render_runner():
+    token = "__TEMPLATE" + "_REPR__"
+    return TEMPLATE.replace(token, repr(TEMPLATE)).encode("utf-8")
+
+
+def validate(seed):
+    if not isinstance(seed, dict) or seed.get("standard_version") != "TEN-1":
+        raise ValueError("invalid-root-seed")
+    stage1 = seed.get("stage1")
+    if not isinstance(stage1, dict) or set(stage1) != {"format_version", "framework", "generator", "uem"}:
+        raise ValueError("unsupported-stage1-declaration")
+    generator = stage1["generator"]
+    framework = stage1["framework"]
+    uem = stage1["uem"]
+    if (
+        stage1["format_version"] != "UC-STAGE1-SEED-1"
+        or not isinstance(generator, dict)
+        or generator.get("boilerplate") != BOILERPLATE_ID
+        or tuple(generator.get("operations") or ()) != OPERATIONS
+        or not isinstance(generator.get("outputs"), list)
+    ):
+        raise ValueError("standard.gap:unsupported-stage1-operation")
+    if (
+        not isinstance(framework, dict)
+        or set(framework) != {"standard_version", "thing_fields", "thing_states", "laws"}
+        or framework["standard_version"] != "TEN-1"
+        or framework["thing_fields"] != ["value", "depths", "axes", "evidence", "state"]
+        or framework["thing_states"] != ["unknown", "absent", "false", "formed", "valid", "invalid"]
+        or framework["laws"] != ["L" + str(index) for index in range(1, 14)]
+    ):
+        raise ValueError("unsupported-framework-declaration")
+    if (
+        not isinstance(uem, dict)
+        or set(uem) != {"machine", "format_version", "opcodes", "primitive_registry_version", "primitives"}
+        or uem["machine"] != "UEM-16"
+        or uem["format_version"] != 1
+        or uem["primitive_registry_version"] != 2
+        or not isinstance(uem["opcodes"], list)
+        or [item.get("code") for item in uem["opcodes"] if isinstance(item, dict)] != list(range(1, 17))
+        or any(set(item) != {"code", "name"} or not isinstance(item["name"], str) or not item["name"] for item in uem["opcodes"])
+        or not isinstance(uem["primitives"], list)
+        or not uem["primitives"]
+        or len(uem["primitives"]) != len(set(uem["primitives"]))
+        or any(not isinstance(item, str) or not item for item in uem["primitives"])
+    ):
+        raise ValueError("unsupported-uem-declaration")
+    return stage1
+
+
+def tree_hash(inventory):
+    raw = "".join(
+        item["path"] + "\\0" + item["sha256"] + "\\n"
+        for item in sorted(inventory, key=lambda item: item["path"])
+    ).encode("utf-8")
+    return sha(raw)
+
+
+def render(seed):
+    stage1 = validate(seed)
+    files = {"stage1.py": render_runner()}
+    origins = {"stage1.py": ["/stage1/generator"]}
+    seen = {"stage1.py"}
+    for output in stage1["generator"]["outputs"]:
+        if not isinstance(output, dict) or set(output) != {"path", "seed_node", "encoding"}:
+            raise ValueError("unsupported-output-declaration")
+        path = safe_path(output["path"]).as_posix()
+        if path in seen or output["encoding"] != "canonical-json":
+            raise ValueError("unsupported-output-declaration")
+        seen.add(path)
+        files[path] = canonical(resolve(seed, output["seed_node"]))
+        origins[path] = [output["seed_node"]]
+    inventory = [
+        {
+            "path": path,
+            "sha256": sha(raw),
+            "size": len(raw),
+            "originating_seed_nodes": origins[path],
+        }
+        for path, raw in sorted(files.items())
+    ]
+    manifest = {
+        "format_version": "UC-STAGE1-GENERATION-MANIFEST-1",
+        "generator_identity": BOILERPLATE_ID,
+        "root_seed_identity": seed["seed_id"],
+        "root_seed_sha256": sha(canonical(seed)),
+        "files": inventory,
+        "tree_sha256": tree_hash(inventory),
+        "evidence": [
+            "stage1:root-seed-validated",
+            "stage1:declarations-resolved",
+            "stage1:tree-rendered",
+            "stage1:tree-verified",
+        ],
+    }
+    files["stage1-manifest.json"] = canonical(manifest)
+    return files, manifest
+
+
+def remove(path):
+    if path.is_dir() and not path.is_symlink():
+        shutil.rmtree(path)
+    elif path.exists() or path.is_symlink():
+        path.unlink()
+
+
+def publish(output, files):
+    output = output.resolve(strict=False)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    stage = output.parent / ("." + output.name + ".stage1-new")
+    backup = output.parent / ("." + output.name + ".stage1-old")
+    remove(stage)
+    remove(backup)
+    stage.mkdir(parents=True)
+    for relative, raw in sorted(files.items()):
+        destination = stage.joinpath(*safe_path(relative).parts)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(raw)
+    had_output = output.exists()
+    if had_output:
+        output.rename(backup)
+    try:
+        stage.rename(output)
+    except BaseException:
+        if had_output and backup.exists() and not output.exists():
+            backup.rename(output)
+        raise
+    remove(backup)
+
+
+def main(argv=None):
+    args = list(sys.argv if argv is None else argv)
+    try:
+        if len(args) != 3:
+            raise ValueError("usage")
+        seed_path = Path(args[1]).resolve(strict=True)
+        output = Path(args[2]).resolve(strict=False)
+        if output in seed_path.parents:
+            raise ValueError("output-overlaps-root-seed")
+        seed = json.loads(seed_path.read_text(encoding="utf-8"), object_pairs_hook=pairs_without_duplicates)
+        files, manifest = render(seed)
+        publish(output, files)
+        result = {
+            "value": manifest,
+            "depths": [],
+            "axes": [],
+            "evidence": manifest["evidence"] + ["boundary:stage1-published"],
+            "state": "valid",
+        }
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError) as error:
+        result = {
+            "value": {"error": str(error), "ticket": None},
+            "depths": [],
+            "axes": [],
+            "evidence": ["stage1:rejected"],
+            "state": "invalid",
+        }
+    sys.stdout.buffer.write(canonical(result))
+    return 0 if result["state"] == "valid" else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+'''
 
 
 def _canonical_json_bytes(value):
@@ -358,6 +595,7 @@ def inward_read_trusted_inputs(thing):
     try:
         root = Path(value["input_root"])
         verified = []
+        documents = {}
         for item in sorted(contract["trusted_inputs"], key=lambda entry: (entry["role"], entry["path"])):
             relative = _safe_relative_path(item["path"], limits["maximum_path_bytes"])
             path = _confined_file(root, relative)
@@ -376,6 +614,7 @@ def inward_read_trusted_inputs(thing):
                 raise ValueError(f"hash-mismatch:{item['role']}")
             if item["hash_mode"] == "canonical-json":
                 _validate_trusted_json(item["role"], parsed)
+                documents[item["role"]] = parsed
             verified.append(
                 {
                     "role": item["role"],
@@ -386,6 +625,7 @@ def inward_read_trusted_inputs(thing):
                 }
             )
         value["verified_inputs"] = verified
+        value["trusted_documents"] = documents
         return {
             **thing,
             "value": value,
@@ -471,6 +711,175 @@ def plan_stage1_handoff(thing):
     }
 
 
+def _render_stage1_runner():
+    token = "__TEMPLATE" + "_REPR__"
+    return STAGE1_TEMPLATE.replace(token, repr(STAGE1_TEMPLATE)).encode("utf-8")
+
+
+def _resolve_seed_node(seed, pointer):
+    if not isinstance(pointer, str) or not pointer.startswith("/"):
+        raise ValueError("unsupported-seed-node")
+    parts = pointer.split("/")[1:]
+    if not parts:
+        raise ValueError("unsupported-seed-node")
+    value = seed
+    for part in parts:
+        if not isinstance(value, dict) or part not in value:
+            raise ValueError("unsupported-seed-node")
+        value = value[part]
+    return value
+
+
+def _stage1_tree_hash(inventory):
+    raw = "".join(
+        item["path"] + "\0" + item["sha256"] + "\n"
+        for item in sorted(inventory, key=lambda item: item["path"])
+    ).encode("utf-8")
+    return _sha256(raw)
+
+
+def _validate_stage1_seed(seed):
+    stage1 = seed.get("stage1") if isinstance(seed, dict) else None
+    if (
+        not isinstance(stage1, dict)
+        or set(stage1) != {"format_version", "framework", "generator", "uem"}
+        or stage1.get("format_version") != "UC-STAGE1-SEED-1"
+    ):
+        raise ValueError("unsupported-stage1-declaration")
+    generator = stage1.get("generator")
+    framework = stage1.get("framework")
+    uem = stage1.get("uem")
+    if (
+        not isinstance(generator, dict)
+        or generator.get("boilerplate") != "UC-STAGE1-PY-1"
+        or tuple(generator.get("operations") or ()) != STAGE1_OPERATIONS
+        or not isinstance(generator.get("outputs"), list)
+    ):
+        raise ValueError("standard.gap:unsupported-stage1-operation")
+    if (
+        not isinstance(framework, dict)
+        or set(framework)
+        != {"standard_version", "thing_fields", "thing_states", "laws"}
+        or framework["standard_version"] != "TEN-1"
+        or framework["thing_fields"]
+        != ["value", "depths", "axes", "evidence", "state"]
+        or framework["thing_states"]
+        != ["unknown", "absent", "false", "formed", "valid", "invalid"]
+        or framework["laws"] != [f"L{index}" for index in range(1, 14)]
+    ):
+        raise ValueError("unsupported-framework-declaration")
+    if (
+        not isinstance(uem, dict)
+        or set(uem)
+        != {
+            "machine",
+            "format_version",
+            "opcodes",
+            "primitive_registry_version",
+            "primitives",
+        }
+        or uem["machine"] != "UEM-16"
+        or uem["format_version"] != 1
+        or uem["primitive_registry_version"] != 2
+        or not isinstance(uem["opcodes"], list)
+        or [
+            item.get("code") for item in uem["opcodes"] if isinstance(item, dict)
+        ]
+        != list(range(1, 17))
+        or any(
+            set(item) != {"code", "name"}
+            or not isinstance(item["name"], str)
+            or not item["name"]
+            for item in uem["opcodes"]
+        )
+        or not isinstance(uem["primitives"], list)
+        or not uem["primitives"]
+        or len(uem["primitives"]) != len(set(uem["primitives"]))
+        or any(not isinstance(item, str) or not item for item in uem["primitives"])
+    ):
+        raise ValueError("unsupported-uem-declaration")
+    return stage1
+
+
+def plan_stage1_tree(thing):
+    """Pure construction: specialize the generic Stage-1 boilerplate from ROOT.seed."""
+    if thing.get("state") == "invalid":
+        return thing
+    value = dict(thing["value"])
+    try:
+        seed = value["trusted_documents"]["root-seed"]
+        stage1 = _validate_stage1_seed(seed)
+        files = {"stage1.py": _render_stage1_runner()}
+        origins = {"stage1.py": ["/stage1/generator"]}
+        seen = {"stage1.py"}
+        for output in stage1["generator"]["outputs"]:
+            if not isinstance(output, dict) or set(output) != {
+                "path",
+                "seed_node",
+                "encoding",
+            }:
+                raise ValueError("unsupported-output-declaration")
+            path = _safe_relative_path(
+                output["path"], value["contract"]["limits"]["maximum_path_bytes"]
+            ).as_posix()
+            if path in seen or output["encoding"] != "canonical-json":
+                raise ValueError("unsupported-output-declaration")
+            seen.add(path)
+            files[path] = _canonical_json_bytes(
+                _resolve_seed_node(seed, output["seed_node"])
+            )
+            origins[path] = [output["seed_node"]]
+        inventory = [
+            {
+                "path": path,
+                "sha256": _sha256(raw),
+                "size": len(raw),
+                "originating_seed_nodes": origins[path],
+            }
+            for path, raw in sorted(files.items())
+        ]
+        manifest = {
+            "format_version": "UC-STAGE1-GENERATION-MANIFEST-1",
+            "generator_identity": "UC-STAGE1-PY-1",
+            "root_seed_identity": seed["seed_id"],
+            "root_seed_sha256": _sha256(_canonical_json_bytes(seed)),
+            "files": inventory,
+            "tree_sha256": _stage1_tree_hash(inventory),
+            "evidence": [
+                "stage1:root-seed-validated",
+                "stage1:declarations-resolved",
+                "stage1:tree-rendered",
+                "stage1:tree-verified",
+            ],
+        }
+        files["stage1-manifest.json"] = _canonical_json_bytes(manifest)
+        value.update(
+            {
+                "stage1_files": files,
+                "stage1_manifest": manifest,
+                "stage1_tree_sha256": manifest["tree_sha256"],
+            }
+        )
+        return {
+            **thing,
+            "value": value,
+            "evidence": (
+                *thing["evidence"],
+                "stage1:root-seed-validated",
+                "stage1:declarations-resolved",
+                "stage1:tree-rendered",
+                "stage1:tree-verified",
+            ),
+            "state": "valid",
+        }
+    except (KeyError, TypeError, ValueError) as error:
+        return _invalid(
+            thing,
+            f"stage1.generate:{str(error)}",
+            "stage1:generation-rejected",
+        )
+
+
 def _remove_path(path):
     if path.is_dir() and not path.is_symlink():
         shutil.rmtree(path)
@@ -480,6 +889,7 @@ def _remove_path(path):
 
 def _atomic_publish(output, files):
     parent = output.parent
+    parent.mkdir(parents=True, exist_ok=True)
     stage = parent / f".{output.name}.stage0-new"
     backup = parent / f".{output.name}.stage0-old"
     if stage.exists():
@@ -488,7 +898,10 @@ def _atomic_publish(output, files):
         _remove_path(backup)
     stage.mkdir(parents=True)
     for filename, raw in sorted(files.items()):
-        (stage / filename).write_bytes(raw)
+        relative = _safe_relative_path(filename, 256)
+        destination = stage.joinpath(*relative.parts)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(raw)
     had_output = output.exists()
     if had_output:
         output.rename(backup)
@@ -531,6 +944,34 @@ def outward_publish_handoff(thing):
         return _invalid(thing, f"stage0.publish:{type(error).__name__}", "stage0:publish-rejected")
 
 
+def outward_publish_stage1(thing):
+    """Named OUTWARD boundary: atomically install the verified Stage1-A tree."""
+    if thing.get("state") == "invalid":
+        return thing
+    value = dict(thing["value"])
+    try:
+        output = _safe_output_path(value)
+        _atomic_publish(output, value["stage1_files"])
+        value.pop("stage1_files", None)
+        value.pop("trusted_documents", None)
+        return {
+            **thing,
+            "value": value,
+            "evidence": (
+                *thing["evidence"],
+                "boundary:stage1:publish",
+                "stage1:published",
+            ),
+            "state": "valid",
+        }
+    except (KeyError, OSError, ValueError) as error:
+        return _invalid(
+            thing,
+            f"stage1.publish:{type(error).__name__}",
+            "stage1:publish-rejected",
+        )
+
+
 def stage0_plan(thing):
     """Public Stage-0 Part: one Thing in, one Thing out."""
     try:
@@ -541,13 +982,36 @@ def stage0_plan(thing):
         return _unhandled(thing)
 
 
+def stage0_generate(thing):
+    """Public Stage-0 Part: ROOT.seed to a runnable generated Stage1-A."""
+    try:
+        return outward_publish_stage1(
+            plan_stage1_tree(inward_read_trusted_inputs(inward_read_contract(thing)))
+        )
+    except BaseException:
+        return _unhandled(thing)
+
+
 def main(argv=None):
     args = list(sys.argv if argv is None else argv)
-    if len(args) != 8 or args[1] != "plan" or args[2] != "--contract" or args[4] != "--input-root" or args[6] != "--output":
+    if (
+        len(args) != 8
+        or args[1] not in ("plan", "generate")
+        or args[2] != "--contract"
+        or args[4] != "--input-root"
+        or args[6] != "--output"
+    ):
         result = _invalid(_thing({}), "stage0.cli:usage", "stage0:cli-rejected")
     else:
-        result = stage0_plan(
-            _thing({"contract_path": args[3], "input_root": args[5], "output": args[7]})
+        operation = stage0_plan if args[1] == "plan" else stage0_generate
+        result = operation(
+            _thing(
+                {
+                    "contract_path": args[3],
+                    "input_root": args[5],
+                    "output": args[7],
+                }
+            )
         )
     sys.stdout.buffer.write(_canonical_json_bytes(result))
     return 0 if result["state"] == "valid" else 1

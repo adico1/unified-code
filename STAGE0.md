@@ -26,8 +26,10 @@ physical adapters; their implementation languages do not become multiple
 application languages. Stage 0 is therefore a substrate adapter, not precedent
 for adding another post-bootstrap language.
 
-This contract does not generate Stage 1 and does not prove the eventual
-post-bootstrap language reduction. Those are separate contributor issues.
+The `plan` operation produces the frozen handoff. The bounded `generate`
+operation now interprets the root seed's structured Stage-1 declaration and
+produces the first runnable Stage1-A surface. It does not prove the complete
+repository fixed point or the eventual post-bootstrap language reduction.
 
 ## Trusted inputs
 
@@ -69,6 +71,7 @@ The public Part obeys one-Thing-in/one-Thing-out:
 
 ```text
 stage0_plan(thing) -> thing
+stage0_generate(thing) -> thing
 ```
 
 The executable operation is:
@@ -90,6 +93,18 @@ Success atomically writes the canonical Stage-1 handoff tree:
 
 The command exits nonzero and publishes no handoff when any verification fails.
 
+After the handoff contract is verified, Stage1-A is generated with:
+
+```bash
+python3 bootstrap/stage0.py generate \
+  --contract seed/stage0/TRUSTED_INPUTS.json \
+  --input-root . \
+  --output /tmp/uc-stage1-a
+```
+
+See [STAGE1.md](STAGE1.md) for its generated tree, manifest and isolation
+contract.
+
 ## Permitted computation
 
 Stage 0 may only:
@@ -101,7 +116,10 @@ Stage 0 may only:
 5. validate and confine relative paths;
 6. read pinned trusted inputs;
 7. construct the Stage-1 handoff;
-8. atomically publish it.
+8. interpret the closed structured Stage-1 declaration;
+9. specialize the pinned generic Stage-1 boilerplate;
+10. hash the complete Stage-1 semantic tree;
+11. atomically publish verified output.
 
 Application-domain behavior, unverified copying, network access, subprocesses,
 dynamic loading, fuzzy resolution, environment-dependent selection, randomness,
@@ -136,7 +154,9 @@ The handoff pins:
 - the empty external-dependency set;
 - Stage-1 output and manifest names.
 
-It deliberately does not claim a generated Stage-1 tree or fixed point.
+The `plan` result deliberately does not claim a generated Stage-1 tree or fixed
+point. The separate `generate` result claims only the bounded Stage1-A tree
+defined in [STAGE1.md](STAGE1.md).
 
 Here “Stage-1 tree” means this verified two-file input package for Stage 1, not
 a generated Stage-1 implementation. `generation-manifest.json` inventories all
@@ -188,10 +208,10 @@ publication or Stage-1 generation.
 Stage 1 must verify the identities again before using them and must emit its
 output under the declared deterministic tree and manifest names.
 
-This PR does not define Stage-1 operations, generate repository source, execute
-application behavior, prove a fixed point, generate UEM hosts, or account for
-vendored dependencies. It also does not implement deployment, scheduling,
-real-time behavior, lifecycle coordination, GUI/browser output, or
+The Stage1-A extension does not generate the complete repository, execute
+application behavior, certify the isolated fixed point, generate independent
+UEM hosts, or account for vendored dependencies. It also does not implement
+deployment, scheduling, real-time behavior, lifecycle coordination, or
 name-to-manifestation.
 
 ## Conformance

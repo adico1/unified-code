@@ -195,6 +195,108 @@
     }
   ],
   "seed_id": "uc-canonical",
+  "stage1": {
+    "format_version": "UC-STAGE1-SEED-1",
+    "framework": {
+      "standard_version": "TEN-1",
+      "thing_fields": [
+        "value",
+        "depths",
+        "axes",
+        "evidence",
+        "state"
+      ],
+      "thing_states": [
+        "unknown",
+        "absent",
+        "false",
+        "formed",
+        "valid",
+        "invalid"
+      ],
+      "laws": [
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6",
+        "L7",
+        "L8",
+        "L9",
+        "L10",
+        "L11",
+        "L12",
+        "L13"
+      ]
+    },
+    "generator": {
+      "boilerplate": "UC-STAGE1-PY-1",
+      "operations": [
+        "canonicalize-json",
+        "resolve-seed-node",
+        "render-canonical-json",
+        "render-stage1-runner",
+        "hash-file",
+        "hash-tree",
+        "write-manifest",
+        "atomic-publish"
+      ],
+      "outputs": [
+        {
+          "path": "framework/contract.json",
+          "seed_node": "/stage1/framework",
+          "encoding": "canonical-json"
+        },
+        {
+          "path": "generator/contract.json",
+          "seed_node": "/stage1/generator",
+          "encoding": "canonical-json"
+        },
+        {
+          "path": "uem/contract.json",
+          "seed_node": "/stage1/uem",
+          "encoding": "canonical-json"
+        }
+      ]
+    },
+    "uem": {
+      "machine": "UEM-16",
+      "format_version": 1,
+      "opcodes": [
+        {"code": 1, "name": "LOAD"},
+        {"code": 2, "name": "READ"},
+        {"code": 3, "name": "WRITE"},
+        {"code": 4, "name": "DELETE"},
+        {"code": 5, "name": "EMIT"},
+        {"code": 6, "name": "ENQUEUE"},
+        {"code": 7, "name": "DEQUEUE"},
+        {"code": 8, "name": "ROUTE"},
+        {"code": 9, "name": "APPLY"},
+        {"code": 10, "name": "MAP"},
+        {"code": 11, "name": "FOLD"},
+        {"code": 12, "name": "VERIFY"},
+        {"code": 13, "name": "TICKET"},
+        {"code": 14, "name": "OUTWARD"},
+        {"code": 15, "name": "ACK"},
+        {"code": 16, "name": "STOP"}
+      ],
+      "primitive_registry_version": 2,
+      "primitives": [
+        "identity",
+        "letter",
+        "mark_inward",
+        "require_source",
+        "accept_outward",
+        "eval_expression",
+        "merge_result",
+        "verify_result",
+        "present_json",
+        "mark_part",
+        "state_transition"
+      ]
+    }
+  },
   "standard_ten": true,
   "standard_version": "TEN-1",
   "uem_version": "UEM-16-v0.1",
