@@ -121,7 +121,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "cdb64ee4c33b495ef49e386198fbbee18b89fa7d604aa590419b8e3f3c6be09e",
+      "sha256": "effbd5be0cf28660deff235d7abc837e685bf6400dbded10afed3115a7699fac",
       "size": 29301,
       "standard_ten_class_ok": true
     },
@@ -203,7 +203,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "a022bae17a2026f0c337ee5bbece58eaeaeccee2e2bde7fc1810096836cc1e7a",
+      "sha256": "77ba61275eefd677c54de0fc09080f893db340a62be1b9dc3c5db13c8d7f1b2c",
       "size": 172830,
       "standard_ten_class_ok": true
     },
@@ -5009,10 +5009,10 @@
         "classes": 0,
         "comp": 65,
         "for": 23,
-        "if": 72,
+        "if": 74,
         "match": 0,
-        "total": 176,
-        "try": 13,
+        "total": 180,
+        "try": 15,
         "while": 3
       },
       "gap_id": "gap.untracked-or-handwritten",
@@ -5023,8 +5023,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/assembly.py",
       "provenance": "handwritten-pending",
-      "sha256": "025018dda71a29fac427ed4b07322d11d2514404c995b774a07ed716b5ebae90",
-      "size": 72725,
+      "sha256": "c9a922031d35146f09936950aacc1b18cd4c8f17140ff7f5e7a5512d13b22e78",
+      "size": 73282,
       "standard_ten_class_ok": false
     },
     {

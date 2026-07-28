@@ -10,7 +10,7 @@ import json
 import os
 import re
 import shutil
-import socket
+import signal
 import subprocess
 import sys
 import tempfile
@@ -1445,9 +1445,6 @@ def _graphical_browser_capture(executable, url, deadline_seconds):
             process = None
             encoded = None
             try:
-                with socket.socket() as reserved:
-                    reserved.bind(("127.0.0.1", 0))
-                    port = reserved.getsockname()[1]
                 process = subprocess.Popen(
                     [
                         executable,
@@ -1456,11 +1453,12 @@ def _graphical_browser_capture(executable, url, deadline_seconds):
                         "--disable-default-apps",
                         "--disable-extensions",
                         "--disable-gpu",
+                        "--disable-dev-shm-usage",
                         "--disable-sync",
                         "--no-first-run",
                         "--no-sandbox",
                         "--allow-file-access-from-files",
-                        f"--remote-debugging-port={port}",
+                        "--remote-debugging-port=0",
                         f"--user-data-dir={profile}",
                         url,
                     ],
@@ -1469,8 +1467,16 @@ def _graphical_browser_capture(executable, url, deadline_seconds):
                     start_new_session=True,
                 )
                 deadline = time.monotonic() + max(20, deadline_seconds)
+                port = None
+                active_port = Path(profile) / "DevToolsActivePort"
                 while time.monotonic() < deadline and process.poll() is None:
                     try:
+                        if port is None and active_port.is_file():
+                            port = int(
+                                active_port.read_text(encoding="utf-8").splitlines()[0]
+                            )
+                        if port is None:
+                            raise OSError("debugging-port-pending")
                         with urllib.request.urlopen(
                             f"http://127.0.0.1:{port}/json/list", timeout=1
                         ) as response:
@@ -1492,12 +1498,18 @@ def _graphical_browser_capture(executable, url, deadline_seconds):
             except (OSError, TypeError, ValueError):
                 encoded = None
             finally:
-                if process is not None and process.poll() is None:
-                    process.terminate()
+                if process is not None:
+                    try:
+                        os.killpg(process.pid, signal.SIGTERM)
+                    except ProcessLookupError:
+                        pass
                     try:
                         process.wait(timeout=3)
                     except subprocess.TimeoutExpired:
-                        process.kill()
+                        try:
+                            os.killpg(process.pid, signal.SIGKILL)
+                        except ProcessLookupError:
+                            pass
                         process.wait(timeout=3)
             if encoded is not None:
                 try:
