@@ -1,0 +1,86 @@
+{
+  "$id": "https://github.com/adico1/unified-code/blob/main/seed/MANIFESTATION_SCHEMA.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "records": {
+      "items": {
+        "$ref": "#/$defs/record"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "registry_snapshot_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "registry_version": {
+      "const": 1
+    }
+  },
+  "required": [
+    "registry_version",
+    "registry_snapshot_sha256",
+    "records"
+  ],
+  "title": "Unified Code name-to-manifestation registry",
+  "type": "object",
+  "$defs": {
+    "record": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_tree_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "canonical_name": {
+          "pattern": "^uc://applications/[a-z][a-z0-9-]*@[1-9][0-9]*$",
+          "type": "string"
+        },
+        "compiler_route": {
+          "enum": [
+            "application-v3",
+            "expression-uem",
+            "stateful-unfold",
+            "thing-v2"
+          ]
+        },
+        "compiler_version": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "product_family": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "route_options": {
+          "type": "object"
+        },
+        "seed_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "seed_ref": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "seed_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "canonical_name",
+        "product_family",
+        "seed_id",
+        "seed_ref",
+        "seed_sha256",
+        "compiler_route",
+        "compiler_version",
+        "artifact_tree_sha256"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

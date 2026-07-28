@@ -50,6 +50,10 @@ def host_main(argv=None):
         from .assembly import run_assemble
 
         result = run_assemble(inward(payload))
+    elif command == "manifest":
+        from .manifestation import manifest_artifact
+
+        result = manifest_artifact(inward(payload))
     elif command == "gauntlet":
         from .gauntlet import run_gauntlet
 
@@ -94,6 +98,8 @@ def host_main(argv=None):
                 sys.stderr.write(f"uc: compiled {path}\n")
                 if value.get("install") == "ok":
                     sys.stderr.write("uc: install ok\n")
+            elif command == "manifest" and value.get("artifact_path"):
+                sys.stderr.write(f"uc: manifested {value['artifact_path']}\n")
 
     if explicit:
         return code
@@ -376,6 +382,50 @@ def _parse_argv(argv: list[str]) -> dict:
             "output": output,
             **gates,
             "gauntlet_depths": depths,
+        }
+
+    if command == "manifest":
+        # uc manifest <qualified-name> --registry FILE --snapshot SHA --output DIR
+        if len(argv) < 2:
+            return {"command": "manifest", "error": "usage-manifest"}
+        name = argv[1]
+        registry_path = None
+        snapshot = None
+        output = None
+        i = 2
+        while i < len(argv):
+            if argv[i] == "--registry" and i + 1 < len(argv):
+                registry_path = argv[i + 1]
+                i += 2
+                continue
+            if argv[i] == "--snapshot" and i + 1 < len(argv):
+                snapshot = argv[i + 1]
+                i += 2
+                continue
+            if argv[i] == "--output" and i + 1 < len(argv):
+                output = argv[i + 1]
+                i += 2
+                continue
+            return {
+                "command": "manifest",
+                "name": name,
+                "error": f"unknown-flag:{argv[i]}",
+            }
+        if not registry_path or not snapshot or not output:
+            return {
+                "command": "manifest",
+                "name": name,
+                "registry_path": registry_path,
+                "expected_registry_snapshot_sha256": snapshot,
+                "output": output,
+                "error": "usage-manifest-required-arguments",
+            }
+        return {
+            "command": "manifest",
+            "name": name,
+            "registry_path": registry_path,
+            "expected_registry_snapshot_sha256": snapshot,
+            "output": output,
         }
 
     return {"command": command, "error": "unknown-command"}

@@ -65,6 +65,15 @@ This proof is intentionally limited to its declared numeric/affine seed
 language. It does not claim arbitrary programs, production compatibility with
 all foreign libraries, self-hosting, GUI/browser generation, or all hardware.
 
+## Name-to-manifestation — Qualified identity resolution
+
+A pinned canonical registry now resolves one explicit qualified application
+name to one verified seed and one deterministic artifact tree through the
+registered Application v3, Thing v2, stateful-unfold, or expression/UEM route. It
+implements resolution and artifact manifestation only; deployment, execution,
+temporal, delivery and scheduling machines remain separate and unimplemented.
+See [MANIFESTATION.md](MANIFESTATION.md).
+
 ## Milestone 2 — Root-seed fixed-point bootstrap
 
 This milestone is deliberately non-blocking for Milestone 1. Open items:
