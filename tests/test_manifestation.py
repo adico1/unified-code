@@ -40,7 +40,7 @@ SEED_ROOT = ROOT / "seed"
 NATIVE_SEED = SEED_ROOT / "thing_v2" / "trajectory_meter.json"
 FOREIGN_SEED = SEED_ROOT / "thing_v2" / "orchard_yield.json"
 QUALIFIED_NAME = "uc://applications/trajectory-meter@1"
-SNAPSHOT = "9ce23df11ff7175bb809f187df4344ee65274486d1d4f91a11b338e45a11cfb1"
+SNAPSHOT = "e72bb04c2d1df8ee50422529a03e396d5bd21ef6a2d34b68d5ad3176c51cc2e2"
 ARTIFACT_SHA = "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841"
 SEED_SHA = "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
 SUCCESS_EVIDENCE = (
@@ -181,21 +181,21 @@ def test_registry_covers_every_current_product_and_only_generic_routes():
         "uc://applications/orchard-yield@1",
         "uc://applications/task-ledger@1",
         "uc://applications/score-board@1",
-        "uc://applications/text-stats@2",
+        "uc://applications/text-stats-v2@1",
         "uc://applications/invoice-total@1",
     }
     assert set(COMPILER_ROUTES) == set(ROUTE_VERSIONS)
     for record in primary.values():
         assert record["compiler_route"] in COMPILER_ROUTES
         assert record["compiler_version"] == ROUTE_VERSIONS[record["compiler_route"]]
-        seed = _load(SEED_ROOT / record["seed_ref"])
+        seed = _load(SEED_ROOT / record["seed_path"])
         assert canonical_seed_sha256(seed) == record["seed_sha256"]
 
 
 def test_all_registered_seed_vocabulary_is_absent_from_manifestation_runtime():
     registry = _load(REGISTRY_PATH)
     seeds = tuple(
-        _load(SEED_ROOT / record["seed_ref"])
+        _load(SEED_ROOT / record["seed_path"])
         for record in registry["records"]
         if record["canonical_name"] != "uc://applications/trajectory-meter@2"
     )
@@ -381,7 +381,7 @@ def test_unreadable_registry_is_unavailable_and_deterministic(tmp_path):
 
 def test_missing_seed_preserves_resolved_outcome_without_artifact(tmp_path):
     registry = _load(REGISTRY_PATH)
-    _record(registry)["seed_ref"] = "thing_v2/missing.json"
+    _record(registry)["seed_path"] = "thing_v2/missing.json"
     registry_path = tmp_path / "registry.json"
     snapshot = _write_registry(registry_path, registry)
     result = manifest_artifact(
@@ -442,7 +442,7 @@ def test_conflicting_duplicate_canonical_identity_is_invalid(tmp_path):
 
 def test_registry_altered_after_pin_and_snapshot_mismatch_are_conflicts(tmp_path):
     altered = _load(REGISTRY_PATH)
-    _record(altered)["seed_ref"] = "thing_v2/other.json"
+    _record(altered)["seed_path"] = "thing_v2/other.json"
     altered_path = tmp_path / "altered.json"
     _write_registry(altered_path, altered, recompute=False)
     first = resolve_name(
@@ -633,7 +633,7 @@ def test_registry_name_version_seed_and_output_locations_are_data(tmp_path):
         registry_path = tmp_path / "registry" / f"{label}.json"
         snapshot = _write_registry(registry_path, registry)
         alternate_seed_root = tmp_path / f"{label}-seeds"
-        relocated_seed = alternate_seed_root / record["seed_ref"]
+        relocated_seed = alternate_seed_root / record["seed_path"]
         relocated_seed.parent.mkdir(parents=True, exist_ok=True)
         seed = _load(NATIVE_SEED)
         relocated_seed.write_bytes(canonical_json_bytes(seed))

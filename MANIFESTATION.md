@@ -146,9 +146,9 @@ Every record pins:
 ```json
 {
   "canonical_name": "uc://applications/trajectory-meter@1",
-  "product_family": "thing-v2-native",
+  "product_family": "thing-v2",
   "seed_id": "thing-v2:trajectory-meter@1",
-  "seed_ref": "thing_v2/trajectory_meter.json",
+  "seed_path": "thing_v2/trajectory_meter.json",
   "seed_sha256": "...",
   "compiler_route": "thing-v2",
   "compiler_version": "THING-V2-1",
@@ -250,7 +250,7 @@ A failure contains no evidence for later phases.
 ```bash
 uc manifest uc://applications/trajectory-meter@1 \
   --registry seed/registry.json \
-  --snapshot 9ce23df11ff7175bb809f187df4344ee65274486d1d4f91a11b338e45a11cfb1 \
+  --snapshot e72bb04c2d1df8ee50422529a03e396d5bd21ef6a2d34b68d5ad3176c51cc2e2 \
   --output /tmp/uc-manifested-trajectory
 ```
 
@@ -258,7 +258,7 @@ The result exposes:
 
 ```json
 {
-  "registry_snapshot_sha256": "9ce23df11ff7175bb809f187df4344ee65274486d1d4f91a11b338e45a11cfb1",
+  "registry_snapshot_sha256": "e72bb04c2d1df8ee50422529a03e396d5bd21ef6a2d34b68d5ad3176c51cc2e2",
   "canonical_name": "uc://applications/trajectory-meter@1",
   "seed_id": "thing-v2:trajectory-meter@1",
   "seed_sha256": "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49",

@@ -8,7 +8,7 @@
       "product_family": "application-v3",
       "route_options": {"product_key": "file-reader", "suite_ref": "application_suite.json"},
       "seed_id": "application-v3:file-reader@1",
-      "seed_ref": "applications/file_reader.json",
+      "seed_path": "applications/file_reader.json",
       "seed_sha256": "c6d62202dc4b173098b0fbf9863feef735011e8be03f4e1c9dea206c2b78cb0a"
     },
     {
@@ -19,7 +19,7 @@
       "product_family": "application-v3",
       "route_options": {"product_key": "file-editor", "suite_ref": "application_suite.json"},
       "seed_id": "application-v3:file-editor@1",
-      "seed_ref": "applications/file_editor.json",
+      "seed_path": "applications/file_editor.json",
       "seed_sha256": "ebb4a4f4c4f6e799387bc228f4f3564e53fd35e869ff388df3bd34fd83410c50"
     },
     {
@@ -30,7 +30,7 @@
       "product_family": "application-v3",
       "route_options": {"product_key": "math-library", "suite_ref": "application_suite.json"},
       "seed_id": "application-v3:math-library@1",
-      "seed_ref": "applications/math_library.json",
+      "seed_path": "applications/math_library.json",
       "seed_sha256": "f6742868745ea349b073e266df13f39d477b8fb1a51995307ae39887f21a27eb"
     },
     {
@@ -41,7 +41,7 @@
       "product_family": "application-v3",
       "route_options": {"product_key": "calculator", "suite_ref": "application_suite.json"},
       "seed_id": "application-v3:calculator@1",
-      "seed_ref": "applications/calculator.json",
+      "seed_path": "applications/calculator.json",
       "seed_sha256": "5912e1468a08a5501547ecb3aef8266b200de73359e82071fdff846826443039"
     },
     {
@@ -52,7 +52,7 @@
       "product_family": "application-v3",
       "route_options": {"product_key": "pong-game", "suite_ref": "application_suite.json"},
       "seed_id": "application-v3:pong-game@1",
-      "seed_ref": "applications/pong_game.json",
+      "seed_path": "applications/pong_game.json",
       "seed_sha256": "b996527ff00ad440d862871489dc705b5b73dbcb6ae5497ad9560c33307f12dd"
     },
     {
@@ -60,9 +60,9 @@
       "canonical_name": "uc://applications/trajectory-meter@1",
       "compiler_route": "thing-v2",
       "compiler_version": "THING-V2-1",
-      "product_family": "thing-v2-native",
+      "product_family": "thing-v2",
       "seed_id": "thing-v2:trajectory-meter@1",
-      "seed_ref": "thing_v2/trajectory_meter.json",
+      "seed_path": "thing_v2/trajectory_meter.json",
       "seed_sha256": "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
     },
     {
@@ -70,9 +70,9 @@
       "canonical_name": "uc://applications/trajectory-meter@2",
       "compiler_route": "thing-v2",
       "compiler_version": "THING-V2-1",
-      "product_family": "thing-v2-native",
+      "product_family": "thing-v2",
       "seed_id": "thing-v2:trajectory-meter@2",
-      "seed_ref": "thing_v2/trajectory_meter.json",
+      "seed_path": "thing_v2/trajectory_meter.json",
       "seed_sha256": "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
     },
     {
@@ -80,9 +80,9 @@
       "canonical_name": "uc://applications/orchard-yield@1",
       "compiler_route": "thing-v2",
       "compiler_version": "THING-V2-1",
-      "product_family": "thing-v2-foreign-fixture",
+      "product_family": "thing-v2",
       "seed_id": "thing-v2:orchard-yield@1",
-      "seed_ref": "thing_v2/orchard_yield.json",
+      "seed_path": "thing_v2/orchard_yield.json",
       "seed_sha256": "ba9bc1d273250032e5cc64092ee4d6a5f8fb176216baa145d2dce7fe07023c96"
     },
     {
@@ -92,7 +92,7 @@
       "compiler_version": "UC-UNFOLD-1",
       "product_family": "stateful",
       "seed_id": "stateful:task-ledger@1",
-      "seed_ref": "declarations/task_ledger.json",
+      "seed_path": "declarations/task_ledger.json",
       "seed_sha256": "2b62e66d78512e2ef4b19fbd94f7cacf274861647b3023ed3fc508e73d870885"
     },
     {
@@ -102,17 +102,17 @@
       "compiler_version": "UC-UNFOLD-1",
       "product_family": "stateful",
       "seed_id": "stateful:score-board@1",
-      "seed_ref": "declarations/score_board.json",
+      "seed_path": "declarations/score_board.json",
       "seed_sha256": "cd808daa959ff3db544595c35919ed160d26464f0982f10248c3581ecd01fab7"
     },
     {
       "artifact_tree_sha256": "77c4b834eda7b5fb20c02ea7c31ced5e76fcb0dd2061468e54f687b40b234ab4",
-      "canonical_name": "uc://applications/text-stats@2",
+      "canonical_name": "uc://applications/text-stats-v2@1",
       "compiler_route": "expression-uem",
       "compiler_version": "UEM-16-v0.1",
       "product_family": "expression-uem",
-      "seed_id": "expression-uem:text-stats@2",
-      "seed_ref": "declarations/text_stats_v2.json",
+      "seed_id": "expression-uem:text-stats-v2@1",
+      "seed_path": "declarations/text_stats_v2.json",
       "seed_sha256": "bc8539370ffdb1bfbe1b76012df18ebced7bbada7c372fb9dbcc93589be46abe"
     },
     {
@@ -122,10 +122,10 @@
       "compiler_version": "UEM-16-v0.1",
       "product_family": "expression-uem",
       "seed_id": "expression-uem:invoice-total@1",
-      "seed_ref": "declarations/invoice_total.json",
+      "seed_path": "declarations/invoice_total.json",
       "seed_sha256": "d2e2bf262b2b637c66aa2e93c26f84d6798d4903e51cfb6eb8ae64a37c05cdab"
     }
   ],
-  "registry_snapshot_sha256": "9ce23df11ff7175bb809f187df4344ee65274486d1d4f91a11b338e45a11cfb1",
+  "registry_snapshot_sha256": "e72bb04c2d1df8ee50422529a03e396d5bd21ef6a2d34b68d5ad3176c51cc2e2",
   "registry_version": 1
 }

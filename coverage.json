@@ -538,59 +538,59 @@
       "ok": true,
       "permitted_catalog": [
         [
-          "formed",
-          "false"
-        ],
-        [
-          "absent",
-          "absent"
-        ],
-        [
-          "formed",
+          "unknown",
           "invalid"
+        ],
+        [
+          "unknown",
+          "false"
         ],
         [
           "formed",
           "valid"
         ],
         [
-          "formed",
-          "absent"
-        ],
-        [
           "unknown",
-          "false"
+          "absent"
         ],
         [
           "unknown",
           "formed"
         ],
         [
-          "invalid",
+          "formed",
           "invalid"
+        ],
+        [
+          "formed",
+          "false"
+        ],
+        [
+          "formed",
+          "absent"
+        ],
+        [
+          "absent",
+          "absent"
         ],
         [
           "valid",
           "valid"
         ],
         [
-          "unknown",
-          "invalid"
-        ],
-        [
-          "unknown",
-          "absent"
-        ],
-        [
           "false",
           "false"
+        ],
+        [
+          "invalid",
+          "invalid"
         ]
       ],
       "prohibited_exercised": true,
       "required": 100.0
     }
   },
-  "duration_s": 34.03997993469238,
+  "duration_s": 16.918360233306885,
   "l13": true,
   "rules": {
     "branch_ledger_must_reconcile": true,

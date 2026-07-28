@@ -121,7 +121,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "69c248ac5d24a9b4a70319ad6620bae1661d5e0fcae858b927b83d83711893d4",
+      "sha256": "2b43b07c313b967754d13cb994af6a44d62b6c56b46bdd275348cadbe195f4b8",
       "size": 29726,
       "standard_ten_class_ok": true
     },
@@ -141,7 +141,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "GAUNTLET.md",
       "provenance": "evidence",
-      "sha256": "fc73b6b06dae6eb154d81bfdae127953b553e8594b98e45612dc98d209dc81ba",
+      "sha256": "b116afebf21443964a08b85e3a3487751e4250f88d0a8da88a6500c11a3a91ba",
       "size": 1331,
       "standard_ten_class_ok": true
     },
@@ -204,8 +204,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "MANIFESTATION.md",
       "provenance": "handwritten-pending",
-      "sha256": "22622f286558e973536090db8e6da3b60f793bbaf340b995ad22289093325405",
-      "size": 9430,
+      "sha256": "e81b4abdafdfc00a7e3cedc3462e7f15d77346c672880bb4f0b733d47d68ca49",
+      "size": 9424,
       "standard_ten_class_ok": false
     },
     {
@@ -224,7 +224,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "d9c4c2f6d8fd8572105388adcca9ae3d3b9f3a3994a6dfbeb1765bc96261aea9",
+      "sha256": "c0dfa663090c985ec81cc4e5b3cc86d993e0addd5bbde035aa099bdeda07c335",
       "size": 175871,
       "standard_ten_class_ok": true
     },
@@ -1198,8 +1198,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "c/targets/manifests/l12_report_x86_64.json",
       "provenance": "evidence",
-      "sha256": "8063ee4d3488e9907a145d76f21eaf18bfecff431724f78e4dc898aacdcdba19",
-      "size": 2498,
+      "sha256": "107156049acc9953e76c4ad57174315a849a137e52769743354998e5ba2217b1",
+      "size": 2496,
       "standard_ten_class_ok": true
     },
     {
@@ -3319,8 +3319,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "coverage.json",
       "provenance": "evidence",
-      "sha256": "87fc9d2598b9e93539505de65321af9f1ef0787020de485f49763e4c79be7ceb",
-      "size": 15413,
+      "sha256": "9c3e8c8573945452a038376669d3276b99cbfc87e6a8ebcde8350a9794b27570",
+      "size": 15414,
       "standard_ten_class_ok": true
     },
     {
@@ -3339,7 +3339,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "coverage_py.json",
       "provenance": "evidence",
-      "sha256": "2227281f25323372b34331a9b4a7f559503183bdf21aa0fd1f58af0559c25722",
+      "sha256": "67e4d2dfe72b0259ca64fcc17fdab0c9951ab7d89ebfb5e0dc3a33c621795229",
       "size": 114317,
       "standard_ten_class_ok": true
     },
@@ -3852,8 +3852,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/MANIFESTATION_SCHEMA.json",
       "provenance": "seed",
-      "sha256": "c8863f90a53589339a6e2877094d4933a939fa21e5e9ff66af877f1caf4c7d69",
-      "size": 1963,
+      "sha256": "a7d6ea56ac0856de4e4136b9688f9925a93e2b81f1e71c263f6925b6b8747af7",
+      "size": 1965,
       "standard_ten_class_ok": true
     },
     {
@@ -4212,8 +4212,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/registry.json",
       "provenance": "seed",
-      "sha256": "7bafcf92fb7686600aebb025af85b7eaa64f6085f39daad3d96a58659c3288fe",
-      "size": 6409,
+      "sha256": "4ac5665ffe56cd8ef8ab1772313b2ad052de6a1be05d7f882d3806404008793c",
+      "size": 6397,
       "standard_ten_class_ok": true
     },
     {
@@ -4700,8 +4700,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_manifestation.py",
       "provenance": "handwritten-pending",
-      "sha256": "f443891b9a588222d673dbdeca395c52dbeeb14fd61086212d1f529abcb7d2c8",
-      "size": 24537,
+      "sha256": "2e783c2fb8a42cfde1a228a41d25f411146971bd38b2afb0cd53a4c9e41b33eb",
+      "size": 24545,
       "standard_ten_class_ok": false
     },
     {
@@ -5348,8 +5348,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/manifestation.py",
       "provenance": "handwritten-pending",
-      "sha256": "3e9a2d993822b42d2bcd9ce2443e12b1ad8714d88ebe5d0650e898eb02ad6b38",
-      "size": 41069,
+      "sha256": "779ee59370425d6148532c2feee750671a2ed90b4ed6cc5231c9548d2dc4b400",
+      "size": 41074,
       "standard_ten_class_ok": false
     },
     {

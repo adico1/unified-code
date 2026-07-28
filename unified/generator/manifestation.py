@@ -90,7 +90,7 @@ def _canonical_record(record: dict) -> dict:
         "product_family": record.get("product_family"),
         "route_options": record.get("route_options", {}),
         "seed_id": record.get("seed_id"),
-        "seed_ref": record.get("seed_ref"),
+        "seed_path": record.get("seed_path"),
         "seed_sha256": record.get("seed_sha256"),
     }
 
@@ -255,7 +255,7 @@ def _validate_record(record: object, index: int) -> list[str]:
     qualified = record.get("canonical_name")
     if not isinstance(qualified, str) or not QUALIFIED_NAME_RE.fullmatch(qualified):
         errors.append(f"records[{index}].canonical_name:invalid")
-    for key in ("seed_id", "seed_ref", "product_family", "compiler_route"):
+    for key in ("seed_id", "seed_path", "product_family", "compiler_route"):
         if not isinstance(record.get(key), str) or not record.get(key):
             errors.append(f"records[{index}].{key}:invalid")
     for key in ("seed_sha256", "artifact_tree_sha256"):
@@ -296,7 +296,7 @@ def _validate_record(record: object, index: int) -> list[str]:
         "product_family",
         "route_options",
         "seed_id",
-        "seed_ref",
+        "seed_path",
         "seed_sha256",
     }
     errors.extend(
@@ -540,7 +540,7 @@ def outward_seed_read(thing):
         if isinstance(seed_root_raw, str) and seed_root_raw
         else registry_path.parent.resolve()
     )
-    seed_path = (seed_root / record["seed_ref"]).resolve()
+    seed_path = (seed_root / record["seed_path"]).resolve()
     if seed_root != seed_path and seed_root not in seed_path.parents:
         return _with_value(
             thing,

@@ -58,7 +58,7 @@
           "minLength": 1,
           "type": "string"
         },
-        "seed_ref": {
+        "seed_path": {
           "minLength": 1,
           "type": "string"
         },
@@ -70,7 +70,7 @@
         "canonical_name",
         "product_family",
         "seed_id",
-        "seed_ref",
+        "seed_path",
         "seed_sha256",
         "compiler_route",
         "compiler_version",
