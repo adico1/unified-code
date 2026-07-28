@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "uc-stage1-handoff-schema-1",
+  "title": "Unified Code Stage-1 Deterministic Handoff",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format_version",
+    "stage0",
+    "root_seed",
+    "trusted_inputs",
+    "external_dependencies",
+    "stage1_output"
+  ],
+  "properties": {
+    "format_version": { "const": "UC-STAGE1-HANDOFF-1" },
+    "stage0": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "contract_sha256", "canonicalization"],
+      "properties": {
+        "version": { "const": "UC-STAGE0-1" },
+        "contract_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "canonicalization": { "const": "UC-CANONICAL-JSON-1" }
+      }
+    },
+    "root_seed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["seed_id", "path", "sha256", "schema_path", "schema_sha256"],
+      "properties": {
+        "seed_id": { "const": "uc-canonical" },
+        "path": { "const": "seed/ROOT.seed.json" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "schema_path": { "const": "seed/SCHEMA.json" },
+        "schema_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "trusted_inputs": { "type": "array", "minItems": 5, "maxItems": 5 },
+    "external_dependencies": { "const": [] },
+    "stage1_output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tree_path", "manifest_path", "handoff_schema_sha256"],
+      "properties": {
+        "tree_path": { "const": "stage1" },
+        "manifest_path": { "const": "stage1-manifest.json" },
+        "handoff_schema_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

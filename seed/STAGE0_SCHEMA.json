@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "uc-stage0-contract-schema-1",
+  "title": "Unified Code Stage-0 Trust Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "canonicalization",
+    "runtime",
+    "limits",
+    "allowed_operations",
+    "prohibited_capabilities",
+    "trusted_inputs",
+    "external_dependencies",
+    "stage1_handoff"
+  ],
+  "properties": {
+    "contract_version": { "const": "UC-STAGE0-1" },
+    "canonicalization": { "const": "UC-CANONICAL-JSON-1" },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["implementation", "minimum_version", "allowed_modules"],
+      "properties": {
+        "implementation": { "const": "cpython-stdlib" },
+        "minimum_version": { "const": "3.11" },
+        "allowed_modules": {
+          "const": ["hashlib", "json", "pathlib", "shutil", "sys"]
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maximum_input_bytes",
+        "maximum_input_count",
+        "maximum_json_depth",
+        "maximum_path_bytes"
+      ],
+      "properties": {
+        "maximum_input_bytes": { "type": "integer", "minimum": 1 },
+        "maximum_input_count": { "type": "integer", "minimum": 5 },
+        "maximum_json_depth": { "type": "integer", "minimum": 1 },
+        "maximum_path_bytes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "allowed_operations": {
+      "const": [
+        "canonicalize-json",
+        "sha256",
+        "validate-contract",
+        "validate-root-seed",
+        "validate-path",
+        "read-trusted-input",
+        "plan-stage1-handoff",
+        "atomic-publish"
+      ]
+    },
+    "prohibited_capabilities": {
+      "const": [
+        "application-domain-behavior",
+        "dynamic-code-loading",
+        "environment-dependent-selection",
+        "fuzzy-name-resolution",
+        "network-access",
+        "process-execution",
+        "randomness",
+        "time-dependent-output",
+        "unverified-input-copy"
+      ]
+    },
+    "trusted_inputs": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "path", "hash_mode", "sha256"],
+        "properties": {
+          "role": {
+            "enum": [
+              "root-seed",
+              "root-seed-schema",
+              "stage0-contract-schema",
+              "stage1-handoff-schema",
+              "stage0-generation-manifest-schema",
+              "stage0-executable"
+            ]
+          },
+          "path": { "type": "string", "minLength": 1 },
+          "hash_mode": { "enum": ["canonical-json", "raw-bytes"] },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    },
+    "external_dependencies": { "const": [] },
+    "stage1_handoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format_version",
+        "handoff_file",
+        "generation_manifest_file",
+        "required_fields"
+      ],
+      "properties": {
+        "format_version": { "const": "UC-STAGE1-HANDOFF-1" },
+        "handoff_file": { "const": "stage1-handoff.json" },
+        "generation_manifest_file": { "const": "generation-manifest.json" },
+        "required_fields": {
+          "const": [
+            "format_version",
+            "stage0",
+            "root_seed",
+            "trusted_inputs",
+            "external_dependencies",
+            "stage1_output"
+          ]
+        }
+      }
+    }
+  }
+}

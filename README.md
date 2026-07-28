@@ -143,6 +143,11 @@ Full repository self-hosting is tracked separately as “Milestone 2 — Root-se
 fixed-point bootstrap” in `ROADMAP.md`; it does not block this application
 contract.
 
+The bounded pre-bootstrap trust boundary and deterministic Stage-1 handoff are
+specified and executable in [STAGE0.md](STAGE0.md). Stage 0 aligns the current
+substrate to the bootstrap without implementing Stage 1 or widening the
+post-bootstrap language surface.
+
 ### Thing v2 — compile-time specialization
 
 Thing v2 specializes seven seedless (`בלי_מה`) boilerplate responsibilities at
