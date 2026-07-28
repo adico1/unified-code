@@ -58,6 +58,10 @@ def host_main(argv=None):
         from ..convergence import run_convergence
 
         result = run_convergence(inward(payload))
+    elif command == "verify-all":
+        from ..verify_flow import verify_all
+
+        result = verify_all(inward(payload))
     elif command == "gauntlet":
         from .gauntlet import run_gauntlet
 
@@ -439,6 +443,13 @@ def _parse_argv(argv: list[str]) -> dict:
             "command": "converge",
             "trace_path": argv[1],
         }
+
+    if command == "verify-all":
+        return (
+            {"command": "verify-all"}
+            if len(argv) == 1
+            else {"command": "verify-all", "error": "usage-verify-all"}
+        )
 
     return {"command": command, "error": "unknown-command"}
 

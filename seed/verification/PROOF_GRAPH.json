@@ -1,0 +1,101 @@
+{
+  "format_version": "UC-VERIFY-FLOW-1",
+  "budget_seconds": 5.0,
+  "scheduler": "parallel-release",
+  "release_policy": "dependency",
+  "cache_policy": "content-addressed-verified",
+  "failure_policy": "propagate",
+  "timeout_policy": "fail",
+  "terminal_event": "verification.completed",
+  "failure_events": [
+    "proof.failed",
+    "timeout.reached",
+    "identity.stale",
+    "worker.missing",
+    "evidence.incomplete",
+    "budget.exceeded"
+  ],
+  "routes": {
+    "verification.requested": "authority.discover",
+    "authority.discovered": "identity.resolve",
+    "identities.resolved": "proof_graph.form",
+    "proof_graph.formed": "prerequisite.materialize",
+    "prerequisites.materialized": "proof.release",
+    "proof_nodes.released": "command",
+    "proof_nodes.executed": "evidence.collect",
+    "evidence.collected": "identity.compare",
+    "identities.compared": "budget.measure",
+    "budget.measured": "verification.complete",
+    "verification.completed": "terminal"
+  },
+  "events": [
+    "verification.requested",
+    "authority.discovered",
+    "identities.resolved",
+    "proof_graph.formed",
+    "prerequisites.materialized",
+    "proof_nodes.released",
+    "proof_nodes.executed",
+    "evidence.collected",
+    "identities.compared",
+    "budget.measured",
+    "verification.completed"
+  ],
+  "bootstrap_nodes": [
+    {
+      "id": "repository-tests",
+      "handler": "command",
+      "requires": [],
+      "argv": ["{python}", "-m", "pytest", "-q"]
+    },
+    {
+      "id": "l13-gauntlet",
+      "handler": "command",
+      "requires": [],
+      "argv": ["bash", "scripts/run_l13.sh"]
+    },
+    {
+      "id": "standard-audit",
+      "handler": "command",
+      "requires": [],
+      "argv": ["{python}", "scripts/audit_standard_ten.py", "audit"]
+    },
+    {
+      "id": "clean-room",
+      "handler": "command",
+      "requires": [],
+      "argv": ["bash", "scripts/clean_room_ten.sh"]
+    },
+    {
+      "id": "uem-gauntlet",
+      "handler": "command",
+      "requires": [],
+      "argv": ["uc", "gauntlet", "examples/declarations/text_stats_v2.json"]
+    }
+  ],
+  "proof_nodes": [
+    {"id": "repository-tests", "requires": ["repository-tests"]},
+    {"id": "stage0-contract", "requires": ["repository-tests"]},
+    {"id": "stage1-generation", "requires": ["repository-tests"]},
+    {"id": "stage1-fixed-point", "requires": ["repository-tests"]},
+    {"id": "standard-ten", "requires": ["repository-tests", "standard-audit", "clean-room"]},
+    {"id": "l1-l13", "requires": ["repository-tests", "l13-gauntlet", "uem-gauntlet"]},
+    {"id": "python-c-equivalence", "requires": ["repository-tests", "l13-gauntlet"]},
+    {"id": "python-c-coverage", "requires": ["repository-tests", "l13-gauntlet"]},
+    {"id": "mutations", "requires": ["repository-tests"]},
+    {"id": "deterministic-fuzzing", "requires": ["repository-tests"]},
+    {"id": "sanitizers", "requires": ["repository-tests"]},
+    {"id": "native-goldens", "requires": ["repository-tests"]},
+    {"id": "application-assembly", "requires": ["repository-tests"]},
+    {"id": "manifestation-direct-identity", "requires": ["repository-tests"]},
+    {"id": "cli-gui-equality", "requires": ["repository-tests"]},
+    {"id": "real-browser", "requires": ["repository-tests"]},
+    {"id": "atomic-preservation", "requires": ["repository-tests"]},
+    {"id": "isolated-runtime", "requires": ["repository-tests"]},
+    {"id": "provenance", "requires": ["repository-tests", "standard-audit"]},
+    {"id": "open-gap-truthfulness", "requires": ["repository-tests", "standard-audit"]},
+    {"id": "python-3.11", "requires": ["repository-tests"]},
+    {"id": "python-3.12", "requires": ["repository-tests"]},
+    {"id": "python-3.13", "requires": ["repository-tests"]}
+  ]
+}

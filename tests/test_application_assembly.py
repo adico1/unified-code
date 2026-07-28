@@ -120,6 +120,7 @@ def test_five_applications_generate_install_execute_and_pass_ten_depths(tmp_path
         assert report["verification"]["javascript_headless_differential"]["ok"]
         graphical = report["verification"]["graphical_browser"]
         assert graphical["ok"], (name, graphical)
+        assert graphical["browser_boot_count"] == 1
         assert graphical["checks"]["meaningful_title"]
         assert graphical["checks"]["required_controls"]
         assert graphical["checks"]["accessible_names"]

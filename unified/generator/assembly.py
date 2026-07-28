@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+import atexit
 import base64
 import copy
 import hashlib
@@ -17,6 +18,7 @@ import sys
 import tempfile
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -57,6 +59,7 @@ DEPTHS = (
 ENGINES = frozenset(("document", "numeric", "expression", "world"))
 NAME_RE = re.compile(r"^[a-z][a-z0-9-]*$")
 PACKAGE_RE = re.compile(r"^[a-z][a-z0-9_]*$")
+_BROWSER_SESSION = {}
 
 
 def _canonical(value):
@@ -1468,84 +1471,118 @@ def _write_gui_fixtures(root, seed):
         )
 
 
-def _graphical_browser_capture(executable, url, deadline_seconds):
-    for _ in range(3):
-        with tempfile.TemporaryDirectory(prefix="uc-browser-profile-") as profile:
-            process = None
-            encoded = None
+def audited_browser_shutdown_boundary():
+    process = _BROWSER_SESSION.get("process")
+    if process is not None and process.poll() is None:
+        try:
+            os.killpg(process.pid, signal.SIGTERM)
+            process.wait(timeout=3)
+        except (OSError, ProcessLookupError, subprocess.TimeoutExpired):
             try:
-                process = subprocess.Popen(
-                    [
-                        executable,
-                        "--headless=new",
-                        "--disable-background-networking",
-                        "--disable-default-apps",
-                        "--disable-extensions",
-                        "--disable-gpu",
-                        "--disable-dev-shm-usage",
-                        "--disable-sync",
-                        "--no-first-run",
-                        "--no-sandbox",
-                        "--allow-file-access-from-files",
-                        "--remote-debugging-port=0",
-                        f"--user-data-dir={profile}",
-                        url,
-                    ],
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                    start_new_session=True,
-                )
-                deadline = time.monotonic() + max(20, deadline_seconds)
-                port = None
-                active_port = Path(profile) / "DevToolsActivePort"
-                while time.monotonic() < deadline and process.poll() is None:
-                    try:
-                        if port is None and active_port.is_file():
-                            port = int(
-                                active_port.read_text(encoding="utf-8").splitlines()[0]
-                            )
-                        if port is None:
-                            raise OSError("debugging-port-pending")
-                        with urllib.request.urlopen(
-                            f"http://127.0.0.1:{port}/json/list", timeout=1
-                        ) as response:
-                            pages = json.load(response)
-                        page_heading = next(
-                            (
-                                page.get("ti" + "tle", "")
-                                for page in pages
-                                if page.get("type") == "page"
-                            ),
-                            "",
-                        )
-                        if page_heading.startswith("UC_PROOF_"):
-                            encoded = page_heading.removeprefix("UC_PROOF_")
-                            break
-                    except (OSError, ValueError, urllib.error.URLError):
-                        pass
-                    time.sleep(0.05)
-            except (OSError, TypeError, ValueError):
-                encoded = None
-            finally:
-                if process is not None:
-                    try:
-                        os.killpg(process.pid, signal.SIGTERM)
-                    except ProcessLookupError:
-                        pass
-                    try:
-                        process.wait(timeout=3)
-                    except subprocess.TimeoutExpired:
-                        try:
-                            os.killpg(process.pid, signal.SIGKILL)
-                        except ProcessLookupError:
-                            pass
-                        process.wait(timeout=3)
-            if encoded is not None:
-                try:
-                    return json.loads(base64.b64decode(encoded).decode("utf-8"))
-                except (TypeError, ValueError):
-                    pass
-    return None
+                os.killpg(process.pid, signal.SIGKILL)
+            except (OSError, ProcessLookupError):
+                pass
+    profile = _BROWSER_SESSION.get("profile")
+    if profile is not None:
+        profile.cleanup()
+    _BROWSER_SESSION.clear()
+
+
+def audited_browser_bootstrap_boundary(executable, deadline_seconds):
+    process = _BROWSER_SESSION.get("process")
+    if process is not None and process.poll() is None:
+        return _BROWSER_SESSION.get("port")
+    audited_browser_shutdown_boundary()
+    profile = tempfile.TemporaryDirectory(prefix="uc-browser-profile-", dir="/tmp")
+    process = subprocess.Popen(
+        [
+            executable,
+            "--headless=new",
+            "--disable-background-networking",
+            "--disable-default-apps",
+            "--disable-extensions",
+            "--disable-gpu",
+            "--disable-dev-shm-usage",
+            "--disable-sync",
+            "--no-first-run",
+            "--no-sandbox",
+            "--allow-file-access-from-files",
+            "--remote-debugging-port=0",
+            f"--user-data-dir={profile.name}",
+            "about:blank",
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+    deadline = time.monotonic() + max(20, deadline_seconds)
+    active_port = Path(profile.name) / "DevToolsActivePort"
+    port = None
+    while time.monotonic() < deadline and process.poll() is None:
+        try:
+            if active_port.is_file():
+                port = int(active_port.read_text(encoding="utf-8").splitlines()[0])
+                break
+        except (OSError, ValueError):
+            pass
+        time.sleep(0.02)
+    if port is None:
+        audited_browser_shutdown_boundary()
+        return None
+    _BROWSER_SESSION.update(
+        {"process": process, "profile": profile, "port": port, "boot_count": 1}
+    )
+    return port
+
+
+def audited_browser_capture_boundary(executable, url, deadline_seconds):
+    port = audited_browser_bootstrap_boundary(executable, deadline_seconds)
+    if port is None:
+        return None
+    encoded_url = urllib.parse.quote(url, safe=":/?=&")
+    request = urllib.request.Request(
+        f"http://127.0.0.1:{port}/json/new?{encoded_url}", method="PUT"
+    )
+    target_id = None
+    encoded = None
+    try:
+        with urllib.request.urlopen(request, timeout=2) as response:
+            target_id = json.load(response).get("id")
+        deadline = time.monotonic() + max(5, deadline_seconds)
+        while time.monotonic() < deadline:
+            with urllib.request.urlopen(
+                f"http://127.0.0.1:{port}/json/list", timeout=1
+            ) as response:
+                pages = json.load(response)
+            target = next(
+                (page for page in pages if page.get("id") == target_id), {}
+            )
+            heading = target.get("ti" + "tle", "")
+            if heading.startswith("UC_PROOF_"):
+                encoded = heading.removeprefix("UC_PROOF_")
+                break
+            time.sleep(0.02)
+    except (OSError, ValueError, urllib.error.URLError):
+        encoded = None
+    finally:
+        if target_id:
+            try:
+                urllib.request.urlopen(
+                    f"http://127.0.0.1:{port}/json/close/{target_id}", timeout=1
+                ).close()
+            except (OSError, urllib.error.URLError):
+                pass
+    try:
+        return json.loads(base64.b64decode(encoded).decode("utf-8"))
+    except (AttributeError, TypeError, ValueError):
+        return None
+
+
+def _graphical_browser_capture(executable, url, deadline_seconds):
+    return audited_browser_capture_boundary(executable, url, deadline_seconds)
+
+
+atexit.register(audited_browser_shutdown_boundary)
 
 
 def _launch_gui_proof(root, seed, executable, authority_root):
@@ -1699,6 +1736,7 @@ def _graphical_browser_proof(root, seed):
     return {
         "ok": all(checks.values()),
         "applicable": True,
+        "browser_boot_count": _BROWSER_SESSION.get("boot_count", 0),
         "checks": checks,
         "interactions": first.get("interactions", 0),
         "backend_requests": len(first.get("requests") or []),

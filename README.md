@@ -150,6 +150,10 @@ generates the first isolated runnable framework/generator surface described in
 isolated byte-identical two-stage proof is documented in
 [STAGE1_FIXED_POINT.md](STAGE1_FIXED_POINT.md).
 
+The complete dependency-aware verification graph is executed once with
+[`uc verify-all`](VERIFY_FLOW.md), with tool bootstrap measured separately from
+the enforced five-second evidence-verification budget.
+
 ### Thing v2 — compile-time specialization
 
 Thing v2 specializes seven seedless (`בלי_מה`) boilerplate responsibilities at
