@@ -248,7 +248,7 @@ A failure contains no evidence for later phases.
 ```bash
 uc manifest uc://applications/trajectory-meter@1 \
   --registry seed/registry.json \
-  --snapshot 4f00f74c969913d89d977e774c2011de803fa37307741e4b14bd542352080f00 \
+  --snapshot e4c69712fb7234d72cee19ff74a03ab90e8686b1331c0460aa432235f0c6c371 \
   --output /tmp/uc-manifested-trajectory
 ```
 
@@ -256,7 +256,7 @@ The result exposes:
 
 ```json
 {
-  "registry_snapshot_sha256": "4f00f74c969913d89d977e774c2011de803fa37307741e4b14bd542352080f00",
+  "registry_snapshot_sha256": "e4c69712fb7234d72cee19ff74a03ab90e8686b1331c0460aa432235f0c6c371",
   "canonical_name": "uc://applications/trajectory-meter@1",
   "seed_id": "thing-v2:trajectory-meter@1",
   "seed_sha256": "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49",
