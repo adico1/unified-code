@@ -46,6 +46,10 @@ def host_main(argv=None):
         from .thing_v2 import run_compile
 
         result = run_compile(inward(payload))
+    elif command == "assemble":
+        from .assembly import run_assemble
+
+        result = run_assemble(inward(payload))
     elif command == "gauntlet":
         from .gauntlet import run_gauntlet
 
@@ -337,6 +341,41 @@ def _parse_argv(argv: list[str]) -> dict:
             "seed_path": seed_path,
             "output": output,
             "verify": True,
+        }
+
+    if command == "assemble":
+        if len(argv) < 2:
+            return {"command": "assemble", "error": "usage-assemble"}
+        suite_path = argv[1]
+        output = None
+        gates = {"build": False, "install": False, "verify": False}
+        depths = None
+        i = 2
+        while i < len(argv):
+            if argv[i] == "--output" and i + 1 < len(argv):
+                output = argv[i + 1]
+                i += 2
+                continue
+            if argv[i] in ("--build", "--install", "--verify"):
+                gates[argv[i][2:]] = True
+                i += 1
+                continue
+            if argv[i] == "--gauntlet-depths" and i + 1 < len(argv):
+                try:
+                    depths = int(argv[i + 1])
+                except ValueError:
+                    return {"command": "assemble", "error": "usage-assemble-depths"}
+                i += 2
+                continue
+            return {"command": "assemble", "error": f"unknown-flag:{argv[i]}"}
+        if not output or not all(gates.values()) or depths != 10:
+            return {"command": "assemble", "error": "usage-assemble-gates"}
+        return {
+            "command": "assemble",
+            "suite_path": suite_path,
+            "output": output,
+            **gates,
+            "gauntlet_depths": depths,
         }
 
     return {"command": command, "error": "unknown-command"}

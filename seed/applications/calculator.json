@@ -1,0 +1,72 @@
+{
+  "application_version": "UC-APPLICATION-3",
+  "application": {"name": "calculator", "package": "calculator_app", "description": "Generated expression interface consuming the generated numeric library."},
+  "interface": {"cli": true, "library": false, "browser": false},
+  "dependency": {"application": "math-library", "interface": "library"},
+  "program": {
+    "engine": "expression",
+    "operations": {"evaluate": {"primitive": "infix_evaluate"}},
+    "operators": {"+": "add", "-": "subtract", "*": "multiply", "/": "divide", "%": "remainder", "^": "power", "unary": "negate"},
+    "precedence": {"+": 1, "-": 1, "*": 2, "/": 2, "%": 2, "^": 3, "unary": 4}
+  },
+  "boundaries": {"dependency": "generated-library", "acceptance_deadline_seconds": 10},
+  "persistence": {"mode": "none"},
+  "formats": {"outer_input": "json-object", "outer_output": "json-object"},
+  "acceptance": [
+    {
+      "id": "expressions",
+      "fixtures": [],
+      "steps": [
+        {
+          "request": {"expression": "2+3*4"},
+          "expect": {
+            "state": "valid", "output": {"result": 14}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"expression": "(2+3)*4"},
+          "expect": {
+            "state": "valid", "output": {"result": 20}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"expression": "-3+1"},
+          "expect": {
+            "state": "valid", "output": {"result": -2}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"expression": "8/2"},
+          "expect": {
+            "state": "valid", "output": {"result": 4}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"expression": "9/0"},
+          "expect": {
+            "state": "invalid", "output": null, "error": "zero-divisor",
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing:error", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"expression": "2+a"},
+          "expect": {
+            "state": "invalid", "output": null, "error": "invalid-token",
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing:error", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"expression": "999999^2"},
+          "expect": {
+            "state": "invalid", "output": null, "error": "range-overflow",
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing:error", "boundary:outward"]
+          }
+        }
+      ]
+    }
+  ]
+}

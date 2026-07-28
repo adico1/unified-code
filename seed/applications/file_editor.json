@@ -1,0 +1,71 @@
+{
+  "application_version": "UC-APPLICATION-3",
+  "application": {"name": "file-editor", "package": "file_editor", "description": "Preview and atomically persist declared text mutations."},
+  "interface": {"cli": true, "library": false, "browser": false},
+  "program": {
+    "engine": "document",
+    "operations": {
+      "read": {"primitive": "bytes_load"},
+      "replace": {"primitive": "text_substitute"},
+      "append": {"primitive": "text_extend"},
+      "insert": {"primitive": "text_splice"},
+      "delete": {"primitive": "text_remove"}
+    },
+    "encoding": "utf-8"
+  },
+  "boundaries": {"filesystem": "OUTWARD", "authority": "runtime-root", "save": "atomic-replace", "acceptance_deadline_seconds": 10},
+  "persistence": {"mode": "declared-resource"},
+  "formats": {"outer_input": "json-object", "outer_output": "json-object"},
+  "acceptance": [
+    {
+      "id": "edit-restart",
+      "fixtures": [{"path": "draft.txt", "text": "alpha beta\n"}],
+      "steps": [
+        {
+          "request": {"action": "append", "path": "draft.txt", "value": "preview", "save": false},
+          "expect": {
+            "state": "valid", "output": {"content": "alpha beta\npreview", "saved": false}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"action": "replace", "path": "draft.txt", "match": "alpha", "value": "omega", "save": true},
+          "expect": {
+            "state": "valid", "output": {"content": "omega beta\n", "saved": true}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"action": "read", "path": "draft.txt"},
+          "expect": {
+            "state": "valid",
+            "output": {"content": "omega beta\n", "empty": false, "encoding": "utf-8", "sha256": "e66bda030944724b0d2b5c85c64a16d821a4c6046618d58328bbdb6a46782bd4", "size": 11},
+            "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"action": "insert", "path": "draft.txt", "index": 5, "value": "!", "save": false},
+          "expect": {
+            "state": "valid", "output": {"content": "omega! beta\n", "saved": false}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"action": "delete", "path": "draft.txt", "index": 5, "count": 1, "save": false},
+          "expect": {
+            "state": "valid", "output": {"content": "omegabeta\n", "saved": false}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"action": "delete", "path": "draft.txt", "index": 99, "count": 1, "save": true},
+          "expect": {
+            "state": "invalid", "output": null, "error": "rejected-mutation",
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing:error", "boundary:outward"]
+          }
+        }
+      ]
+    }
+  ]
+}
