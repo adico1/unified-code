@@ -19,11 +19,30 @@ def audited_assertion_boundary():
     assert result["state"] == "valid", value
     assert value["cache"] == "warm", value
     assert value["verification_seconds"] <= 5.0, value
+    assert value["bootstrap_repository_actions"] == 0, value
     assert value["proofs_passed"] == value["proof_nodes"], value
+    assert value["proof_nodes"] == 23, value
     assert value["explicit_conditional_nodes"] == 0, value
     assert value["explicit_loop_nodes"] == 0, value
     return value
 
 
 evidence = audited_assertion_boundary()
-print("verify-all warm PASS", evidence["verification_seconds"])
+print(
+    json.dumps(
+        {
+            key: evidence[key]
+            for key in (
+                "bootload_seconds",
+                "verification_seconds",
+                "total_seconds",
+                "critical_path_seconds",
+                "critical_path_nodes",
+                "parallel_workers",
+                "structure_hash",
+                "evidence_hash",
+            )
+        },
+        sort_keys=True,
+    )
+)
