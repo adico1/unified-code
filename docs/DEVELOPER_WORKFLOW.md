@@ -161,11 +161,11 @@ python -m unified.generator.benchmark
 | Functions and plain data only | L8 |
 | Construction ≤ 1 second after declaration | L9 |
 
-<!-- BEGIN UC GENERATED ISSUE7:workflow:859a010eb7a10b251cc46c197b0827a2b3f3018c582113d7cff7dead9928e744 -->
+<!-- BEGIN UC GENERATED ISSUE7:workflow:94f7f963f948126345e372dc73aac203608b6731b7b8af4cfb9fa2cd70ec32b3 -->
 # Generated verification workflow
 
-Authority: `944fd457fc7e42dd48c35388e306a7c43a0c1b38311444defa2e247a299b023c`
-Semantic structure: `30ad98acd742bc4c095209bad24a88d4dc631c735aab49784db38c97da1630f5`
+Authority: `c064b67c6b0074835ea215e2a89fd9b014ab31d615ef8a7e3e3a6f9176a31032`
+Semantic structure: `c21b3e04a89002ecf7bcfd935981e7886d376374ec529a65562a9e2eb627b0a6`
 Canonical facts: `59`
 Generated test partitions: `80`
 Generated behavioral mutations: `20`

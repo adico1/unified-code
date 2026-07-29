@@ -40,7 +40,7 @@ SEED_ROOT = ROOT / "seed"
 NATIVE_SEED = SEED_ROOT / "thing_v2" / "trajectory_meter.json"
 FOREIGN_SEED = SEED_ROOT / "thing_v2" / "orchard_yield.json"
 QUALIFIED_NAME = "uc://applications/trajectory-meter@1"
-SNAPSHOT = "3a731f57cf1d8dfa00da3e7c5970c32893f8bfdf3061fd0a69d99f74c35ce54c"
+SNAPSHOT = "48390d2935222a6bf321553d533276b56a9b035bbd9614a4ce8ad3571a781492"
 ARTIFACT_SHA = "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841"
 SEED_SHA = "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
 SUCCESS_EVIDENCE = (
@@ -174,7 +174,7 @@ def test_registry_covers_every_current_product_and_only_generic_routes():
         "uc://applications/file-reader@1",
         "uc://applications/file-editor@1",
         "uc://applications/math-library@1",
-        "uc://applications/calculator@1",
+        "uc://applications/bounded-integer-expression-calculator@1",
         "uc://applications/pong-game@1",
         "uc://applications/trajectory-meter@1",
         "uc://applications/orchard-yield@1",
@@ -333,6 +333,45 @@ def test_unknown_qualified_name_is_valid_domain_outcome(tmp_path):
             "boundary:registry:read",
             "resolution:registry-verified",
             "resolution:unknown",
+        ),
+    )
+
+
+@pytest.mark.parametrize(
+    ("name", "resolution", "markers"),
+    (
+        (
+            "uc://applications/calculator@1",
+            "unknown",
+            ("resolution:unknown",),
+        ),
+        (
+            "calculator",
+            "unresolved",
+            (
+                "resolution:version-required",
+                "resolution:unresolved",
+            ),
+        ),
+    ),
+)
+def test_unqualified_calculator_identity_is_not_silently_selected(
+    tmp_path, name, resolution, markers
+):
+    result = resolve_name(
+        inward(_request(tmp_path / "unused", name=name))
+    )
+    _assert_outcome(
+        result,
+        resolution=resolution,
+        state="valid",
+        phase="addressed",
+        evidence=(
+            "boundary:inward",
+            "manifestation:addressed",
+            "boundary:registry:read",
+            "resolution:registry-verified",
+            *markers,
         ),
     )
 

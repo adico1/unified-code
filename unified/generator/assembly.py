@@ -61,6 +61,21 @@ DEPTHS = (
 ENGINES = frozenset(("document", "numeric", "expression", "world"))
 NAME_RE = re.compile(r"^[a-z][a-z0-9-]*$")
 PACKAGE_RE = re.compile(r"^[a-z][a-z0-9_]*$")
+CANONICAL_NAME_RE = re.compile(
+    r"^uc://applications/[a-z][a-z0-9-]*@[1-9][0-9]*$"
+)
+APPLICATION_IDENTITY_FIELDS = frozenset(
+    (
+        "canonical_name",
+        "family",
+        "variation",
+        "notation",
+        "numeric_type",
+        "interface_identity",
+        "capabilities",
+        "dependency_contract_ref",
+    )
+)
 _BROWSER_SESSION = {}
 _BROWSER_LOCK = threading.Lock()
 _BROWSER_CAPTURE_LOCK = threading.Lock()
@@ -120,6 +135,30 @@ def validate_application(seed):
         errors.append("application.name")
     if not PACKAGE_RE.fullmatch(str(application.get("package", ""))):
         errors.append("application.package")
+    errors.extend(
+        f"application.missing:{key}"
+        for key in sorted(APPLICATION_IDENTITY_FIELDS - set(application))
+    )
+    if not CANONICAL_NAME_RE.fullmatch(str(application.get("canonical_name", ""))):
+        errors.append("application.canonical_name")
+    for field in (
+        "family",
+        "variation",
+        "notation",
+        "numeric_type",
+        "interface_identity",
+        "dependency_contract_ref",
+    ):
+        if not isinstance(application.get(field), str) or not application.get(field):
+            errors.append(f"application.{field}")
+    capabilities = application.get("capabilities")
+    if (
+        not isinstance(capabilities, list)
+        or not capabilities
+        or any(not isinstance(item, str) or not item for item in capabilities)
+        or len(capabilities) != len(set(capabilities))
+    ):
+        errors.append("application.capabilities")
     program = seed["program"]
     if not isinstance(program, dict) or program.get("engine") not in ENGINES:
         errors.append("program.engine")
@@ -227,9 +266,44 @@ def validate_application(seed):
                 if f'"{event}"' not in acceptance_text
             )
     dependency = seed.get("dependency")
+    if dependency and (
+        not isinstance(application.get("numeric_contract"), str)
+        or not application["numeric_contract"].startswith("dependency:")
+        or not application["numeric_type"].startswith("dependency:")
+        or application.get("dependency_contract_ref")
+        != "application:" + str(dependency.get("application", ""))
+    ):
+        errors.append("application.dependency-contract")
     if program.get("engine") == "expression":
         if not isinstance(dependency, dict) or set(("application", "interface")) - set(dependency):
             errors.append("dependency")
+        inherited_fields = {
+            "range",
+            "numeric_grammar",
+            "result_rules",
+            "representation",
+            "exported_contract",
+        }
+        errors.extend(
+            f"program.duplicated-dependency-contract:{field}"
+            for field in sorted(inherited_fields & set(program))
+        )
+        operator_actions = {
+            action.get("value"): name
+            for name, action in (seed["ui"].get("actions") or {}).items()
+            if isinstance(action, dict) and action.get("mode") == "append"
+        }
+        button_actions = {
+            component.get("action")
+            for section in seed["ui"]["layout"]["sections"]
+            for component in section["components"]
+            if component.get("type") == "button"
+        }
+        errors.extend(
+            f"ui.expression.missing-operator:{symbol}"
+            for symbol in sorted(set(program.get("operators") or {}) - {"unary"})
+            if operator_actions.get(symbol) not in button_actions
+        )
     if program.get("engine") == "numeric":
         for field in (
             "range",
@@ -306,6 +380,12 @@ def validate_suite(suite, root):
         seeds.append((relative.as_posix(), seed))
     if len(names) != len(set(names)):
         errors.append("applications:duplicate-name")
+    canonical_names = [
+        seed["application"].get("canonical_name")
+        for _, seed in seeds
+    ]
+    if len(canonical_names) != len(set(canonical_names)):
+        errors.append("applications:duplicate-canonical-name")
     available = set(names)
     for path, seed in seeds:
         dependency = seed.get("dependency")
@@ -1048,7 +1128,20 @@ def _css_source():
     return "html,body{margin:0;background:#05080f;color:#fff}canvas{display:block;margin:auto;background:#101b2d}\n"
 
 
-def derive_specification(seed, dependency_identity=None):
+def _dependency_contract(seed):
+    program = seed["program"]
+    return {
+        "numeric_type": (program.get("numeric_grammar") or {}).get("type"),
+        "range": program.get("range"),
+        "result_rules": program.get("result_rules"),
+        "operations": sorted(program.get("operations") or {}),
+        "exported_contract": program.get("exported_contract"),
+    }
+
+
+def derive_specification(
+    seed, dependency_identity=None, dependency_contract=None
+):
     specification = {
         "application_version": seed["application_version"],
         "application": seed["application"],
@@ -1062,6 +1155,7 @@ def derive_specification(seed, dependency_identity=None):
     }
     if seed.get("dependency"):
         specification["resolved_dependency_identity"] = dependency_identity
+        specification["resolved_dependency_contract"] = dependency_contract
     return specification
 
 
@@ -1105,8 +1199,15 @@ def derive_plan(seed, specification, dependency_package=None):
     }
 
 
-def render_application(seed, dependency_identity=None, dependency_package=None):
-    specification = derive_specification(seed, dependency_identity)
+def render_application(
+    seed,
+    dependency_identity=None,
+    dependency_package=None,
+    dependency_contract=None,
+):
+    specification = derive_specification(
+        seed, dependency_identity, dependency_contract
+    )
     export_identity = _sha(_canonical(specification))
     plan = derive_plan(seed, specification, dependency_package)
     package = seed["application"]["package"]
@@ -1184,7 +1285,10 @@ def render_application(seed, dependency_identity=None, dependency_package=None):
         files[f"{package}/library.py"] = _library_source(export_identity)
     files["browser/index.html"] = _gui_html_source()
     files["browser/browser.js"] = _gui_browser_source(
-        specification, export_identity, dependency_identity
+        specification,
+        export_identity,
+        dependency_identity,
+        dependency_contract,
     )
     files["browser/style.css"] = _gui_css_source(seed["ui"])
     return files
@@ -1245,7 +1349,7 @@ def _runtime_absence(root):
     return {"ok": not hits, "hits": hits}
 
 
-def _manifest(seed, files, dependency_identity):
+def _manifest(seed, files, dependency_identity, dependency_contract=None):
     hashes = _file_hashes(files)
     code_paths = [
         path
@@ -1260,7 +1364,13 @@ def _manifest(seed, files, dependency_identity):
         "generated_file_hashes": hashes,
         "tree_sha256": _tree_hash(hashes),
         "dependency_identity": dependency_identity,
-        "export_identity": _sha(_canonical(derive_specification(seed, dependency_identity))),
+        "export_identity": _sha(
+            _canonical(
+                derive_specification(
+                    seed, dependency_identity, dependency_contract
+                )
+            )
+        ),
         "manual_application_code_lines": 0,
         "manual_application_test_lines": 0,
         "generated_application_code_lines": sum(
@@ -1914,6 +2024,7 @@ def _anti_hardcoding(seeds):
     terms = sorted(set().union(*(_application_vocabulary(seed) for seed in seeds)))
     registered_generic = {
         "advance",
+        "append",
         "dependency",
         "document",
         "error",
@@ -2115,6 +2226,163 @@ def _atomic_preservation_probe(parent):
     return {"ok": all(checks.values()), "checks": checks}
 
 
+def _canonical_seed_sha256(seed):
+    return _sha(
+        json.dumps(
+            seed,
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+    )
+
+
+def _canonical_registry_payload(registry):
+    normalized = [
+        {
+            "artifact_tree_sha256": record.get(
+                "artifact_tree_sha256"
+            ),
+            "canonical_name": record.get("canonical_name"),
+            "compiler_route": record.get("compiler_route"),
+            "compiler_version": record.get("compiler_version"),
+            "product_family": record.get("product_family"),
+            "route_options": record.get("route_options", {}),
+            "seed_id": record.get("seed_id"),
+            "seed_path": record.get("seed_path"),
+            "seed_sha256": record.get("seed_sha256"),
+        }
+        for record in registry["records"]
+    ]
+    records = sorted(
+        normalized,
+        key=lambda record: (record["canonical_name"], record["seed_id"]),
+    )
+    return {"records": records, "registry_version": registry["registry_version"]}
+
+
+def _registry_snapshot_sha256(registry):
+    return _sha(
+        json.dumps(
+            _canonical_registry_payload(registry),
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+    )
+
+
+def derive_application_registry(suite, seeds, manifests, existing_registry):
+    application_records = [
+        {
+            "artifact_tree_sha256": manifests[seed["application"]["name"]][
+                "tree_sha256"
+            ],
+            "canonical_name": seed["application"]["canonical_name"],
+            "compiler_route": "application-v3",
+            "compiler_version": APPLICATION_VERSION,
+            "product_family": seed["application"]["family"],
+            "route_options": {
+                "product_key": seed["application"]["name"],
+                "suite_ref": "application_suite.json",
+            },
+            "seed_id": "application-v3:"
+            + seed["application"]["canonical_name"].rsplit("/", 1)[-1],
+            "seed_path": seed_path.relative_to(seed_path.parents[1]).as_posix(),
+            "seed_sha256": _canonical_seed_sha256(seed),
+        }
+        for seed_path, seed in seeds
+    ]
+    retained = [
+        record
+        for record in existing_registry["records"]
+        if record["compiler_route"] != "application-v3"
+    ]
+    registry = {
+        "records": sorted(
+            (*retained, *application_records),
+            key=lambda record: (record["canonical_name"], record["seed_id"]),
+        ),
+        "registry_version": 1,
+    }
+    registry["registry_snapshot_sha256"] = _registry_snapshot_sha256(registry)
+    return registry
+
+
+def _registry_provenance(registry, suite, seeds):
+    projection = {
+        "authority": "application-v3-seeds",
+        "assembly_version": ASSEMBLY_VERSION,
+        "generated": True,
+        "registry_snapshot_sha256": registry["registry_snapshot_sha256"],
+        "source_seed_sha256": {
+            seed_path.relative_to(seed_path.parents[1]).as_posix():
+            _canonical_seed_sha256(seed)
+            for seed_path, seed in seeds
+        },
+        "suite_seed_sha256": _canonical_seed_sha256(suite),
+    }
+    registry_bytes = (
+        json.dumps(registry, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    ).encode("utf-8")
+    return {
+        **projection,
+        "registry_file_sha256": _sha(registry_bytes),
+    }
+
+
+def audited_registry_authority_boundary(source_root):
+    registry_path = source_root / "seed" / "registry.json"
+    provenance_path = source_root / "seed" / "registry.provenance.json"
+    registry, error = _read_json(registry_path)
+    if error:
+        return None, f"registry:{error}"
+    provenance, provenance_error = _read_json(provenance_path)
+    if provenance_error and provenance_error != "read:FileNotFoundError":
+        return None, f"registry-provenance:{provenance_error}"
+    if provenance is not None:
+        actual = _sha(registry_path.read_bytes())
+        if actual != provenance.get("registry_file_sha256"):
+            return None, "registry-tamper"
+    canonical_names = [
+        record.get("canonical_name")
+        for record in registry.get("records", ())
+        if isinstance(record, dict)
+    ]
+    if len(canonical_names) != len(set(canonical_names)):
+        return None, "registry-identity-conflict"
+    return registry, None
+
+
+def audited_registry_projection_boundary(
+    source_root, staging, suite, seeds, manifests, existing_registry
+):
+    registry = derive_application_registry(
+        suite, seeds, manifests, existing_registry
+    )
+    provenance = _registry_provenance(registry, suite, seeds)
+    registry_text = (
+        json.dumps(registry, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    )
+    provenance_text = (
+        json.dumps(provenance, ensure_ascii=False, indent=2, sort_keys=True)
+        + "\n"
+    )
+    (staging / "registry.json").write_text(registry_text, encoding="utf-8")
+    (staging / "registry.provenance.json").write_text(
+        provenance_text, encoding="utf-8"
+    )
+    for name, text in (
+        ("registry.json", registry_text),
+        ("registry.provenance.json", provenance_text),
+    ):
+        target = source_root / "seed" / name
+        temporary = target.with_name("." + target.name + ".uc-new")
+        temporary.write_text(text, encoding="utf-8")
+        os.replace(temporary, target)
+    return registry, provenance
+
+
 def audited_assembly_cache_key_boundary(suite, source_root):
     authorities = {
         entry["seed"]: _sha(
@@ -2236,6 +2504,21 @@ def run_assemble(thing):
         return _failure(thing, {**value, "validation_errors": errors}, "invalid-suite", "assembly:seed-rejected")
     if output == source_root or source_root in output.parents or output in source_root.parents:
         return _failure(thing, value, "unsafe-output", "assembly:rejected")
+    existing_registry, registry_error = audited_registry_authority_boundary(
+        source_root
+    )
+    if registry_error:
+        return _failure(
+            thing,
+            value,
+            registry_error,
+            "assembly:registry-rejected",
+        )
+    seeds = []
+    for entry in suite["applications"]:
+        seed_path = source_root / entry["seed"]
+        seed, _ = _read_json(seed_path)
+        seeds.append((seed_path, seed))
     cache_key = audited_assembly_cache_key_boundary(suite, source_root)
     cached = audited_assembly_cache_admission_boundary(
         thing, value, output, cache_key
@@ -2243,11 +2526,6 @@ def run_assemble(thing):
     if cached is not None:
         return cached
 
-    seeds = []
-    for entry in suite["applications"]:
-        seed_path = source_root / entry["seed"]
-        seed, _ = _read_json(seed_path)
-        seeds.append((seed_path, seed))
     staging_parent = output.parent
     staging_parent.mkdir(parents=True, exist_ok=True)
     staging = Path(tempfile.mkdtemp(prefix="." + output.name + ".uc-new-", dir=staging_parent))
@@ -2269,8 +2547,20 @@ def run_assemble(thing):
             dependency_package = (
                 package_by_name[dependency["application"]] if dependency else None
             )
-            files = render_application(seed, dependency_identity, dependency_package)
-            manifest = _manifest(seed, files, dependency_identity)
+            dependency_contract = (
+                _dependency_contract(seed_by_name[dependency["application"]])
+                if dependency
+                else None
+            )
+            files = render_application(
+                seed,
+                dependency_identity,
+                dependency_package,
+                dependency_contract,
+            )
+            manifest = _manifest(
+                seed, files, dependency_identity, dependency_contract
+            )
             files[".unified/manifest.json"] = _canonical(manifest).decode()
             root = apps_root / name
             _write_tree(root, files)
@@ -2297,16 +2587,37 @@ def run_assemble(thing):
                 package_by_name[(seed.get("dependency") or {}).get("application")]
                 if seed.get("dependency")
                 else None,
+                _dependency_contract(
+                    seed_by_name[seed["dependency"]["application"]]
+                )
+                if seed.get("dependency")
+                else None,
             )
             deterministic = _tree_hash(_file_hashes(rendered)) == manifest["tree_sha256"]
             verification = {
-                "spec_fidelity": json.loads((root / "canonical-specification.json").read_text()) == derive_specification(seed, manifest["dependency_identity"]),
+                "spec_fidelity": json.loads((root / "canonical-specification.json").read_text()) == derive_specification(
+                    seed,
+                    manifest["dependency_identity"],
+                    _dependency_contract(
+                        seed_by_name[seed["dependency"]["application"]]
+                    )
+                    if seed.get("dependency")
+                    else None,
+                ),
                 "plan_fidelity": json.loads(
                     (root / "application-plan.json").read_text()
                 )
                 == derive_plan(
                     seed,
-                    derive_specification(seed, manifest["dependency_identity"]),
+                    derive_specification(
+                        seed,
+                        manifest["dependency_identity"],
+                        _dependency_contract(
+                            seed_by_name[seed["dependency"]["application"]]
+                        )
+                        if seed.get("dependency")
+                        else None,
+                    ),
                     package_by_name[(seed.get("dependency") or {}).get("application")]
                     if seed.get("dependency")
                     else None,
@@ -2348,6 +2659,18 @@ def run_assemble(thing):
             "anti_hardcoding": anti,
             "reports": application_reports,
         }
+        registry = derive_application_registry(
+            suite, seeds, manifests, existing_registry
+        )
+        registry_provenance = _registry_provenance(
+            registry, suite, seeds
+        )
+        suite_manifest["registry"] = {
+            "registry_snapshot_sha256": registry[
+                "registry_snapshot_sha256"
+            ],
+            "provenance": registry_provenance,
+        }
         (staging / "assembly-manifest.json").write_bytes(_canonical(suite_manifest))
         ok = all(report["verdict"] == "pass" for report in application_reports.values())
         if not ok:
@@ -2361,6 +2684,14 @@ def run_assemble(thing):
                 "verification-failed",
                 "assembly:verification-failed",
             )
+        audited_registry_projection_boundary(
+            source_root,
+            staging,
+            suite,
+            seeds,
+            manifests,
+            existing_registry,
+        )
         _atomic_publish(staging, output)
         cache_identity = audited_assembly_cache_publish_boundary(
             cache_key, output, suite_manifest

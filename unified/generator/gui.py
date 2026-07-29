@@ -209,11 +209,17 @@ table{{width:100%;border-collapse:collapse}}th,td{{text-align:left;padding:.55re
 """
 
 
-def browser_source(specification, export_identity, dependency_identity):
+def browser_source(
+    specification,
+    export_identity,
+    dependency_identity,
+    dependency_contract=None,
+):
     encoded = json.dumps(specification["ui"], ensure_ascii=False, separators=(",", ":"), sort_keys=True)
     return f"""const ui={encoded};
 const generatedIdentity={json.dumps(export_identity)};
 const dependencyIdentity={json.dumps(dependency_identity)};
+const dependencyContract={json.dumps(dependency_contract, ensure_ascii=False, separators=(",", ":"), sort_keys=True)};
 const capability="__UC_SESSION_CAPABILITY__";
 const query=new URLSearchParams(window.location.search);
 const proofMode=query.get("uc-proof")==="1";
@@ -333,6 +339,10 @@ function makeComponent(component){{
   if(component.value!==undefined)element.value=String(component.value);
   if(component.derived==="export_identity")element.value=generatedIdentity;
   if(component.derived==="dependency_identity")element.value=dependencyIdentity||"unavailable";
+  if(String(component.derived||"").startsWith("dependency_contract.")){{
+    const value=pathValue(dependencyContract,component.derived.slice("dependency_contract.".length));
+    element.value=Array.isArray(value)?value.join(" through "):String(value);
+  }}
   if(component.readonly)element.readOnly=true;
   if(component.type!=="button"&&component.type!=="canvas")wrap.appendChild(label);
   wrap.appendChild(element);

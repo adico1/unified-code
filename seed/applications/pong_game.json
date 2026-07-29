@@ -1,6 +1,6 @@
 {
   "application_version": "UC-APPLICATION-3",
-  "application": {"name": "pong-game", "package": "pong_game", "description": "Deterministic event-driven graphical world replay."},
+  "application": {"name": "pong-game", "package": "pong_game", "description": "Deterministic event-driven graphical world replay.", "canonical_name": "uc://applications/pong-game@1", "family": "game", "variation": "deterministic-pong", "notation": "event-stream", "numeric_type": "bounded-integer", "interface_identity": "keyboard-canvas", "capabilities": ["start", "pause", "reset", "tick"], "dependency_contract_ref": "none"},
   "interface": {"cli": true, "library": false, "browser": true},
   "program": {
     "engine": "world",

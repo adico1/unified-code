@@ -17,7 +17,7 @@ def test_generated_surface():
     assert_surface()
 
 def test_fact_0000():
-    assert_fact('acceptance:seed/applications/calculator.json', '8320b12e5cd3100d6abecdc56e69c62c63152cf83970c60aa2053788d3d6865f')
+    assert_fact('acceptance:seed/applications/calculator.json', 'de6c605446e7ef29da29faba69835c93e7243f7d13842c0673705c7b4205bd2f')
 
 def test_fact_0001():
     assert_fact('acceptance:seed/applications/file_editor.json', 'de9ccfb4ea6d5b288b60c7e87e950e2a4b0a89bb5bffa9630228d5808cba12a2')
@@ -38,19 +38,19 @@ def test_fact_0006():
     assert_fact('acceptance:seed/thing_v2/trajectory_meter.json', '79c8d7389ed12b34fde502925aa1ecf23fd267278d74c9c130b73344253f6f5b')
 
 def test_fact_0007():
-    assert_fact('application-declaration:seed/applications/calculator.json', '44758bbcc7060e124fd43685189bdab35e2f90a0ad2093fa26f03936009ba6d1')
+    assert_fact('application-declaration:seed/applications/calculator.json', '2dcf1a0805c45875fe8ba2224cd11c94a8b0e77ed920f32555ab99850b28cee0')
 
 def test_fact_0008():
-    assert_fact('application-declaration:seed/applications/file_editor.json', 'e260bf72d48a79ba62489b9f12caecb2013dbcefaa4d5f34fe421d6976b9a3b8')
+    assert_fact('application-declaration:seed/applications/file_editor.json', '280c2849eab61d1e8f3bb22321f12aefce3196052bc637173eb23ca3432a6b1c')
 
 def test_fact_0009():
-    assert_fact('application-declaration:seed/applications/file_reader.json', '10183536ec467162de13135ae6d71d7ae2913efac241b513d24045b53b8d2040')
+    assert_fact('application-declaration:seed/applications/file_reader.json', '62383c23cfbb037a154d98bf63e0a9bf40fa87b3f6d0419dbea45b42d38c4ac3')
 
 def test_fact_0010():
-    assert_fact('application-declaration:seed/applications/math_library.json', 'af7ab465360924a63363bc7ddc42b5e0cd11970ba89f12ad4647ba22186d724c')
+    assert_fact('application-declaration:seed/applications/math_library.json', 'b8943b911b91d5e5b467ca0e1e636278f759250ebaee4fc5aec0d2ff875defae')
 
 def test_fact_0011():
-    assert_fact('application-declaration:seed/applications/pong_game.json', '9d1f333e46ea115ed1e69cd30058e331386856e1e194dfbbb5f4bc6c4c4513a6')
+    assert_fact('application-declaration:seed/applications/pong_game.json', '9857a5ee5d577edea7a3d6d0bfffc6e255876a248e77f0e5f8b63a77b4bd1aec')
 
 def test_fact_0012():
     assert_fact('application-declaration:seed/declarations/invoice_total.json', 'b37d85902165ea0b3292094cbc05058e7d953884fab29fa5e16d758b9ce83d4b')
@@ -71,19 +71,19 @@ def test_fact_0017():
     assert_fact('application-declaration:seed/thing_v2/trajectory_meter.json', '1e630d5a2c9f4c98901558a3e68d536ebfb09649dbab2f1361e5c7c910de9750')
 
 def test_fact_0018():
-    assert_fact('application-identity:seed/applications/calculator.json', 'f04c3e2153540549a454a85b5c149b8ee33b62b031b2f82b024cdf8d51e21da6')
+    assert_fact('application-identity:seed/applications/calculator.json', 'e4f0ee6e2f713ef128b22c3c8aa67040791db915680b9543e8cf82dcc2dd3759')
 
 def test_fact_0019():
-    assert_fact('application-identity:seed/applications/file_editor.json', 'c57eb8540a71cb749ba89ef4202bfab342a3b7972d28afe658fe80b3c9321e7d')
+    assert_fact('application-identity:seed/applications/file_editor.json', '10951d1df426c5f215cd5cbba7e3a6d3b66e233115dde09b512b68d177a5b72b')
 
 def test_fact_0020():
-    assert_fact('application-identity:seed/applications/file_reader.json', '4b8ca158d2f611e2d653a2c3e502f8567613eb3d5cc2fad2b46af223eeda8ea3')
+    assert_fact('application-identity:seed/applications/file_reader.json', '2a64a5bcab1f45aa7992d64ab296e2f21451cfad89197ef326451c9928dc0c0e')
 
 def test_fact_0021():
-    assert_fact('application-identity:seed/applications/math_library.json', '4e2b2e7eca0ffdbc1890ca1acefcb1f59658e3283a0a4c965bdd904459c27368')
+    assert_fact('application-identity:seed/applications/math_library.json', '620e348aa9f1a0531ce7df6db1f7df2f5bedfdfeda69d8137c9871eb926aacab')
 
 def test_fact_0022():
-    assert_fact('application-identity:seed/applications/pong_game.json', '8bfd0a19ee26ac1f27b44cd9989494f6d87d58829cf79c09e3fc7d1c95de2204')
+    assert_fact('application-identity:seed/applications/pong_game.json', '88561fb50e3035ec5341a68ffd086856bf3a46cbaf23b3eedbcc63db391b3029')
 
 def test_fact_0023():
     assert_fact('application-identity:seed/thing_v2/orchard_yield.json', '4d9c4b9ec06bff904104a9b793ae3abc82d81359dbd8a77fa0c2d5dc808f51f3')
@@ -176,7 +176,7 @@ def test_fact_0052():
     assert_fact('thing-state:canonical', '991bb9145ea612ef79499d05278ebac1d66c1156b4694f2f67784a1728a1f476')
 
 def test_fact_0053():
-    assert_fact('ui:seed/applications/calculator.json', '6a7ca8154a7a2d384d2cc5df2315c7896041b9c21d0a626a3dfd2a665514a1bf')
+    assert_fact('ui:seed/applications/calculator.json', 'e665b8f804730434dcdc15009099896c822ef16208090e2f5c197d9cc0126460')
 
 def test_fact_0054():
     assert_fact('ui:seed/applications/file_editor.json', 'b26d6509b4091291c5306aa85399cba2e88bbccf3c5dd1bca978aed3839200b4')

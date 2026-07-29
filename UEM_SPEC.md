@@ -436,11 +436,11 @@ physical board golden pass.
 See LAW.md L13. Emit `coverage.json` and `GAUNTLET.md` from
 `unified.machine.l13.run_l13_gauntlet`. CI must fail on any dimension below 100%.
 
-<!-- BEGIN UC GENERATED ISSUE7:uem:d5d0004191b028191fe365fe91fede631dc504545b9e66730453cf67ccffcae1 -->
+<!-- BEGIN UC GENERATED ISSUE7:uem:e4231f6c69bb6d1c124ca38bf59c77c9d3bfe752c3e7c2fb310a0135dd0b28fb -->
 ## Generated UEM verification projection
 
-Authority: `944fd457fc7e42dd48c35388e306a7c43a0c1b38311444defa2e247a299b023c`
-Semantic structure: `30ad98acd742bc4c095209bad24a88d4dc631c735aab49784db38c97da1630f5`
+Authority: `c064b67c6b0074835ea215e2a89fd9b014ab31d615ef8a7e3e3a6f9176a31032`
+Semantic structure: `c21b3e04a89002ecf7bcfd935981e7886d376374ec529a65562a9e2eb627b0a6`
 Canonical facts: `59`
 Generated test partitions: `80`
 Generated behavioral mutations: `20`

@@ -313,11 +313,11 @@ Compact rules live in [STANDARD_TEN.md](STANDARD_TEN.md). Run:
 Partial clean-room: UEM artifacts regenerate byte-identical from seed declarations.  
 **Full-tree clean-room is not claimed** while open gaps remain. Enforcement fails until every file is one of: `seed` | `generated` | `external-vendored` | `physical-host-boundary` | `evidence`.
 
-<!-- BEGIN UC GENERATED ISSUE7:status:7e00ff03dd3fd69baa93c0067e9c1365583e4226bfda3152121faef8ed9591b9 -->
+<!-- BEGIN UC GENERATED ISSUE7:status:1fffbfe343f687c97bf5989be5da433006b051c062adcc65186b2f68514b37d4 -->
 ## Generated verification status
 
-Authority: `944fd457fc7e42dd48c35388e306a7c43a0c1b38311444defa2e247a299b023c`
-Semantic structure: `30ad98acd742bc4c095209bad24a88d4dc631c735aab49784db38c97da1630f5`
+Authority: `c064b67c6b0074835ea215e2a89fd9b014ab31d615ef8a7e3e3a6f9176a31032`
+Semantic structure: `c21b3e04a89002ecf7bcfd935981e7886d376374ec529a65562a9e2eb627b0a6`
 Canonical facts: `59`
 Generated test partitions: `80`
 Generated behavioral mutations: `20`
