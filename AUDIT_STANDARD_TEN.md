@@ -24,8 +24,8 @@ The repository-wide figures and gaps below measure only the root-seed fixed-poin
 **Repository self-hosting verdict:** `fail`
 **standard_version:** TEN-1
 **seed_sha256:** `9b145882d8aaa29dfec413ce78e72e86998349a5d7e63118b0daf361b26d25c2`
-**files classified:** 316
-**illegal provenance (not in allowed five classes):** 234
+**files classified:** 418
+**illegal provenance (not in allowed five classes):** 236
 **OOP class files:** 0
 **open standard.gap tickets:** 6
 
@@ -52,10 +52,10 @@ Conventional development is not an authorized fallback. Gaps below are `standard
 | --- | ---: |
 | `evidence` | 7 |
 | `external-vendored` | 4 |
-| `generated` | 26 |
-| `handwritten-pending` | 234 |
+| `generated` | 125 |
+| `handwritten-pending` | 236 |
 | `physical-host-boundary` | 16 |
-| `seed` | 29 |
+| `seed` | 30 |
 
 ## Clean-room status
 
@@ -68,22 +68,22 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `.github/workflows/test.yml` · `handwritten-pending` · `standard.gap` · `224c02a74cf42f1d`
 - `.gitignore` · `handwritten-pending` · `standard.gap` · `699c693cc407b221`
 - `APPLICATION_ASSEMBLY.md` · `handwritten-pending` · `standard.gap` · `8bacd4ab1df79455`
-- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `c20ba915a48baee3`
+- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `8f97efff3c9b7adf`
 - `GAUNTLET.md` · `evidence` · `ok` · `0fa0d5bc6bb62286`
-- `LAW.md` · `handwritten-pending` · `standard.gap` · `7d452c174dec7c94`
+- `LAW.md` · `handwritten-pending` · `standard.gap` · `774f91fa24ce4acd`
 - `LICENSE` · `handwritten-pending` · `standard.gap` · `af6b910929ec375c`
 - `MANIFESTATION.md` · `handwritten-pending` · `standard.gap` · `15efdca893c191c3`
-- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `e8f1b6d3d11bd1a0`
-- `README.md` · `handwritten-pending` · `standard.gap` · `f59cf73dde37809b`
+- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `23cfc30db9f26b83`
+- `README.md` · `handwritten-pending` · `standard.gap` · `074c929f30e14ee5`
 - `ROADMAP.md` · `handwritten-pending` · `standard.gap` · `cec16f240821e25c`
 - `ROOT_CONVERGENCE.md` · `handwritten-pending` · `standard.gap` · `a2a6a6142608d173`
-- `SPEC.md` · `handwritten-pending` · `standard.gap` · `fb04ba1772610eb3`
+- `SPEC.md` · `handwritten-pending` · `standard.gap` · `770c5f67b0bc7824`
 - `STAGE0.md` · `handwritten-pending` · `standard.gap` · `9e2bae9dd4ed3f3a`
 - `STAGE1.md` · `handwritten-pending` · `standard.gap` · `2e0f4ae22335666b`
 - `STAGE1_FIXED_POINT.md` · `handwritten-pending` · `standard.gap` · `6316896f841a697b`
 - `STANDARD_TEN.md` · `seed` · `ok` · `d7152599e81fa3e1`
 - `THING_V2.md` · `handwritten-pending` · `standard.gap` · `da567f98a7b53f54`
-- `UEM_SPEC.md` · `handwritten-pending` · `standard.gap` · `1cb6d38f55bb2a36`
+- `UEM_SPEC.md` · `handwritten-pending` · `standard.gap` · `63d2020f5a77ef5f`
 - `VERIFY_FLOW.md` · `handwritten-pending` · `standard.gap` · `a8a4df82c4ef96ad`
 - `artifacts/uem/invoice_total/program.symbolic.json` · `generated` · `ok` · `a1899fe0c2f6ac40`
 - `artifacts/uem/invoice_total/program.symbolic.json.stamp.json` · `generated` · `ok` · `4fc5f5b144118ff1`
@@ -96,6 +96,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `bootstrap/fixed_point.py` · `handwritten-pending` · `standard.gap` · `d018b708d67cdde1`
 - `bootstrap/stage0.py` · `handwritten-pending` · `standard.gap` · `d1ba66af02b606e2`
 - `bootstrap/uem_surface.py` · `handwritten-pending` · `standard.gap` · `3c9101d9907c1640`
+- `bootstrap/verification_surface.py` · `handwritten-pending` · `standard.gap` · `fad8ab346881242f`
 - `c/.gitignore` · `handwritten-pending` · `standard.gap` · `2dc3b312a4902f53`
 - `c/Makefile` · `handwritten-pending` · `standard.gap` · `1c23d3b0fc4dbf85`
 - `c/README.md` · `handwritten-pending` · `standard.gap` · `84a0d2f879ecac82`
@@ -228,7 +229,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `contract_status.json` · `handwritten-pending` · `standard.gap` · `3ed75edf9b64810f`
 - `coverage.json` · `evidence` · `ok` · `b6130a1054645415`
 - `coverage_py.json` · `evidence` · `ok` · `f6277200dfe9e536`
-- `docs/DEVELOPER_WORKFLOW.md` · `handwritten-pending` · `standard.gap` · `5ce70a955dc69a2c`
+- `docs/DEVELOPER_WORKFLOW.md` · `handwritten-pending` · `standard.gap` · `972a9832bc0260a7`
 - `examples/declarations/invoice_total.json` · `handwritten-pending` · `standard.gap` · `1a0479e011592752`
 - `examples/declarations/invoice_total.py` · `handwritten-pending` · `standard.gap` · `d0cb833aace2a12a`
 - `examples/declarations/text_stats_program.json` · `handwritten-pending` · `standard.gap` · `c8c1c8f23b4e780a`
@@ -256,8 +257,107 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `generated/uem_surface/unified/machine/generated_host.py` · `generated` · `ok` · `595e09c1b8294f5c`
 - `generated/uem_surface/unified/machine/generated_surface.py` · `generated` · `ok` · `28b3ef421c860466`
 - `generated/uem_surface/vectors/l11-surface.json` · `generated` · `ok` · `569475e5da9bc192`
+- `generated/verification_surface/__init__.py` · `generated` · `ok` · `a86334931a1bdf70`
+- `generated/verification_surface/audit/__init__.py` · `generated` · `ok` · `e76029b523f09f15`
+- `generated/verification_surface/audit/generated_audit.py` · `generated` · `ok` · `8bbdeef4e781e648`
+- `generated/verification_surface/audit/obligations.json` · `generated` · `ok` · `f5b8429a50f0ce13`
+- `generated/verification_surface/audit/run_audit.py` · `generated` · `ok` · `37196aeb81802c1a`
+- `generated/verification_surface/audit/schema.json` · `generated` · `ok` · `dcc5c289ca146696`
+- `generated/verification_surface/authority/facts.json` · `generated` · `ok` · `e57632f0c613c593`
+- `generated/verification_surface/authority/obligations.json` · `generated` · `ok` · `224f825972670ec1`
+- `generated/verification_surface/c/generated_contract_test.c` · `generated` · `ok` · `c74de4e57e1dd871`
+- `generated/verification_surface/coverage/contract.json` · `generated` · `ok` · `895249d0df5a226b`
+- `generated/verification_surface/docs/DEVELOPER_WORKFLOW.md` · `generated` · `ok` · `859a010eb7a10b25`
+- `generated/verification_surface/docs/LAW.normative.md` · `generated` · `ok` · `c6c8a3ccd5996f82`
+- `generated/verification_surface/docs/README.status.md` · `generated` · `ok` · `7e00ff03dd3fd69b`
+- `generated/verification_surface/docs/SPEC.normative.md` · `generated` · `ok` · `264f6429305dbe4d`
+- `generated/verification_surface/docs/UEM.normative.md` · `generated` · `ok` · `d5d0004191b02819`
+- `generated/verification_surface/gauntlet/contract.json` · `generated` · `ok` · `0fe90178cdae7e6d`
+- `generated/verification_surface/goldens/manifest.json` · `generated` · `ok` · `02de77a73a443c38`
+- `generated/verification_surface/goldens/vector-0000.json` · `generated` · `ok` · `3057fa2313fe9583`
+- `generated/verification_surface/goldens/vector-0001.json` · `generated` · `ok` · `ad5f701a4e69758c`
+- `generated/verification_surface/goldens/vector-0002.json` · `generated` · `ok` · `51d27795d00b9e98`
+- `generated/verification_surface/goldens/vector-0003.json` · `generated` · `ok` · `c6fc307350ba9ebd`
+- `generated/verification_surface/goldens/vector-0004.json` · `generated` · `ok` · `a1a2230865a07a12`
+- `generated/verification_surface/goldens/vector-0005.json` · `generated` · `ok` · `460daa04c17caec9`
+- `generated/verification_surface/goldens/vector-0006.json` · `generated` · `ok` · `3552ac6a95221ada`
+- `generated/verification_surface/goldens/vector-0007.json` · `generated` · `ok` · `787cfe8ca6b8414c`
+- `generated/verification_surface/goldens/vector-0008.json` · `generated` · `ok` · `401c15a8274905d4`
+- `generated/verification_surface/goldens/vector-0009.json` · `generated` · `ok` · `18454bc901d5d578`
+- `generated/verification_surface/goldens/vector-0010.json` · `generated` · `ok` · `f151b7b2a1b4b36b`
+- `generated/verification_surface/goldens/vector-0011.json` · `generated` · `ok` · `d25c8dab1b9ddbae`
+- `generated/verification_surface/goldens/vector-0012.json` · `generated` · `ok` · `c17b529e0a1d6706`
+- `generated/verification_surface/goldens/vector-0013.json` · `generated` · `ok` · `9d7d31223557973e`
+- `generated/verification_surface/goldens/vector-0014.json` · `generated` · `ok` · `1fd2b6b088102b9c`
+- `generated/verification_surface/goldens/vector-0015.json` · `generated` · `ok` · `a33aae75aa090833`
+- `generated/verification_surface/goldens/vector-0016.json` · `generated` · `ok` · `4e37f2377c52ba23`
+- `generated/verification_surface/goldens/vector-0017.json` · `generated` · `ok` · `bd979632d1900e1c`
+- `generated/verification_surface/goldens/vector-0018.json` · `generated` · `ok` · `2c7d59b536a1aed3`
+- `generated/verification_surface/goldens/vector-0019.json` · `generated` · `ok` · `b9ccb1c33dca512d`
+- `generated/verification_surface/goldens/vector-0020.json` · `generated` · `ok` · `3742e9ddf35eae68`
+- `generated/verification_surface/goldens/vector-0021.json` · `generated` · `ok` · `3fcc244fd79f5e5c`
+- `generated/verification_surface/goldens/vector-0022.json` · `generated` · `ok` · `01795901bb0f7844`
+- `generated/verification_surface/goldens/vector-0023.json` · `generated` · `ok` · `7158fd2ea84de8f5`
+- `generated/verification_surface/goldens/vector-0024.json` · `generated` · `ok` · `c56970ea68f921d5`
+- `generated/verification_surface/goldens/vector-0025.json` · `generated` · `ok` · `d2e2902cc5ec76b2`
+- `generated/verification_surface/goldens/vector-0026.json` · `generated` · `ok` · `14032d3edc187e65`
+- `generated/verification_surface/goldens/vector-0027.json` · `generated` · `ok` · `4eea531145528300`
+- `generated/verification_surface/goldens/vector-0028.json` · `generated` · `ok` · `0db1d39e32664b2b`
+- `generated/verification_surface/goldens/vector-0029.json` · `generated` · `ok` · `fcc13abb12cf4d7b`
+- `generated/verification_surface/goldens/vector-0030.json` · `generated` · `ok` · `1f8ddbba0b561857`
+- `generated/verification_surface/goldens/vector-0031.json` · `generated` · `ok` · `6f02122ebc9d489d`
+- `generated/verification_surface/goldens/vector-0032.json` · `generated` · `ok` · `1e8765aca3f1f897`
+- `generated/verification_surface/goldens/vector-0033.json` · `generated` · `ok` · `7472a0d68fc40da2`
+- `generated/verification_surface/goldens/vector-0034.json` · `generated` · `ok` · `f828ef664e19a871`
+- `generated/verification_surface/goldens/vector-0035.json` · `generated` · `ok` · `1ea21b50953e17bd`
+- `generated/verification_surface/goldens/vector-0036.json` · `generated` · `ok` · `3b01eee2641a6b46`
+- `generated/verification_surface/goldens/vector-0037.json` · `generated` · `ok` · `ecee2d4c20b3933b`
+- `generated/verification_surface/goldens/vector-0038.json` · `generated` · `ok` · `586e1a8f6ce83bc4`
+- `generated/verification_surface/goldens/vector-0039.json` · `generated` · `ok` · `e33b4278a8ab6acf`
+- `generated/verification_surface/goldens/vector-0040.json` · `generated` · `ok` · `3639fca157656106`
+- `generated/verification_surface/goldens/vector-0041.json` · `generated` · `ok` · `e12eab651b071d74`
+- `generated/verification_surface/goldens/vector-0042.json` · `generated` · `ok` · `3bb4cfa3c4433996`
+- `generated/verification_surface/goldens/vector-0043.json` · `generated` · `ok` · `260affc4969cafc2`
+- `generated/verification_surface/goldens/vector-0044.json` · `generated` · `ok` · `547126d217c41247`
+- `generated/verification_surface/goldens/vector-0045.json` · `generated` · `ok` · `b97d2a421e5fc9a4`
+- `generated/verification_surface/goldens/vector-0046.json` · `generated` · `ok` · `5a76523b8de0eac2`
+- `generated/verification_surface/goldens/vector-0047.json` · `generated` · `ok` · `da0c6a4121ef4dbe`
+- `generated/verification_surface/goldens/vector-0048.json` · `generated` · `ok` · `6180641858911067`
+- `generated/verification_surface/goldens/vector-0049.json` · `generated` · `ok` · `e9a5885cda514a94`
+- `generated/verification_surface/goldens/vector-0050.json` · `generated` · `ok` · `347e1e78709fb42e`
+- `generated/verification_surface/goldens/vector-0051.json` · `generated` · `ok` · `928e3f043c6877be`
+- `generated/verification_surface/goldens/vector-0052.json` · `generated` · `ok` · `7a0df56a912c0ffa`
+- `generated/verification_surface/goldens/vector-0053.json` · `generated` · `ok` · `c6a05135b94bbbf8`
+- `generated/verification_surface/goldens/vector-0054.json` · `generated` · `ok` · `13bab943b326eec7`
+- `generated/verification_surface/goldens/vector-0055.json` · `generated` · `ok` · `57ad88cb7ebb6844`
+- `generated/verification_surface/goldens/vector-0056.json` · `generated` · `ok` · `1587131bf997c7fe`
+- `generated/verification_surface/goldens/vector-0057.json` · `generated` · `ok` · `fb011125c65703fa`
+- `generated/verification_surface/goldens/vector-0058.json` · `generated` · `ok` · `ca157db1e93dbf7a`
+- `generated/verification_surface/goldens/vector-0059.json` · `generated` · `ok` · `b31f1333bbdd2ed1`
+- `generated/verification_surface/goldens/vector-0060.json` · `generated` · `ok` · `39597b14cc40748d`
+- `generated/verification_surface/goldens/vector-0061.json` · `generated` · `ok` · `5d8e4eaaa7245f12`
+- `generated/verification_surface/goldens/vector-0062.json` · `generated` · `ok` · `403e8259eee63e61`
+- `generated/verification_surface/goldens/vector-0063.json` · `generated` · `ok` · `bb7c7a2cd6368ac4`
+- `generated/verification_surface/goldens/vector-0064.json` · `generated` · `ok` · `40700eb17396bd06`
+- `generated/verification_surface/goldens/vector-0065.json` · `generated` · `ok` · `d280b534e68fa1f8`
+- `generated/verification_surface/goldens/vector-0066.json` · `generated` · `ok` · `89817b37f3e2c241`
+- `generated/verification_surface/goldens/vector-0067.json` · `generated` · `ok` · `e8ff9137ebf1dba4`
+- `generated/verification_surface/goldens/vector-0068.json` · `generated` · `ok` · `3c8d819efeae14a5`
+- `generated/verification_surface/goldens/vector-0069.json` · `generated` · `ok` · `51c0c9f95d812595`
+- `generated/verification_surface/goldens/vector-0070.json` · `generated` · `ok` · `6aa7fc4df602d616`
+- `generated/verification_surface/goldens/vector-0071.json` · `generated` · `ok` · `ae4ab78dc98904c8`
+- `generated/verification_surface/goldens/vector-0072.json` · `generated` · `ok` · `755c155177adfe56`
+- `generated/verification_surface/goldens/vector-0073.json` · `generated` · `ok` · `6a51500e81fb4165`
+- `generated/verification_surface/mutations/manifest.json` · `generated` · `ok` · `e05367450b3e5041`
+- `generated/verification_surface/provenance.json` · `generated` · `ok` · `bac0b5bc618cb917`
+- `generated/verification_surface/python/test_generated_contract.py` · `generated` · `ok` · `98c2b498887a5ad0`
+- `generated/verification_surface/tests/cross-host-vectors.json` · `generated` · `ok` · `2e864d2313dd6f6b`
+- `generated/verification_surface/tests/partitions.json` · `generated` · `ok` · `9ca202b862ace290`
+- `generated/verification_surface/verification/ci-inventory.json` · `generated` · `ok` · `927d0f4c51c565f7`
+- `generated/verification_surface/verification/proof-graph.json` · `generated` · `ok` · `53764eea58c6a6e2`
+- `generated/verification_surface/verification-manifest.json` · `generated` · `ok` · `35c25b8ba50ea7aa`
 - `pyproject.toml` · `handwritten-pending` · `standard.gap` · `033818aa172c883b`
-- `scripts/assert_verify_budget.py` · `handwritten-pending` · `standard.gap` · `16fe2e7355274bf4`
+- `scripts/assert_verify_budget.py` · `handwritten-pending` · `standard.gap` · `c0cff5192f23dd74`
 - `scripts/audit_standard_ten.py` · `handwritten-pending` · `standard.gap` · `400c2bdc3650a4bc`
 - `scripts/check_stateful_overfit.py` · `handwritten-pending` · `standard.gap` · `1068fd99ebb46984`
 - `scripts/check_thing_v2_overfit.py` · `handwritten-pending` · `standard.gap` · `cdd9b75c330cb5fd`
@@ -294,8 +394,9 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `seed/stamps/generator.lock.json` · `seed` · `ok` · `f910c89e103f18a2`
 - `seed/thing_v2/orchard_yield.json` · `seed` · `ok` · `dbef860d09797957`
 - `seed/thing_v2/trajectory_meter.json` · `seed` · `ok` · `7d6a462785e2f846`
-- `seed/verification/PROOF_BUNDLE.json` · `seed` · `ok` · `2bda8d6025993ac9`
-- `seed/verification/PROOF_GRAPH.json` · `seed` · `ok` · `75fb6683d2539986`
+- `seed/verification/PROOF_BUNDLE.json` · `seed` · `ok` · `82a1770e15800c8f`
+- `seed/verification/PROOF_GRAPH.json` · `seed` · `ok` · `070e52794ee21260`
+- `seed/verification/SYNTHETIC_OBLIGATION.json` · `seed` · `ok` · `ae1dff1127af06ef`
 - `tests/test_application_assembly.py` · `handwritten-pending` · `standard.gap` · `5c4168fc545cda85`
 - `tests/test_benchmark.py` · `handwritten-pending` · `standard.gap` · `4ce9240b671a4c66`
 - `tests/test_binding_mutations.py` · `handwritten-pending` · `standard.gap` · `7ad5942c665486a5`
@@ -325,7 +426,8 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `tests/test_uem.py` · `handwritten-pending` · `standard.gap` · `124d0cb0b656702c`
 - `tests/test_uem_surface_generation.py` · `handwritten-pending` · `standard.gap` · `9de8badd5c9ebcd8`
 - `tests/test_unfold_stateful.py` · `handwritten-pending` · `standard.gap` · `b8f3c1dcaff383cd`
-- `tests/test_verify_flow.py` · `handwritten-pending` · `standard.gap` · `f759c11c9e28bb0b`
+- `tests/test_verification_surface_generation.py` · `handwritten-pending` · `standard.gap` · `6819675e10cd1891`
+- `tests/test_verify_flow.py` · `handwritten-pending` · `standard.gap` · `4a1782da0cfa8c2f`
 - `unified/__init__.py` · `handwritten-pending` · `standard.gap` · `7ffb124068950347`
 - `unified/__main__.py` · `handwritten-pending` · `standard.gap` · `2b9731d81c4a0fe6`
 - `unified/boundary.py` · `handwritten-pending` · `standard.gap` · `9a76b9d73f1daab0`
@@ -374,8 +476,8 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `unified/machine/thing.py` · `handwritten-pending` · `standard.gap` · `991b7864294015f9`
 - `unified/machine/validate.py` · `handwritten-pending` · `standard.gap` · `a7233a9e4015f04f`
 - `unified/standard.py` · `handwritten-pending` · `standard.gap` · `8aa45f56d2948ac5`
-- `unified/standard_audit.py` · `handwritten-pending` · `standard.gap` · `15ba18365a494ecd`
+- `unified/standard_audit.py` · `handwritten-pending` · `standard.gap` · `759c0f9a5a61280b`
 - `unified/standard_generate.py` · `handwritten-pending` · `standard.gap` · `78fd6e444cffdc5d`
 - `unified/thing.py` · `handwritten-pending` · `standard.gap` · `7db7669dc8e629b1`
 - `unified/verify.py` · `handwritten-pending` · `standard.gap` · `d72f0665fb484a42`
-- `unified/verify_flow.py` · `handwritten-pending` · `standard.gap` · `ac75b3d6756e4e2c`
+- `unified/verify_flow.py` · `handwritten-pending` · `standard.gap` · `7133fc6584d67dcf`

@@ -1,0 +1,17 @@
+{
+  "identity": "signal-measure@1",
+  "fields": [
+    "signal",
+    "measure"
+  ],
+  "evidence": [
+    "signal:observed",
+    "measure:verified"
+  ],
+  "relations": {
+    "valid": "measure equals declared signal magnitude",
+    "invalid": "missing signal remains invalid",
+    "boundary": "signal source remains outside the computation",
+    "temporal_event": "observation precedes verification"
+  }
+}

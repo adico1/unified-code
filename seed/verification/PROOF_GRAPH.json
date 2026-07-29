@@ -105,6 +105,12 @@
       "handler": "command",
       "requires": [],
       "argv": ["{python}", "-m", "unified.generator.cli", "gauntlet", "examples/declarations/text_stats_v2.json"]
+    },
+    {
+      "id": "issue7-generated-surface",
+      "handler": "command",
+      "requires": [],
+      "argv": ["{python}", "generated/verification_surface/audit/run_audit.py"]
     }
   ],
   "proof_nodes": [
@@ -130,6 +136,7 @@
     {"id": "open-gap-truthfulness", "requires": ["repository-tests", "standard-audit"]},
     {"id": "python-3.11", "requires": ["repository-tests"]},
     {"id": "python-3.12", "requires": ["repository-tests"]},
-    {"id": "python-3.13", "requires": ["repository-tests"]}
+    {"id": "python-3.13", "requires": ["repository-tests"]},
+    {"id": "issue7-generated-surface", "requires": ["issue7-generated-surface"]}
   ]
 }

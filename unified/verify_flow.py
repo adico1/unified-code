@@ -226,7 +226,7 @@ def audited_graph_report_primitive(graph):
         errors.append("duplicate-event")
     if len(proof_ids) != len(set(proof_ids)):
         errors.append("duplicate-proof")
-    if len(proof_ids) != 23:
+    if len(proof_ids) != 24:
         errors.append("proof-inventory")
     if any(item.get("handler") != "command" for item in evidence):
         errors.append("unregistered-handler")

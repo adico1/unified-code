@@ -1,5 +1,5 @@
 {
-  "file_count": 316,
+  "file_count": 418,
   "files": [
     {
       "compliance": "ok",
@@ -121,8 +121,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "c20ba915a48baee3596334e91ab4318041b023b0c9e9b531550ad8a878d6f7e2",
-      "size": 33661,
+      "sha256": "8f97efff3c9b7adf0e6c470f94d7e1288bc400c826a9ecb8a38a51ec31dad5ac",
+      "size": 43877,
       "standard_ten_class_ok": true
     },
     {
@@ -162,8 +162,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "LAW.md",
       "provenance": "handwritten-pending",
-      "sha256": "7d452c174dec7c94b55661b34f21b3f8fdbcd062d76dc336ce6c37bac332107a",
-      "size": 7105,
+      "sha256": "774f91fa24ce4acd1d61063eae76eebdf21d8516eb464eb6eed16362a81ddc39",
+      "size": 7793,
       "standard_ten_class_ok": false
     },
     {
@@ -224,8 +224,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "e8f1b6d3d11bd1a029fa1cb93197d8410d14e33affadab6aa5d8e48501f5d8e2",
-      "size": 200444,
+      "sha256": "23cfc30db9f26b8399e3a296d4035c625225d8dfd51a60b2deb931df0d77e527",
+      "size": 261770,
       "standard_ten_class_ok": true
     },
     {
@@ -245,8 +245,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "README.md",
       "provenance": "handwritten-pending",
-      "sha256": "f59cf73dde37809b8a48af7b86c0ab046ff73c626291bb4dc34f0905b0932abe",
-      "size": 12203,
+      "sha256": "074c929f30e14ee56b80ece0ba7b5d23c57aaa6fcefcb31b534acd011d11a7e3",
+      "size": 13414,
       "standard_ten_class_ok": false
     },
     {
@@ -308,8 +308,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "SPEC.md",
       "provenance": "handwritten-pending",
-      "sha256": "fb04ba1772610eb3c6454d552ceaa0bdf1088c0efbb1ea5eec2857a19d6480e9",
-      "size": 10787,
+      "sha256": "770c5f67b0bc782489e8d28e80b53effce6ded933f81dcdbbcebe241e31d37bf",
+      "size": 11546,
       "standard_ten_class_ok": false
     },
     {
@@ -433,8 +433,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "UEM_SPEC.md",
       "provenance": "handwritten-pending",
-      "sha256": "1cb6d38f55bb2a36a8c55640cd3c61194a716f6f99ff666c28a48c0b0c827f66",
-      "size": 16546,
+      "sha256": "63d2020f5a77ef5f50d6973c689b563815dd3315d26eb9e79cb1c65c88bb1e89",
+      "size": 17442,
       "standard_ten_class_ok": false
     },
     {
@@ -688,6 +688,30 @@
       "provenance": "handwritten-pending",
       "sha256": "3c9101d9907c1640a9f13d0894d254f86cb6e06fd904aefaf73a4624150ffdd4",
       "size": 15681,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 35,
+        "for": 11,
+        "if": 15,
+        "match": 0,
+        "total": 63,
+        "try": 2,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "bootstrap/verification_surface.py",
+      "provenance": "handwritten-pending",
+      "sha256": "fad8ab346881242fb8cdb626e4efc1622ba02cdf7d6e23d896581d20a23274b4",
+      "size": 46272,
       "standard_ten_class_ok": false
     },
     {
@@ -3492,8 +3516,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "docs/DEVELOPER_WORKFLOW.md",
       "provenance": "handwritten-pending",
-      "sha256": "5ce70a955dc69a2c6fcda31c102f90b00a4253cfb7ef81f1b1b8013967c9867b",
-      "size": 4046,
+      "sha256": "972a9832bc0260a79dbc95df4f9c525eb0619f0fb567e6e7ecf9eeef394b87ed",
+      "size": 5023,
       "standard_ten_class_ok": false
     },
     {
@@ -4082,6 +4106,2002 @@
       "standard_ten_class_ok": true
     },
     {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "comp": 0,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 0,
+        "try": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/__init__.py",
+      "provenance": "generated",
+      "sha256": "a86334931a1bdf702149c887948d6dc0128120019c499af4bae0f6a5a6e243d7",
+      "size": 38,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "comp": 0,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 0,
+        "try": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/audit/__init__.py",
+      "provenance": "generated",
+      "sha256": "e76029b523f09f157ae6f4f72a3c46460844f51744b753e40bf2f22b4842a0b0",
+      "size": 33,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "comp": 5,
+        "for": 2,
+        "if": 23,
+        "match": 0,
+        "total": 30,
+        "try": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/audit/generated_audit.py",
+      "provenance": "generated",
+      "sha256": "8bbdeef4e781e648e2f4d90ec724ddfdb0cbcf9a51277e9728199d87bc13aab4",
+      "size": 8323,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/audit/obligations.json",
+      "provenance": "generated",
+      "sha256": "f5b8429a50f0ce138cc647369f04dc0af251b58e6de25005708b4914aabbcfc1",
+      "size": 493,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "comp": 0,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 0,
+        "try": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/audit/run_audit.py",
+      "provenance": "generated",
+      "sha256": "37196aeb81802c1af6d32f0a7f2ed808c57475d6145bd462fa08621efc15779e",
+      "size": 367,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/audit/schema.json",
+      "provenance": "generated",
+      "sha256": "dcc5c289ca146696c330146390b51eeba079b9c0938b005ca3485104962f4272",
+      "size": 366,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/authority/facts.json",
+      "provenance": "generated",
+      "sha256": "e57632f0c613c5931f6e8f89eaa7eed830d0c6d50ad1c732b6a498c5296dca65",
+      "size": 129612,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/authority/obligations.json",
+      "provenance": "generated",
+      "sha256": "224f825972670ec119652de4473a343a7ec1479247d58a70631ed91a432efb6b",
+      "size": 5437,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "switch": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/c/generated_contract_test.c",
+      "provenance": "generated",
+      "sha256": "c74de4e57e1dd8716c9d471cf027e510ba653b81098b4df94bad6c2808bed594",
+      "size": 1347,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/coverage/contract.json",
+      "provenance": "generated",
+      "sha256": "895249d0df5a226b8a59dd657ced32f760d7dcd22acc74d30ebecb9bff1de33a",
+      "size": 427,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/docs/DEVELOPER_WORKFLOW.md",
+      "provenance": "generated",
+      "sha256": "859a010eb7a10b251cc46c197b0827a2b3f3018c582113d7cff7dead9928e744",
+      "size": 825,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/docs/LAW.normative.md",
+      "provenance": "generated",
+      "sha256": "c6c8a3ccd5996f824836ff957ed4d54914b267da46d127a3b9ce703088500b53",
+      "size": 546,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/docs/README.status.md",
+      "provenance": "generated",
+      "sha256": "7e00ff03dd3fd69baa93c0067e9c1365583e4226bfda3152121faef8ed9591b9",
+      "size": 1063,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/docs/SPEC.normative.md",
+      "provenance": "generated",
+      "sha256": "264f6429305dbe4d529882203fa0cd99c3808970436646e5da6f63de0b0ddded",
+      "size": 615,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/docs/UEM.normative.md",
+      "provenance": "generated",
+      "sha256": "d5d0004191b028191fe365fe91fede631dc504545b9e66730453cf67ccffcae1",
+      "size": 754,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/gauntlet/contract.json",
+      "provenance": "generated",
+      "sha256": "0fe90178cdae7e6d31f01fde3f8b40802ff21a48878a188005f25da591cc7f11",
+      "size": 2399,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/manifest.json",
+      "provenance": "generated",
+      "sha256": "02de77a73a443c38053fd7131e6779c83401ed3627006ad455979d24f61f9901",
+      "size": 18253,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0000.json",
+      "provenance": "generated",
+      "sha256": "3057fa2313fe95835a6cda4c8b3b92f7f69528d8012f7a063e017c84dc29eaf7",
+      "size": 474,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0001.json",
+      "provenance": "generated",
+      "sha256": "ad5f701a4e69758c0cd315a5c4c95f96b15964d986b820473131b31307c56625",
+      "size": 477,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0002.json",
+      "provenance": "generated",
+      "sha256": "51d27795d00b9e986fe95f88cf2d82870ccde3adc2567e10e68790f7e8959a39",
+      "size": 479,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0003.json",
+      "provenance": "generated",
+      "sha256": "c6fc307350ba9ebd7ab5d79a7d18d7f5798063e01bb95d94cae08767018f9a0b",
+      "size": 481,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0004.json",
+      "provenance": "generated",
+      "sha256": "a1a2230865a07a1294ea5a8e3ffd95b8448e751c83bb020e6fdbff9b916aae7f",
+      "size": 475,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0005.json",
+      "provenance": "generated",
+      "sha256": "460daa04c17caec9adbdbb06a700343502634e1ded14db054ada9697d610fdb3",
+      "size": 481,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0006.json",
+      "provenance": "generated",
+      "sha256": "3552ac6a95221ada82d21738213a4024a8f1b92a55e6ba9ecdcf9e6e14ac2453",
+      "size": 476,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0007.json",
+      "provenance": "generated",
+      "sha256": "787cfe8ca6b8414c096b62d466a02c4a7222681123afeb791170b9bf8631a46c",
+      "size": 475,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0008.json",
+      "provenance": "generated",
+      "sha256": "401c15a8274905d4c734d5640f4d2cfde47600161b11ac1d089ed5bb7079fb10",
+      "size": 474,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0009.json",
+      "provenance": "generated",
+      "sha256": "18454bc901d5d5785d51da2cad0619662be45c877ce85cdce58ffd026da42000",
+      "size": 482,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0010.json",
+      "provenance": "generated",
+      "sha256": "f151b7b2a1b4b36bc167bc986c717f54826e1becd38e44edee5f7643b58abae6",
+      "size": 475,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0011.json",
+      "provenance": "generated",
+      "sha256": "d25c8dab1b9ddbae75d115e2c99b68192f92bac48227884157d7e9f6239a8cab",
+      "size": 477,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0012.json",
+      "provenance": "generated",
+      "sha256": "c17b529e0a1d67060cc9f5dce23cef9dfa2f210a0b6d015bcba45c48f5565033",
+      "size": 476,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0013.json",
+      "provenance": "generated",
+      "sha256": "9d7d31223557973e2e5be1bb031af7932734a41c61ab5ec06a13883994aaa18e",
+      "size": 480,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0014.json",
+      "provenance": "generated",
+      "sha256": "1fd2b6b088102b9c1637280aa8230607ce70b4b58b1e4ecf56c9065bc1314d26",
+      "size": 480,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0015.json",
+      "provenance": "generated",
+      "sha256": "a33aae75aa09083334cdc0a1952ff8c59c885a89ae25df8cac8689add0eb67ea",
+      "size": 477,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0016.json",
+      "provenance": "generated",
+      "sha256": "4e37f2377c52ba23db9fed291b539d8feb2b628750b752494927b7a8982a9847",
+      "size": 519,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0017.json",
+      "provenance": "generated",
+      "sha256": "bd979632d1900e1cd50f2c81bdb0180e3d367b5db4a6b8831b443c78eea35ebd",
+      "size": 522,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0018.json",
+      "provenance": "generated",
+      "sha256": "2c7d59b536a1aed3752977a5bfd230038401d7a9ab9bea7e41db51e9c49d0cea",
+      "size": 501,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0019.json",
+      "provenance": "generated",
+      "sha256": "b9ccb1c33dca512d57d110291768f0d1d8f427241cd993bf462ee8a527976f03",
+      "size": 495,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0020.json",
+      "provenance": "generated",
+      "sha256": "3742e9ddf35eae686cc3495c10194bc6e0194852983a193abcc97d34cff90aaa",
+      "size": 510,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0021.json",
+      "provenance": "generated",
+      "sha256": "3fcc244fd79f5e5c517518e3d2d98bc681cf0b7c1e7a9be710395181314477ba",
+      "size": 504,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0022.json",
+      "provenance": "generated",
+      "sha256": "01795901bb0f78445e25e0f7df0f8ab9d00df55d5790e67c0e1afba278f59015",
+      "size": 513,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0023.json",
+      "provenance": "generated",
+      "sha256": "7158fd2ea84de8f5000f53abd871ce0696a6efa4564a4c8bfa6351b6928e13a3",
+      "size": 513,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0024.json",
+      "provenance": "generated",
+      "sha256": "c56970ea68f921d5811f6d09eb763f2fc500276ce20e3829577db502b67dbf76",
+      "size": 519,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0025.json",
+      "provenance": "generated",
+      "sha256": "d2e2902cc5ec76b2b5da561b2dabea60fb25b6c962fd15dff3fe83ea8b260b7e",
+      "size": 525,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0026.json",
+      "provenance": "generated",
+      "sha256": "14032d3edc187e65837c9c3d40ecae6c97db208d4da9a567de53885abf379da3",
+      "size": 516,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0027.json",
+      "provenance": "generated",
+      "sha256": "4eea531145528300d5729d8702be6b2f6898fe8799d3765fe946c93d53ba825a",
+      "size": 502,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0028.json",
+      "provenance": "generated",
+      "sha256": "0db1d39e32664b2bd28c01c2004ace7580e7984f4b64b260edd1d55498a8e88c",
+      "size": 488,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0029.json",
+      "provenance": "generated",
+      "sha256": "fcc13abb12cf4d7b12a72ed5f414c59066e4051fc6d2a42839f14ab3a9ff1bd8",
+      "size": 494,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0030.json",
+      "provenance": "generated",
+      "sha256": "1f8ddbba0b561857c68d09882a654abbb445533b743d2d63c69c4082bf236586",
+      "size": 490,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0031.json",
+      "provenance": "generated",
+      "sha256": "6f02122ebc9d489d56db12edcd2082a63019bd13a96d873d8350a5b1f14fef67",
+      "size": 581,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0032.json",
+      "provenance": "generated",
+      "sha256": "1e8765aca3f1f897eb1d8a2a42c16e7f2ff7e538613cfa521a0a9ca1a5abd611",
+      "size": 583,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0033.json",
+      "provenance": "generated",
+      "sha256": "7472a0d68fc40da2d470e8ea176ad819b66a8044c2277c3f0f5fc9e57983fec1",
+      "size": 527,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0034.json",
+      "provenance": "generated",
+      "sha256": "f828ef664e19a871506de6735e47acf90b05dd741ae9c5426483854806ab90bc",
+      "size": 527,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0035.json",
+      "provenance": "generated",
+      "sha256": "1ea21b50953e17bd0a05086df699747723b14f4a3eda7fc9b0d07cddccb8c72f",
+      "size": 534,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0036.json",
+      "provenance": "generated",
+      "sha256": "3b01eee2641a6b46ac39fcbb44f72eb3af62aaa833ed1d1baba218b7c6cd3ac3",
+      "size": 528,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0037.json",
+      "provenance": "generated",
+      "sha256": "ecee2d4c20b3933b1a01f75e7ecb94a0473cbb8195b175e603031622e464cac6",
+      "size": 531,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0038.json",
+      "provenance": "generated",
+      "sha256": "586e1a8f6ce83bc4911134198fbda8934e34981b9f370e1c3f170afb5fdcfc5c",
+      "size": 533,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0039.json",
+      "provenance": "generated",
+      "sha256": "e33b4278a8ab6acfee9fa4a17ffbdb81840711b43625f2eb0fbee8b521ec5671",
+      "size": 531,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0040.json",
+      "provenance": "generated",
+      "sha256": "3639fca157656106e1904008777cf4e2a06fca81668f9adcffee4e90c7a1d52f",
+      "size": 583,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0041.json",
+      "provenance": "generated",
+      "sha256": "e12eab651b071d747bb9304552138673c8697f6ea3820d0c477f961d5b16bdaa",
+      "size": 535,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0042.json",
+      "provenance": "generated",
+      "sha256": "3bb4cfa3c4433996aab479cdaeabb21521ffa1386f318003bf46f341c94b7c9c",
+      "size": 537,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0043.json",
+      "provenance": "generated",
+      "sha256": "260affc4969cafc2ed972c7025cb903ed1343432239b513bf042756d0648b06c",
+      "size": 533,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0044.json",
+      "provenance": "generated",
+      "sha256": "547126d217c412476bf362e79b2580b3c63703d0db2081a5784b162c85d3edf8",
+      "size": 544,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0045.json",
+      "provenance": "generated",
+      "sha256": "b97d2a421e5fc9a40c2bdec19b970376fa91603464a4e67bfd9983d0c246b39f",
+      "size": 544,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0046.json",
+      "provenance": "generated",
+      "sha256": "5a76523b8de0eac2a55f48ec7f7f00c9b92f582824ffc59b5b0deefa48d2ceb5",
+      "size": 539,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0047.json",
+      "provenance": "generated",
+      "sha256": "da0c6a4121ef4dbe1d852b7e5acd642e02278eaf7a542aedc08d54e32798bf84",
+      "size": 531,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0048.json",
+      "provenance": "generated",
+      "sha256": "618064185891106789d03d5c739bf830fc5c265add1315baa794909ddd80e776",
+      "size": 542,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0049.json",
+      "provenance": "generated",
+      "sha256": "e9a5885cda514a942b1027d1b927e95baa7a4d4d80898fe454392d1a91cb5262",
+      "size": 531,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0050.json",
+      "provenance": "generated",
+      "sha256": "347e1e78709fb42e922785983afca91410b973933a1dbdfa9968aae7c83af122",
+      "size": 531,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0051.json",
+      "provenance": "generated",
+      "sha256": "928e3f043c6877be34ee6af507f354fb8490b25f498c7ecd067ac74af0ab6714",
+      "size": 581,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0052.json",
+      "provenance": "generated",
+      "sha256": "7a0df56a912c0ffab9d254f6be9672b1fcdf738caf6d7e082d7ca7b1ff3621e8",
+      "size": 599,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0053.json",
+      "provenance": "generated",
+      "sha256": "c6a05135b94bbbf84f0e244100c99726ef678254847922d6bb096602990dfd4b",
+      "size": 699,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0054.json",
+      "provenance": "generated",
+      "sha256": "13bab943b326eec7ebe34d2a4ce48718156f39f6f24fc374cc5584aa739bd82e",
+      "size": 581,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0055.json",
+      "provenance": "generated",
+      "sha256": "57ad88cb7ebb6844d4d60724f93115a6bba26a23377dd08b48fc729d30c4fa75",
+      "size": 583,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0056.json",
+      "provenance": "generated",
+      "sha256": "1587131bf997c7fe08673691691657106cadf8bbb40623cd8d5f8e5875c2ce9b",
+      "size": 581,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0057.json",
+      "provenance": "generated",
+      "sha256": "fb011125c65703facaf55b1f748ed7db6f57ff28f052e0ab92ca82a57b730ef0",
+      "size": 581,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0058.json",
+      "provenance": "generated",
+      "sha256": "ca157db1e93dbf7ae3ab5b26a48c703a942ab2e9bcc415cda9f769c74601c5ec",
+      "size": 581,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0059.json",
+      "provenance": "generated",
+      "sha256": "b31f1333bbdd2ed1a7b53a72f28d4bc257506bea05a19047a105fbab0dde639d",
+      "size": 528,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0060.json",
+      "provenance": "generated",
+      "sha256": "39597b14cc40748d02c41186a2c0465587dbcb09a524bc24e05598d30e28512f",
+      "size": 572,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0061.json",
+      "provenance": "generated",
+      "sha256": "5d8e4eaaa7245f123a2ee7b5ed90d1541afd80983d239ff1e9b4f15e900aaaa9",
+      "size": 573,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0062.json",
+      "provenance": "generated",
+      "sha256": "403e8259eee63e6197c23e667f8f32388ece189ca173dd54a8be72898db99671",
+      "size": 582,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0063.json",
+      "provenance": "generated",
+      "sha256": "bb7c7a2cd6368ac4a2c314d3e177b7ec3d6fc93be1df5466b59d2e18908e9908",
+      "size": 697,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0064.json",
+      "provenance": "generated",
+      "sha256": "40700eb17396bd06e31f188ee934b8510f7c61aab911cfaaa94be6ed95f027b9",
+      "size": 572,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0065.json",
+      "provenance": "generated",
+      "sha256": "d280b534e68fa1f8c12519a7b5cbc631a78e46e0f08b52e5b55150fcdf577fc1",
+      "size": 572,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0066.json",
+      "provenance": "generated",
+      "sha256": "89817b37f3e2c2416c71e3a023ce3821658ae9acf61be71b342372f4bfb657fc",
+      "size": 573,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0067.json",
+      "provenance": "generated",
+      "sha256": "e8ff9137ebf1dba4619750ba91a811e4d21f1e7f20056c383ad1648b771552a1",
+      "size": 528,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0068.json",
+      "provenance": "generated",
+      "sha256": "3c8d819efeae14a53c76b43698e92f2a79695db28bb149b998aaaabc798715db",
+      "size": 526,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0069.json",
+      "provenance": "generated",
+      "sha256": "51c0c9f95d812595d547f33d96811ae296efd1849ab8fca004113d0f5e25d85b",
+      "size": 794,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0070.json",
+      "provenance": "generated",
+      "sha256": "6aa7fc4df602d616c4e82ac6b2142a977ec4b7bfe521a30a6a3f0bee42102c72",
+      "size": 731,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0071.json",
+      "provenance": "generated",
+      "sha256": "ae4ab78dc98904c87873f6c6710047fa298d00713bdf8b3a1f9f64bcd08e8444",
+      "size": 794,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0072.json",
+      "provenance": "generated",
+      "sha256": "755c155177adfe566d66a1d37b1ea17ec7bdf9a912eaf2f4260134cd9a3fdd43",
+      "size": 794,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/goldens/vector-0073.json",
+      "provenance": "generated",
+      "sha256": "6a51500e81fb4165d930245a57699be65eb777d43958e358613ed65f458a25cb",
+      "size": 681,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/mutations/manifest.json",
+      "provenance": "generated",
+      "sha256": "e05367450b3e5041c3d2a4cc16e8b1caebf8b6a2ec225a2e799580f167794d57",
+      "size": 3272,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/provenance.json",
+      "provenance": "generated",
+      "sha256": "bac0b5bc618cb917ec00c7e7c5d0bb0e4c04163e8c4343763732cee42857187e",
+      "size": 40901,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "comp": 0,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 0,
+        "try": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/python/test_generated_contract.py",
+      "provenance": "generated",
+      "sha256": "98c2b498887a5ad0d4a7b05851d65fd3ad61bb8dd77c29f50a151dcd9e47d6a2",
+      "size": 25190,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/tests/cross-host-vectors.json",
+      "provenance": "generated",
+      "sha256": "2e864d2313dd6f6bb561a6c563a5f1629399767485e01c6a287ac22bc49d949e",
+      "size": 2387,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/tests/partitions.json",
+      "provenance": "generated",
+      "sha256": "9ca202b862ace29010785ac2e6a132889926d662be6a70684de4d23095c919fd",
+      "size": 11542,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/verification/ci-inventory.json",
+      "provenance": "generated",
+      "sha256": "927d0f4c51c565f75fd7c5de1285342d3d2fa33e5910589bc602a04985af2840",
+      "size": 927,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/verification/proof-graph.json",
+      "provenance": "generated",
+      "sha256": "53764eea58c6a6e2494d0b6ce01bfcd9d7173347504e6124c375ed4d5006ca79",
+      "size": 4090,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/verification_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/verification_surface/verification-manifest.json",
+      "provenance": "generated",
+      "sha256": "35c25b8ba50ea7aa2c7fbc2d3dc84de94b940afa0341c4d278c1f3e6eb4b648f",
+      "size": 20993,
+      "standard_ten_class_ok": true
+    },
+    {
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
@@ -4122,7 +6142,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "scripts/assert_verify_budget.py",
       "provenance": "handwritten-pending",
-      "sha256": "16fe2e7355274bf4435f8906f325499d982cd324dca922c91746354d948b3a51",
+      "sha256": "c0cff5192f23dd745bce68ef4add07e4c0448524b3769e3ea4e53cc7f3060044",
       "size": 1352,
       "standard_ten_class_ok": false
     },
@@ -4890,7 +6910,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/verification/PROOF_BUNDLE.json",
       "provenance": "seed",
-      "sha256": "2bda8d6025993ac903d5b8d7633282f3e367cba7af564dfb2dc07d979ca11296",
+      "sha256": "82a1770e15800c8ff7e50e90cf8b37832e0dbb69e5dc0c099e74f92407b8a755",
       "size": 3886,
       "standard_ten_class_ok": true
     },
@@ -4910,8 +6930,28 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/verification/PROOF_GRAPH.json",
       "provenance": "seed",
-      "sha256": "75fb6683d25399869a66f83debc0696b0412b9bb18fc52e9998b81adf0f4fdb8",
-      "size": 4671,
+      "sha256": "070e52794ee21260dc42b6c164e59952b04f3597ade37ba7420aed174ed1b64d",
+      "size": 4936,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/verification/SYNTHETIC_OBLIGATION.json",
+      "provenance": "seed",
+      "sha256": "ae1dff1127af06ef68b43e5aa62bc3bb8e7670793b985d9110d9d6b344b8fb7b",
+      "size": 402,
       "standard_ten_class_ok": true
     },
     {
@@ -5614,6 +7654,30 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
+        "comp": 6,
+        "for": 1,
+        "if": 1,
+        "match": 0,
+        "total": 8,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_verification_surface_generation.py",
+      "provenance": "handwritten-pending",
+      "sha256": "6819675e10cd1891d1a9476ff9f2368d1e70d5feea63079cabc32a30a1c62de4",
+      "size": 6679,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
         "comp": 5,
         "for": 4,
         "if": 3,
@@ -5630,7 +7694,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_verify_flow.py",
       "provenance": "handwritten-pending",
-      "sha256": "f759c11c9e28bb0b564a166623215c55b063c820a590c488edb2a598ca0d066a",
+      "sha256": "4a1782da0cfa8c2f2e9120e10594ec45389f444221ff646ad88b2d8b88dae5c5",
       "size": 10226,
       "standard_ten_class_ok": false
     },
@@ -6791,9 +8855,9 @@
         "classes": 0,
         "comp": 4,
         "for": 11,
-        "if": 38,
+        "if": 39,
         "match": 0,
-        "total": 54,
+        "total": 55,
         "try": 1,
         "while": 0
       },
@@ -6805,8 +8869,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/standard_audit.py",
       "provenance": "handwritten-pending",
-      "sha256": "15ba18365a494ecdf5d3ed8d0274ab3e9ebba00095ccd22bf73228093d3296d8",
-      "size": 15862,
+      "sha256": "759c0f9a5a61280b6bd18d3afb4888299e766c2b68b39eb13ca5553a6ee498f2",
+      "size": 16107,
       "standard_ten_class_ok": false
     },
     {
@@ -6901,12 +8965,12 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/verify_flow.py",
       "provenance": "handwritten-pending",
-      "sha256": "ac75b3d6756e4e2c7d3a2c5e5806f9d075501353c4312ed0232530b9e0928dc3",
+      "sha256": "7133fc6584d67dcf61fc76c7e94b7a930e968004434df26a5f5cec4b40e45661",
       "size": 22929,
       "standard_ten_class_ok": false
     }
   ],
-  "illegal_provenance_count": 234,
+  "illegal_provenance_count": 236,
   "oop_files": [],
   "open_gaps": [
     {
