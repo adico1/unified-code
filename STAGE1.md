@@ -89,3 +89,8 @@ close:
 
 Those remain separate Milestone 2 issues and cannot be inferred from this
 minimal runnable Stage-1 surface.
+
+The bounded UEM-surface successor consumes generated `uem/contract.json`
+without changing this five-file identity. It generates independent Python/C
+host boundaries, registries, target declarations and shared L11 vector
+declarations under `generated/uem_surface/`.

@@ -92,13 +92,17 @@ This milestone is deliberately non-blocking for Milestone 1. Open items:
 - Keep the complete proof inventory under the event-driven
   [`uc verify-all`](VERIFY_FLOW.md) tool-bootstrap-plus-five-second budget.
 - Generate Python/C hosts, physical target adapters, and build definitions.
+  The ROOT/Stage-1 generated UEM surface now supplies independent host
+  boundaries and honest target declarations; physical support remains gated by
+  native goldens.
 - Generate repository tests, mutations, goldens, documentation, and audit tools.
 - Account for vendored dependencies without claiming they were generated.
 - Rebuild the complete repository in a clean room from Stage 0 plus the root
   seed.
 - Reach a whole-tree fixed point with byte-identical hashes.
 - Unify the UEM surface while preserving independent Python and C hosts for
-  L11 equivalence.
+  L11 equivalence. The generated surface and differential-vector authority now
+  implement this boundary.
 
 ## 0.1 — Kernel
 
