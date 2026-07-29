@@ -637,9 +637,17 @@ def run_l11_gauntlet(thing=None):
     bad_samples.append(("trunc", raw[:20]))
     bad_samples.append(("trail", raw + b"\x00"))
     bad_samples.append(("magic", b"XXXX" + raw[4:]))
+    bad_version = bytearray(raw)
+    bad_version[4:6] = b"\x00\x02"
+    bad_samples.append(("version", bytes(bad_version)))
     b = bytearray(raw)
     b[12] = 0x7F
     bad_samples.append(("badop", bytes(b)))
+    primitive_compiled = _enc((("APPLY", "identity"), ("STOP", None)))
+    primitive_raw = value_of(primitive_compiled)["bytecode"]
+    bad_samples.append(
+        ("primitive", primitive_raw.replace(b"identity", b"zzzzzzzz", 1))
+    )
     for bname, blob in bad_samples:
         py = validate_bytecode(blank_thing({"bytecode": blob}))
         ok(f"reject_py:{bname}", py.get("state") == "invalid")

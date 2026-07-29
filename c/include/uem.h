@@ -4,17 +4,12 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "../../generated/uem_surface/c/include/uem_generated_surface.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define UEM_MAGIC0 'U'
-#define UEM_MAGIC1 'E'
-#define UEM_MAGIC2 'M'
-#define UEM_MAGIC3 0x16
-#define UEM_FORMAT_VERSION 1
-#define UEM_REGISTRY_VERSION 2
 #define UEM_MAX_STEPS_DEFAULT 100000u
 #define UEM_MAX_QUEUE_DEFAULT 10000u
 #define UEM_MAX_EVIDENCE 512

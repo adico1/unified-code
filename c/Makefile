@@ -26,6 +26,7 @@ CORE_OBJ = \
   build/stateful.o \
   build/expr.o \
   build/decimal.o \
+  build/uem_generated_host.o \
   build/cJSON.o \
   build/sha256.o
 
@@ -64,6 +65,8 @@ build/expr.o: core/expr.c include/uem.h | $(BUILD)
 	$(CC) $(CFLAGS) -c -o $@ core/expr.c
 build/decimal.o: core/decimal.c | $(BUILD)
 	$(CC) $(CFLAGS) -c -o $@ core/decimal.c
+build/uem_generated_host.o: ../generated/uem_surface/c/host/generated/uem_generated_host.c include/uem.h | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ ../generated/uem_surface/c/host/generated/uem_generated_host.c
 build/cJSON.o: third_party/cJSON.c | $(BUILD)
 	$(CC) $(CFLAGS) -c -o $@ third_party/cJSON.c
 build/sha256.o: third_party/sha256.c | $(BUILD)

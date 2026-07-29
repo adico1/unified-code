@@ -1,0 +1,1 @@
+{"additional_properties":false,"fields":["canonical_version","registry_version","unicode_profile","program_sha256","state","stop_reason","presentation","stats","error","path","ticket","outward_log","events_emitted","events_dequeued","evidence","limit_hit","steps","instruction_count","reject"],"format_version":"UC-UEM-SURFACE-1"}

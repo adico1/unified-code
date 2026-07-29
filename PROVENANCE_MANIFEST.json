@@ -1,5 +1,5 @@
 {
-  "file_count": 286,
+  "file_count": 316,
   "files": [
     {
       "compliance": "ok",
@@ -59,8 +59,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": ".github/workflows/test.yml",
       "provenance": "handwritten-pending",
-      "sha256": "daf9dc9485d797c6f6ea0676e09ba18d0b0761d82fe021bfe894b36323b1b866",
-      "size": 6799,
+      "sha256": "224c02a74cf42f1d8beca49b073393851ca72c743ab52c925fd1aa786fca4cc3",
+      "size": 6342,
       "standard_ten_class_ok": false
     },
     {
@@ -121,8 +121,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "dc2f3af605d9f3bcb20e8607c73b1fe28d1a063c24b83d9372bad894a79e1fe1",
-      "size": 30353,
+      "sha256": "c20ba915a48baee3596334e91ab4318041b023b0c9e9b531550ad8a878d6f7e2",
+      "size": 33661,
       "standard_ten_class_ok": true
     },
     {
@@ -204,7 +204,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "MANIFESTATION.md",
       "provenance": "handwritten-pending",
-      "sha256": "4d94d666eea3c4c374f27bfc892aeb09099168c3a20c82701e50d033f3d31b90",
+      "sha256": "15efdca893c191c369d1cd55a94dc15230ae0ddb25d702905619dd4352334609",
       "size": 9452,
       "standard_ten_class_ok": false
     },
@@ -224,8 +224,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "35b093a1e404b6e485c91a08ed390cfa151532f6f16275e55c04bc0b825e1726",
-      "size": 180317,
+      "sha256": "e8f1b6d3d11bd1a029fa1cb93197d8410d14e33affadab6aa5d8e48501f5d8e2",
+      "size": 200444,
       "standard_ten_class_ok": true
     },
     {
@@ -245,8 +245,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "README.md",
       "provenance": "handwritten-pending",
-      "sha256": "276ad1198feb95b8d5105f7e1a6cb81a444b953b36832bd434c55cef31926e95",
-      "size": 11887,
+      "sha256": "f59cf73dde37809b8a48af7b86c0ab046ff73c626291bb4dc34f0905b0932abe",
+      "size": 12203,
       "standard_ten_class_ok": false
     },
     {
@@ -266,8 +266,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "ROADMAP.md",
       "provenance": "handwritten-pending",
-      "sha256": "8425980061922e0201857bf395101bf09ac7503e31f8f11bdf0efc3cb4c2cf08",
-      "size": 8391,
+      "sha256": "cec16f240821e25c178b218310be6643f22f945ceb90a8b6c68169eadc18239d",
+      "size": 8921,
       "standard_ten_class_ok": false
     },
     {
@@ -350,8 +350,29 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "STAGE1.md",
       "provenance": "handwritten-pending",
-      "sha256": "1d1905da481412dd5eeab62f42c3da6d6f26018aaf371f1eac9a0d7735af8c73",
-      "size": 3073,
+      "sha256": "2e0f4ae22335666b5c3db2967f743eadbb523f77f33353ca5e8438b7ed901c1a",
+      "size": 3339,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "STAGE1_FIXED_POINT.md",
+      "provenance": "handwritten-pending",
+      "sha256": "6316896f841a697b83ca6e22f36be7b552a65ca7de5c77ceb670391f01edd8a0",
+      "size": 1360,
       "standard_ten_class_ok": false
     },
     {
@@ -412,8 +433,29 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "UEM_SPEC.md",
       "provenance": "handwritten-pending",
-      "sha256": "6bfacbc86a486bebb3ad201929358731f4bf8fe83007423d9abd987f38eaede0",
-      "size": 15381,
+      "sha256": "1cb6d38f55bb2a36a8c55640cd3c61194a716f6f99ff666c28a48c0b0c827f66",
+      "size": 16546,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "VERIFY_FLOW.md",
+      "provenance": "handwritten-pending",
+      "sha256": "a8a4df82c4ef96ad06884f1841b736f633055d2112f68de8816716800cd168ac",
+      "size": 3360,
       "standard_ten_class_ok": false
     },
     {
@@ -452,7 +494,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "artifacts/uem/invoice_total/program.symbolic.json.stamp.json",
       "provenance": "generated",
-      "sha256": "db995be5d8230b5eb8e7f663f6de1fbdc90e8c1b97602dd0de3d4736ca7f9698",
+      "sha256": "4fc5f5b144118ff15f2afd1239f0470451d5434fd9edb3e52f5bddfe3eb641e5",
       "size": 422,
       "standard_ten_class_ok": true
     },
@@ -492,7 +534,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "artifacts/uem/invoice_total/program.uem.stamp.json",
       "provenance": "generated",
-      "sha256": "5805e26e7ad32e68caed753bcb1757ec5889a3389f5d12df445f014277d440e9",
+      "sha256": "702ee448c1fadc8328adcc30056ca78a882d320b80515731150c0fae73a45b21",
       "size": 422,
       "standard_ten_class_ok": true
     },
@@ -532,7 +574,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "artifacts/uem/text_stats_v2/program.symbolic.json.stamp.json",
       "provenance": "generated",
-      "sha256": "4de434b81d37047e95a7c3c08a6fa4a932dc663390f9f06fe53a43e91192ee31",
+      "sha256": "1f90c6814be8e951da55b18b156dc17a9f4837078dbc5d89f8525e9cf07cf1fc",
       "size": 422,
       "standard_ten_class_ok": true
     },
@@ -572,9 +614,33 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "artifacts/uem/text_stats_v2/program.uem.stamp.json",
       "provenance": "generated",
-      "sha256": "488bfbba6c1b9296f33001e466ff6554766978f0e976e444f6e2b97169745e98",
+      "sha256": "9bf8e23d85d2ba42b128fe8f0d3b704e1364253a9c2feda7652f8506800d974b",
       "size": 422,
       "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 6,
+        "for": 1,
+        "if": 13,
+        "match": 0,
+        "total": 23,
+        "try": 3,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "bootstrap/fixed_point.py",
+      "provenance": "handwritten-pending",
+      "sha256": "d018b708d67cdde1b7adc07947378434cf90f53fa47da157be84aa9f68c55bbe",
+      "size": 9414,
+      "standard_ten_class_ok": false
     },
     {
       "compliance": "standard.gap",
@@ -598,6 +664,30 @@
       "provenance": "handwritten-pending",
       "sha256": "d1ba66af02b606e209421ed786eb0e0795e1fc847107ecb3cb6b99959c7b6514",
       "size": 35749,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 17,
+        "for": 1,
+        "if": 11,
+        "match": 0,
+        "total": 31,
+        "try": 2,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "bootstrap/uem_surface.py",
+      "provenance": "handwritten-pending",
+      "sha256": "3c9101d9907c1640a9f13d0894d254f86cb6e06fd904aefaf73a4624150ffdd4",
+      "size": 15681,
       "standard_ten_class_ok": false
     },
     {
@@ -638,8 +728,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "c/Makefile",
       "provenance": "handwritten-pending",
-      "sha256": "f40326d9bf9dd16c68683c7f73ce3c2c7b76aac8767b16971516ec72f0b814a9",
-      "size": 3611,
+      "sha256": "1c23d3b0fc4dbf858cff8d8e510b6d488d00040f957a70306c476cdaa15e29ff",
+      "size": 3847,
       "standard_ten_class_ok": false
     },
     {
@@ -680,8 +770,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "c/REGISTRY.md",
       "provenance": "handwritten-pending",
-      "sha256": "1a496cfe8a0530655abefdddf60d5b14083b4ef0f7a0368537983ec3303a546c",
-      "size": 2264,
+      "sha256": "e2c03426cd04c88c662bdee724055caa4d49efee66f9a4d0f7cb5b7d7ab2d567",
+      "size": 2604,
       "standard_ten_class_ok": false
     },
     {
@@ -995,8 +1085,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "c/include/uem.h",
       "provenance": "physical-host-boundary",
-      "sha256": "87720fdc5935ec49f26a7ef4187d44c6665058669be57bae74269eb2117aac9a",
-      "size": 3136,
+      "sha256": "7d24711c97c4c49ff80e03ec274fbd6a1947162471cdde43f825576a99298829",
+      "size": 3056,
       "standard_ten_class_ok": true
     },
     {
@@ -3614,6 +3704,384 @@
       "standard_ten_class_ok": false
     },
     {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "comp": 0,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 0,
+        "try": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/__init__.py",
+      "provenance": "generated",
+      "sha256": "2cbd00d2f1b1304a57767c7c360416539b4a6f70afa60b45a62347d399b866da",
+      "size": 37,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 2,
+        "switch": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/c/host/generated/uem_generated_host.c",
+      "provenance": "generated",
+      "sha256": "37c9e4e3d6e53740ba830ca06688a0aa59100cc45b94b9ace48310c068f5c920",
+      "size": 840,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "switch": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/c/host/generated/uem_generated_host.h",
+      "provenance": "generated",
+      "sha256": "a8eca690e3e013d0cde9202341a4c0b944afd1e4b9c656e1c312b6d294766522",
+      "size": 426,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "switch": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/c/include/uem_generated_surface.h",
+      "provenance": "generated",
+      "sha256": "23fe24fd5754156b99caf08ac37889f1e9ed403b97d0a41d30d3f50653d51d07",
+      "size": 1459,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/registry/opcodes.json",
+      "provenance": "generated",
+      "sha256": "18f86a8df391c413015d2f3076ef665e4675de39eddc00716bacd6c9e9196b73",
+      "size": 473,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/registry/primitives.json",
+      "provenance": "generated",
+      "sha256": "09eba5721c0a98423a09a3176ae6f87554aad273804889fc39625d45f055bc29",
+      "size": 237,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/schema/canonical-result.json",
+      "provenance": "generated",
+      "sha256": "09399887210475bc81f839ccf5521323cf4a7bbce310ccd374fdc9d0d0a91e61",
+      "size": 331,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/spec/uem.json",
+      "provenance": "generated",
+      "sha256": "c1b1979da0e7e228f523a5390abf7ff2aba87913c31af6d0187be7e61826994b",
+      "size": 684,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/targets/mcu.json",
+      "provenance": "generated",
+      "sha256": "e333cff90ed789a01f6f5084717f14c6aa3fbb4033aa3c41780acfba7b687763",
+      "size": 138,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/targets/posix.json",
+      "provenance": "generated",
+      "sha256": "6e4d45e136ae9eef4de09b6e013bab56a95e552cdc77a04e61649f2f6dafb0be",
+      "size": 144,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/targets/python-host.json",
+      "provenance": "generated",
+      "sha256": "8753cca71c0bff48873c05dbc24ec3cfc6fba127f2b80d10c14c9a6e9e2b152b",
+      "size": 160,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/targets/wasm.json",
+      "provenance": "generated",
+      "sha256": "c1f0ec041e16fac0bf08cab7bf7065359fc0bd7dab14e56fb6dfabc2dcfa13a8",
+      "size": 141,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/uem-surface-manifest.json",
+      "provenance": "generated",
+      "sha256": "6022d70873baf3e47a6877bbd5d91334064df3da70a78f82cb6f81dc980a13f0",
+      "size": 3495,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "comp": 0,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 0,
+        "try": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/unified/__init__.py",
+      "provenance": "generated",
+      "sha256": "ae6c4cd34cb4de5866d15f3127fefb18ffc5dcd1407c4ce2afe4f7336f065c39",
+      "size": 43,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "comp": 0,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 0,
+        "try": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/unified/machine/__init__.py",
+      "provenance": "generated",
+      "sha256": "d5348d3935fc71b268e23267a1dbe1fb3bcb9911c45a4f5b662fae6eec824bb1",
+      "size": 37,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "comp": 0,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 0,
+        "try": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/unified/machine/generated_host.py",
+      "provenance": "generated",
+      "sha256": "595e09c1b8294f5cd5c2f29ec848be6470134a4283489336ebb7a9548c88f6b0",
+      "size": 269,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "comp": 0,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 0,
+        "try": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/unified/machine/generated_surface.py",
+      "provenance": "generated",
+      "sha256": "28b3ef421c8604667df0b83dc28d1749d97013bd034dd51896b0a7c9e4dc5c60",
+      "size": 1305,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": true,
+      "generation_command": "python bootstrap/uem_surface.py",
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "generated/uem_surface/vectors/l11-surface.json",
+      "provenance": "generated",
+      "sha256": "569475e5da9bc1929a86b490fdc4b2e5488264c8fb048b50b39cc425b21c8a3f",
+      "size": 2191,
+      "standard_ten_class_ok": true
+    },
+    {
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
@@ -3632,6 +4100,30 @@
       "provenance": "handwritten-pending",
       "sha256": "033818aa172c883be500f15489d0292f98f03506b62258645396babb07869b40",
       "size": 586,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 1,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 1,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "scripts/assert_verify_budget.py",
+      "provenance": "handwritten-pending",
+      "sha256": "16fe2e7355274bf4435f8906f325499d982cd324dca922c91746354d948b3a51",
+      "size": 1352,
       "standard_ten_class_ok": false
     },
     {
@@ -3836,6 +4328,30 @@
       "provenance": "handwritten-pending",
       "sha256": "76fad072500449d62ad3e12728da1d10c8a36e1d02a2c0f083be3b968c2c7f4c",
       "size": 37987,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 4,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 4,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "scripts/verify_l13_evidence.py",
+      "provenance": "handwritten-pending",
+      "sha256": "52225b679187a5e1a6ed1084ecdda03095dc14d2f4a5487e531e5a96ead9d87e",
+      "size": 1458,
       "standard_ten_class_ok": false
     },
     {
@@ -4274,7 +4790,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/registry.json",
       "provenance": "seed",
-      "sha256": "2d33cdacbb5a7c4a2a31bda098d43d480de1701ef5eeabf841514ae871e512bf",
+      "sha256": "277ad623f93d724a1e0cbdc9b4c9bc0ada1fd28c58ef87dab3c8f39f1d16ed0f",
       "size": 5921,
       "standard_ten_class_ok": true
     },
@@ -4314,7 +4830,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/stamps/generator.lock.json",
       "provenance": "seed",
-      "sha256": "eab941fad387f2b9a3badd68f5eebb3e74dce054a96bc75d9af5cb56627c3a7e",
+      "sha256": "f910c89e103f18a2e236a6fc07b573e57bdc9f886defa9e8fdfd349c7556d469",
       "size": 156,
       "standard_ten_class_ok": true
     },
@@ -4359,6 +4875,46 @@
       "standard_ten_class_ok": true
     },
     {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/verification/PROOF_BUNDLE.json",
+      "provenance": "seed",
+      "sha256": "2bda8d6025993ac903d5b8d7633282f3e367cba7af564dfb2dc07d979ca11296",
+      "size": 3886,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/verification/PROOF_GRAPH.json",
+      "provenance": "seed",
+      "sha256": "75fb6683d25399869a66f83debc0696b0412b9bb18fc52e9998b81adf0f4fdb8",
+      "size": 4671,
+      "standard_ten_class_ok": true
+    },
+    {
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
@@ -4378,8 +4934,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_application_assembly.py",
       "provenance": "handwritten-pending",
-      "sha256": "9e01e266d87db544602d634ffea1bee28e7be824577f75aafe7ebf39ae5baf8c",
-      "size": 16903,
+      "sha256": "5c4168fc545cda858235290e8d91494aea84e9a41672551b38d1283b305d6268",
+      "size": 17187,
       "standard_ten_class_ok": false
     },
     {
@@ -4690,8 +5246,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_l11.py",
       "provenance": "handwritten-pending",
-      "sha256": "b4500532c720112dcb29998f6c7a7b6956ab61486aff21e94b1c7d2793868d4c",
-      "size": 1605,
+      "sha256": "4d863d79a39a9577ce16a255afde4b1650ece159780b78873e836561232c16d6",
+      "size": 2180,
       "standard_ten_class_ok": false
     },
     {
@@ -4786,7 +5342,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_manifestation.py",
       "provenance": "handwritten-pending",
-      "sha256": "7f6b829f2368d30bc362370c5fa9f065759f16310aedb3238ed23b4348a116c7",
+      "sha256": "c9ef1c8bd061ddb132abd90c2ebbbf413886084c8e042a0444247debece5173a",
       "size": 25827,
       "standard_ten_class_ok": false
     },
@@ -4914,6 +5470,30 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
+        "comp": 5,
+        "for": 2,
+        "if": 0,
+        "match": 0,
+        "total": 7,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_stage1_fixed_point.py",
+      "provenance": "handwritten-pending",
+      "sha256": "3d1a5fc6287329233e51c02edcb23b3842e8e3a42ccb281081729a016f228611",
+      "size": 7564,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
         "comp": 0,
         "for": 1,
         "if": 0,
@@ -4986,6 +5566,30 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
+        "comp": 16,
+        "for": 2,
+        "if": 0,
+        "match": 0,
+        "total": 18,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_uem_surface_generation.py",
+      "provenance": "handwritten-pending",
+      "sha256": "9de8badd5c9ebcd84ae8b4a6b0c3aec67b97749d1bf48edc16f1061a3fdb60f4",
+      "size": 10084,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
         "comp": 8,
         "for": 2,
         "if": 1,
@@ -5010,6 +5614,30 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
+        "comp": 5,
+        "for": 4,
+        "if": 3,
+        "match": 0,
+        "total": 12,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_verify_flow.py",
+      "provenance": "handwritten-pending",
+      "sha256": "f759c11c9e28bb0b564a166623215c55b063c820a590c488edb2a598ca0d066a",
+      "size": 10226,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
         "comp": 0,
         "for": 0,
         "if": 0,
@@ -5026,8 +5654,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/__init__.py",
       "provenance": "handwritten-pending",
-      "sha256": "24a5176c9cd5a7f9240297317b369c8ec52d6ea17ebcd9d305043f1e30cbf50c",
-      "size": 761,
+      "sha256": "7ffb124068950347bfff8b7aba725fa702ea34e6aea2086564c6568ff0c1a9f4",
+      "size": 875,
       "standard_ten_class_ok": false
     },
     {
@@ -5226,13 +5854,13 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 80,
-        "for": 33,
-        "if": 83,
+        "comp": 86,
+        "for": 32,
+        "if": 90,
         "match": 0,
-        "total": 216,
+        "total": 229,
         "try": 17,
-        "while": 3
+        "while": 4
       },
       "gap_id": "gap.untracked-or-handwritten",
       "generated": false,
@@ -5242,8 +5870,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/assembly.py",
       "provenance": "handwritten-pending",
-      "sha256": "3b93e188c9c5695f60742f74a3ebaff649ceba9c6a9fed8d34fe72cf7416595a",
-      "size": 84974,
+      "sha256": "3dd3a1d490a2da2dde9ba95c03c0d63d64c0c09e4c3df2c271b4915b73aa6bb5",
+      "size": 90384,
       "standard_ten_class_ok": false
     },
     {
@@ -5300,9 +5928,9 @@
         "classes": 0,
         "comp": 0,
         "for": 0,
-        "if": 69,
+        "if": 72,
         "match": 0,
-        "total": 79,
+        "total": 82,
         "try": 2,
         "while": 8
       },
@@ -5314,8 +5942,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/cli.py",
       "provenance": "handwritten-pending",
-      "sha256": "ff74dc4ff58425ce08392faf91db73a818f09a73660ed8205957de558c26212f",
-      "size": 15105,
+      "sha256": "5d1e73fe2cf2142a91348a88a8a5be7bbef862cf2bac7819b6d5e7073ad35e7c",
+      "size": 15682,
       "standard_ten_class_ok": false
     },
     {
@@ -5674,8 +6302,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/unfold.py",
       "provenance": "handwritten-pending",
-      "sha256": "2811f7f2161a0199f543bd33e901ba1f23947c5c88c52e6c787a7f038b2dad23",
-      "size": 28179,
+      "sha256": "68473f68bf0418bb973437320c3b50acf5b46cde02cf645fc183828ea081eadd",
+      "size": 28323,
       "standard_ten_class_ok": false
     },
     {
@@ -5818,8 +6446,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/machine/canonical.py",
       "provenance": "handwritten-pending",
-      "sha256": "0221102fe36bd7d5248510614d55cba659712c72f9c86fbd970f9926d0c8b4c2",
-      "size": 6825,
+      "sha256": "a52356295ee86c8600aac2c12cc3b73304e034559f5ad7f9714860f7f361ca1c",
+      "size": 6865,
       "standard_ten_class_ok": false
     },
     {
@@ -5937,8 +6565,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/machine/l11.py",
       "provenance": "handwritten-pending",
-      "sha256": "511327326cbe6cdcbf58331116efcb7b35547961d59d4f89ae9cf4782c587408",
-      "size": 25189,
+      "sha256": "95674b18c7322017f6c820754efdeab125d27988448ab82b85f7dd8174dfcd8c",
+      "size": 25549,
       "standard_ten_class_ok": false
     },
     {
@@ -6033,8 +6661,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/machine/opcodes.py",
       "provenance": "handwritten-pending",
-      "sha256": "97cc810a83ccc046ffee0f8bd033de623079e5143b99d4f32fea58b6956c8645",
-      "size": 746,
+      "sha256": "8e04271a8acd6f0cb34f40b6c942ff2a67f32c4dd1af94d58904df9b9e5e3901",
+      "size": 331,
       "standard_ten_class_ok": false
     },
     {
@@ -6163,9 +6791,9 @@
         "classes": 0,
         "comp": 4,
         "for": 11,
-        "if": 37,
+        "if": 38,
         "match": 0,
-        "total": 53,
+        "total": 54,
         "try": 1,
         "while": 0
       },
@@ -6177,8 +6805,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/standard_audit.py",
       "provenance": "handwritten-pending",
-      "sha256": "67738b2208dcd8da1d7e97011a325cf8f72320f1caf87de4482b6ca615e7d1d3",
-      "size": 15639,
+      "sha256": "15ba18365a494ecdf5d3ed8d0274ab3e9ebba00095ccd22bf73228093d3296d8",
+      "size": 15862,
       "standard_ten_class_ok": false
     },
     {
@@ -6252,9 +6880,33 @@
       "sha256": "d72f0665fb484a42227499b4a75b2da7832a61ac5c6fed19168bdc5fddb7a480",
       "size": 1090,
       "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 27,
+        "for": 1,
+        "if": 37,
+        "match": 0,
+        "total": 67,
+        "try": 2,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "unified/verify_flow.py",
+      "provenance": "handwritten-pending",
+      "sha256": "ac75b3d6756e4e2c7d3a2c5e5806f9d075501353c4312ed0232530b9e0928dc3",
+      "size": 22929,
+      "standard_ten_class_ok": false
     }
   ],
-  "illegal_provenance_count": 224,
+  "illegal_provenance_count": 234,
   "oop_files": [],
   "open_gaps": [
     {

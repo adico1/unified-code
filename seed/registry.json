@@ -96,7 +96,7 @@
       "seed_sha256": "cd808daa959ff3db544595c35919ed160d26464f0982f10248c3581ecd01fab7"
     },
     {
-      "artifact_tree_sha256": "67372a335bef68af5466a9e9c820c0d63bec437d2395d79390c5791dd1d2e431",
+      "artifact_tree_sha256": "15bb2cef1cc1c7813f09a499e4f55456fef89ce493d282191ac7ea0a1bc04b4e",
       "canonical_name": "uc://applications/text-stats-v2@1",
       "compiler_route": "expression-uem",
       "compiler_version": "UEM-16-v0.1",
@@ -106,7 +106,7 @@
       "seed_sha256": "bc8539370ffdb1bfbe1b76012df18ebced7bbada7c372fb9dbcc93589be46abe"
     },
     {
-      "artifact_tree_sha256": "a27d437389c52a922bd25d6ac5dc2bddc453e47b6e7a845337e44935ec2565e3",
+      "artifact_tree_sha256": "70e66180b19d80b75ea21be0c42efb617ab58d95b9a0357215243e0e74ede827",
       "canonical_name": "uc://applications/invoice-total@1",
       "compiler_route": "expression-uem",
       "compiler_version": "UEM-16-v0.1",
@@ -116,6 +116,6 @@
       "seed_sha256": "d2e2bf262b2b637c66aa2e93c26f84d6798d4903e51cfb6eb8ae64a37c05cdab"
     }
   ],
-  "registry_snapshot_sha256": "e4c69712fb7234d72cee19ff74a03ab90e8686b1331c0460aa432235f0c6c371",
+  "registry_snapshot_sha256": "3a731f57cf1d8dfa00da3e7c5970c32893f8bfdf3061fd0a69d99f74c35ce54c",
   "registry_version": 1
 }

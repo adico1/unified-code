@@ -1,5 +1,35 @@
 # Unified Event Machine — UEM-16 v0.1
 
+## ROOT-authoritative generated surface
+
+The accepted Stage-1 UEM contract deterministically generates the shared UEM
+surface under [`generated/uem_surface/`](generated/uem_surface/):
+
+```text
+ROOT.seed
+→ Stage-1 uem/contract.json
+→ bootstrap/uem_surface.py
+→ opcode + primitive registries
+→ bytecode + canonical-result contracts
+→ independent Python host boundary
+→ independent C99 host boundary
+→ POSIX/MCU/Wasm/Python target declarations
+→ shared L11 vector declarations
+```
+
+The generated Python boundary invokes only `unified.machine.host`; the
+generated C boundary invokes only `c/core`. Neither implementation generates,
+embeds, invokes, or supplies expected results to the other. Both consume the
+same ROOT-authoritative generated constants.
+
+Generated target declarations begin as `declared-unverified` with
+`support_claim=false`. Physical support remains governed by native goldens in
+`c/targets/manifests/`; generation alone never creates a hardware claim.
+
+The frozen five-file Stage-1 fixed point remains
+`443671f1c8c752989489112d045c09ce7589abe03f9336f8a14a24edfdab8acf`.
+The generated UEM surface has its own clean-room fixed point.
+
 **Status:** foundation beneath Unified Code. Chip-neutral canonical machine.  
 **Not claimed:** independent interpreters for x86-64, ARM64, RISC-V, or MCUs.
 

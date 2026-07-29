@@ -90,6 +90,8 @@ def _classify(rel: str, seed: dict) -> str:
         return "evidence"
     if rel.startswith("artifacts/uem/") or rel.endswith(".stamp.json"):
         return "generated"
+    if rel.startswith("generated/uem_surface/"):
+        return "generated"
     if rel.endswith(".provenance.json"):
         return "generated"
     if rel.startswith("seed/stamps/"):
@@ -225,7 +227,11 @@ def run_audit(thing=None):
             "compliance": "ok" if cls in PROVENANCE_CLASSES else "standard.gap",
         }
         if cls == "generated" or rel.startswith("artifacts/uem/"):
-            entry["generation_command"] = "python -m unified.standard_generate"
+            entry["generation_command"] = (
+                "python bootstrap/uem_surface.py"
+                if rel.startswith("generated/uem_surface/")
+                else "python -m unified.standard_generate"
+            )
         if not entry["standard_ten_class_ok"]:
             illegal_class += 1
             entry["gap_id"] = "gap.untracked-or-handwritten"

@@ -8,7 +8,7 @@ from pathlib import Path
 from unified.machine.canonical import UNICODE_PROFILE, canonical_bytes, from_python_run
 from unified.machine.compile_decl import compile_declaration_path
 from unified.machine.host import run_compiled
-from unified.machine.l11 import run_l11_gauntlet
+from unified.machine.l11 import compare_canonical, run_l11_gauntlet
 from unified.machine.thing import value_of
 
 
@@ -35,6 +35,21 @@ def test_l11_gauntlet():
         failed,
         {k: report.get("details", {}).get(k) for k in failed[:12]},
     )
+    assert report.get("verdict") == "pass"
+
+
+def test_host_unique_result_mutations_are_detected_differentially():
+    compiled = compile_declaration_path(
+        str(ROOT / "examples/declarations/text_stats_v2.json")
+    )
+    canonical = from_python_run(
+        compiled,
+        run_compiled(compiled, {"text": "Go go GO"}),
+    )
+    python_mutation = {**canonical, "state": "invalid"}
+    c_mutation = {**canonical, "registry_version": 999}
+    assert compare_canonical(python_mutation, canonical)
+    assert compare_canonical(canonical, c_mutation)
 
 
 def test_canonical_domain_stable_hash():

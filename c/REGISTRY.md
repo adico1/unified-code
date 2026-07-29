@@ -1,5 +1,11 @@
 # UEM-16 Portable Primitive Registry — version 2
 
+The canonical registry is generated at
+`generated/uem_surface/registry/primitives.json`. This document explains that
+authority; it is not a second registry. C consumes generated constants through
+`c/include/uem.h`; Python consumes the corresponding generated module through
+`unified/machine/opcodes.py` and `unified/machine/canonical.py`.
+
 **Registry version:** `2`
 **Machine:** UEM-16  
 **Spec:** UEM_SPEC.md 0.1  
