@@ -1,6 +1,6 @@
 {
   "application_version": "UC-APPLICATION-3",
-  "application": {"name": "calculator", "package": "calculator_app", "description": "Generated expression interface consuming the generated numeric library."},
+  "application": {"name": "calculator", "package": "calculator_app", "description": "Generated bounded-integer infix expression interface consuming the generated numeric library.", "canonical_name": "uc://applications/bounded-integer-expression-calculator@1", "family": "calculator", "variation": "bounded-integer-expression", "notation": "infix", "numeric_type": "dependency:math-library.numeric_type", "numeric_contract": "dependency:math-library.program", "interface_identity": "editable-expression-keypad", "capabilities": ["evaluate", "add", "subtract", "multiply", "floor-divide", "remainder", "power", "negate"], "dependency_contract_ref": "application:math-library"},
   "interface": {"cli": true, "library": false, "browser": true},
   "dependency": {"application": "math-library", "interface": "library"},
   "program": {
@@ -15,8 +15,8 @@
   "ui": {
     "page": {
       "id": "calculator-desk",
-      "title": "Calculator",
-      "description": "Evaluate expressions through the generated math-library dependency.",
+      "title": "Bounded Integer Expression Calculator",
+      "description": "Editable infix expressions over -1000000 through 1000000; division always floors.",
       "requires_root": false
     },
     "theme": {"background": "#11131a", "surface": "#232631", "text": "#ffffff", "muted": "#b8bdca", "primary": "#ffcc66", "danger": "#ff7f8f"},
@@ -28,6 +28,8 @@
           "components": [
             {"id": "calculator-root", "type": "label", "label": "Runtime root", "accessible_name": "Runtime root"},
             {"id": "calculator-library", "type": "label", "label": "Math library identity", "accessible_name": "Generated math library identity", "derived": "dependency_identity", "readonly": true},
+            {"id": "calculator-range", "type": "label", "label": "Bounded range", "accessible_name": "Inherited bounded integer range", "derived": "dependency_contract.range", "readonly": true},
+            {"id": "calculator-division", "type": "label", "label": "Division rule", "accessible_name": "Inherited division rule", "derived": "dependency_contract.result_rules.division", "readonly": true},
             {"id": "calculator-status", "type": "status", "label": "Status", "accessible_name": "Calculator status"},
             {"id": "calculator-error", "type": "output", "label": "Error", "accessible_name": "Calculator error"}
           ]
@@ -57,6 +59,8 @@
             {"id": "calculator-subtract", "type": "button", "label": "−", "accessible_name": "Subtract operator", "action": "append-subtract"},
             {"id": "calculator-multiply", "type": "button", "label": "×", "accessible_name": "Multiply operator", "action": "append-multiply"},
             {"id": "calculator-divide", "type": "button", "label": "÷", "accessible_name": "Divide operator", "action": "append-divide"},
+            {"id": "calculator-remainder", "type": "button", "label": "%", "accessible_name": "Remainder operator", "action": "append-remainder"},
+            {"id": "calculator-power", "type": "button", "label": "^", "accessible_name": "Power operator", "action": "append-power"},
             {"id": "calculator-equals", "type": "button", "label": "=", "accessible_name": "Evaluate expression", "action": "evaluate-expression", "primary": true},
             {"id": "calculator-result", "type": "output", "label": "Result", "accessible_name": "Calculation result"}
           ]
@@ -82,6 +86,8 @@
       "append-subtract": {"mode": "append", "target": "calculator-display", "value": "-"},
       "append-multiply": {"mode": "append", "target": "calculator-display", "value": "*"},
       "append-divide": {"mode": "append", "target": "calculator-display", "value": "/"},
+      "append-remainder": {"mode": "append", "target": "calculator-display", "value": "%"},
+      "append-power": {"mode": "append", "target": "calculator-display", "value": "^"},
       "evaluate-expression": {"mode": "request", "request": {"expression": {"$control": "calculator-display"}}}
     },
     "bindings": {
@@ -103,6 +109,16 @@
         {"control": "calculator-multiply", "expect": {"target": "calculator-display", "equals": "(2+3)*"}},
         {"control": "calculator-4", "expect": {"target": "calculator-display", "equals": "(2+3)*4"}},
         {"control": "calculator-equals", "expect": {"target": "calculator-result", "equals": "20"}},
+        {"control": "calculator-clear", "expect": {"target": "calculator-display", "equals": ""}},
+        {"control": "calculator-8", "expect": {"target": "calculator-display", "equals": "8"}},
+        {"control": "calculator-remainder", "expect": {"target": "calculator-display", "equals": "8%"}},
+        {"control": "calculator-3", "expect": {"target": "calculator-display", "equals": "8%3"}},
+        {"control": "calculator-equals", "expect": {"target": "calculator-result", "equals": "2"}},
+        {"control": "calculator-clear", "expect": {"target": "calculator-display", "equals": ""}},
+        {"control": "calculator-3", "expect": {"target": "calculator-display", "equals": "3"}},
+        {"control": "calculator-power", "expect": {"target": "calculator-display", "equals": "3^"}},
+        {"control": "calculator-4", "expect": {"target": "calculator-display", "equals": "3^4"}},
+        {"control": "calculator-equals", "expect": {"target": "calculator-result", "equals": "81"}},
         {"set": {"calculator-display": "9/0"}, "keyboard": "Enter", "expect": {"target": "calculator-error", "equals": "zero-divisor"}}
       ],
       "expected_error": "zero-divisor"
@@ -135,9 +151,23 @@
           }
         },
         {
-          "request": {"expression": "8/2"},
+          "request": {"expression": "7/2"},
           "expect": {
-            "state": "valid", "output": {"result": 4}, "error": null,
+            "state": "valid", "output": {"result": 3}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"expression": "8%3"},
+          "expect": {
+            "state": "valid", "output": {"result": 2}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"expression": "3^4"},
+          "expect": {
+            "state": "valid", "output": {"result": 81}, "error": null,
             "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
           }
         },

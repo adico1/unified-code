@@ -1,69 +1,70 @@
 {
   "records": [
     {
-      "artifact_tree_sha256": "53651d1c1646cd5b34a563173a3731b1112d51cf2521c34dd709a5d652714308",
-      "canonical_name": "uc://applications/file-reader@1",
+      "artifact_tree_sha256": "3ee253d8f47582d0db85c67f2636ee3911484d124ec312b55699cfbb7606a660",
+      "canonical_name": "uc://applications/bounded-integer-expression-calculator@1",
       "compiler_route": "application-v3",
       "compiler_version": "UC-APPLICATION-3",
-      "product_family": "application-v3",
-      "route_options": {"product_key": "file-reader", "suite_ref": "application_suite.json"},
-      "seed_id": "application-v3:file-reader@1",
-      "seed_path": "applications/file_reader.json",
-      "seed_sha256": "4e9e705b0db2f06305c8d831feb82af0a6fa7fe7c1a5680d395945ec781db67d"
+      "product_family": "calculator",
+      "route_options": {
+        "product_key": "calculator",
+        "suite_ref": "application_suite.json"
+      },
+      "seed_id": "application-v3:bounded-integer-expression-calculator@1",
+      "seed_path": "applications/calculator.json",
+      "seed_sha256": "3a5a95d8694ec413840efb4b4b64557440c1ad690456ce2c70ea7e7bf2fe3ec3"
     },
     {
-      "artifact_tree_sha256": "b49eadd443bfcfe42e7c508903bac85cb5ca2a138ced3afd6d0e7a402115a1bf",
+      "artifact_tree_sha256": "3d6d4ec001997f6e929cfdac1129edfb7586e3fdf9581d51e612e0b1626cb5a2",
       "canonical_name": "uc://applications/file-editor@1",
       "compiler_route": "application-v3",
       "compiler_version": "UC-APPLICATION-3",
-      "product_family": "application-v3",
-      "route_options": {"product_key": "file-editor", "suite_ref": "application_suite.json"},
+      "product_family": "document-tool",
+      "route_options": {
+        "product_key": "file-editor",
+        "suite_ref": "application_suite.json"
+      },
       "seed_id": "application-v3:file-editor@1",
       "seed_path": "applications/file_editor.json",
-      "seed_sha256": "9bf7887567c3f3ababd58dfed8fa18d3fe1f653670ecf99f9b17999b3b304779"
+      "seed_sha256": "302b854f0b3a8403bd162beb50f78fda0fb4e052304f907a1850415690a70b0e"
     },
     {
-      "artifact_tree_sha256": "1e1eb98be97e36e397b699d910ce39d13594f58742fa9b0e510230b6e7d6772d",
+      "artifact_tree_sha256": "5b0da280b304ea4b18759436e848fbced1ea765f1ee10d4cd02c747be557aad9",
+      "canonical_name": "uc://applications/file-reader@1",
+      "compiler_route": "application-v3",
+      "compiler_version": "UC-APPLICATION-3",
+      "product_family": "document-tool",
+      "route_options": {
+        "product_key": "file-reader",
+        "suite_ref": "application_suite.json"
+      },
+      "seed_id": "application-v3:file-reader@1",
+      "seed_path": "applications/file_reader.json",
+      "seed_sha256": "21988467a086c34ba0076dc0375a6fa86cfa6bba2a94ecf4bd0ea0d3deacd664"
+    },
+    {
+      "artifact_tree_sha256": "70e66180b19d80b75ea21be0c42efb617ab58d95b9a0357215243e0e74ede827",
+      "canonical_name": "uc://applications/invoice-total@1",
+      "compiler_route": "expression-uem",
+      "compiler_version": "UEM-16-v0.1",
+      "product_family": "expression-uem",
+      "seed_id": "expression-uem:invoice-total@1",
+      "seed_path": "declarations/invoice_total.json",
+      "seed_sha256": "d2e2bf262b2b637c66aa2e93c26f84d6798d4903e51cfb6eb8ae64a37c05cdab"
+    },
+    {
+      "artifact_tree_sha256": "5b87eb636687064d9e6a49cae532f43dbf36b885f20dc18716ebdac00f2466a2",
       "canonical_name": "uc://applications/math-library@1",
       "compiler_route": "application-v3",
       "compiler_version": "UC-APPLICATION-3",
-      "product_family": "application-v3",
-      "route_options": {"product_key": "math-library", "suite_ref": "application_suite.json"},
+      "product_family": "math-library",
+      "route_options": {
+        "product_key": "math-library",
+        "suite_ref": "application_suite.json"
+      },
       "seed_id": "application-v3:math-library@1",
       "seed_path": "applications/math_library.json",
-      "seed_sha256": "367d5a1275cbc0c8b6ab9f63eea1457efd8c9f5d0b8c0da989de06a621821a3b"
-    },
-    {
-      "artifact_tree_sha256": "866c8ae2b198b233d1bdf905006585bb125d3db635d6e1ceb21d7604eb321d10",
-      "canonical_name": "uc://applications/calculator@1",
-      "compiler_route": "application-v3",
-      "compiler_version": "UC-APPLICATION-3",
-      "product_family": "application-v3",
-      "route_options": {"product_key": "calculator", "suite_ref": "application_suite.json"},
-      "seed_id": "application-v3:calculator@1",
-      "seed_path": "applications/calculator.json",
-      "seed_sha256": "5989bfd7255f1c820e54c02df006bf23f273f2a2732fcf4a6cb57e9c36103723"
-    },
-    {
-      "artifact_tree_sha256": "d49f2769ba4105c94e1544adbf8fd677e1d8ea05ff9500db112202ea2461b9ba",
-      "canonical_name": "uc://applications/pong-game@1",
-      "compiler_route": "application-v3",
-      "compiler_version": "UC-APPLICATION-3",
-      "product_family": "application-v3",
-      "route_options": {"product_key": "pong-game", "suite_ref": "application_suite.json"},
-      "seed_id": "application-v3:pong-game@1",
-      "seed_path": "applications/pong_game.json",
-      "seed_sha256": "9889b360cda2b8342e5426af50f9da849b5dd68395a81ef48b62d708b15c4e9c"
-    },
-    {
-      "artifact_tree_sha256": "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841",
-      "canonical_name": "uc://applications/trajectory-meter@1",
-      "compiler_route": "thing-v2",
-      "compiler_version": "THING-V2-1",
-      "product_family": "thing-v2",
-      "seed_id": "thing-v2:trajectory-meter@1",
-      "seed_path": "thing_v2/trajectory_meter.json",
-      "seed_sha256": "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
+      "seed_sha256": "91b79a7140dd7b8e654f55725611d751164856e2f48c49c378fbcdb15da1c4c1"
     },
     {
       "artifact_tree_sha256": "fbd0f362dee131c0148cb064ed8c5bae651c11ad800531dba7df49ee87da5be9",
@@ -76,14 +77,18 @@
       "seed_sha256": "ba9bc1d273250032e5cc64092ee4d6a5f8fb176216baa145d2dce7fe07023c96"
     },
     {
-      "artifact_tree_sha256": "328ca31cd5f91b7529a003eb14a05d263a9269e4d63a6073de0d39d4f8fc0b32",
-      "canonical_name": "uc://applications/task-ledger@1",
-      "compiler_route": "stateful-unfold",
-      "compiler_version": "UC-UNFOLD-1",
-      "product_family": "stateful",
-      "seed_id": "stateful:task-ledger@1",
-      "seed_path": "declarations/task_ledger.json",
-      "seed_sha256": "2b62e66d78512e2ef4b19fbd94f7cacf274861647b3023ed3fc508e73d870885"
+      "artifact_tree_sha256": "159e75567ed6bbd46a3b287375c3f24e59850c7643f71bed701d51ef0e89a912",
+      "canonical_name": "uc://applications/pong-game@1",
+      "compiler_route": "application-v3",
+      "compiler_version": "UC-APPLICATION-3",
+      "product_family": "game",
+      "route_options": {
+        "product_key": "pong-game",
+        "suite_ref": "application_suite.json"
+      },
+      "seed_id": "application-v3:pong-game@1",
+      "seed_path": "applications/pong_game.json",
+      "seed_sha256": "12a05f466754bae65a891d97ab684e2287ceabf8c6095b3af90ca2aa0211ae91"
     },
     {
       "artifact_tree_sha256": "b5dc40bf58c58b6862a9a337a2d4c5bc12120db2bdb42859e17327b9be3b393f",
@@ -96,6 +101,16 @@
       "seed_sha256": "cd808daa959ff3db544595c35919ed160d26464f0982f10248c3581ecd01fab7"
     },
     {
+      "artifact_tree_sha256": "328ca31cd5f91b7529a003eb14a05d263a9269e4d63a6073de0d39d4f8fc0b32",
+      "canonical_name": "uc://applications/task-ledger@1",
+      "compiler_route": "stateful-unfold",
+      "compiler_version": "UC-UNFOLD-1",
+      "product_family": "stateful",
+      "seed_id": "stateful:task-ledger@1",
+      "seed_path": "declarations/task_ledger.json",
+      "seed_sha256": "2b62e66d78512e2ef4b19fbd94f7cacf274861647b3023ed3fc508e73d870885"
+    },
+    {
       "artifact_tree_sha256": "15bb2cef1cc1c7813f09a499e4f55456fef89ce493d282191ac7ea0a1bc04b4e",
       "canonical_name": "uc://applications/text-stats-v2@1",
       "compiler_route": "expression-uem",
@@ -106,16 +121,16 @@
       "seed_sha256": "bc8539370ffdb1bfbe1b76012df18ebced7bbada7c372fb9dbcc93589be46abe"
     },
     {
-      "artifact_tree_sha256": "70e66180b19d80b75ea21be0c42efb617ab58d95b9a0357215243e0e74ede827",
-      "canonical_name": "uc://applications/invoice-total@1",
-      "compiler_route": "expression-uem",
-      "compiler_version": "UEM-16-v0.1",
-      "product_family": "expression-uem",
-      "seed_id": "expression-uem:invoice-total@1",
-      "seed_path": "declarations/invoice_total.json",
-      "seed_sha256": "d2e2bf262b2b637c66aa2e93c26f84d6798d4903e51cfb6eb8ae64a37c05cdab"
+      "artifact_tree_sha256": "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841",
+      "canonical_name": "uc://applications/trajectory-meter@1",
+      "compiler_route": "thing-v2",
+      "compiler_version": "THING-V2-1",
+      "product_family": "thing-v2",
+      "seed_id": "thing-v2:trajectory-meter@1",
+      "seed_path": "thing_v2/trajectory_meter.json",
+      "seed_sha256": "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
     }
   ],
-  "registry_snapshot_sha256": "3a731f57cf1d8dfa00da3e7c5970c32893f8bfdf3061fd0a69d99f74c35ce54c",
+  "registry_snapshot_sha256": "48390d2935222a6bf321553d533276b56a9b035bbd9614a4ce8ad3571a781492",
   "registry_version": 1
 }

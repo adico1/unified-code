@@ -1091,7 +1091,7 @@ def manifestation_source_report(source: str | None = None) -> dict:
 GENERIC_VOCABULARY = frozenset(
     {
         "acceptance", "action", "actions", "adapter", "and", "any", "append",
-        "application", "are", "arg", "argument", "arguments", "artifact",
+        "application", "applications", "are", "arg", "argument", "arguments", "artifact",
         "atomically", "boolean", "boundary", "build", "bytes", "canonical",
         "collect", "command", "commands", "compile", "compiler", "composition", "constant",
         "core", "data", "declaration", "default", "dependency", "description",

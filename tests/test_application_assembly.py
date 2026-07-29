@@ -18,6 +18,8 @@ from unified.generator.assembly import (
     _atomic_preservation_probe,
     _file_hashes,
     _ordered_seeds,
+    audited_registry_authority_boundary,
+    derive_application_registry,
     _sha,
     derive_specification,
     render_application,
@@ -250,6 +252,173 @@ def test_dependency_order_is_derived_and_cycles_are_rejected(tmp_path):
     assert "applications:dependency-cycle" in validate_suite(suite, tmp_path)
 
 
+def test_application_v3_registry_is_derived_from_seed_identities():
+    suite = load(SUITE)
+    seeds = [
+        (ROOT / entry["seed"], load(ROOT / entry["seed"]))
+        for entry in suite["applications"]
+    ]
+    manifests = {
+        seed["application"]["name"]: {
+            "tree_sha256": _sha(
+                seed["application"]["canonical_name"].encode()
+            )
+        }
+        for _, seed in seeds
+    }
+    existing, error = audited_registry_authority_boundary(ROOT)
+    assert error is None
+    first = derive_application_registry(
+        suite, seeds, manifests, existing
+    )
+    second = derive_application_registry(
+        suite, list(reversed(seeds)), manifests, existing
+    )
+    assert first == second
+    records = {
+        item["canonical_name"]: item
+        for item in first["records"]
+        if item["compiler_route"] == "application-v3"
+    }
+    exact = (
+        "uc://applications/"
+        "bounded-integer-expression-calculator@1"
+    )
+    assert set(records) == {
+        seed["application"]["canonical_name"] for _, seed in seeds
+    }
+    assert records[exact]["product_family"] == "calculator"
+    assert records[exact]["route_options"]["product_key"] == "calculator"
+    assert "uc://applications/calculator@1" not in records
+
+
+def test_registry_tamper_and_missing_seed_identity_are_rejected(tmp_path):
+    source = tmp_path / "source"
+    shutil.copytree(ROOT / "seed", source / "seed")
+    registry = source / "seed" / "registry.json"
+    registry.write_text(registry.read_text() + " ")
+    _, error = audited_registry_authority_boundary(source)
+    assert error == "registry-tamper"
+    result = run_assemble(
+        thing(
+            source / "seed" / "application_suite.json",
+            tmp_path / "unused-output",
+        )
+    )
+    assert result["state"] == "invalid"
+    assert result["value"]["error"] == "registry-tamper"
+    assert not (tmp_path / "unused-output").exists()
+
+    seed = load(APPLICATIONS / "calculator.json")
+    del seed["application"]["canonical_name"]
+    assert "application.missing:canonical_name" in validate_application(seed)
+    malformed = load(APPLICATIONS / "calculator.json")
+    malformed["application"]["canonical_name"] = "not-qualified"
+    assert "application.canonical_name" in validate_application(malformed)
+    versionless = load(APPLICATIONS / "calculator.json")
+    versionless["application"]["canonical_name"] = (
+        "uc://applications/versionless"
+    )
+    assert "application.canonical_name" in validate_application(versionless)
+
+    duplicate_root = tmp_path / "duplicate"
+    shutil.copytree(ROOT / "seed", duplicate_root / "seed")
+    duplicate_path = (
+        duplicate_root / "seed" / "applications" / "file_reader.json"
+    )
+    duplicate = load(duplicate_path)
+    duplicate["application"]["canonical_name"] = (
+        "uc://applications/"
+        "bounded-integer-expression-calculator@1"
+    )
+    duplicate_path.write_text(
+        json.dumps(duplicate, indent=2, sort_keys=True) + "\n"
+    )
+    duplicate_suite = load(
+        duplicate_root / "seed" / "application_suite.json"
+    )
+    assert "applications:duplicate-canonical-name" in validate_suite(
+        duplicate_suite, duplicate_root
+    )
+
+
+def test_dependency_contract_is_inherited_into_calculator_projection():
+    library = load(APPLICATIONS / "math_library.json")
+    calculator = load(APPLICATIONS / "calculator.json")
+    specification = derive_specification(
+        calculator,
+        "dependency-identity",
+        {
+            "numeric_type": library["program"]["numeric_grammar"]["type"],
+            "range": library["program"]["range"],
+            "result_rules": library["program"]["result_rules"],
+            "operations": sorted(library["program"]["operations"]),
+            "exported_contract": library["program"]["exported_contract"],
+        },
+    )
+    inherited = specification["resolved_dependency_contract"]
+    assert inherited["numeric_type"] == "integer"
+    assert inherited["range"] == [-1000000, 1000000]
+    assert inherited["result_rules"]["division"] == "floor"
+    assert "range" not in calculator["program"]
+    assert "result_rules" not in calculator["program"]
+    duplicated = copy.deepcopy(calculator)
+    duplicated["program"]["range"] = [-1000000, 1000000]
+    assert (
+        "program.duplicated-dependency-contract:range"
+        in validate_application(duplicated)
+    )
+    for symbol, component_id in (
+        ("%", "calculator-remainder"),
+        ("^", "calculator-power"),
+    ):
+        missing = copy.deepcopy(calculator)
+        for section in missing["ui"]["layout"]["sections"]:
+            section["components"] = [
+                component
+                for component in section["components"]
+                if component["id"] != component_id
+            ]
+        assert (
+            f"ui.expression.missing-operator:{symbol}"
+            in validate_application(missing)
+        )
+
+    baseline = _file_hashes(
+        render_application(
+            calculator,
+            "dependency-identity",
+            library["application"]["package"],
+            inherited,
+        )
+    )
+    changed_range = copy.deepcopy(inherited)
+    changed_range["range"] = [-100, 100]
+    range_files = _file_hashes(
+        render_application(
+            calculator,
+            "dependency-identity",
+            library["application"]["package"],
+            changed_range,
+        )
+    )
+    changed_division = copy.deepcopy(inherited)
+    changed_division["result_rules"]["division"] = "truncate"
+    division_files = _file_hashes(
+        render_application(
+            calculator,
+            "dependency-identity",
+            library["application"]["package"],
+            changed_division,
+        )
+    )
+    assert baseline["browser/browser.js"] != range_files["browser/browser.js"]
+    assert (
+        baseline["canonical-specification.json"]
+        != division_files["canonical-specification.json"]
+    )
+
+
 def test_generator_vocabulary_scanner_injections_and_renamed_behavior():
     source = (ROOT / "unified" / "generator" / "assembly.py").read_text().lower()
     forbidden = {
@@ -320,6 +489,9 @@ def test_all_renamed_seeds_assemble_and_invalid_rebuild_preserves_output(tmp_pat
         value_mapping = {
             application["name"]: "unseen-" + application["name"],
             application["package"]: "unseen_" + application["package"],
+            application["canonical_name"]: (
+                "uc://applications/unseen-" + application["name"] + "@7"
+            ),
             **{
                 operation: "unseen-" + operation
                 for operation in seed["program"]["operations"]
@@ -391,6 +563,9 @@ def test_all_renamed_seeds_assemble_and_invalid_rebuild_preserves_output(tmp_pat
     calculator_path = source_root / "seed" / "applications" / "calculator.json"
     calculator = load(calculator_path)
     calculator["dependency"]["application"] = renamed_names["math-library"]
+    calculator["application"]["dependency_contract_ref"] = (
+        "application:" + renamed_names["math-library"]
+    )
     calculator["program"]["operators"] = {
         symbol: vocabulary_maps["math-library"].get(operation, operation)
         for symbol, operation in calculator["program"]["operators"].items()
