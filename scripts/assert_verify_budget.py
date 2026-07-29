@@ -21,7 +21,7 @@ def audited_assertion_boundary():
     assert value["verification_seconds"] <= 5.0, value
     assert value["bootstrap_repository_actions"] == 0, value
     assert value["proofs_passed"] == value["proof_nodes"], value
-    assert value["proof_nodes"] == 23, value
+    assert value["proof_nodes"] == 24, value
     assert value["explicit_conditional_nodes"] == 0, value
     assert value["explicit_loop_nodes"] == 0, value
     return value

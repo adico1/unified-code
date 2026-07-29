@@ -340,3 +340,17 @@ The laws do **not** yet decide whether:
 This remains an unresolved design point. Implementations must not treat
 the current behavior as settled law until it is specified and tested as
 conformance.
+
+<!-- BEGIN UC GENERATED ISSUE7:spec:264f6429305dbe4d529882203fa0cd99c3808970436646e5da6f63de0b0ddded -->
+## Generated verification projection contract
+
+Authority: `944fd457fc7e42dd48c35388e306a7c43a0c1b38311444defa2e247a299b023c`
+Semantic structure: `30ad98acd742bc4c095209bad24a88d4dc631c735aab49784db38c97da1630f5`
+Canonical facts: `59`
+Generated test partitions: `80`
+Generated behavioral mutations: `20`
+Generated canonical goldens: `74`
+Verification proof nodes: `24`
+
+The projection surface contains exactly ten semantic depths and ten deterministic watchers. Generated-region edits, divided authority, stale goldens, incomplete proof inventory, and claim/evidence disagreement are deterministic invalid outcomes.
+<!-- END UC GENERATED ISSUE7:spec -->

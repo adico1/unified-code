@@ -65,7 +65,7 @@ def mini_graph():
         ],
         "proof_nodes": [
             {"id": f"proof-{index:02d}", "requires": ["physical"]}
-            for index in range(23)
+            for index in range(24)
         ],
     }
 
@@ -99,7 +99,7 @@ def test_empty_and_valid_cache_measure_complete_verification(monkeypatch, tmp_pa
     assert warm["value"]["verification_seconds"] <= 5.0
     assert cold["value"]["bootstrap_repository_actions"] == 0
     assert cold["value"]["structure_hash"] == warm["value"]["structure_hash"]
-    assert cold["value"]["proofs_passed"] == warm["value"]["proofs_passed"] == 23
+    assert cold["value"]["proofs_passed"] == warm["value"]["proofs_passed"] == 24
     assert cold["value"]["events"] == warm["value"]["events"] == list(FLOW_EVENTS)
 
 
