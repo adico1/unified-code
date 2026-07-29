@@ -55,6 +55,10 @@ def host_main(argv=None):
         from .assembly import run_assemble
 
         result = run_assemble(inward(payload))
+    elif command == "calculator":
+        from .calculator import run_calculator
+
+        result = run_calculator(inward(payload))
     elif command == "manifest":
         from .manifestation import manifest_artifact
 
@@ -392,6 +396,43 @@ def _parse_argv(argv: list[str]) -> dict:
         return {
             "command": "assemble",
             "suite_path": suite_path,
+            "output": output,
+            **gates,
+            "gauntlet_depths": depths,
+        }
+
+    if command == "calculator":
+        if len(argv) < 3 or argv[1] not in {"generate", "generate-suite"}:
+            return {"command": "calculator", "error": "usage-calculator"}
+        operation = argv[1]
+        request_path = argv[2]
+        output = None
+        gates = {"build": False, "install": False, "verify": False}
+        depths = None
+        i = 3
+        while i < len(argv):
+            if argv[i] == "--output" and i + 1 < len(argv):
+                output = argv[i + 1]
+                i += 2
+                continue
+            if argv[i] in {"--build", "--install", "--verify"}:
+                gates[argv[i][2:]] = True
+                i += 1
+                continue
+            if argv[i] == "--gauntlet-depths" and i + 1 < len(argv):
+                try:
+                    depths = int(argv[i + 1])
+                except ValueError:
+                    return {"command": "calculator", "error": "usage-calculator-depths"}
+                i += 2
+                continue
+            return {"command": "calculator", "error": f"unknown-flag:{argv[i]}"}
+        if not output or not all(gates.values()) or depths != 10:
+            return {"command": "calculator", "error": "usage-calculator-gates"}
+        return {
+            "command": "calculator",
+            "calculator_operation": operation,
+            "request_path": request_path,
             "output": output,
             **gates,
             "gauntlet_depths": depths,

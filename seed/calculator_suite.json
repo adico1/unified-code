@@ -1,0 +1,1 @@
+{"schema":"UC-CALCULATOR-SUITE-1","applications":["applications/bounded_integer_expression.json","applications/scientific_decimal.json","applications/unit_converter.json","applications/percentage.json","applications/date_duration.json","applications/mortgage.json","applications/statistics.json"]}

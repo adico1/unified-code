@@ -1,6 +1,6 @@
 /* Generated UEM contract projection. Do not edit. */
-/* authority: c064b67c6b0074835ea215e2a89fd9b014ab31d615ef8a7e3e3a6f9176a31032 */
-/* structure: c21b3e04a89002ecf7bcfd935981e7886d376374ec529a65562a9e2eb627b0a6 */
+/* authority: 90074d90922f343b1f807dd2756f3370d52776a1d2c536fc85b8b7f9c9e1d06a */
+/* structure: d1fcd43879f432e7abd07d52170c0fab09cbc26d6fa68e699c641fa4e5ab95e3 */
 #include "../../uem_surface/c/include/uem_generated_surface.h"
 
 enum { generated_opcode_load = 1 / (UEM_OPCODE_LOAD == 1u) };

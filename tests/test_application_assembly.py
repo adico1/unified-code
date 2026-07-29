@@ -78,6 +78,8 @@ def test_public_one_operation_and_all_seed_contracts():
     assert parsed["gauntlet_depths"] == 10
     assert not validate_suite(load(SUITE), ROOT)
     for path in sorted(APPLICATIONS.glob("*.json")):
+        if "application" not in load(path):
+            continue
         assert not validate_application(load(path)), path
 
 
@@ -232,6 +234,7 @@ def test_dependency_order_is_derived_and_cycles_are_rejected(tmp_path):
     entries = [
         (path, load(path))
         for path in sorted(APPLICATIONS.glob("*.json"), reverse=True)
+        if "application" in load(path)
     ]
     ordered = [
         seed["application"]["name"]
@@ -485,6 +488,8 @@ def test_all_renamed_seeds_assemble_and_invalid_rebuild_preserves_output(tmp_pat
     vocabulary_maps = {}
     for seed_path in sorted((source_root / "seed" / "applications").glob("*.json")):
         seed = load(seed_path)
+        if "application" not in seed:
+            continue
         application = seed["application"]
         value_mapping = {
             application["name"]: "unseen-" + application["name"],

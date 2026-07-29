@@ -122,6 +122,8 @@ def test_generated_flow_has_no_public_control_and_no_application_vocabulary():
     vocabulary = set()
     for seed_path in sorted((ROOT / "seed" / "applications").glob("*.json")):
         seed = json.loads(seed_path.read_text())
+        if "application" not in seed:
+            continue
         vocabulary.update(
             (
                 seed["application"]["name"],
