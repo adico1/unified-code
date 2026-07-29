@@ -220,12 +220,12 @@ dimension is exactly 100%. Dimensions are never averaged into one score:
 
 No pragma/no-cover. No empty tests. Unreachable production code is a defect.
 
-<!-- BEGIN UC GENERATED ISSUE7:law:a566433155955eb97fe6d1bc01dfa61fb455dd2786295f4163cfda0f5ab59804 -->
+<!-- BEGIN UC GENERATED ISSUE7:law:b738a5df1ae01e2932ffef3cc5cbb7a19e9dc99e15daca17be5f69fbf6fa28d3 -->
 ## Generated verification authority law
 
-Authority: `c064b67c6b0074835ea215e2a89fd9b014ab31d615ef8a7e3e3a6f9176a31032`
-Semantic structure: `c21b3e04a89002ecf7bcfd935981e7886d376374ec529a65562a9e2eb627b0a6`
-Canonical facts: `59`
+Authority: `90074d90922f343b1f807dd2756f3370d52776a1d2c536fc85b8b7f9c9e1d06a`
+Semantic structure: `d1fcd43879f432e7abd07d52170c0fab09cbc26d6fa68e699c641fa4e5ab95e3`
+Canonical facts: `75`
 Generated test partitions: `80`
 Generated behavioral mutations: `20`
 Generated canonical goldens: `74`

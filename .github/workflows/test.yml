@@ -54,6 +54,36 @@ jobs:
       # Cloud-runner wall-clock time is NOT the authority for L9.
       # Authoritative L9 measurement: local `uc benchmark --iterations 20`.
 
+  calculator_windows:
+    name: Calculator Windows x64 projection
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install -e ".[test]"
+
+      - name: Generate calculator suite
+        run: >-
+          python -m unified.generator.cli calculator generate-suite seed/calculator_suite.json
+          --output "${{ runner.temp }}/unified-calculator-suite"
+          --build --install --verify --gauntlet-depths 10
+
+      - name: Execute Windows x64 projection
+        shell: pwsh
+        run: |
+          $root = "${{ runner.temp }}/unified-calculator-suite/bounded-integer-expression-calculator"
+          $actual = python "$root/targets/windows-x64/run.py" '{"expression":"2 + 3 * 4"}'
+          $result = $actual | ConvertFrom-Json
+          if ($result.value.result -ne 14) { throw "Windows projection mismatch" }
+          if (($result.evidence -join ",") -ne "input:normalized,uem:executed,result:formed") { throw "Windows evidence mismatch" }
+
   l13:
     name: L13 Complete Testing Gauntlet
     runs-on: macos-26-intel

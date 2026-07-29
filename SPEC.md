@@ -341,12 +341,12 @@ This remains an unresolved design point. Implementations must not treat
 the current behavior as settled law until it is specified and tested as
 conformance.
 
-<!-- BEGIN UC GENERATED ISSUE7:spec:332feb6572985a3e5535dd5d8e86551035860c339a431374bf7a93588ef81e72 -->
+<!-- BEGIN UC GENERATED ISSUE7:spec:dd93f15039ab3692bfe61e894b90526a5679ad0780d4a803f9115b7c2030a2ad -->
 ## Generated verification projection contract
 
-Authority: `c064b67c6b0074835ea215e2a89fd9b014ab31d615ef8a7e3e3a6f9176a31032`
-Semantic structure: `c21b3e04a89002ecf7bcfd935981e7886d376374ec529a65562a9e2eb627b0a6`
-Canonical facts: `59`
+Authority: `90074d90922f343b1f807dd2756f3370d52776a1d2c536fc85b8b7f9c9e1d06a`
+Semantic structure: `d1fcd43879f432e7abd07d52170c0fab09cbc26d6fa68e699c641fa4e5ab95e3`
+Canonical facts: `75`
 Generated test partitions: `80`
 Generated behavioral mutations: `20`
 Generated canonical goldens: `74`

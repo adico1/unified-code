@@ -116,6 +116,17 @@ uc unfold seed/declarations/task_ledger.json \
   --run
 ```
 
+Universal calculator generation is documented in
+[CALCULATOR_GENERATOR.md](CALCULATOR_GENERATOR.md). Seven reference
+calculators and an unseen eighth composition are derived from atomic,
+versioned seeds with:
+
+```bash
+uc calculator generate-suite seed/calculator_suite.json \
+  --output /tmp/unified-calculator-suite \
+  --build --install --verify --gauntlet-depths 10
+```
+
 Milestone 1.1 removes the original task-ledger profile behavior from the generic
 generator. Its independent numeric-transition proof is:
 
@@ -313,12 +324,12 @@ Compact rules live in [STANDARD_TEN.md](STANDARD_TEN.md). Run:
 Partial clean-room: UEM artifacts regenerate byte-identical from seed declarations.  
 **Full-tree clean-room is not claimed** while open gaps remain. Enforcement fails until every file is one of: `seed` | `generated` | `external-vendored` | `physical-host-boundary` | `evidence`.
 
-<!-- BEGIN UC GENERATED ISSUE7:status:1fffbfe343f687c97bf5989be5da433006b051c062adcc65186b2f68514b37d4 -->
+<!-- BEGIN UC GENERATED ISSUE7:status:a7bfb9771dc823536d7d4fc4af46432579faddd4f5e430d2d449c2153343f827 -->
 ## Generated verification status
 
-Authority: `c064b67c6b0074835ea215e2a89fd9b014ab31d615ef8a7e3e3a6f9176a31032`
-Semantic structure: `c21b3e04a89002ecf7bcfd935981e7886d376374ec529a65562a9e2eb627b0a6`
-Canonical facts: `59`
+Authority: `90074d90922f343b1f807dd2756f3370d52776a1d2c536fc85b8b7f9c9e1d06a`
+Semantic structure: `d1fcd43879f432e7abd07d52170c0fab09cbc26d6fa68e699c641fa4e5ab95e3`
+Canonical facts: `75`
 Generated test partitions: `80`
 Generated behavioral mutations: `20`
 Generated canonical goldens: `74`
