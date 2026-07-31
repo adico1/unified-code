@@ -1,0 +1,312 @@
+{
+  "bases": [
+    {
+      "identity": "uc://manual/seeds/calculator-family@1",
+      "path": "../families/calculator.seed.json",
+      "sha256": "b74bbf1a9a4f815f2461fa72594f8fecbe6a298c955ef426f1bc5fb36be7f811"
+    }
+  ],
+  "format": "manual-what-seed-4",
+  "what": {
+    "acceptance": [
+      {
+        "expected": {
+          "error": null,
+          "result": "-2"
+        },
+        "id": "matrix-vector.1",
+        "input": {
+          "expression": "determinant2(1,2,3,4)"
+        }
+      },
+      {
+        "expected": {
+          "error": null,
+          "result": "11"
+        },
+        "id": "matrix-vector.2",
+        "input": {
+          "expression": "dot2(1,2,3,4)"
+        }
+      }
+    ],
+    "identity": {
+      "canonical": "uc://applications/matrix-vector@1",
+      "family": "calculator",
+      "variation": "matrix-vector",
+      "version": 1
+    },
+    "presentation": {
+      "geometry": "520x340+530+850",
+      "keys": [
+        {
+          "column": 0,
+          "key": "function.det",
+          "row": 2
+        },
+        {
+          "column": 1,
+          "key": "function.trace",
+          "row": 2
+        },
+        {
+          "column": 2,
+          "key": "function.dot",
+          "row": 2
+        },
+        {
+          "column": 3,
+          "key": "syntax.comma",
+          "row": 2
+        },
+        {
+          "column": 4,
+          "key": "syntax.right",
+          "row": 2
+        },
+        {
+          "column": 0,
+          "key": "digit.7",
+          "row": 3
+        },
+        {
+          "column": 1,
+          "key": "digit.8",
+          "row": 3
+        },
+        {
+          "column": 2,
+          "key": "digit.9",
+          "row": 3
+        },
+        {
+          "column": 3,
+          "key": "operator.expression.subtract",
+          "row": 3
+        },
+        {
+          "column": 4,
+          "key": "command.clear.compact",
+          "row": 3
+        },
+        {
+          "column": 0,
+          "key": "digit.4",
+          "row": 4
+        },
+        {
+          "column": 1,
+          "key": "digit.5",
+          "row": 4
+        },
+        {
+          "column": 2,
+          "key": "digit.6",
+          "row": 4
+        },
+        {
+          "column": 3,
+          "key": "digit.1",
+          "row": 4
+        },
+        {
+          "column": 4,
+          "key": "digit.2",
+          "row": 4
+        },
+        {
+          "column": 0,
+          "key": "digit.3",
+          "row": 5
+        },
+        {
+          "column": 1,
+          "key": "digit.0",
+          "row": 5
+        },
+        {
+          "column": 2,
+          "key": "syntax.decimal",
+          "row": 5
+        },
+        {
+          "column": 3,
+          "key": "command.backspace",
+          "row": 5
+        },
+        {
+          "column": 4,
+          "key": "command.evaluate",
+          "row": 5
+        }
+      ],
+      "layout": {
+        "columns": 5
+      },
+      "mode_label": "2×2 matrices and 2D vectors",
+      "theme": {
+        "background": "#e0fbfc",
+        "button_background": "#ffffff",
+        "button_foreground": "#293241",
+        "foreground": "#293241"
+      },
+      "title": "Matrix and Vector Calculator"
+    },
+    "program": {
+      "case_entrypoint": "run_case",
+      "language": "calculator-declaration-1",
+      "launch_entrypoint": "launch"
+    },
+    "semantics": {
+      "numeric_laws": {
+        "kind": "expression",
+        "maximum_characters": 512,
+        "numeric_domain": "real",
+        "precision": 10
+      },
+      "operations": {
+        "binary": [
+          {
+            "emit": "+",
+            "id": "add",
+            "syntax": "ast.Add",
+            "target": "operator.add",
+            "token": "+"
+          },
+          {
+            "emit": "-",
+            "id": "subtract",
+            "syntax": "ast.Sub",
+            "target": "operator.sub",
+            "token": "-"
+          },
+          {
+            "emit": "*",
+            "id": "multiply",
+            "syntax": "ast.Mult",
+            "target": "operator.mul",
+            "token": "*"
+          },
+          {
+            "emit": "/",
+            "id": "divide",
+            "syntax": "ast.Div",
+            "target": "operator.truediv",
+            "token": "/"
+          }
+        ],
+        "constants": [],
+        "functions": [
+          {
+            "body": {
+              "subtract": [
+                {
+                  "multiply": [
+                    {
+                      "parameter": "a"
+                    },
+                    {
+                      "parameter": "d"
+                    }
+                  ]
+                },
+                {
+                  "multiply": [
+                    {
+                      "parameter": "b"
+                    },
+                    {
+                      "parameter": "c"
+                    }
+                  ]
+                }
+              ]
+            },
+            "id": "determinant2",
+            "parameters": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ]
+          },
+          {
+            "body": {
+              "add": [
+                {
+                  "parameter": "a"
+                },
+                {
+                  "parameter": "d"
+                }
+              ]
+            },
+            "id": "trace2",
+            "parameters": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ]
+          },
+          {
+            "body": {
+              "add": [
+                {
+                  "multiply": [
+                    {
+                      "parameter": "a"
+                    },
+                    {
+                      "parameter": "c"
+                    }
+                  ]
+                },
+                {
+                  "multiply": [
+                    {
+                      "parameter": "b"
+                    },
+                    {
+                      "parameter": "d"
+                    }
+                  ]
+                }
+              ]
+            },
+            "id": "dot2",
+            "parameters": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ]
+          }
+        ],
+        "unary": [
+          {
+            "emit": "+",
+            "id": "positive",
+            "syntax": "ast.UAdd",
+            "target": "operator.pos"
+          },
+          {
+            "emit": "-",
+            "id": "negative",
+            "syntax": "ast.USub",
+            "target": "operator.neg"
+          }
+        ]
+      }
+    },
+    "state": {
+      "authority": "declarations",
+      "fields": [
+        "expression"
+      ],
+      "initial": {
+        "expression": ""
+      }
+    }
+  }
+}

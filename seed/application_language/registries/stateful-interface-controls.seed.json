@@ -1,0 +1,172 @@
+{
+  "bases": [
+    {
+      "identity": "uc://manual/seeds/בלי_מה@1",
+      "path": "../bases/בלי_מה.seed.json",
+      "sha256": "ac0c41637a25a96144b7c1974cdf93e6ba3408cc97c61fc1d44d34252c77e201"
+    }
+  ],
+  "format": "manual-seed-base-1",
+  "identity": "uc://manual/registries/stateful-interface-controls@1",
+  "kind": "control-registry-authority",
+  "provides": {
+    "control_registry": [
+      {
+        "arguments": {
+          "title": {
+            "identity": "entry.primary",
+            "source": "input"
+          }
+        },
+        "command": "create",
+        "identity": "record.create",
+        "label": "Add"
+      },
+      {
+        "arguments": {
+          "id": {
+            "field": "id",
+            "identity": "collection.primary",
+            "source": "selection"
+          },
+          "title": {
+            "identity": "entry.primary",
+            "source": "input"
+          }
+        },
+        "command": "update",
+        "identity": "record.update",
+        "label": "Edit"
+      },
+      {
+        "arguments": {
+          "id": {
+            "field": "id",
+            "identity": "collection.primary",
+            "source": "selection"
+          }
+        },
+        "command": "toggle",
+        "identity": "record.toggle",
+        "label": "Complete / Reopen"
+      },
+      {
+        "arguments": {
+          "id": {
+            "field": "id",
+            "identity": "collection.primary",
+            "source": "selection"
+          }
+        },
+        "command": "remove",
+        "identity": "record.remove",
+        "label": "Delete"
+      },
+      {
+        "arguments": {
+          "id": {
+            "field": "id",
+            "identity": "collection.primary",
+            "source": "selection"
+          }
+        },
+        "command": "archive",
+        "confirmation": {
+          "message": "The request will leave the active view but remain recoverable in persisted state.",
+          "title": "Archive request?"
+        },
+        "identity": "record.archive",
+        "label": "Archive Request"
+      },
+      {
+        "arguments": {
+          "mode": {
+            "source": "literal",
+            "value": "all"
+          }
+        },
+        "command": "set_filter",
+        "identity": "filter.all",
+        "label": "All"
+      },
+      {
+        "arguments": {
+          "mode": {
+            "source": "literal",
+            "value": "open"
+          }
+        },
+        "command": "set_filter",
+        "identity": "filter.open",
+        "label": "Open"
+      },
+      {
+        "arguments": {
+          "mode": {
+            "source": "literal",
+            "value": "completed"
+          }
+        },
+        "command": "set_filter",
+        "identity": "filter.completed",
+        "label": "Completed"
+      },
+      {
+        "arguments": {
+          "title": {
+            "identity": "entry.primary",
+            "source": "input"
+          }
+        },
+        "command": "create",
+        "identity": "request.submit",
+        "label": "Ask AI"
+      },
+      {
+        "arguments": {
+          "link": {
+            "field": "link",
+            "identity": "collection.primary",
+            "source": "selection"
+          }
+        },
+        "command": "open_link",
+        "identity": "link.open",
+        "label": "Open Code"
+      },
+      {
+        "arguments": {
+          "mode": {
+            "source": "literal",
+            "value": "past"
+          }
+        },
+        "command": "set_filter",
+        "identity": "filter.past",
+        "label": "Past"
+      },
+      {
+        "arguments": {
+          "mode": {
+            "source": "literal",
+            "value": "present"
+          }
+        },
+        "command": "set_filter",
+        "identity": "filter.present",
+        "label": "Present"
+      },
+      {
+        "arguments": {
+          "mode": {
+            "source": "literal",
+            "value": "future"
+          }
+        },
+        "command": "set_filter",
+        "identity": "filter.future",
+        "label": "Future"
+      }
+    ]
+  }
+}

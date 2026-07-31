@@ -1,0 +1,69 @@
+{
+  "applications": [
+    {
+      "enabled": true,
+      "seed": "applications/normal.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/regular.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/scientific.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/programmer.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/financial.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/statistical.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/graphing.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/matrix-vector.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/engineering-units.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/rpn.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/ohms-law.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/quadratic-polynomial.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/todo.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/costed-todo.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/classic-paddle-duel.seed.json"
+    },
+    {
+      "enabled": true,
+      "seed": "applications/development-observatory.seed.json"
+    }
+  ],
+  "format": "manual-seed-program-suite-4"
+}

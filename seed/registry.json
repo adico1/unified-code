@@ -1,6 +1,38 @@
 {
   "records": [
     {
+      "artifact_tree_sha256": "1e13fa24dd24e1b0e468ffeb264c03a7a7bc5eb95c5d2bf3c657b98825d0347a",
+      "canonical_name": "uc://applications/approvals@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "approvals",
+        "profile_identity": "uc://manual/catalog/todo/approvals@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/approvals@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "c5a39fb805cad9f287d8f138b8cb2af99be462c68e867d0ed6ffcd2854e2d2de"
+    },
+    {
+      "artifact_tree_sha256": "7569fb807c33152c55012c04e5bebf3eceff89ed8937844fff97d8c0263c9f93",
+      "canonical_name": "uc://applications/arbitrary-precision@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "arbitrary-precision",
+        "profile_identity": "uc://manual/catalog/calculators/arbitrary-precision@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/arbitrary-precision@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "197d902487df2cdcfbf1e51745b5dd7f8004a07c30309b435cd910ba449736e0"
+    },
+    {
       "artifact_tree_sha256": "3ee253d8f47582d0db85c67f2636ee3911484d124ec312b55699cfbb7606a660",
       "canonical_name": "uc://applications/bounded-integer-expression-calculator@1",
       "compiler_route": "application-v3",
@@ -13,6 +45,374 @@
       "seed_id": "application-v3:bounded-integer-expression-calculator@1",
       "seed_path": "applications/calculator.json",
       "seed_sha256": "3a5a95d8694ec413840efb4b4b64557440c1ad690456ce2c70ea7e7bf2fe3ec3"
+    },
+    {
+      "artifact_tree_sha256": "d7e12dd6a75f8ffc2e4f9273deed4d81dd3fe72b2c576a913da338a32562bf39",
+      "canonical_name": "uc://applications/bug-tracker@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "bug-tracker",
+        "profile_identity": "uc://manual/catalog/todo/bug-tracker@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/bug-tracker@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "6ed6631513d0a72951b212d754e5e44eec5e56fd5fa65533090bee1feb094960"
+    },
+    {
+      "artifact_tree_sha256": "9b2f8b8a23a7842c53e0f6da1f028d16ec983c7648183b21d8e318130a8543ec",
+      "canonical_name": "uc://applications/calculus@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "calculus",
+        "profile_identity": "uc://manual/catalog/calculators/calculus@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/calculus@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "01936b68768ba78b79d1271a62a8fb4f9af0384ca49600664e7ea2d78c791fbf"
+    },
+    {
+      "artifact_tree_sha256": "2dc0731133bfc96bcdc6e8fc88deb0c406fbdcd6ba36be6012e188558b24d619",
+      "canonical_name": "uc://applications/calendar-tasks@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "calendar-tasks",
+        "profile_identity": "uc://manual/catalog/todo/calendar-tasks@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/calendar-tasks@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "ee5176e298eef8050a960fc801996d80075ad0c74735476544c1df7de91672c3"
+    },
+    {
+      "artifact_tree_sha256": "8790e2c08e49028c97f40cae4167e0b0ccf4f282634cb1fc491634a3aa9ccd94",
+      "canonical_name": "uc://applications/care-plan@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "care-plan",
+        "profile_identity": "uc://manual/catalog/todo/care-plan@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/care-plan@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "4644b4970aaba0af7ec048da5e1e846c4123ceecae05d96e68ed7e81b5611ef6"
+    },
+    {
+      "artifact_tree_sha256": "17cd742aba72c46c2c9025550cb0d9458e09bc754f6437819ecd292fcbd31451",
+      "canonical_name": "uc://applications/chemistry@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "chemistry",
+        "profile_identity": "uc://manual/catalog/calculators/chemistry@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/chemistry@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "dfd05712d9654591fa623cac994f474c3ebfd594d6338ab596ec2c19493fb9fe"
+    },
+    {
+      "artifact_tree_sha256": "927d5aeff02e02a227a2a1b4a8453e39cf0da5cc9a67d571909810d638a28e75",
+      "canonical_name": "uc://applications/classic-paddle-duel@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "bounded-simulation",
+      "route_options": {
+        "build_group": "pong-games",
+        "product_key": "classic-paddle-duel",
+        "profile_identity": "uc://manual/catalog/paddle-simulation/classic-paddle-duel@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/classic-paddle-duel@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "dcdeadc8aa5bf1cc330e00a1d255b1a71857402ad655c144311b65bce9fa86bf"
+    },
+    {
+      "artifact_tree_sha256": "f84775f3df48a7a45caa560d4964a7ba033cdf4d9d290392d8dab364dfa9ffad",
+      "canonical_name": "uc://applications/collaboration-sync-plan@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "collaboration-sync-plan",
+        "profile_identity": "uc://manual/catalog/todo/collaboration-sync-plan@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/collaboration-sync-plan@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "d27e9f6d4a555d155ffe5fb05946bf78c170b694d5f854bb8246274e49e5b7f2"
+    },
+    {
+      "artifact_tree_sha256": "65f445054b36d7d3c84ee8244fa51eb27eb6d9b752ac9e1b865e7f35e934831f",
+      "canonical_name": "uc://applications/complex-number@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "complex-number",
+        "profile_identity": "uc://manual/catalog/calculators/complex-number@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/complex-number@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "5b6a8f3d021dd098b21424f2ea56181f3f45f06e2d9d8bb1e76ad1f4ccee37b8"
+    },
+    {
+      "artifact_tree_sha256": "c8f7ada2cf6c9f8d7226f73a24de1f1366c201607ab5f952dbe80ae7e7c8d90a",
+      "canonical_name": "uc://applications/construction@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "construction",
+        "profile_identity": "uc://manual/catalog/calculators/construction@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/construction@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "9b06b80be48c4703e1afc0472cc3af713e6ff5b1a37911723ea083520f3f2c70"
+    },
+    {
+      "artifact_tree_sha256": "2287b7a584f0ab812ecb3637055b4b5d4882b77f58dfb22266f3d0afd900b8f5",
+      "canonical_name": "uc://applications/cooking@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "cooking",
+        "profile_identity": "uc://manual/catalog/calculators/cooking@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/cooking@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "e97a06700f8b172346b539c7f7d51b727c017b9a387379bb591100afd106444c"
+    },
+    {
+      "artifact_tree_sha256": "16d07e1dd49db8b55ac60980eaf43f8673b15f3f175ebdeb4a2547e82e47e4a2",
+      "canonical_name": "uc://applications/costed-todo@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "costed-todo",
+        "profile_identity": "uc://manual/catalog/todo/costed-todo@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/costed-todo@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "9fdde295fdd20fd4a7174dab14c499f401b446f447658cbe46c0c5cc12533d7c"
+    },
+    {
+      "artifact_tree_sha256": "69c8ed3fb58581adec66db1bcd146240af03b06a1fe6b0cdf62b82f42d5e4c98",
+      "canonical_name": "uc://applications/crm-follow-up@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "crm-follow-up",
+        "profile_identity": "uc://manual/catalog/todo/crm-follow-up@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/crm-follow-up@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "de749077ea9463b3cd3248f155db6a49824c87bdefee6fabd48e31879bc07d49"
+    },
+    {
+      "artifact_tree_sha256": "a0249cb716cf192b336cee6887c5030066fbfadd9fb836a70582bb02bf237058",
+      "canonical_name": "uc://applications/currency@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "currency",
+        "profile_identity": "uc://manual/catalog/calculators/currency@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/currency@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "885141c2539482d8fd6db4164072cfba9adb582929549a099b536541b5412ea9"
+    },
+    {
+      "artifact_tree_sha256": "c1760967cb8175cb51aabeab4f9ef94fd2bcb71adb7ddde2a815a9461df2455b",
+      "canonical_name": "uc://applications/daily-planner@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "daily-planner",
+        "profile_identity": "uc://manual/catalog/todo/daily-planner@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/daily-planner@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "2d96f80221b5e3de1ad762ac5da3a40652da149c8980cff5627bbf125aa5f657"
+    },
+    {
+      "artifact_tree_sha256": "af401f138bb12fe93e2b7e9b1752bbefb7be6d3a80026662b84018d4fa93ba1a",
+      "canonical_name": "uc://applications/date-time@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "date-time",
+        "profile_identity": "uc://manual/catalog/calculators/date-time@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/date-time@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "9e26594b25667d3f902d35a3d8a90bacdc1fb1e0473959ae61c9cca60536be38"
+    },
+    {
+      "artifact_tree_sha256": "a27f47555edd884e3a77a4671a4804b4e89bfdfce0d9771f4e1b686ccdeb78e5",
+      "canonical_name": "uc://applications/dependency-plan@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "dependency-plan",
+        "profile_identity": "uc://manual/catalog/todo/dependency-plan@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/dependency-plan@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "1221b3c6fe42d7fb078053233eb6703bb7e17ecb0c25394ea5d07f88323d3672"
+    },
+    {
+      "artifact_tree_sha256": "8b4a0f8bdf012e579c90d52ad2dd2dbc1b6fd5bc69c2b4225855e8adbc9b66d5",
+      "canonical_name": "uc://applications/development-observatory@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "dashboards",
+        "product_key": "development-observatory",
+        "profile_identity": "uc://manual/catalog/development-observatory/system@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/development-observatory@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "498c24aa1c1c38aa3958c741e36d27086fab59628a04437a154400fe7887645f"
+    },
+    {
+      "artifact_tree_sha256": "8eb7ebb36f70416090d29e002f9372b6504af6948f2f04b83eceae3196f291fd",
+      "canonical_name": "uc://applications/doubles-paddle-duel@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "bounded-simulation",
+      "route_options": {
+        "build_group": "pong-games",
+        "product_key": "doubles-paddle-duel",
+        "profile_identity": "uc://manual/catalog/paddle-simulation/doubles@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/doubles-paddle-duel@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "6789dcbec144a59cb5f2bc696d78cdd02ebeb15be17241b836d095ab2497db77"
+    },
+    {
+      "artifact_tree_sha256": "345a98cad3e3e6e4baae918b93aa967cadc065ae63ce3a694400fcf4514f4d4e",
+      "canonical_name": "uc://applications/editorial-calendar@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "editorial-calendar",
+        "profile_identity": "uc://manual/catalog/todo/editorial-calendar@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/editorial-calendar@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "38ddeb41f75750f320c6e640b47bbd175f37696e2951f70fca542388f0db23b1"
+    },
+    {
+      "artifact_tree_sha256": "e3ead17d3b94b54f2d644896674002e47445f9d532fa5fcfa829e594a7f94e23",
+      "canonical_name": "uc://applications/eisenhower@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "eisenhower",
+        "profile_identity": "uc://manual/catalog/todo/eisenhower@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/eisenhower@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "5c2bb321674a4e44df3703d5381313953b4430eae4b11a967107f37b5029e201"
+    },
+    {
+      "artifact_tree_sha256": "dbe0384db45f5a8ae27c6ee57acd2b57d8064d53dd3515de2afa904bc737db90",
+      "canonical_name": "uc://applications/engineering-units@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "engineering-units",
+        "profile_identity": "uc://manual/catalog/calculators/engineering-units@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/engineering-units@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "c97f5a9a06c663c3ebfd20d9fb8cb07af2f49f870543786574a09589577cb59e"
+    },
+    {
+      "artifact_tree_sha256": "eb49f85b3fc82ca650aabe19050756069ef5295ef80d652f4327238e6c363d84",
+      "canonical_name": "uc://applications/errands@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "errands",
+        "profile_identity": "uc://manual/catalog/todo/errands@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/errands@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "310fe420df93b5ef4cd5758db1a602d26929110e95e3c5f96431b8fb7a7f734b"
+    },
+    {
+      "artifact_tree_sha256": "bbdaa1f23e3402f97333d47378fd5060e043e374fdb43c2962cfc1f412407087",
+      "canonical_name": "uc://applications/event-planning@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "event-planning",
+        "profile_identity": "uc://manual/catalog/todo/event-planning@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/event-planning@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "08a879a28ec80418da0156b77f6ab56c2146eb1bf3b1ae75323bcc7f285d1508"
     },
     {
       "artifact_tree_sha256": "3d6d4ec001997f6e929cfdac1129edfb7586e3fdf9581d51e612e0b1626cb5a2",
@@ -43,6 +443,166 @@
       "seed_sha256": "21988467a086c34ba0076dc0375a6fa86cfa6bba2a94ecf4bd0ea0d3deacd664"
     },
     {
+      "artifact_tree_sha256": "ab3c98c1929ce97c230321bbe4d316ed5105b9ace3ab2f7ee1a8ad96422b2afc",
+      "canonical_name": "uc://applications/financial@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "financial",
+        "profile_identity": "uc://manual/catalog/calculators/financial@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/financial@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "17dc208d9bd8bcc85cfca9b347ae4145830ad76f51b4a3e437b3af0ecf9e6ff0"
+    },
+    {
+      "artifact_tree_sha256": "22bb5d6942172b382e61046dfd690dd96c7c8e1202244c4d90113b49645863f1",
+      "canonical_name": "uc://applications/fraction@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "fraction",
+        "profile_identity": "uc://manual/catalog/calculators/fraction@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/fraction@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "ba750a799f731895f35258a5330fff9e707c4997991d0e0efa2f68d4d6a26954"
+    },
+    {
+      "artifact_tree_sha256": "a2a2c05d0096b2e40a80526a54994403f1668b1c8d7625585f554a3a3ae30406",
+      "canonical_name": "uc://applications/geometry@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "geometry",
+        "profile_identity": "uc://manual/catalog/calculators/geometry@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/geometry@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "f8ca454f07a9c9354574f600df36583a6cd7ea82d4eac2a69d93611b040aba92"
+    },
+    {
+      "artifact_tree_sha256": "014ad6a5aa4a525bbada33737583ab4d48782835934a04cfc6fcc90f55930297",
+      "canonical_name": "uc://applications/graphing@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "graphing",
+        "profile_identity": "uc://manual/catalog/calculators/graphing@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/graphing@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "b5410e43c546dfa01051ad0f3c35a99fe34f1c30a97d11720a79be034e9b957b"
+    },
+    {
+      "artifact_tree_sha256": "eefea0923b3a67fde4a977a204329f40e2a1266934ae1e5ee5a2ffe095bc4cee",
+      "canonical_name": "uc://applications/grocery@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "grocery",
+        "profile_identity": "uc://manual/catalog/todo/grocery@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/grocery@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "5974a4d707de44162606da5c11b7919d8d1900d5e4aff80dc34a41ae4161ce28"
+    },
+    {
+      "artifact_tree_sha256": "5b8aed5c7fbf994875456a4da5336eeb2cb920585c5523a0e77f5cfd007c5faa",
+      "canonical_name": "uc://applications/gtd@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "gtd",
+        "profile_identity": "uc://manual/catalog/todo/gtd@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/gtd@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "2db4522cac33a92acb359193e25a44bd268b62e58393db85de2553cdfb1d6b8e"
+    },
+    {
+      "artifact_tree_sha256": "74d5aee6a4958b73f2e2ee9c1863f97fc1b97cbebc60119f26f013419e79cbc8",
+      "canonical_name": "uc://applications/habits@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "habits",
+        "profile_identity": "uc://manual/catalog/todo/habits@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/habits@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "cff0fc6f10e049cecd05ea3c14dd7d5cb6244bec5c917ef6cae7f5b0d068c478"
+    },
+    {
+      "artifact_tree_sha256": "da8a017cf6722ffb583e29e5e31ab6fb7db4d42656b03453179ac7f1f18ef5a6",
+      "canonical_name": "uc://applications/health@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "health",
+        "profile_identity": "uc://manual/catalog/calculators/health@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/health@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "53498a80d9db0e9d3f0b72c2caf1a1459a050ee38925814f1bdf9167d58848a7"
+    },
+    {
+      "artifact_tree_sha256": "cd0907bdd9c918be6112218786d3d323307ad8cc80737d9053c1885683b8c555",
+      "canonical_name": "uc://applications/inventory-restock@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "inventory-restock",
+        "profile_identity": "uc://manual/catalog/todo/inventory-restock@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/inventory-restock@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "c818dbc93589afc378f68e02d0bbcedd2c9575388a7f0ed56ffe34b1d26b5fc2"
+    },
+    {
+      "artifact_tree_sha256": "db33bfb3286d2fc355cc0e674d28007060d73e73d63c734c8efb574eaee26d08",
+      "canonical_name": "uc://applications/investment@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "investment",
+        "profile_identity": "uc://manual/catalog/calculators/investment@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/investment@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "dbe036e9fcbe02082ec462ea611d0b02d87dd4ff8395e15c615b948c4c3264ec"
+    },
+    {
       "artifact_tree_sha256": "70e66180b19d80b75ea21be0c42efb617ab58d95b9a0357215243e0e74ede827",
       "canonical_name": "uc://applications/invoice-total@1",
       "compiler_route": "expression-uem",
@@ -51,6 +611,70 @@
       "seed_id": "expression-uem:invoice-total@1",
       "seed_path": "declarations/invoice_total.json",
       "seed_sha256": "d2e2bf262b2b637c66aa2e93c26f84d6798d4903e51cfb6eb8ae64a37c05cdab"
+    },
+    {
+      "artifact_tree_sha256": "290a735b50cd73823e338249b9333102606d07e07712aa9e957a3f358fde84cc",
+      "canonical_name": "uc://applications/issue-tracker@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "issue-tracker",
+        "profile_identity": "uc://manual/catalog/todo/issue-tracker@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/issue-tracker@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "bedf18ad33aca57e2a0bc1be31ea62fb380e691dd9a653fae335192abfa2a3b2"
+    },
+    {
+      "artifact_tree_sha256": "e328609d14b24b015aeffc814cae704cfa5867a54a35886e373804bd23fdd068",
+      "canonical_name": "uc://applications/kanban@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "kanban",
+        "profile_identity": "uc://manual/catalog/todo/kanban@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/kanban@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "3d6e8a1ab289739b9630267aa96b88599d475ec0164a8a092ee20c8bcb02fad9"
+    },
+    {
+      "artifact_tree_sha256": "3245e250ea408d3cd9b999319fffa31d2730af81f210d7d0ac3dec850ddca6cf",
+      "canonical_name": "uc://applications/loan-mortgage@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "loan-mortgage",
+        "profile_identity": "uc://manual/catalog/calculators/loan-mortgage@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/loan-mortgage@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "834541ae4ed112fb6d4403214e9d399ddcf3bb53963d47de5c21fd3db422c02a"
+    },
+    {
+      "artifact_tree_sha256": "c5787a94127f1dda73c60744cb0ab171076651cd841d18d7737c763c17d05758",
+      "canonical_name": "uc://applications/maintenance-work-orders@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "maintenance-work-orders",
+        "profile_identity": "uc://manual/catalog/todo/maintenance-work-orders@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/maintenance-work-orders@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "fe6c35e785b6bc428fc7d1bd5826f347552e7c4a8013e8a05745650e8c707eac"
     },
     {
       "artifact_tree_sha256": "5b87eb636687064d9e6a49cae532f43dbf36b885f20dc18716ebdac00f2466a2",
@@ -67,6 +691,118 @@
       "seed_sha256": "91b79a7140dd7b8e654f55725611d751164856e2f48c49c378fbcdb15da1c4c1"
     },
     {
+      "artifact_tree_sha256": "8059c1269bc6ed22ced350eeb4a8fe015500f94e3cfb08d12e3c9f71a8a9a019",
+      "canonical_name": "uc://applications/matrix-vector@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "matrix-vector",
+        "profile_identity": "uc://manual/catalog/calculators/matrix-vector@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/matrix-vector@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "5080f6f2614451d2f0cdf0e3d25e2bb65b651659005249d59bc55c253852b569"
+    },
+    {
+      "artifact_tree_sha256": "e9af655d1199d136551e3fd9bea8d7e6d696f3c763ce385158700ad2696b2b67",
+      "canonical_name": "uc://applications/multiball-paddle-duel@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "bounded-simulation",
+      "route_options": {
+        "build_group": "pong-games",
+        "product_key": "multiball-paddle-duel",
+        "profile_identity": "uc://manual/catalog/paddle-simulation/multiball@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/multiball-paddle-duel@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "31be3ff289dcdabe2dcdd207f0681934df59fb123d060c484a73b1adfa7cd8c6"
+    },
+    {
+      "artifact_tree_sha256": "075fd7b27b8763a91e0c7884e8993a8a9b4c3075ea89297056f5f50cff002d50",
+      "canonical_name": "uc://applications/navigation@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "navigation",
+        "profile_identity": "uc://manual/catalog/calculators/navigation@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/navigation@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "ea0e589777ca4cd715eb45a175c9aad4402a95fa15fda5e8d2255798b96d1849"
+    },
+    {
+      "artifact_tree_sha256": "c1eeeaea5721e78ac3dff49d2800d5e1f33023b2b31d949c457b6e63ac671f9f",
+      "canonical_name": "uc://applications/normal@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "normal",
+        "profile_identity": "uc://manual/catalog/calculators/normal@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/normal@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "0e5bf5179917e10d370da108f0dd1bf632db8bd6ef92b28e711c3a5b549db5de"
+    },
+    {
+      "artifact_tree_sha256": "9e05a8e91bb8c459f173c16b422747181802596ab0509587e5348a40a964c0e8",
+      "canonical_name": "uc://applications/obstacle-paddle-arena@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "bounded-simulation",
+      "route_options": {
+        "build_group": "pong-games",
+        "product_key": "obstacle-paddle-arena",
+        "profile_identity": "uc://manual/catalog/paddle-simulation/obstacle@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/obstacle-paddle-arena@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "19694ef5dfd433bf664a2279f2707cf210e1b532729f1f415a8eb52fbb136276"
+    },
+    {
+      "artifact_tree_sha256": "a793d98eb85940ad590cb644785bd67fbe042be45ce55a3ac0b4a2b1d805be5f",
+      "canonical_name": "uc://applications/offline-security-plan@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "offline-security-plan",
+        "profile_identity": "uc://manual/catalog/todo/offline-security-plan@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/offline-security-plan@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "97d54caa227527f906d00b3e06adb9816c8cfa5dfe4eb898d495ee9deba03231"
+    },
+    {
+      "artifact_tree_sha256": "ae19e3d6b82559c6ba7ff871aa6c5580c8ca9526c12502b8bc425edf3e503354",
+      "canonical_name": "uc://applications/ohms-law@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "ohms-law",
+        "profile_identity": "uc://manual/catalog/calculators/ohms-law@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/ohms-law@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "32fd95fd1a50fda97081852d74e23f1b67d39d9f1902516fe05dc874ce4caf79"
+    },
+    {
       "artifact_tree_sha256": "fbd0f362dee131c0148cb064ed8c5bae651c11ad800531dba7df49ee87da5be9",
       "canonical_name": "uc://applications/orchard-yield@1",
       "compiler_route": "thing-v2",
@@ -75,6 +811,38 @@
       "seed_id": "thing-v2:orchard-yield@1",
       "seed_path": "thing_v2/orchard_yield.json",
       "seed_sha256": "ba9bc1d273250032e5cc64092ee4d6a5f8fb176216baa145d2dce7fe07023c96"
+    },
+    {
+      "artifact_tree_sha256": "1f0b594d9f2efa588d62b14f6264077dfbd637308ff223008ff4a614bc06230b",
+      "canonical_name": "uc://applications/physics@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "physics",
+        "profile_identity": "uc://manual/catalog/calculators/physics@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/physics@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "4b90c046e1100847400d7146a172ca098ddd6358fe80a56007bf8f8bd566e243"
+    },
+    {
+      "artifact_tree_sha256": "c825e37fb99880942fb7cc4422879ea4d95f43aa902f4ef98f06fd504e8b5322",
+      "canonical_name": "uc://applications/polynomial-algebra@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "polynomial-algebra",
+        "profile_identity": "uc://manual/catalog/calculators/polynomial-algebra@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/polynomial-algebra@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "a0280537ce0d77f88f725daf6ba5b087702a1c6f81a129998125fd6bf6261758"
     },
     {
       "artifact_tree_sha256": "159e75567ed6bbd46a3b287375c3f24e59850c7643f71bed701d51ef0e89a912",
@@ -91,6 +859,214 @@
       "seed_sha256": "12a05f466754bae65a891d97ab684e2287ceabf8c6095b3af90ca2aa0211ae91"
     },
     {
+      "artifact_tree_sha256": "55175c907b13375e582b2c360b72e734f890999348de30fff31ae7241ebe9e36",
+      "canonical_name": "uc://applications/power-up-paddle-arena@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "bounded-simulation",
+      "route_options": {
+        "build_group": "pong-games",
+        "product_key": "power-up-paddle-arena",
+        "profile_identity": "uc://manual/catalog/paddle-simulation/power-up@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/power-up-paddle-arena@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "7f99924412a337a79d5a5cdf85740d8942b924a597e03d35ea30dfbf015d7cad"
+    },
+    {
+      "artifact_tree_sha256": "e86084bf96f6e4743355f62023131ca40f0224750608b3bc0bb36e5eb6fc7657",
+      "canonical_name": "uc://applications/probability@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "probability",
+        "profile_identity": "uc://manual/catalog/calculators/probability@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/probability@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "f109187f14d5f6aa2c958ed44f36c262e06f2ab3bb6495ff4847340aab749be3"
+    },
+    {
+      "artifact_tree_sha256": "375244d1b4db7cbd06f798fb76a1782c930beb7df50c8bd34a66604c211e1592",
+      "canonical_name": "uc://applications/product-roadmap@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "product-roadmap",
+        "profile_identity": "uc://manual/catalog/todo/product-roadmap@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/product-roadmap@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "278c0abbeb8b8d983762dc5f11b33bb611cb48e0e3bb4731195df86e9ed85008"
+    },
+    {
+      "artifact_tree_sha256": "4a54bac8388f1961fd3fb4e8e7d00f8d477828eb83221d49db012293d8d29451",
+      "canonical_name": "uc://applications/programmer@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "programmer",
+        "profile_identity": "uc://manual/catalog/calculators/programmer@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/programmer@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "dee6c0c06e81a35f8725210dcd918f1a9aaffd7263b065349286193f55333a04"
+    },
+    {
+      "artifact_tree_sha256": "0ed5797605b0473f49cc15d940507fb46d8706ec6eebd65630a77741fbbf4485",
+      "canonical_name": "uc://applications/project-work-breakdown@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "project-work-breakdown",
+        "profile_identity": "uc://manual/catalog/todo/project-work-breakdown@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/project-work-breakdown@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "b72d52ddaa0a47b9fbd26e2e2fdf98fe921d710f8cf7141b287784486038e4e4"
+    },
+    {
+      "artifact_tree_sha256": "c962b93e318bbad974cd11eb4c5f76e24fcc89e9dd69750715628829f14e222b",
+      "canonical_name": "uc://applications/quadratic-polynomial@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "quadratic-polynomial",
+        "profile_identity": "uc://manual/catalog/calculators/quadratic-polynomial@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/quadratic-polynomial@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "34f8b14cf75a2fd24e90e49c537c70807499ad359d7a46de55b7b74d2f87f557"
+    },
+    {
+      "artifact_tree_sha256": "1d989624b5cbf9df303d1334e771d2b4dd001220aa34e05bb2a829fc2a2db5a4",
+      "canonical_name": "uc://applications/recurring-chores@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "recurring-chores",
+        "profile_identity": "uc://manual/catalog/todo/recurring-chores@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/recurring-chores@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "0fb52ea549f589c2c9ba02b6b5098cf5c08dde14e243562c52067f9f260cbf1a"
+    },
+    {
+      "artifact_tree_sha256": "64c6e13bbd6fa0d29f43f31cb38c1d0507f5086e75a8e2c4adaee8082b03e2be",
+      "canonical_name": "uc://applications/regression@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "regression",
+        "profile_identity": "uc://manual/catalog/calculators/regression@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/regression@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "954fddfb036c5af0d5acdcf9e51a00a04c7f0e68895ed584cf3fbc100e6b5b5d"
+    },
+    {
+      "artifact_tree_sha256": "0244da650b65454db45b73b706b8171c5c451b185d551db102e8ea03c71dcedf",
+      "canonical_name": "uc://applications/regular@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "regular",
+        "profile_identity": "uc://manual/catalog/calculators/regular@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/regular@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "bd3bf1b2340a1e339ef109ccc9653c00bfeaf9c859911ddcf563cd36e2a87bb2"
+    },
+    {
+      "artifact_tree_sha256": "9ecd195df3e05c7c933c31cab833961e5ee27d545cf09428909d6e0f9c89965f",
+      "canonical_name": "uc://applications/reminders@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "reminders",
+        "profile_identity": "uc://manual/catalog/todo/reminders@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/reminders@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "c66bd3fc09d7deaff72a0314436f825a865cc9df7d1390ea685dfdfd97bbf749"
+    },
+    {
+      "artifact_tree_sha256": "4914785a286f233e33ddf048a08700d00cda2a1db51030438a084b8cb437521f",
+      "canonical_name": "uc://applications/research-pipeline@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "research-pipeline",
+        "profile_identity": "uc://manual/catalog/todo/research-pipeline@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/research-pipeline@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "e56c394571bb23162227340b0e9785880618b51e7a75b86cb9cf98244cb011d6"
+    },
+    {
+      "artifact_tree_sha256": "db5a5bd3ff8e8a57a3c19e220629d6a6a3d97a8546e7e92b1d18e329e745e43d",
+      "canonical_name": "uc://applications/rpn@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "rpn",
+        "profile_identity": "uc://manual/catalog/calculators/rpn@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/rpn@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "a50b86af1035cf0b71713966fa81b3e732109a1971ef1abe4f5ddc5ad6134e88"
+    },
+    {
+      "artifact_tree_sha256": "a86e71a07867d22b78aa6fabb34b3533f7939c229ba3439ad226f47f9b76333b",
+      "canonical_name": "uc://applications/scientific@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "scientific",
+        "profile_identity": "uc://manual/catalog/calculators/scientific@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/scientific@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "ca3c824eb27aedb9d1ba18f012374ecbd6bafba8276a2561a4f13f9d28cdc41a"
+    },
+    {
       "artifact_tree_sha256": "b5dc40bf58c58b6862a9a337a2d4c5bc12120db2bdb42859e17327b9be3b393f",
       "canonical_name": "uc://applications/score-board@1",
       "compiler_route": "stateful-unfold",
@@ -99,6 +1075,102 @@
       "seed_id": "stateful:score-board@1",
       "seed_path": "declarations/score_board.json",
       "seed_sha256": "cd808daa959ff3db544595c35919ed160d26464f0982f10248c3581ecd01fab7"
+    },
+    {
+      "artifact_tree_sha256": "f8d524626371dd290277834bf873fe0a0e722f28597b5016aebcd055ea0937f9",
+      "canonical_name": "uc://applications/solo-paddle-opponent@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "bounded-simulation",
+      "route_options": {
+        "build_group": "pong-games",
+        "product_key": "solo-paddle-opponent",
+        "profile_identity": "uc://manual/catalog/paddle-simulation/solo-opponent@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/solo-paddle-opponent@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "94da07188e3ac9b4858fdbb8869cb5c9741e4b12a404d5fec1e73d1c4847d309"
+    },
+    {
+      "artifact_tree_sha256": "01c4fb2b3501ced5f3d774bea9f43d3a80fdb977cf4490abde99376e45f5f147",
+      "canonical_name": "uc://applications/sprint-backlog@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "sprint-backlog",
+        "profile_identity": "uc://manual/catalog/todo/sprint-backlog@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/sprint-backlog@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "7ee72bbaa6705b569769f478f5b88d5dc784a3e2978224076db000a5dce63dd9"
+    },
+    {
+      "artifact_tree_sha256": "a75ea4f201844f664e76f7932c1b04b73f6c1f066a9b3a4a74c95f377e4109de",
+      "canonical_name": "uc://applications/statistical@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "statistical",
+        "profile_identity": "uc://manual/catalog/calculators/statistical@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/statistical@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "02c5045c1c6071690f0cc26917b2507a84689532aa9aa0100130e87962731871"
+    },
+    {
+      "artifact_tree_sha256": "5222b17ac39e152ca480977b163733986265ca05f38b892f614932ddaa8cd012",
+      "canonical_name": "uc://applications/study-homework@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "study-homework",
+        "profile_identity": "uc://manual/catalog/todo/study-homework@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/study-homework@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "e845658ec0d444f07568f5cda778da6b7a0599d4a2b04e9d03688424aaa2ddec"
+    },
+    {
+      "artifact_tree_sha256": "46590a2ee1749908640b40de6261e9700ac8c247458125fab5e6522ffcfbf5d9",
+      "canonical_name": "uc://applications/subnet@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "subnet",
+        "profile_identity": "uc://manual/catalog/calculators/subnet@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/subnet@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "5f750dbefb93549851b64dd5e7b214c1531e4a9c7cc213e0d15c09f52d37ce6f"
+    },
+    {
+      "artifact_tree_sha256": "7bb1b8a7d341aff1d3fb0d4e474a02234a50dc6b78e4b47f1315fcf87edf329f",
+      "canonical_name": "uc://applications/support-queue@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "support-queue",
+        "profile_identity": "uc://manual/catalog/todo/support-queue@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/support-queue@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "57780c42eba4e2e5bdccc5305699813d10d1c1d225ea57960ac31c4e7ace8a1d"
     },
     {
       "artifact_tree_sha256": "328ca31cd5f91b7529a003eb14a05d263a9269e4d63a6073de0d39d4f8fc0b32",
@@ -111,6 +1183,38 @@
       "seed_sha256": "2b62e66d78512e2ef4b19fbd94f7cacf274861647b3023ed3fc508e73d870885"
     },
     {
+      "artifact_tree_sha256": "dc36b781d0b65ab35502f2df22d548ab30d110673d98ef862d6ced13e31c16b4",
+      "canonical_name": "uc://applications/tax@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "calculator",
+      "route_options": {
+        "build_group": "calculators",
+        "product_key": "tax",
+        "profile_identity": "uc://manual/catalog/calculators/tax@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/tax@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "d361b5d3baa616bc0d131945be062bf8cb37b753629bc89d905afade25f3ab73"
+    },
+    {
+      "artifact_tree_sha256": "d5d059a37d427002efc0d4b705fd683f40a9c238c741c12ccb598b73b2519856",
+      "canonical_name": "uc://applications/team-assignments@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "team-assignments",
+        "profile_identity": "uc://manual/catalog/todo/team-assignments@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/team-assignments@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "f6f96ade0f40f8902c4ec94bb908e13b84c7fa333cdeed01374dfb32bd30c243"
+    },
+    {
       "artifact_tree_sha256": "15bb2cef1cc1c7813f09a499e4f55456fef89ce493d282191ac7ea0a1bc04b4e",
       "canonical_name": "uc://applications/text-stats-v2@1",
       "compiler_route": "expression-uem",
@@ -121,6 +1225,38 @@
       "seed_sha256": "bc8539370ffdb1bfbe1b76012df18ebced7bbada7c372fb9dbcc93589be46abe"
     },
     {
+      "artifact_tree_sha256": "4c1ec7cee4efbc7bea357f12e671d265dc40849779609dbde1fc9e81998011b0",
+      "canonical_name": "uc://applications/timed-paddle-score-attack@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "bounded-simulation",
+      "route_options": {
+        "build_group": "pong-games",
+        "product_key": "timed-paddle-score-attack",
+        "profile_identity": "uc://manual/catalog/paddle-simulation/timed-score-attack@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/timed-paddle-score-attack@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "cfec8a566731788763febf49e598e46eb113764c5b5805ebe057952201cee6d5"
+    },
+    {
+      "artifact_tree_sha256": "3af0f48a0d9cdfb1bb7f9f2202abc8cacb162e2f0586d10f1624e73446f2c0de",
+      "canonical_name": "uc://applications/todo@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "todo",
+        "profile_identity": "uc://manual/catalog/todo/personal@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/todo@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "b980b858dd791a145cb29cef67467033b2e5f442c547e71ebd4cb064e1019b7b"
+    },
+    {
       "artifact_tree_sha256": "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841",
       "canonical_name": "uc://applications/trajectory-meter@1",
       "compiler_route": "thing-v2",
@@ -129,8 +1265,56 @@
       "seed_id": "thing-v2:trajectory-meter@1",
       "seed_path": "thing_v2/trajectory_meter.json",
       "seed_sha256": "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
+    },
+    {
+      "artifact_tree_sha256": "e70c39150d844e8c762dfcaead459ec72251ac23112ecb32d0cd9cfd973c45e1",
+      "canonical_name": "uc://applications/travel-checklist@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "travel-checklist",
+        "profile_identity": "uc://manual/catalog/todo/travel-checklist@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/travel-checklist@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "7bddbb8d7a36e2153cee5cd7a8b9140a58d3b074fbcf33732bc7d52cf0bf1f17"
+    },
+    {
+      "artifact_tree_sha256": "6d4eee6b6f2eb7dc98bd0d73d25e7bc568ffd0ae220f29c758da83c5c0a9adc5",
+      "canonical_name": "uc://applications/wall-return-training@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "bounded-simulation",
+      "route_options": {
+        "build_group": "pong-games",
+        "product_key": "wall-return-training",
+        "profile_identity": "uc://manual/catalog/paddle-simulation/wall-training@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/wall-return-training@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "0acc5a82b3d168db0264b489449772a6943e458c15620f1f3e88a48cd4bbb85e"
+    },
+    {
+      "artifact_tree_sha256": "3c1e5fba163a6444a68fde95189ca829b1e9e4b5ef02cdfae99ce80636bd05ee",
+      "canonical_name": "uc://applications/weekly-planner@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "weekly-planner",
+        "profile_identity": "uc://manual/catalog/todo/weekly-planner@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/weekly-planner@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "c43b79f5d09f6def8ac3196c38d84c1e9058318df9e42d3b48675e1674732c2e"
     }
   ],
-  "registry_snapshot_sha256": "48390d2935222a6bf321553d533276b56a9b035bbd9614a4ce8ad3571a781492",
+  "registry_snapshot_sha256": "6651fd92c1feffa779b9d887f7f0c089c47ab19d7c6cb5cec638330d2503d835",
   "registry_version": 1
 }

@@ -31,6 +31,10 @@ from unified.generator.manifestation import (
     resolve_name,
     validate_registry,
 )
+from unified.generator.application_language.tooling.catalog_materializer import (
+    materialize_profile,
+)
+from unified.generator.application_language import seed_compiler as application_language_compiler
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -40,7 +44,7 @@ SEED_ROOT = ROOT / "seed"
 NATIVE_SEED = SEED_ROOT / "thing_v2" / "trajectory_meter.json"
 FOREIGN_SEED = SEED_ROOT / "thing_v2" / "orchard_yield.json"
 QUALIFIED_NAME = "uc://applications/trajectory-meter@1"
-SNAPSHOT = "48390d2935222a6bf321553d533276b56a9b035bbd9614a4ce8ad3571a781492"
+SNAPSHOT = "6651fd92c1feffa779b9d887f7f0c089c47ab19d7c6cb5cec638330d2503d835"
 ARTIFACT_SHA = "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841"
 SEED_SHA = "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
 SUCCESS_EVIDENCE = (
@@ -67,6 +71,43 @@ def _load(path: Path) -> dict:
 def _record(registry: dict, name: str = QUALIFIED_NAME) -> dict:
     return next(
         item for item in registry["records"] if item["canonical_name"] == name
+    )
+
+
+def _record_seed(record: dict) -> dict:
+    path = SEED_ROOT / record["seed_path"]
+    document = _load(path)
+    if record["compiler_route"] != "application-language":
+        return document
+    profile_identity = record["route_options"]["profile_identity"]
+    profiles = [
+        profile
+        for family in document["families"]
+        for profile in family["profiles"]
+        if profile["identity"] == profile_identity
+    ]
+    assert len(profiles) == 1
+    profile = profiles[0]
+    if "derivation" in profile:
+        leaf, prototype = materialize_profile(profile, path.parent)
+        return application_language_compiler.resolve_seed_document(
+            prototype, leaf
+        )[0]
+    return application_language_compiler.load_seed(
+        path.parent / profile["seed"]
+    )[0]
+
+
+def _record_vocabulary_seed(record: dict) -> dict:
+    if record["compiler_route"] != "application-language":
+        return _record_seed(record)
+    catalog = _load(SEED_ROOT / record["seed_path"])
+    profile_identity = record["route_options"]["profile_identity"]
+    return next(
+        profile
+        for family in catalog["families"]
+        for profile in family["profiles"]
+        if profile["identity"] == profile_identity
     )
 
 
@@ -170,7 +211,7 @@ def test_registry_covers_every_current_product_and_only_generic_routes():
         record["canonical_name"]: record
         for record in registry["records"]
     }
-    assert set(primary) == {
+    established = {
         "uc://applications/file-reader@1",
         "uc://applications/file-editor@1",
         "uc://applications/math-library@1",
@@ -183,18 +224,31 @@ def test_registry_covers_every_current_product_and_only_generic_routes():
         "uc://applications/text-stats-v2@1",
         "uc://applications/invoice-total@1",
     }
+    catalog = _load(SEED_ROOT / "application_language" / "catalog.seed.json")
+    application_language = {
+        profile["product_identity"]
+        for family in catalog["families"]
+        for profile in family["profiles"]
+        if profile["status"] == "proven"
+    }
+    assert len(application_language) == 74
+    assert set(primary) == established | application_language
     assert set(COMPILER_ROUTES) == set(ROUTE_VERSIONS)
     for record in primary.values():
         assert record["compiler_route"] in COMPILER_ROUTES
         assert record["compiler_version"] == ROUTE_VERSIONS[record["compiler_route"]]
-        seed = _load(SEED_ROOT / record["seed_path"])
+        seed = _record_seed(record)
         assert canonical_seed_sha256(seed) == record["seed_sha256"]
 
 
-def test_all_eleven_registered_products_match_direct_compiler_identities(tmp_path):
+def test_established_registered_products_match_direct_compiler_identities(tmp_path):
     registry = _load(REGISTRY_PATH)
     results = {}
-    for record in registry["records"]:
+    for record in (
+        item
+        for item in registry["records"]
+        if item["compiler_route"] != "application-language"
+    ):
         output = tmp_path / record["canonical_name"].rsplit("/", 1)[-1].replace("@", "-")
         result = manifest_artifact(
             inward(
@@ -216,7 +270,7 @@ def test_all_eleven_registered_products_match_direct_compiler_identities(tmp_pat
 def test_all_registered_seed_vocabulary_is_absent_from_manifestation_runtime():
     registry = _load(REGISTRY_PATH)
     seeds = tuple(
-        _load(SEED_ROOT / record["seed_path"])
+        _record_vocabulary_seed(record)
         for record in registry["records"]
     )
     report = manifestation_vocabulary_report(seeds)

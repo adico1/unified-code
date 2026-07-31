@@ -3,9 +3,18 @@
   "$id": "uc-application-suite-1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["assembly_version", "applications"],
+  "required": ["assembly_version", "applications", "application_language"],
   "properties": {
     "assembly_version": {"const": "UC-ASSEMBLY-1"},
+    "application_language": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["catalog", "suite"],
+      "properties": {
+        "catalog": {"const": "seed/application_language/catalog.seed.json"},
+        "suite": {"const": "seed/application_language/suite.seed.json"}
+      }
+    },
     "applications": {
       "type": "array",
       "minItems": 5,

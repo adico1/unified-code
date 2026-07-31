@@ -6,5 +6,9 @@
     {"seed": "seed/applications/math_library.json"},
     {"seed": "seed/applications/calculator.json"},
     {"seed": "seed/applications/pong_game.json"}
-  ]
+  ],
+  "application_language": {
+    "catalog": "seed/application_language/catalog.seed.json",
+    "suite": "seed/application_language/suite.seed.json"
+  }
 }

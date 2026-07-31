@@ -344,9 +344,7 @@ def audited_bundle_identity_primitive(bundle):
 def audited_materialize_bundle_primitive(graph, authority):
     """Produce physical evidence through the same canonical proof graph."""
     nodes = graph["evidence_nodes"]
-    with concurrent.futures.ThreadPoolExecutor(
-        max_workers=max(1, len(nodes))
-    ) as workers:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as workers:
         results = list(
             workers.map(
                 lambda node: HANDLER_REGISTRY[node["handler"]](node),

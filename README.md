@@ -182,18 +182,21 @@ deterministic manifest, affected-file churn contract, anti-overfitting
 mutations, and honest limitations are specified in
 [THING_V2.md](THING_V2.md).
 
-### Five applications, one assembly
+### Seventy-nine applications, one assembly
 
-The application-generation milestone unfolds a file reader, file editor,
-reusable math library, calculator consuming that library, and deterministic
-browser/headless game from five seeds with one command. All five now generate
-responsive browser interfaces and loopback-only graphical launchers from their
-declarative `ui` sections, with real-browser CLI/GUI differential proof. See
+The application-generation milestone now combines the five original Thing v2
+proof products with the 74-product application-language catalog: 32
+calculators, 33 Todo applications, eight Pong variations, and one development
+observatory. One public command builds and verifies all 79 without handwritten
+application code or tests. The original proofs retain responsive browser
+interfaces and real-browser CLI/GUI differential evidence; the catalog retains
+its generated GUI self-verification and product-first installation layout. See
 [APPLICATION_ASSEMBLY.md](APPLICATION_ASSEMBLY.md).
 
 Qualified names can resolve through a pinned, content-addressed registry to
-one verified artifact through the current Application v3, Thing v2, stateful,
-or expression/UEM compiler route without implicit version selection. The
+one verified artifact through the current Application v3, application-language,
+Thing v2, stateful, or expression/UEM compiler route without implicit version
+selection. The
 bounded resolution and artifact lifecycle are specified in
 [MANIFESTATION.md](MANIFESTATION.md).
 

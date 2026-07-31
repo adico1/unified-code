@@ -1,0 +1,498 @@
+{
+  "$defs": {
+    "base": {
+      "additionalProperties": false,
+      "properties": {
+        "bases": {
+          "items": {
+            "$ref": "#/$defs/reference"
+          },
+          "type": "array"
+        },
+        "format": {
+          "const": "manual-seed-base-1"
+        },
+        "identity": {
+          "pattern": "^uc://",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "provides": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "format",
+        "identity",
+        "kind",
+        "bases",
+        "provides"
+      ],
+      "type": "object"
+    },
+    "leaf": {
+      "additionalProperties": false,
+      "properties": {
+        "bases": {
+          "items": {
+            "$ref": "#/$defs/reference"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "format": {
+          "const": "manual-what-seed-4"
+        },
+        "what": {
+          "$ref": "#/$defs/what"
+        }
+      },
+      "required": [
+        "format",
+        "bases",
+        "what"
+      ],
+      "type": "object"
+    },
+    "reference": {
+      "additionalProperties": false,
+      "properties": {
+        "identity": {
+          "pattern": "^uc://",
+          "type": "string"
+        },
+        "path": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "identity",
+        "path",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "root": {
+      "additionalProperties": false,
+      "properties": {
+        "authorities": {
+          "items": {
+            "$ref": "#/$defs/reference"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "fixed_point": {
+          "type": "object"
+        },
+        "format": {
+          "const": "unified-root-seed-1"
+        },
+        "identity": {
+          "pattern": "^uc://roots/.+@[1-9][0-9]*$",
+          "type": "string"
+        },
+        "machine": {
+          "type": "object"
+        },
+        "open_gaps": {
+          "maxItems": 0,
+          "type": "array"
+        },
+        "operation": {
+          "type": "object"
+        },
+        "scope": {
+          "const": "application-language-convergence"
+        },
+        "standard": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "format",
+        "identity",
+        "scope",
+        "standard",
+        "machine",
+        "operation",
+        "authorities",
+        "fixed_point",
+        "open_gaps"
+      ],
+      "type": "object"
+    },
+    "what": {
+      "additionalProperties": false,
+      "properties": {
+        "acceptance": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "expected": {
+                "type": "object"
+              },
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "input": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "id",
+              "input",
+              "expected"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "boundaries": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "direction": {
+                "enum": [
+                  "inward",
+                  "outward",
+                  "inward-outward"
+                ]
+              },
+              "effect": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "identity": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "identity",
+              "direction",
+              "effect"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "identity": {
+          "additionalProperties": false,
+          "properties": {
+            "canonical": {
+              "pattern": "^uc://applications/.+@[1-9][0-9]*$",
+              "type": "string"
+            },
+            "family": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "variation": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "version": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "canonical",
+            "family",
+            "variation",
+            "version"
+          ],
+          "type": "object"
+        },
+        "presentation": {
+          "additionalProperties": false,
+          "properties": {
+            "collection": {
+              "type": "object"
+            },
+            "control_arguments": {
+              "type": "object"
+            },
+            "entities": {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "geometry": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "inputs": {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "keys": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "column": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "key": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "row": {
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "key",
+                  "row",
+                  "column"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "layout": {
+              "type": "object"
+            },
+            "mode_label": {
+              "type": "string"
+            },
+            "score_text": {
+              "type": "string"
+            },
+            "self_tests": {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "status": {
+              "type": "object"
+            },
+            "surface": {
+              "type": "object"
+            },
+            "text_fill": {
+              "type": "string"
+            },
+            "theme": {
+              "type": "object"
+            },
+            "title": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "geometry",
+            "keys"
+          ],
+          "type": "object"
+        },
+        "program": {
+          "additionalProperties": false,
+          "properties": {
+            "case_entrypoint": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "language": {
+              "enum": [
+                "calculator-declaration-1",
+                "stateful-interface-declaration-1",
+                "bounded-simulation-declaration-1"
+              ]
+            },
+            "launch_entrypoint": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "language",
+            "case_entrypoint",
+            "launch_entrypoint"
+          ],
+          "type": "object"
+        },
+        "semantics": {
+          "additionalProperties": false,
+          "anyOf": [
+            {
+              "required": [
+                "numeric_laws",
+                "operations"
+              ]
+            },
+            {
+              "required": [
+                "commands"
+              ]
+            },
+            {
+              "required": [
+                "clock",
+                "motion",
+                "validation"
+              ]
+            }
+          ],
+          "properties": {
+            "application_vocabulary": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "boundaries": {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "calculations": {
+              "type": "object"
+            },
+            "clock": {
+              "type": "object"
+            },
+            "collisions": {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "commands": {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "controllers": {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "motion": {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "numeric_laws": {
+              "type": "object"
+            },
+            "operations": {
+              "additionalProperties": {
+                "items": {
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "type": "object"
+            },
+            "thresholds": {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "validation": {
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "state": {
+          "additionalProperties": false,
+          "properties": {
+            "authority": {
+              "const": "declarations"
+            },
+            "fields": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "uniqueItems": true
+            },
+            "initial": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "authority",
+            "fields",
+            "initial"
+          ],
+          "type": "object"
+        },
+        "transitions": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "argument": {},
+              "event": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "route": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "event",
+              "route"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "identity",
+        "semantics",
+        "state",
+        "presentation",
+        "program",
+        "acceptance"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "uc://schemas/manual-seed-graph@5",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/root"
+    },
+    {
+      "$ref": "#/$defs/base"
+    },
+    {
+      "$ref": "#/$defs/leaf"
+    }
+  ],
+  "title": "Recursive manual seed graph"
+}
