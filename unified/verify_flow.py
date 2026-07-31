@@ -283,7 +283,12 @@ def audited_command_node_primitive(node):
             ROOT,
             work,
             ignore=shutil.ignore_patterns(
-                ".git", ".venv", ".pytest_cache", "__pycache__", "*.pyc"
+                ".git",
+                ".venv",
+                ".pytest_cache",
+                "__pycache__",
+                "*.pyc",
+                "build",
             ),
         )
         completed = subprocess.run(

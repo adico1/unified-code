@@ -18,6 +18,7 @@ from unified.generator.assembly import (
     _atomic_preservation_probe,
     _file_hashes,
     _ordered_seeds,
+    audited_assembly_output_boundary,
     audited_registry_authority_boundary,
     derive_application_registry,
     _sha,
@@ -101,16 +102,39 @@ def test_all_applications_generate_install_execute_and_pass_ten_depths(tmp_path)
     assert len(application_language["product_ids"]) == 74
     assert application_language["acceptance"] == {"passed": 175, "total": 175}
     assert application_language["verdict"] == "pass"
+    index = load(output / "index.json")
+    assert index["total_products"] == 79
+    assert index["groups"] == {
+        "calculators": 33,
+        "dashboards": 1,
+        "document-tools": 2,
+        "libraries": 1,
+        "pong-games": 9,
+        "todos": 33,
+    }
+    assert (output / "README.md").is_file()
+    assert not (output / "applications").exists()
+    assert not (output / "installation").exists()
+    assert not (output / "application-language").exists()
+    assert (output / ".unified" / "assembly-manifest.json").is_file()
+    assert (output / ".unified" / "registry.json").is_file()
+    for item in index["products"]:
+        assert all((output / path).exists() for path in item["paths"].values())
     for product in application_language["product_ids"]:
         matches = tuple(
-            (output / "application-language" / group / f"{product}@1")
+            (output / group / f"{product}@1")
             for group in ("calculators", "todos", "pong-games", "dashboards")
-            if (output / "application-language" / group / f"{product}@1").is_dir()
+            if (output / group / f"{product}@1").is_dir()
         )
         assert len(matches) == 1, product
         assert (matches[0] / "application" / "main.py").is_file()
         assert (matches[0] / "verification" / "test_generated.py").is_file()
     reports = value["manifest"]["reports"]
+    public_products = {
+        item["id"]: output / item["paths"]["application"]
+        for item in index["products"]
+        if item["id"] in reports
+    }
     for name, report in reports.items():
         assert report["verdict"] == "pass", (name, report)
         assert tuple(report["depths"]) == DEPTHS
@@ -128,13 +152,14 @@ def test_all_applications_generate_install_execute_and_pass_ten_depths(tmp_path)
         assert report["verification"]["build_ok"]
         assert report["verification"]["performance_ok"]
         assert len(manifest["seven_generated_files"]) == len(STAGES) == 7
-        assert all((output / "applications" / name / path).is_file() for path in manifest["seven_generated_files"])
-        assert (output / "installation" / name / "tests" / "test_generated.py").is_file()
-        assert (output / "installation" / name / "bin" / name).is_file()
-        assert (output / "installation" / name / "bin" / f"{name}-gui").is_file()
-        assert (output / "installation" / name / "browser" / "index.html").is_file()
-        assert (output / "installation" / name / "browser" / "style.css").is_file()
-        assert (output / "installation" / name / "browser" / "browser.js").is_file()
+        product = public_products[name]
+        assert all((product / path).is_file() for path in manifest["seven_generated_files"])
+        assert (product / "tests" / "test_generated.py").is_file()
+        assert (product / "bin" / name).is_file()
+        assert (product / "bin" / f"{name}-gui").is_file()
+        assert (product / "browser" / "index.html").is_file()
+        assert (product / "browser" / "style.css").is_file()
+        assert (product / "browser" / "browser.js").is_file()
     for name, report in reports.items():
         assert report["verification"]["javascript_headless_differential"]["ok"]
         graphical = report["verification"]["graphical_browser"]
@@ -163,13 +188,13 @@ def test_all_applications_generate_install_execute_and_pass_ten_depths(tmp_path)
     (fixture / "entry.txt").write_text("entry proof")
     entry = subprocess.run(
         [
-            str(output / "installation" / "file-reader" / "bin" / "file-reader"),
+            str(public_products["file-reader"] / "bin" / "file-reader"),
             "--request",
             json.dumps({"action": "read", "path": "entry.txt"}),
             "--root",
             str(fixture),
         ],
-        cwd=output / "installation" / "file-reader",
+        cwd=public_products["file-reader"],
         text=True,
         capture_output=True,
         check=False,
@@ -190,6 +215,17 @@ def test_repeated_independent_assembly_is_byte_identical(tmp_path):
         == second_result["value"]["cache_identity"]
     )
     assert tree_bytes(first) == tree_bytes(second)
+
+
+def test_only_canonical_in_repository_build_output_is_permitted(tmp_path):
+    source = tmp_path / "source"
+    source.mkdir()
+    assert audited_assembly_output_boundary(source, source / "build")
+    assert audited_assembly_output_boundary(source, tmp_path / "external")
+    assert not audited_assembly_output_boundary(source, source)
+    assert not audited_assembly_output_boundary(source, source / "other")
+    assert not audited_assembly_output_boundary(source, source / "build" / "nested")
+    assert not audited_assembly_output_boundary(source, tmp_path)
 
 
 def test_declared_churn_changes_only_responsible_specialization():
@@ -616,12 +652,18 @@ def test_all_renamed_seeds_assemble_and_invalid_rebuild_preserves_output(tmp_pat
 def test_calculator_rejects_altered_generated_library_identity(tmp_path):
     output = tmp_path / "suite"
     assert run_assemble(thing(SUITE, output))["state"] == "valid"
-    library = output / "installation" / "math-library" / "math_library" / "library.py"
+    index = load(output / "index.json")
+    products = {
+        item["id"]: output / item["paths"]["application"]
+        for item in index["products"]
+        if "application" in item["paths"]
+    }
+    library = products["math-library"] / "math_library" / "library.py"
     text = library.read_text()
     library.write_text(text.replace("LIBRARY_IDENTITY = '", "LIBRARY_IDENTITY = 'altered-"))
     environment = dict(os.environ)
     environment["PYTHONPATH"] = os.pathsep.join(
-        str(output / "installation" / name)
+        str(products[name])
         for name in ("math-library", "calculator")
     )
     completed = subprocess.run(

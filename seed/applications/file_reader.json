@@ -1,6 +1,6 @@
 {
   "application_version": "UC-APPLICATION-3",
-  "application": {"name": "file-reader", "package": "file_reader", "description": "Read declared text resources through an OUTWARD boundary.", "canonical_name": "uc://applications/file-reader@1", "family": "document-tool", "variation": "read-only-text", "notation": "request-object", "numeric_type": "not-applicable", "interface_identity": "authorized-file-reader", "capabilities": ["read"], "dependency_contract_ref": "none"},
+  "application": {"name": "file-reader", "package": "file_reader", "description": "Read declared text resources through an OUTWARD boundary.", "canonical_name": "uc://applications/file-reader@1", "family": "document-tool", "build_group": "document-tools", "variation": "read-only-text", "notation": "request-object", "numeric_type": "not-applicable", "interface_identity": "authorized-file-reader", "capabilities": ["read"], "dependency_contract_ref": "none"},
   "interface": {"cli": true, "library": false, "browser": true},
   "program": {
     "engine": "document",

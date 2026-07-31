@@ -68,6 +68,7 @@ APPLICATION_IDENTITY_FIELDS = frozenset(
     (
         "canonical_name",
         "family",
+        "build_group",
         "variation",
         "notation",
         "numeric_type",
@@ -143,6 +144,7 @@ def validate_application(seed):
         errors.append("application.canonical_name")
     for field in (
         "family",
+        "build_group",
         "variation",
         "notation",
         "numeric_type",
@@ -151,6 +153,8 @@ def validate_application(seed):
     ):
         if not isinstance(application.get(field), str) or not application.get(field):
             errors.append(f"application.{field}")
+    if not NAME_RE.fullmatch(str(application.get("build_group", ""))):
+        errors.append("application.build_group")
     capabilities = application.get("capabilities")
     if (
         not isinstance(capabilities, list)
@@ -2300,6 +2304,7 @@ def derive_application_registry(suite, seeds, manifests, existing_registry):
             "compiler_version": APPLICATION_VERSION,
             "product_family": seed["application"]["family"],
             "route_options": {
+                "build_group": seed["application"]["build_group"],
                 "product_key": seed["application"]["name"],
                 "suite_ref": "application_suite.json",
             },
@@ -2547,6 +2552,126 @@ def audited_application_language_build_boundary(output):
     }
 
 
+def _canonical_product_key(canonical_name):
+    return canonical_name.rsplit("/", 1)[-1]
+
+
+def _public_product_index(staging, metadata_root, seeds, manifests, reports, catalog):
+    """Project compiler-private trees into one seed-derived, product-first view."""
+    catalog_root = metadata_root / "application-language"
+    for group in sorted({item["build_group"] for item in catalog["applications"]}):
+        shutil.copytree(catalog_root / group, staging / group, dirs_exist_ok=True)
+
+    records = []
+    for item in catalog["applications"]:
+        records.append(
+            {
+                **item,
+                "seed": str(Path(item["seed"]).relative_to("build")),
+                "paths": {
+                    key: str(Path(reference).relative_to("build"))
+                    for key, reference in sorted(item["paths"].items())
+                },
+            }
+        )
+
+    for seed_path, seed in seeds:
+        application = seed["application"]
+        name = application["name"]
+        group = application["build_group"]
+        key = _canonical_product_key(application["canonical_name"])
+        product_root = staging / group / key
+        application_root = product_root / "application"
+        shutil.copytree(metadata_root / "applications" / name, application_root)
+        authority = product_root / "authority"
+        authority.mkdir(parents=True)
+        shutil.copyfile(seed_path, authority / "seed.json")
+        specification = product_root / "specification"
+        specification.mkdir()
+        shutil.copyfile(
+            application_root / "canonical-specification.json",
+            specification / "specification.json",
+        )
+        verification = product_root / "verification"
+        verification.mkdir()
+        shutil.copyfile(
+            application_root / "tests" / "test_generated.py",
+            verification / "test_generated.py",
+        )
+        (verification / "report.json").write_bytes(_canonical(reports[name]))
+        (product_root / "manifest.json").write_bytes(_canonical(manifests[name]))
+        records.append(
+            {
+                "acceptance": {
+                    "passed": len(reports[name]["acceptance"]),
+                    "total": len(reports[name]["acceptance"]),
+                },
+                "artifact_tree_sha256": manifests[name]["tree_sha256"],
+                "build_group": group,
+                "canonical_identity": application["canonical_name"],
+                "family": application["family"],
+                "id": name,
+                "paths": {
+                    "application": f"{group}/{key}/application",
+                    "authority": f"{group}/{key}/authority/seed.json",
+                    "manifest": f"{group}/{key}/manifest.json",
+                    "specification": f"{group}/{key}/specification/specification.json",
+                    "test": f"{group}/{key}/verification/test_generated.py",
+                    "verification": f"{group}/{key}/verification/report.json",
+                },
+                "seed_sha256": _canonical_seed_sha256(seed),
+            }
+        )
+
+    records = sorted(records, key=lambda item: item["canonical_identity"])
+    groups = {
+        group: sum(item["build_group"] == group for item in records)
+        for group in sorted({item["build_group"] for item in records})
+    }
+    index = {
+        "assembly_version": ASSEMBLY_VERSION,
+        "groups": groups,
+        "products": records,
+        "total_products": len(records),
+    }
+    (staging / "index.json").write_bytes(_canonical(index))
+    lines = [
+        "# Unified Code generated products",
+        "",
+        "Choose a product family, then a product. Each `application/` directory",
+        "is runnable. This entire tree is generated; do not edit it manually.",
+        "",
+        f"Products: {len(records)}",
+        "",
+    ]
+    for group, count in groups.items():
+        lines.extend((f"## [{group}]({group}/)", "", f"{count} products.", ""))
+    lines.extend(
+        (
+            "Assembly metadata, internal compiler trees and evidence are under",
+            "[`.unified/`](.unified/). The product directories are the public view.",
+            "",
+        )
+    )
+    (staging / "README.md").write_text("\n".join(lines), encoding="utf-8")
+    return index
+
+
+def audited_transient_build_cleanup_boundary(root):
+    """Remove host caches that are neither application source nor evidence."""
+    for directory in sorted(
+        (
+            path
+            for path in root.rglob("*")
+            if path.is_dir() and path.name in {"__pycache__", ".pytest_cache"}
+        ),
+        reverse=True,
+    ):
+        shutil.rmtree(directory)
+    for path in root.rglob("*.pyc"):
+        path.unlink()
+
+
 def audited_assembly_cache_admission_boundary(thing, value, output, cache_key):
     cached = _ASSEMBLY_PROOF_CACHE.get(cache_key)
     if cached is None:
@@ -2596,6 +2721,9 @@ def audited_assembly_cache_admission_boundary(thing, value, output, cache_key):
 
 
 def audited_assembly_cache_publish_boundary(cache_key, output, manifest):
+    for cached in _ASSEMBLY_PROOF_CACHE.values():
+        shutil.rmtree(cached["owner"], ignore_errors=True)
+    _ASSEMBLY_PROOF_CACHE.clear()
     cache_parent = Path(tempfile.mkdtemp(prefix="uc-assembly-cache-"))
     cache_tree = cache_parent / "tree"
     shutil.copytree(output, cache_tree)
@@ -2607,6 +2735,16 @@ def audited_assembly_cache_publish_boundary(cache_key, output, manifest):
         "manifest": copy.deepcopy(manifest),
     }
     return identity
+
+
+def audited_assembly_output_boundary(source_root, output):
+    """Permit external outputs and the single canonical in-repository build tree."""
+    canonical_build = (source_root / "build").resolve()
+    return not (
+        output == source_root
+        or output in source_root.parents
+        or (source_root in output.parents and output != canonical_build)
+    )
 
 
 def run_assemble(thing):
@@ -2637,7 +2775,7 @@ def run_assemble(thing):
     errors = validate_suite(suite, source_root)
     if errors:
         return _failure(thing, {**value, "validation_errors": errors}, "invalid-suite", "assembly:seed-rejected")
-    if output == source_root or source_root in output.parents or output in source_root.parents:
+    if not audited_assembly_output_boundary(source_root, output):
         return _failure(thing, value, "unsafe-output", "assembly:rejected")
     existing_registry, registry_error = audited_registry_authority_boundary(
         source_root
@@ -2665,8 +2803,9 @@ def run_assemble(thing):
     staging_parent.mkdir(parents=True, exist_ok=True)
     staging = Path(tempfile.mkdtemp(prefix="." + output.name + ".uc-new-", dir=staging_parent))
     try:
-        apps_root = staging / "applications"
-        install_root = staging / "installation"
+        metadata_root = staging / ".unified"
+        apps_root = metadata_root / "applications"
+        install_root = metadata_root / "installation"
         manifests = {}
         roots = []
         seed_by_name = {seed["application"]["name"]: seed for _, seed in seeds}
@@ -2702,7 +2841,7 @@ def run_assemble(thing):
             manifests[name] = manifest
             roots.append(root)
 
-        application_language_root = staging / "application-language"
+        application_language_root = metadata_root / "application-language"
         application_language_build = audited_application_language_build_boundary(
             application_language_root
         )
@@ -2830,7 +2969,22 @@ def run_assemble(thing):
             ],
             "provenance": registry_provenance,
         }
-        (staging / "assembly-manifest.json").write_bytes(_canonical(suite_manifest))
+        audited_transient_build_cleanup_boundary(metadata_root)
+        product_index = _public_product_index(
+            staging,
+            metadata_root,
+            seeds,
+            manifests,
+            application_reports,
+            application_language_report,
+        )
+        suite_manifest["public_build"] = {
+            "groups": product_index["groups"],
+            "total_products": product_index["total_products"],
+        }
+        (metadata_root / "assembly-manifest.json").write_bytes(
+            _canonical(suite_manifest)
+        )
         ok = (
             all(
                 report["verdict"] == "pass"
@@ -2851,7 +3005,7 @@ def run_assemble(thing):
             )
         audited_registry_projection_boundary(
             source_root,
-            staging,
+            metadata_root,
             suite,
             seeds,
             manifests,

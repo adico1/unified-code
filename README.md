@@ -3,6 +3,9 @@
 Unified Code is an experimental functional construction grammar for writing
 software from one repeatedly practised form.
 
+Start with [Vision](VISION.md), [Goals and boundaries](docs/GOALS_AND_BOUNDARIES.md),
+[How to read the code](docs/HOW_TO_READ.md), and [Build output](docs/BUILD_OUTPUT.md).
+
 [Read: The Age of AI Requires Standard Ten — One Unified Code for All Software](https://adico.tech/blog/2026/07/25/the-age-of-ai-requires-standard-ten-one-unified-code-for-all-software/)
 
 ```python
@@ -190,8 +193,16 @@ calculators, 33 Todo applications, eight Pong variations, and one development
 observatory. One public command builds and verifies all 79 without handwritten
 application code or tests. The original proofs retain responsive browser
 interfaces and real-browser CLI/GUI differential evidence; the catalog retains
-its generated GUI self-verification and product-first installation layout. See
+its generated GUI self-verification. The generated `build/` entrance exposes
+six product families directly; compiler-private trees and evidence live under
+`build/.unified/`. See
 [APPLICATION_ASSEMBLY.md](APPLICATION_ASSEMBLY.md).
+
+```bash
+uc assemble seed/application_suite.json \
+  --output build \
+  --build --install --verify --gauntlet-depths 10
+```
 
 Qualified names can resolve through a pinned, content-addressed registry to
 one verified artifact through the current Application v3, application-language,

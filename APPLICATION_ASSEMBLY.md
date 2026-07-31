@@ -7,7 +7,7 @@ complete generated installations:
 
 ```bash
 uc assemble seed/application_suite.json \
-  --output /tmp/unified-app-suite \
+  --output build \
   --build \
   --install \
   --verify \
@@ -24,11 +24,14 @@ publication failure, and atomically publishes only after all ten depths pass.
 The additional application-language catalog contains 32 calculators, 33 Todo
 applications, eight Pong variations, and one development observatory. Sixteen
 products have direct leaf seeds and 58 are deterministically derived from
-family prototypes and catalog patches. Their generated output is organized for
-users under `application-language/{calculators,todos,pong-games,dashboards}`.
+family prototypes and catalog patches. Together with the original products,
+their generated output is organized directly under
+`{calculators,todos,pong-games,dashboards,document-tools,libraries}`. The exact
+79-product map is generated as `build/index.json`; internal compiler trees,
+registry projection and evidence are under `build/.unified/`.
 
 Every successful assembly writes the projected canonical registry and its
-provenance into the output tree. Updating the checked-in registry is an
+provenance under `.unified/`. Updating the checked-in registry is an
 explicit generated-evidence operation (`UC_REGISTRY_MATERIALIZE=1`); ordinary
 tests and builds never rewrite repository authority while it is being hashed.
 
@@ -119,3 +122,8 @@ web frontend and loopback host in a Chromium-family browser. They do not prove
 cross-browser portability, native desktop widgets or mobile packaging. Stage‑0,
 name-to-manifestation and the root-seed fixed point remain separate support
 tracks.
+
+The suite currently contains two generic compiler profiles behind one public
+operation: Application v3 for the original five products and the
+application-language compiler for the 74-product catalog. This is public
+assembly convergence, not yet proof of one root-generated compiler.

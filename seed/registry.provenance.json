@@ -5,7 +5,7 @@
       "total": 175
     },
     "applications": 74,
-    "complete_tree_sha256": "f17f625b7f2e7a504457b9510469981f182a2dd8b17ae7dd2a62ef76e46606b4",
+    "complete_tree_sha256": "9ed270d886bf2aa511472de733f3756b33c2bfa4a6f0f1f380ba8e4ff026678d",
     "seed_catalog": {
       "catalog": "seed/application_language/catalog.seed.json",
       "suite": "seed/application_language/suite.seed.json"
@@ -14,14 +14,14 @@
   "assembly_version": "UC-ASSEMBLY-1",
   "authority": "application-v3-seeds",
   "generated": true,
-  "registry_file_sha256": "445bc40372408ca0d0aad4c1d6edebdfa2a21ae89bbe5d6d480e707954aa017f",
-  "registry_snapshot_sha256": "6651fd92c1feffa779b9d887f7f0c089c47ab19d7c6cb5cec638330d2503d835",
+  "registry_file_sha256": "b229b1d404d31173e2e9efaaa0ecdd921e866756f023ebbf2e5d34aeaade1638",
+  "registry_snapshot_sha256": "e0c6e98a4ba57606b71bf85cfb4632a173cbbea4b802b09f02f81dc29da46b1b",
   "source_seed_sha256": {
-    "applications/calculator.json": "3a5a95d8694ec413840efb4b4b64557440c1ad690456ce2c70ea7e7bf2fe3ec3",
-    "applications/file_editor.json": "302b854f0b3a8403bd162beb50f78fda0fb4e052304f907a1850415690a70b0e",
-    "applications/file_reader.json": "21988467a086c34ba0076dc0375a6fa86cfa6bba2a94ecf4bd0ea0d3deacd664",
-    "applications/math_library.json": "91b79a7140dd7b8e654f55725611d751164856e2f48c49c378fbcdb15da1c4c1",
-    "applications/pong_game.json": "12a05f466754bae65a891d97ab684e2287ceabf8c6095b3af90ca2aa0211ae91"
+    "applications/calculator.json": "9e46fb6cd2d5e6f98f2a114abe375b59c469fd5cee1b280cb99861b0c18a7ae3",
+    "applications/file_editor.json": "23a865b9fddeee209d8a9b566e70b3e8aa3dada7a02cfd31f0e1f18f31c4187b",
+    "applications/file_reader.json": "ffcee57680285d4742fb1156194183ce699e51b240ec728438492ebffd97497f",
+    "applications/math_library.json": "dabf6b93cca4012c8a85c0e16e50c0b9dd302c227d52cc5eedd7ed8233648b02",
+    "applications/pong_game.json": "f2049becde1a59f98f79b84fcd5749668e103aaf125df0501812ef4499ed9106"
   },
   "suite_seed_sha256": "edc5b6f4cbdd2c1c15360a03edd2b045d6cbae868046bf236042257d9b0487df"
 }
