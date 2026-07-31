@@ -217,7 +217,13 @@ This milestone is deliberately non-blocking for Milestone 1. Open items:
   real-browser interaction and CLI/GUI equality are ten-depth gates.
 - The bounded acceptance operation and ten-depth proof are specified in
   [APPLICATION_ASSEMBLY.md](APPLICATION_ASSEMBLY.md).
+- The former manual learning track is now represented inside Unified Code's
+  public 79-product assembly. Generated output is product-first at `build/`;
+  the manual repository is no longer a second product authority.
 - The application-language catalog remains a distinct generic compiler route
   inside the same public assembly while convergence with the Thing v2/UEM
   internals continues as measured follow-up work.
 - This product milestone does not replace or expand Milestone 2 bootstrap work.
+- Vision, measurable goals, inner/outer boundaries and the reading path are
+  recorded in [VISION.md](VISION.md) and
+  [docs/GOALS_AND_BOUNDARIES.md](docs/GOALS_AND_BOUNDARIES.md).

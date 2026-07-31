@@ -1,6 +1,6 @@
 {
   "application_version": "UC-APPLICATION-3",
-  "application": {"name": "file-editor", "package": "file_editor", "description": "Preview and atomically persist declared text mutations.", "canonical_name": "uc://applications/file-editor@1", "family": "document-tool", "variation": "atomic-text-editor", "notation": "request-object", "numeric_type": "not-applicable", "interface_identity": "authorized-file-editor", "capabilities": ["read", "write", "replace", "append", "insert", "delete"], "dependency_contract_ref": "none"},
+  "application": {"name": "file-editor", "package": "file_editor", "description": "Preview and atomically persist declared text mutations.", "canonical_name": "uc://applications/file-editor@1", "family": "document-tool", "build_group": "document-tools", "variation": "atomic-text-editor", "notation": "request-object", "numeric_type": "not-applicable", "interface_identity": "authorized-file-editor", "capabilities": ["read", "write", "replace", "append", "insert", "delete"], "dependency_contract_ref": "none"},
   "interface": {"cli": true, "library": false, "browser": true},
   "program": {
     "engine": "document",

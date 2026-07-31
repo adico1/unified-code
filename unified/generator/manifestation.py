@@ -278,10 +278,16 @@ def _validate_record(record: object, index: int) -> list[str]:
         errors.append(f"records[{index}].route_options:invalid")
     elif route == "application-v3":
         options = record.get("route_options") or {}
+        build_group = options.get("build_group")
         product_key = options.get("product_key")
         suite_ref = options.get("suite_ref")
-        if set(options) != {"product_key", "suite_ref"}:
+        if set(options) != {"build_group", "product_key", "suite_ref"}:
             errors.append(f"records[{index}].route_options:invalid")
+        if (
+            not isinstance(build_group, str)
+            or not SHORT_NAME_RE.fullmatch(build_group)
+        ):
+            errors.append(f"records[{index}].route_options.build_group:invalid")
         if (
             not isinstance(product_key, str)
             or not SHORT_NAME_RE.fullmatch(product_key)
@@ -801,7 +807,8 @@ def _compile_application_v3(thing: dict) -> dict:
     work_root = Path(value["_manifestation_work_root"])
     suite_ref = (record.get("route_options") or {}).get("suite_ref")
     product_key = (record.get("route_options") or {}).get("product_key")
-    if not isinstance(suite_ref, str) or not isinstance(product_key, str):
+    build_group = (record.get("route_options") or {}).get("build_group")
+    if not all(isinstance(item, str) for item in (suite_ref, product_key, build_group)):
         return _route_failure(thing, {"value": {}}, "application-route-options-invalid")
     suite_path = (Path(value["seed_root"]) / suite_ref).resolve()
     seed_root = Path(value["seed_root"]).resolve()
@@ -826,7 +833,12 @@ def _compile_application_v3(thing: dict) -> dict:
     suite_manifest = compiled_value.get("manifest") or {}
     manifest = (suite_manifest.get("applications") or {}).get(product_key)
     report = (suite_manifest.get("reports") or {}).get(product_key)
-    source = suite_output / "applications" / product_key
+    source = (
+        suite_output
+        / build_group
+        / record["canonical_name"].rsplit("/", 1)[-1]
+        / "application"
+    )
     if (
         not isinstance(manifest, dict)
         or not isinstance(report, dict)
@@ -1247,7 +1259,7 @@ GENERIC_VOCABULARY = frozenset(
         "deterministic", "effect", "empty", "encoding", "error", "errors",
         "evidence", "expected", "extend", "failed", "false", "family", "field", "fields", "file",
         "exists", "files", "filesystem", "format", "formed", "from", "generated",
-        "generic", "guard", "guards", "identity", "index", "input", "inside", "int",
+        "generic", "group", "guard", "guards", "identity", "index", "input", "inside", "int",
         "integer", "invalid", "item", "items", "json", "key", "keys", "kind",
         "len", "li" + "st", "literal", "manifest", "message", "mode", "mutation",
         "name", "native", "none", "not", "object", "one", "only", "open",
