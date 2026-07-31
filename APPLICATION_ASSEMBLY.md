@@ -1,7 +1,8 @@
-# Five Applications, One Assembly
+# Seventy-nine Applications, One Assembly
 
 This milestone makes application generation—not bootstrap infrastructure—the
-observable product. Five independent JSON seeds are the sole authority for five
+observable product. The public suite combines five independent Thing v2 seeds
+with a declarative 74-product catalog. Together they are the authority for 79
 complete generated installations:
 
 ```bash
@@ -19,6 +20,17 @@ documentation, CLI entry points and graphical launchers, builds and tests the
 trees, installs isolated copies, executes restart scenarios, compares CLI and
 GUI behavior in a real Chromium-family browser, injects a replacement-stage
 publication failure, and atomically publishes only after all ten depths pass.
+
+The additional application-language catalog contains 32 calculators, 33 Todo
+applications, eight Pong variations, and one development observatory. Sixteen
+products have direct leaf seeds and 58 are deterministically derived from
+family prototypes and catalog patches. Their generated output is organized for
+users under `application-language/{calculators,todos,pong-games,dashboards}`.
+
+Every successful assembly writes the projected canonical registry and its
+provenance into the output tree. Updating the checked-in registry is an
+explicit generated-evidence operation (`UC_REGISTRY_MATERIALIZE=1`); ordinary
+tests and builds never rewrite repository authority while it is being hashed.
 
 For these Python/browser targets, build means parsing every generated Python
 source and executable plus running the JavaScript host syntax gate before tests

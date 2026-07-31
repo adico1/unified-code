@@ -1,4 +1,4 @@
-"""Five real generated applications and one bounded assembly contract."""
+"""One operation assembles the original proofs and the application catalog."""
 
 from __future__ import annotations
 
@@ -83,18 +83,33 @@ def test_public_one_operation_and_all_seed_contracts():
         assert not validate_application(load(path)), path
 
 
-def test_five_applications_generate_install_execute_and_pass_ten_depths(tmp_path):
+def test_all_applications_generate_install_execute_and_pass_ten_depths(tmp_path):
     output = tmp_path / "suite"
     result = run_assemble(thing(SUITE, output))
     assert result["state"] == "valid", result["value"]
     value = result["value"]
-    assert value["applications"] == [
+    assert len(value["applications"]) == 79
+    assert {
         "calculator",
         "file-editor",
         "file-reader",
         "math-library",
         "pong-game",
-    ]
+    }.issubset(value["applications"])
+    application_language = value["manifest"]["application_language"]
+    assert application_language["applications"] == 74
+    assert len(application_language["product_ids"]) == 74
+    assert application_language["acceptance"] == {"passed": 175, "total": 175}
+    assert application_language["verdict"] == "pass"
+    for product in application_language["product_ids"]:
+        matches = tuple(
+            (output / "application-language" / group / f"{product}@1")
+            for group in ("calculators", "todos", "pong-games", "dashboards")
+            if (output / "application-language" / group / f"{product}@1").is_dir()
+        )
+        assert len(matches) == 1, product
+        assert (matches[0] / "application" / "main.py").is_file()
+        assert (matches[0] / "verification" / "test_generated.py").is_file()
     reports = value["manifest"]["reports"]
     for name, report in reports.items():
         assert report["verdict"] == "pass", (name, report)
@@ -581,7 +596,12 @@ def test_all_renamed_seeds_assemble_and_invalid_rebuild_preserves_output(tmp_pat
     suite = source_root / "seed" / "application_suite.json"
     first = run_assemble(thing(suite, output))
     assert first["state"] == "valid", first["value"]
-    assert set(first["value"]["applications"]) == set(renamed_names.values())
+    catalog_products = set(
+        first["value"]["manifest"]["application_language"]["product_ids"]
+    )
+    assert set(first["value"]["applications"]) == (
+        set(renamed_names.values()) | catalog_products
+    )
     before = tree_bytes(output)
 
     seed_path = source_root / "seed" / "applications" / "file_reader.json"

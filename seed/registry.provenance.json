@@ -1,9 +1,21 @@
 {
+  "application_language": {
+    "acceptance": {
+      "passed": 175,
+      "total": 175
+    },
+    "applications": 74,
+    "complete_tree_sha256": "f17f625b7f2e7a504457b9510469981f182a2dd8b17ae7dd2a62ef76e46606b4",
+    "seed_catalog": {
+      "catalog": "seed/application_language/catalog.seed.json",
+      "suite": "seed/application_language/suite.seed.json"
+    }
+  },
   "assembly_version": "UC-ASSEMBLY-1",
   "authority": "application-v3-seeds",
   "generated": true,
-  "registry_file_sha256": "7f0bb18da97f265dd46e44387cdc06ca9d018aa08a243eaf3f2f952a9084681f",
-  "registry_snapshot_sha256": "48390d2935222a6bf321553d533276b56a9b035bbd9614a4ce8ad3571a781492",
+  "registry_file_sha256": "445bc40372408ca0d0aad4c1d6edebdfa2a21ae89bbe5d6d480e707954aa017f",
+  "registry_snapshot_sha256": "6651fd92c1feffa779b9d887f7f0c089c47ab19d7c6cb5cec638330d2503d835",
   "source_seed_sha256": {
     "applications/calculator.json": "3a5a95d8694ec413840efb4b4b64557440c1ad690456ce2c70ea7e7bf2fe3ec3",
     "applications/file_editor.json": "302b854f0b3a8403bd162beb50f78fda0fb4e052304f907a1850415690a70b0e",
@@ -11,5 +23,5 @@
     "applications/math_library.json": "91b79a7140dd7b8e654f55725611d751164856e2f48c49c378fbcdb15da1c4c1",
     "applications/pong_game.json": "12a05f466754bae65a891d97ab684e2287ceabf8c6095b3af90ca2aa0211ae91"
   },
-  "suite_seed_sha256": "a6dd47e1510ccee0ea261b24fda8e4147bc843ebe5e0475d3dd5622b13a0980a"
+  "suite_seed_sha256": "edc5b6f4cbdd2c1c15360a03edd2b045d6cbae868046bf236042257d9b0487df"
 }

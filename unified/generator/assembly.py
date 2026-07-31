@@ -1,4 +1,4 @@
-"""Five-application assembly from seed-defined generic capability programs."""
+"""Multi-family application assembly from seed-defined generic programs."""
 
 from __future__ import annotations
 
@@ -354,6 +354,21 @@ def validate_suite(suite, root):
     errors = []
     if suite.get("assembly_version") != ASSEMBLY_VERSION:
         errors.append("assembly_version")
+    application_language = suite.get("application_language")
+    if (
+        not isinstance(application_language, dict)
+        or set(application_language) != {"catalog", "suite"}
+        or application_language
+        != {
+            "catalog": "seed/application_language/catalog.seed.json",
+            "suite": "seed/application_language/suite.seed.json",
+        }
+        or any(
+            not (root / relative).is_file()
+            for relative in application_language.values()
+        )
+    ):
+        errors.append("application_language")
     entries = suite.get("applications")
     if not isinstance(entries, list) or len(entries) != 5:
         return ["applications:requires-five"]
@@ -1749,7 +1764,11 @@ def _launch_gui_proof(root, seed, executable, authority_root):
                 os.killpg(process.pid, signal.SIGTERM)
             except ProcessLookupError:
                 pass
-            process.wait(timeout=3)
+            try:
+                process.wait(timeout=3)
+            except subprocess.TimeoutExpired:
+                os.killpg(process.pid, signal.SIGKILL)
+                process.wait(timeout=3)
 
 
 def _cli_results_for_gui(root, seed, requests, authority_root):
@@ -1878,9 +1897,7 @@ def audited_graphical_suite_boundary(roots, seed_by_name):
         for root in roots
     )
     audited_browser_bootstrap_boundary(executable, deadline)
-    with concurrent.futures.ThreadPoolExecutor(
-        max_workers=max(1, len(roots))
-    ) as workers:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as workers:
         futures = {
             root.name: workers.submit(
                 _graphical_browser_proof, root, seed_by_name[root.name]
@@ -1927,7 +1944,7 @@ def _ten_depth_report(seed, manifest, verification):
             verification["generated_tests_ok"],
             verification["installed_execution_ok"],
             verification["atomic_install"]["ok"],
-            verification["graphical_browser"]["checks"]["copied_installation"],
+            browser_checks.get("copied_installation", False),
         ],
     }
     return {
@@ -2309,6 +2326,42 @@ def derive_application_registry(suite, seeds, manifests, existing_registry):
     return registry
 
 
+def extend_application_registry(registry, application_language_report):
+    records = [
+        {
+            "artifact_tree_sha256": item["artifact_tree_sha256"],
+            "canonical_name": item["canonical_identity"],
+            "compiler_route": "application-language",
+            "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+            "product_family": item["family"],
+            "route_options": {
+                "build_group": item["build_group"],
+                "profile_identity": item["profile_identity"],
+                "product_key": item["id"],
+                "suite_ref": "application_language/suite.seed.json",
+            },
+            "seed_id": "application-language:" + item["canonical_identity"],
+            "seed_path": "application_language/catalog.seed.json",
+            "seed_sha256": item["registry_seed_sha256"],
+        }
+        for item in application_language_report["applications"]
+    ]
+    retained = [
+        item
+        for item in registry["records"]
+        if item["compiler_route"] != "application-language"
+    ]
+    extended = {
+        "records": sorted(
+            (*retained, *records),
+            key=lambda item: (item["canonical_name"], item["seed_id"]),
+        ),
+        "registry_version": registry["registry_version"],
+    }
+    extended["registry_snapshot_sha256"] = _registry_snapshot_sha256(extended)
+    return extended
+
+
 def _registry_provenance(registry, suite, seeds):
     projection = {
         "authority": "application-v3-seeds",
@@ -2355,12 +2408,31 @@ def audited_registry_authority_boundary(source_root):
 
 
 def audited_registry_projection_boundary(
-    source_root, staging, suite, seeds, manifests, existing_registry
+    source_root,
+    staging,
+    suite,
+    seeds,
+    manifests,
+    existing_registry,
+    projected_registry=None,
+    application_language_summary=None,
 ):
-    registry = derive_application_registry(
-        suite, seeds, manifests, existing_registry
+    registry = projected_registry or derive_application_registry(
+        suite,
+        seeds,
+        manifests,
+        existing_registry,
     )
     provenance = _registry_provenance(registry, suite, seeds)
+    if application_language_summary is not None:
+        provenance["application_language"] = {
+            "acceptance": application_language_summary["acceptance"],
+            "applications": application_language_summary["applications"],
+            "complete_tree_sha256": application_language_summary[
+                "complete_tree_sha256"
+            ],
+            "seed_catalog": suite["application_language"],
+        }
     registry_text = (
         json.dumps(registry, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     )
@@ -2372,14 +2444,15 @@ def audited_registry_projection_boundary(
     (staging / "registry.provenance.json").write_text(
         provenance_text, encoding="utf-8"
     )
-    for name, text in (
-        ("registry.json", registry_text),
-        ("registry.provenance.json", provenance_text),
-    ):
-        target = source_root / "seed" / name
-        temporary = target.with_name("." + target.name + ".uc-new")
-        temporary.write_text(text, encoding="utf-8")
-        os.replace(temporary, target)
+    if os.environ.get("UC_REGISTRY_MATERIALIZE") == "1":
+        for name, text in (
+            ("registry.json", registry_text),
+            ("registry.provenance.json", provenance_text),
+        ):
+            target = source_root / "seed" / name
+            temporary = target.with_name("." + target.name + ".uc-new")
+            temporary.write_text(text, encoding="utf-8")
+            os.replace(temporary, target)
     return registry, provenance
 
 
@@ -2417,6 +2490,63 @@ def audited_directory_identity_boundary(root):
     )
 
 
+def audited_application_language_build_boundary(output):
+    """Build the catalog in a fresh process before any GUI host is initialized."""
+    environment = dict(os.environ)
+    source_root = Path(__file__).resolve().parents[2]
+    environment["PYTHONPATH"] = os.pathsep.join(
+        (str(source_root), environment.get("PYTHONPATH", ""))
+    ).rstrip(os.pathsep)
+    process = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "unified.generator.application_language.tooling.verify_all",
+            "--build-root",
+            str(output),
+            "--quiet",
+        ],
+        cwd=source_root,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=180,
+        check=False,
+    )
+    if process.returncode != 0:
+        raise RuntimeError("application-language-verification-failed")
+    report = json.loads(
+        (output / "reports" / "assembly-report.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    tree = (output / "complete-tree.sha256").read_text(
+        encoding="utf-8"
+    ).strip()
+    acceptance = {
+        "passed": sum(item["acceptance"]["passed"] for item in report["applications"]),
+        "total": sum(item["acceptance"]["total"] for item in report["applications"]),
+    }
+    self_tests = report["application_self_tests"]
+    verdict = (
+        "PASS"
+        if acceptance["passed"] == acceptance["total"]
+        and self_tests["passed"] == self_tests["total"]
+        and self_tests["closed"]
+        else "FAIL"
+    )
+    return {
+        "summary": {
+            "verdict": verdict,
+            "applications": len(report["applications"]),
+            "acceptance": acceptance,
+            "independent_tree_hashes": [tree, tree],
+            "complete_tree_sha256": tree,
+        },
+        "report": report,
+    }
+
+
 def audited_assembly_cache_admission_boundary(thing, value, output, cache_key):
     cached = _ASSEMBLY_PROOF_CACHE.get(cache_key)
     if cached is None:
@@ -2445,7 +2575,12 @@ def audited_assembly_cache_admission_boundary(thing, value, output, cache_key):
                 **value,
                 "output": str(output),
                 "manifest": copy.deepcopy(cached["manifest"]),
-                "applications": sorted(cached["manifest"]["applications"]),
+                "applications": sorted(
+                    (
+                        *cached["manifest"]["applications"],
+                        *cached["manifest"]["application_language"]["product_ids"],
+                    )
+                ),
                 "verdict": "pass",
                 "cache_identity": cached["tree_identity"],
             },
@@ -2475,7 +2610,7 @@ def audited_assembly_cache_publish_boundary(cache_key, output, manifest):
 
 
 def run_assemble(thing):
-    """One suite seed in; five generated, verified, installed applications out."""
+    """One suite seed in; all generated, verified, installed applications out."""
     value = dict(thing.get("value") or {}) if isinstance(thing, dict) else {}
     if not is_thing(thing):
         return _failure(
@@ -2567,6 +2702,12 @@ def run_assemble(thing):
             manifests[name] = manifest
             roots.append(root)
 
+        application_language_root = staging / "application-language"
+        application_language_build = audited_application_language_build_boundary(
+            application_language_root
+        )
+        application_language_summary = application_language_build["summary"]
+        application_language_report = application_language_build["report"]
         builds = _build_generated_sources(roots)
         tests = _run_generated_tests(roots)
         anti = _anti_hardcoding([seed for _, seed in seeds])
@@ -2658,9 +2799,27 @@ def run_assemble(thing):
             "applications": manifests,
             "anti_hardcoding": anti,
             "reports": application_reports,
+            "application_language": {
+                "applications": application_language_summary["applications"],
+                "product_ids": sorted(
+                    item["id"] for item in application_language_report["applications"]
+                ),
+                "acceptance": application_language_summary["acceptance"],
+                "complete_tree_sha256": application_language_summary[
+                    "complete_tree_sha256"
+                ],
+                "independent_tree_hashes": application_language_summary[
+                    "independent_tree_hashes"
+                ],
+                "verdict": application_language_summary["verdict"].lower(),
+            },
         }
         registry = derive_application_registry(
             suite, seeds, manifests, existing_registry
+        )
+        registry = extend_application_registry(
+            registry,
+            application_language_report,
         )
         registry_provenance = _registry_provenance(
             registry, suite, seeds
@@ -2672,7 +2831,13 @@ def run_assemble(thing):
             "provenance": registry_provenance,
         }
         (staging / "assembly-manifest.json").write_bytes(_canonical(suite_manifest))
-        ok = all(report["verdict"] == "pass" for report in application_reports.values())
+        ok = (
+            all(
+                report["verdict"] == "pass"
+                for report in application_reports.values()
+            )
+            and application_language_summary["verdict"] == "PASS"
+        )
         if not ok:
             diagnostics = output.with_name("." + output.name + ".uc-diagnostics")
             if diagnostics.exists():
@@ -2691,6 +2856,8 @@ def run_assemble(thing):
             seeds,
             manifests,
             existing_registry,
+            registry,
+            application_language_summary,
         )
         _atomic_publish(staging, output)
         cache_identity = audited_assembly_cache_publish_boundary(
@@ -2703,7 +2870,12 @@ def run_assemble(thing):
                     **value,
                     "output": str(output),
                     "manifest": suite_manifest,
-                    "applications": sorted(manifests),
+                    "applications": sorted(
+                        (
+                            *manifests,
+                            *suite_manifest["application_language"]["product_ids"],
+                        )
+                    ),
                     "verdict": "pass",
                     "cache_identity": cache_identity,
                 },

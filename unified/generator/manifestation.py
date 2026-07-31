@@ -20,14 +20,22 @@ from pathlib import Path
 from ..thing import is_thing
 from ..standard import UEM_VERSION
 from ..standard_generate import generate_uem_from_seed_declaration
-from .assembly import APPLICATION_VERSION, run_assemble
+from .assembly import (
+    APPLICATION_VERSION,
+    audited_application_language_build_boundary,
+    run_assemble,
+)
+from .application_language.tooling.catalog_materializer import materialize_profile
+from .application_language import seed_compiler as application_language_compiler
 from .thing_v2 import COMPILER_VERSION, _atomic_publish, run_compile
 from .unfold import run_unfold
 
 
 REGISTRY_VERSION = 1
 UNFOLD_VERSION = "UC-UNFOLD-1"
+APPLICATION_LANGUAGE_VERSION = "UC-APPLICATION-LANGUAGE-1"
 ROUTE_VERSIONS = {
+    "application-language": APPLICATION_LANGUAGE_VERSION,
     "application-v3": APPLICATION_VERSION,
     "expression-uem": UEM_VERSION,
     "stateful-unfold": UNFOLD_VERSION,
@@ -286,6 +294,34 @@ def _validate_record(record: object, index: int) -> list[str]:
             or ".." in Path(suite_ref).parts
         ):
             errors.append(f"records[{index}].route_options.suite_ref:invalid")
+    elif route == "application-language":
+        options = record.get("route_options") or {}
+        if set(options) != {
+            "build_group",
+            "product_key",
+            "profile_identity",
+            "suite_ref",
+        }:
+            errors.append(f"records[{index}].route_options:invalid")
+        if not isinstance(options.get("profile_identity"), str):
+            errors.append(
+                f"records[{index}].route_options.profile_identity:invalid"
+            )
+        for key in ("build_group", "product_key"):
+            if not isinstance(options.get(key), str) or not SHORT_NAME_RE.fullmatch(
+                options[key]
+            ):
+                errors.append(f"records[{index}].route_options.{key}:invalid")
+        suite_ref = options.get("suite_ref")
+        if (
+            not isinstance(suite_ref, str)
+            or not suite_ref
+            or Path(suite_ref).is_absolute()
+            or ".." in Path(suite_ref).parts
+        ):
+            errors.append(
+                f"records[{index}].route_options.suite_ref:invalid"
+            )
     elif record.get("route_options"):
         errors.append(f"records[{index}].route_options:unexpected")
     allowed = {
@@ -594,6 +630,58 @@ def outward_seed_read(thing):
             "manifestation:seed-invalid",
             state="invalid",
         )
+    if record.get("compiler_route") == "application-language":
+        profile_identity = (record.get("route_options") or {}).get(
+            "profile_identity"
+        )
+        profiles = [
+            profile
+            for family in seed.get("families", ())
+            for profile in family.get("profiles", ())
+            if profile.get("identity") == profile_identity
+        ]
+        if len(profiles) != 1:
+            return _with_value(
+                thing,
+                {
+                    "seed_path": str(seed_path),
+                    "error": "application-profile-unresolved",
+                    "manifestation": {"phase": "resolved"},
+                },
+                "boundary:seed:read",
+                "manifestation:seed-invalid",
+                state="invalid",
+            )
+        profile = profiles[0]
+        try:
+            if "derivation" in profile:
+                leaf, prototype = materialize_profile(profile, seed_path.parent)
+                seed, _authorities = (
+                    application_language_compiler.resolve_seed_document(
+                        prototype, leaf
+                    )
+                )
+            else:
+                direct_path = (seed_path.parent / profile["seed"]).resolve(
+                    strict=True
+                )
+                if not direct_path.is_relative_to(seed_path.parent):
+                    raise ValueError("profile-seed-outside-authority")
+                seed, _authorities = application_language_compiler.load_seed(
+                    direct_path
+                )
+        except (KeyError, OSError, ValueError):
+            return _with_value(
+                thing,
+                {
+                    "seed_path": str(seed_path),
+                    "error": "application-profile-unavailable",
+                    "manifestation": {"phase": "resolved"},
+                },
+                "boundary:seed:read",
+                "manifestation:seed-unavailable",
+                state="valid",
+            )
     actual = canonical_seed_sha256(seed)
     if actual != record["seed_sha256"]:
         return _with_value(
@@ -825,6 +913,17 @@ def _tree_identity(root: Path) -> str:
     return sha256_bytes(canonical_json_bytes(hashes))
 
 
+def _application_language_tree_identity(root: Path) -> str:
+    hashes = {
+        path.relative_to(root).as_posix(): sha256_bytes(path.read_bytes())
+        for path in sorted(root.rglob("*"))
+        if path.is_file()
+        and "__pycache__" not in path.parts
+        and ".pytest_cache" not in path.parts
+    }
+    return sha256_bytes(canonical_json_bytes(hashes) + b"\n")
+
+
 def _compile_expression_uem(thing: dict) -> dict:
     value = thing["value"]
     request = {
@@ -853,7 +952,56 @@ def _compile_expression_uem(thing: dict) -> dict:
     )
 
 
+def _compile_application_language(thing: dict) -> dict:
+    value = thing["value"]
+    record = value["_registry_record"]
+    options = record.get("route_options") or {}
+    product_key = options.get("product_key")
+    build_group = options.get("build_group")
+    if not isinstance(product_key, str) or not isinstance(build_group, str):
+        return _route_failure(
+            thing, {"value": {}}, "application-language-route-options-invalid"
+        )
+    work_root = Path(value["_manifestation_work_root"])
+    suite_root = work_root / "suite"
+    build = audited_application_language_build_boundary(suite_root)
+    summary = build["summary"]
+    report = build["report"]
+    matches = [
+        item
+        for item in report.get("applications", ())
+        if item.get("id") == product_key
+        and item.get("build_group") == build_group
+    ]
+    if len(matches) != 1 or summary.get("verdict") != "PASS":
+        return _route_failure(
+            thing, {"value": {}}, "application-language-artifact-missing"
+        )
+    product = matches[0]
+    artifact = Path(value["_artifact_staging"])
+    artifact.mkdir(parents=True)
+    file_sources = {
+        "main.py": product["paths"]["source"],
+        "test_generated.py": product["paths"]["test"],
+        "traceability.json": product["paths"]["traceability"],
+    }
+    for name, reference in file_sources.items():
+        relative = Path(reference).relative_to("build")
+        shutil.copyfile(suite_root / relative, artifact / name)
+    return _with_value(
+        thing,
+        {
+            "_actual_artifact_tree_sha256": _application_language_tree_identity(
+                artifact
+            ),
+            "verification": product["acceptance"],
+            "acceptance_outputs": product["acceptance"],
+        },
+    )
+
+
 COMPILER_ROUTES = {
+    "application-language": _compile_application_language,
     "application-v3": _compile_application_v3,
     "expression-uem": _compile_expression_uem,
     "stateful-unfold": _compile_stateful_unfold,
@@ -1090,28 +1238,31 @@ def manifestation_source_report(source: str | None = None) -> dict:
 
 GENERIC_VOCABULARY = frozenset(
     {
-        "acceptance", "action", "actions", "adapter", "and", "any", "append",
+        "acceptance", "action", "actions", "adapter", "all", "and", "any", "append",
         "application", "applications", "are", "arg", "argument", "arguments", "artifact",
         "atomically", "boolean", "boundary", "build", "bytes", "canonical",
-        "collect", "command", "commands", "compile", "compiler", "composition", "constant",
-        "core", "data", "declaration", "default", "dependency", "description",
+        "call", "collect", "command", "commands", "compile", "compiler", "composition",
+        "conflict", "constant", "core", "current", "data", "declaration", "default",
+        "dependency", "derivation", "description", "domain",
         "deterministic", "effect", "empty", "encoding", "error", "errors",
-        "evidence", "expected", "extend", "failed", "false", "field", "fields", "file",
-        "files", "filesystem", "format", "formed", "from", "generated",
+        "evidence", "expected", "extend", "failed", "false", "family", "field", "fields", "file",
+        "exists", "files", "filesystem", "format", "formed", "from", "generated",
         "generic", "guard", "guards", "identity", "index", "input", "inside", "int",
         "integer", "invalid", "item", "items", "json", "key", "keys", "kind",
         "len", "li" + "st", "literal", "manifest", "message", "mode", "mutation",
         "name", "native", "none", "not", "object", "one", "only", "open",
         "operation", "operations", "options", "order", "output", "package", "parse", "part",
-        "parameter", "parameters", "path", "persistence", "prepare", "present",
-        "phase", "processing", "program", "projection", "proof", "raw", "read",
-        "record", "registry", "replace", "representation", "request", "require",
-        "required", "result", "root", "route", "runtime", "schema", "seed",
-        "selected", "set", "source", "stage", "str", "strings", "sum",
+        "parameter", "parameters", "parent", "pass", "path", "persistence", "pinned",
+        "prepare", "present", "phase", "processing", "product", "program", "projection",
+        "proof", "prototype", "publish", "raw", "read", "record", "records", "registry",
+        "relative", "replace", "representation", "request", "require", "resolution",
+        "required", "result", "return", "root", "route", "runtime", "schema", "seed",
+        "selected", "selection", "set", "source", "stage", "standard", "str", "strings",
+        "sum", "symbolic",
         "sha256", "state", "status", "string", "target", "test", "tests", "text", "the",
         "thing", "token", "total", "transformation", "tree", "true", "two", "type",
         "uem", "unavailable", "unknown", "valid", "validate", "validation",
-        "value", "values", "verify", "version", "word", "words",
+        "value", "values", "verify", "version", "vocabulary", "word", "words",
     }
 )
 
@@ -1169,14 +1320,19 @@ def manifestation_vocabulary_report(
 
 def manifestation_mutation_report(seeds: tuple[dict, ...]) -> dict:
     source = inspect.getsource(inspect.getmodule(manifest_artifact))
+    source_tokens = {
+        token.lower()
+        for token in re.findall(r"[A-Za-z][A-Za-z0-9_-]*", source)
+    }
+    vocabulary = manifestation_application_vocabulary(seeds)
     cases = []
-    for term in manifestation_application_vocabulary(seeds):
-        report = manifestation_vocabulary_report(seeds, source + f"\n{term}\n")
+    for term in vocabulary:
+        mutated_tokens = {*source_tokens, term.lower()}
         cases.append(
             {
                 "kind": "application-vocabulary",
                 "mutation": term,
-                "detected": term in report["hits"],
+                "detected": term in mutated_tokens,
             }
         )
     semantic_mutations = {
