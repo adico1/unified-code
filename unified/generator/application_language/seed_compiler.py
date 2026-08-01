@@ -19,6 +19,7 @@ from .declaration_compiler import declaration_form
 from .declaration_compiler import render_declaration_source
 from .stateful_compiler import safe_name
 from .simulation_compiler import render_tests as render_simulation_tests
+from .precompile import build_pipeline, verify_manifestation
 
 
 FORMAT = "manual-resolved-declaration-4"
@@ -783,48 +784,36 @@ def resolve_seed_document(path, document):
         "kind": "what-authority",
         "sha256": document_digest(document),
     }
-    form = declaration_form(what)
-    if form == "expression":
-        registry_authority = next(
-            item
-            for item in authorities
-            if "key_registry" in item.get("provides", ())
-        )
-        materialized = materialize(
-            what,
-            provisions["assembly"],
-            provisions["key_registry"],
-            registry_authority,
-            leaf_authority,
-        )
-    elif form == "stateful":
-        registry_authority = next(
-            item
-            for item in authorities
-            if "control_registry" in item.get("provides", ())
-        )
-        materialized = materialize_stateful(
-            what,
-            provisions["assembly"],
-            provisions["control_registry"],
-            registry_authority,
-            leaf_authority,
-        )
-    elif form == "simulation":
-        registry_authority = next(
-            item
-            for item in authorities
-            if "simulation_control_registry" in item.get("provides", ())
-        )
-        materialized = materialize_simulation(
-            what,
-            provisions["assembly"],
-            provisions["simulation_control_registry"],
-            registry_authority,
-            leaf_authority,
-        )
-    else:
+    routes = (
+        ("expression", "key_registry", materialize),
+        ("stateful", "control_registry", materialize_stateful),
+        (
+            "simulation",
+            "simulation_control_registry",
+            materialize_simulation,
+        ),
+    )
+    selected_routes = [
+        route for route in routes if route[1] in provisions
+    ]
+    if len(selected_routes) != 1:
         raise ValueError("unknown-program-language")
+    form, registry_identity, materializer = selected_routes[0]
+    registry_authority = next(
+        item
+        for item in authorities
+        if registry_identity in item.get("provides", ())
+    )
+    materialized = materializer(
+        what,
+        provisions["assembly"],
+        provisions[registry_identity],
+        registry_authority,
+        leaf_authority,
+    )
+    materialized["_assembly"]["profile"] = form
+    materialized["_assembly"]["targets"] = provisions["targets"]
+    materialized["_assembly"]["request"] = what
     resolved = {
         "format": FORMAT,
         **materialized,
@@ -1337,23 +1326,53 @@ def install(stage, output):
 
 def assemble_resolved(seed, authorities):
     working = deepcopy(seed)
-    source, tree = render_program(working)
+    pipeline = build_pipeline(working, authorities)
+    specialized = pipeline["specialized_specification"]["declaration"]
+    source, tree = render_program(specialized)
     errors = validate(working, tree)
     if errors:
         raise ValueError(",".join(errors))
     verify_runtime_source(working, tree)
     verification = acceptance_result(working, source)
     tests = render_tests(working)
-    trace = canonical(trace_program(working, source, tree, authorities))
+    trace_document = trace_program(working, source, tree, authorities)
+    exactness = verify_manifestation(
+        pipeline,
+        source,
+        tests,
+        trace_document,
+    )
+    if exactness["verdict"] != "pass":
+        raise ValueError("manifestation-not-exact")
+    pipeline["evidence"]["manifestation_exactness"] = exactness
+    trace = canonical(trace_document)
     files = {
         "main.py": source,
         "test_generated.py": tests,
         "traceability.json": trace,
+        "request.json": canonical(pipeline["request"]),
+        "system-architecture.json": canonical(pipeline["architecture"]),
+        "systems.json": canonical(pipeline["systems"]),
+        "interfaces.json": canonical(pipeline["interfaces"]),
+        "full-specification.json": canonical(pipeline["full_specification"]),
+        "specialized-specification.json": canonical(
+            pipeline["specialized_specification"]
+        ),
+        "manifestation-plan.json": canonical(pipeline["manifestation_plan"]),
+        "precompile-evidence.json": canonical(pipeline["evidence"]),
     }
     generated_roles = {
         "main.py": "application",
         "test_generated.py": "test",
         "traceability.json": "evidence",
+        "request.json": "request",
+        "system-architecture.json": "architecture",
+        "systems.json": "architecture",
+        "interfaces.json": "architecture",
+        "full-specification.json": "specification",
+        "specialized-specification.json": "specification",
+        "manifestation-plan.json": "plan",
+        "precompile-evidence.json": "evidence",
     }
     unclassified = set(files) - set(generated_roles)
     manual_application_files = sum(
@@ -1394,6 +1413,18 @@ def assemble_resolved(seed, authorities):
         "manual_application_files": manual_application_files,
         "manual_test_files": manual_test_files,
         "generated_ast": True,
+        "precompile": {
+            "events": pipeline["evidence"]["events"],
+            "projection_sha256": pipeline["evidence"]["projection_sha256"],
+            "missing_capabilities": pipeline["evidence"][
+                "missing_capabilities"
+            ],
+            "excess_capabilities": pipeline["evidence"][
+                "excess_capabilities"
+            ],
+            "verdict": pipeline["evidence"]["verdict"],
+            "manifestation_exactness": exactness,
+        },
     }
     files["manifest.json"] = canonical(manifest)
     return manifest, files
