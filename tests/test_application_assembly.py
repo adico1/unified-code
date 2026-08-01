@@ -162,7 +162,21 @@ def test_all_applications_generate_install_execute_and_pass_ten_depths(tmp_path)
     result = run_assemble(thing(SUITE, output))
     assert result["state"] == "valid", result["value"]
     value = result["value"]
-    assert len(value["applications"]) == 79
+    suite = load(SUITE)
+    catalog = load(ROOT / suite["application_language"]["catalog"])
+    catalog_products = {
+        profile["product_identity"]
+        for family in catalog["families"]
+        for profile in family["profiles"]
+        if profile["status"] == "proven"
+    }
+    direct_products = {
+        load(ROOT / entry["seed"])["application"]["canonical_name"]
+        for entry in suite["applications"]
+    }
+    assert direct_products.isdisjoint(catalog_products)
+    expected_products = direct_products | catalog_products
+    assert len(value["applications"]) == len(expected_products)
     assert {
         "calculator",
         "file-editor",
@@ -171,20 +185,16 @@ def test_all_applications_generate_install_execute_and_pass_ten_depths(tmp_path)
         "pong-game",
     }.issubset(value["applications"])
     application_language = value["manifest"]["application_language"]
-    assert application_language["applications"] == 74
-    assert len(application_language["product_ids"]) == 74
-    assert application_language["acceptance"] == {"passed": 175, "total": 175}
+    assert application_language["applications"] == len(catalog_products)
+    assert len(application_language["product_ids"]) == len(catalog_products)
+    assert application_language["acceptance"]["passed"] == (
+        application_language["acceptance"]["total"]
+    )
+    assert application_language["acceptance"]["total"] >= len(catalog_products)
     assert application_language["verdict"] == "pass"
     index = load(output / "index.json")
-    assert index["total_products"] == 79
-    assert index["groups"] == {
-        "calculators": 33,
-        "dashboards": 1,
-        "document-tools": 2,
-        "libraries": 1,
-        "pong-games": 9,
-        "todos": 33,
-    }
+    assert index["total_products"] == len(expected_products)
+    assert sum(index["groups"].values()) == len(expected_products)
     assert (output / "README.md").is_file()
     assert not (output / "applications").exists()
     assert not (output / "installation").exists()

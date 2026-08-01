@@ -233,7 +233,7 @@ def test_registry_covers_every_current_product_and_only_generic_routes():
         for profile in family["profiles"]
         if profile["status"] == "proven"
     }
-    assert len(application_language) == 74
+    assert application_language
     assert set(primary) == established | application_language
     assert set(COMPILER_ROUTES) == set(ROUTE_VERSIONS)
     for record in primary.values():

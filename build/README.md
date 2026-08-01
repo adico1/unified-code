@@ -4,7 +4,7 @@ This checked-in tree is generated for education, research and reproducible
 inspection. Choose a product family, then a product. Each `application/`
 directory is runnable. Do not edit generated files manually.
 
-Products: 79
+Products: 80
 
 ## How to read one generated product
 
@@ -39,7 +39,7 @@ Follow the same path in every product:
 
 ## [todos](todos/)
 
-33 products.
+34 products.
 
 Assembly metadata, internal compiler trees and evidence are under
 [`.unified/`](.unified/). The product directories are the public view.
