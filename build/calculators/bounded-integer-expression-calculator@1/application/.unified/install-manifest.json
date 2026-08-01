@@ -1,0 +1,1 @@
+{"application":"calculator","entry_point":"calculator_app.cli:main","interface":{"browser":true,"cli":true,"library":false},"package":"calculator_app"}

@@ -1,0 +1,91 @@
+# Generated applications
+
+Choose a product family first, then a product. Inside each product,
+`application/main.py` is the exact runnable application; the other
+folders explain where it came from and how it was verified.
+
+## calculators
+
+- [arbitrary-precision@1](calculators/arbitrary-precision@1/)
+- [calculus@1](calculators/calculus@1/)
+- [chemistry@1](calculators/chemistry@1/)
+- [complex-number@1](calculators/complex-number@1/)
+- [construction@1](calculators/construction@1/)
+- [cooking@1](calculators/cooking@1/)
+- [currency@1](calculators/currency@1/)
+- [date-time@1](calculators/date-time@1/)
+- [engineering-units@1](calculators/engineering-units@1/)
+- [financial@1](calculators/financial@1/)
+- [fraction@1](calculators/fraction@1/)
+- [geometry@1](calculators/geometry@1/)
+- [graphing@1](calculators/graphing@1/)
+- [health@1](calculators/health@1/)
+- [investment@1](calculators/investment@1/)
+- [loan-mortgage@1](calculators/loan-mortgage@1/)
+- [matrix-vector@1](calculators/matrix-vector@1/)
+- [navigation@1](calculators/navigation@1/)
+- [normal@1](calculators/normal@1/)
+- [ohms-law@1](calculators/ohms-law@1/)
+- [physics@1](calculators/physics@1/)
+- [polynomial-algebra@1](calculators/polynomial-algebra@1/)
+- [probability@1](calculators/probability@1/)
+- [programmer@1](calculators/programmer@1/)
+- [quadratic-polynomial@1](calculators/quadratic-polynomial@1/)
+- [regression@1](calculators/regression@1/)
+- [regular@1](calculators/regular@1/)
+- [rpn@1](calculators/rpn@1/)
+- [scientific@1](calculators/scientific@1/)
+- [statistical@1](calculators/statistical@1/)
+- [subnet@1](calculators/subnet@1/)
+- [tax@1](calculators/tax@1/)
+
+## dashboards
+
+- [development-observatory@1](dashboards/development-observatory@1/)
+
+## pong-games
+
+- [classic-paddle-duel@1](pong-games/classic-paddle-duel@1/)
+- [doubles-paddle-duel@1](pong-games/doubles-paddle-duel@1/)
+- [multiball-paddle-duel@1](pong-games/multiball-paddle-duel@1/)
+- [obstacle-paddle-arena@1](pong-games/obstacle-paddle-arena@1/)
+- [power-up-paddle-arena@1](pong-games/power-up-paddle-arena@1/)
+- [solo-paddle-opponent@1](pong-games/solo-paddle-opponent@1/)
+- [timed-paddle-score-attack@1](pong-games/timed-paddle-score-attack@1/)
+- [wall-return-training@1](pong-games/wall-return-training@1/)
+
+## todos
+
+- [approvals@1](todos/approvals@1/)
+- [bug-tracker@1](todos/bug-tracker@1/)
+- [calendar-tasks@1](todos/calendar-tasks@1/)
+- [care-plan@1](todos/care-plan@1/)
+- [collaboration-sync-plan@1](todos/collaboration-sync-plan@1/)
+- [costed-todo@1](todos/costed-todo@1/)
+- [crm-follow-up@1](todos/crm-follow-up@1/)
+- [daily-planner@1](todos/daily-planner@1/)
+- [dependency-plan@1](todos/dependency-plan@1/)
+- [editorial-calendar@1](todos/editorial-calendar@1/)
+- [eisenhower@1](todos/eisenhower@1/)
+- [errands@1](todos/errands@1/)
+- [event-planning@1](todos/event-planning@1/)
+- [grocery@1](todos/grocery@1/)
+- [gtd@1](todos/gtd@1/)
+- [habits@1](todos/habits@1/)
+- [inventory-restock@1](todos/inventory-restock@1/)
+- [issue-tracker@1](todos/issue-tracker@1/)
+- [kanban@1](todos/kanban@1/)
+- [maintenance-work-orders@1](todos/maintenance-work-orders@1/)
+- [offline-security-plan@1](todos/offline-security-plan@1/)
+- [product-roadmap@1](todos/product-roadmap@1/)
+- [project-work-breakdown@1](todos/project-work-breakdown@1/)
+- [recurring-chores@1](todos/recurring-chores@1/)
+- [reminders@1](todos/reminders@1/)
+- [research-pipeline@1](todos/research-pipeline@1/)
+- [sprint-backlog@1](todos/sprint-backlog@1/)
+- [study-homework@1](todos/study-homework@1/)
+- [support-queue@1](todos/support-queue@1/)
+- [team-assignments@1](todos/team-assignments@1/)
+- [todo@1](todos/todo@1/)
+- [travel-checklist@1](todos/travel-checklist@1/)
+- [weekly-planner@1](todos/weekly-planner@1/)

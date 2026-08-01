@@ -6,7 +6,7 @@ import ast
 import re
 
 
-LANGUAGE = "bounded-simulation-declaration-1"
+LANGUAGE = "unified-application-declaration-1"
 
 
 def safe_name(value):

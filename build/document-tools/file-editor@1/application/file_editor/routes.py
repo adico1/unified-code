@@ -1,0 +1,1 @@
+ROUTES = {'read': {'primitive': 'bytes_load'}, 'write': {'primitive': 'text_write'}, 'replace': {'primitive': 'text_substitute'}, 'append': {'primitive': 'text_extend'}, 'insert': {'primitive': 'text_splice'}, 'delete': {'primitive': 'text_remove'}}

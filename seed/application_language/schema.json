@@ -316,9 +316,7 @@
             },
             "language": {
               "enum": [
-                "calculator-declaration-1",
-                "stateful-interface-declaration-1",
-                "bounded-simulation-declaration-1"
+                "unified-application-declaration-1"
               ]
             },
             "launch_entrypoint": {

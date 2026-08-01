@@ -24,8 +24,8 @@ The repository-wide figures and gaps below measure only the root-seed fixed-poin
 **Repository self-hosting verdict:** `fail`
 **standard_version:** TEN-1
 **seed_sha256:** `9b145882d8aaa29dfec413ce78e72e86998349a5d7e63118b0daf361b26d25c2`
-**files classified:** 442
-**illegal provenance (not in allowed five classes):** 239
+**files classified:** 481
+**illegal provenance (not in allowed five classes):** 253
 **OOP class files:** 0
 **open standard.gap tickets:** 6
 
@@ -50,12 +50,12 @@ Conventional development is not an authorized fallback. Gaps below are `standard
 
 | Class | Count |
 | --- | ---: |
-| `evidence` | 7 |
+| `evidence` | 6 |
 | `external-vendored` | 4 |
 | `generated` | 125 |
-| `handwritten-pending` | 239 |
+| `handwritten-pending` | 253 |
 | `physical-host-boundary` | 16 |
-| `seed` | 51 |
+| `seed` | 77 |
 
 ## Clean-room status
 
@@ -63,20 +63,19 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 
 ## File table (path · class · compliance · sha256[:16])
 
-- `.coverage` · `evidence` · `ok` · `0582dadf4a76f6ed`
 - `.coveragerc` · `handwritten-pending` · `standard.gap` · `f4c1eac25e83d766`
-- `.github/workflows/test.yml` · `handwritten-pending` · `standard.gap` · `f37a01563671e8dc`
+- `.github/workflows/test.yml` · `handwritten-pending` · `standard.gap` · `ecdcab5357112a43`
 - `.gitignore` · `handwritten-pending` · `standard.gap` · `699c693cc407b221`
-- `APPLICATION_ASSEMBLY.md` · `handwritten-pending` · `standard.gap` · `8bacd4ab1df79455`
-- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `ca52e4dc41dc2082`
+- `APPLICATION_ASSEMBLY.md` · `handwritten-pending` · `standard.gap` · `b07a7da4774bc644`
+- `AUDIT_STANDARD_TEN.md` · `evidence` · `ok` · `6118d899a69f93be`
 - `CALCULATOR_GENERATOR.md` · `handwritten-pending` · `standard.gap` · `0b3adaa7e650e50c`
 - `GAUNTLET.md` · `evidence` · `ok` · `0fa0d5bc6bb62286`
 - `LAW.md` · `handwritten-pending` · `standard.gap` · `6dc632d5ddceb66d`
 - `LICENSE` · `handwritten-pending` · `standard.gap` · `af6b910929ec375c`
 - `MANIFESTATION.md` · `handwritten-pending` · `standard.gap` · `15efdca893c191c3`
-- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `bff58013cb4d9266`
-- `README.md` · `handwritten-pending` · `standard.gap` · `a49e2ddff956b5ce`
-- `ROADMAP.md` · `handwritten-pending` · `standard.gap` · `cec16f240821e25c`
+- `PROVENANCE_MANIFEST.json` · `evidence` · `ok` · `cc58400868f7f3f1`
+- `README.md` · `handwritten-pending` · `standard.gap` · `d882950840e254f8`
+- `ROADMAP.md` · `handwritten-pending` · `standard.gap` · `ca0c3f7fe075a259`
 - `ROOT_CONVERGENCE.md` · `handwritten-pending` · `standard.gap` · `a2a6a6142608d173`
 - `SPEC.md` · `handwritten-pending` · `standard.gap` · `f0c486f6fdd9d865`
 - `STAGE0.md` · `handwritten-pending` · `standard.gap` · `9e2bae9dd4ed3f3a`
@@ -86,6 +85,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `THING_V2.md` · `handwritten-pending` · `standard.gap` · `da567f98a7b53f54`
 - `UEM_SPEC.md` · `handwritten-pending` · `standard.gap` · `3864ea074f093bdc`
 - `VERIFY_FLOW.md` · `handwritten-pending` · `standard.gap` · `a8a4df82c4ef96ad`
+- `VISION.md` · `handwritten-pending` · `standard.gap` · `090dda43f5dccb98`
 - `artifacts/uem/invoice_total/program.symbolic.json` · `generated` · `ok` · `a1899fe0c2f6ac40`
 - `artifacts/uem/invoice_total/program.symbolic.json.stamp.json` · `generated` · `ok` · `4fc5f5b144118ff1`
 - `artifacts/uem/invoice_total/program.uem` · `generated` · `ok` · `cf2a87a8219f26e5`
@@ -226,11 +226,12 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `c/third_party/cJSON.h` · `external-vendored` · `ok` · `0578cc29132912ed`
 - `c/third_party/sha256.c` · `external-vendored` · `ok` · `7512aca9136ce6e2`
 - `c/third_party/sha256.h` · `external-vendored` · `ok` · `ee296ea123f062e6`
-- `contract_report.json` · `handwritten-pending` · `standard.gap` · `7805a99ab3fa9825`
-- `contract_status.json` · `handwritten-pending` · `standard.gap` · `3ed75edf9b64810f`
 - `coverage.json` · `evidence` · `ok` · `b6130a1054645415`
 - `coverage_py.json` · `evidence` · `ok` · `f6277200dfe9e536`
+- `docs/BUILD_OUTPUT.md` · `handwritten-pending` · `standard.gap` · `c718f2415f6ed00a`
 - `docs/DEVELOPER_WORKFLOW.md` · `handwritten-pending` · `standard.gap` · `b1e1b48722ac0e51`
+- `docs/GOALS_AND_BOUNDARIES.md` · `handwritten-pending` · `standard.gap` · `72807dc74b16b6a9`
+- `docs/HOW_TO_READ.md` · `handwritten-pending` · `standard.gap` · `31f03b6ada100176`
 - `examples/declarations/invoice_total.json` · `handwritten-pending` · `standard.gap` · `1a0479e011592752`
 - `examples/declarations/invoice_total.py` · `handwritten-pending` · `standard.gap` · `d0cb833aace2a12a`
 - `examples/declarations/text_stats_program.json` · `handwritten-pending` · `standard.gap` · `c8c1c8f23b4e780a`
@@ -260,103 +261,103 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `generated/uem_surface/vectors/l11-surface.json` · `generated` · `ok` · `569475e5da9bc192`
 - `generated/verification_surface/__init__.py` · `generated` · `ok` · `a86334931a1bdf70`
 - `generated/verification_surface/audit/__init__.py` · `generated` · `ok` · `e76029b523f09f15`
-- `generated/verification_surface/audit/generated_audit.py` · `generated` · `ok` · `08f4b4aa44f7b436`
-- `generated/verification_surface/audit/obligations.json` · `generated` · `ok` · `8eb33cbcbbd8af3a`
+- `generated/verification_surface/audit/generated_audit.py` · `generated` · `ok` · `d009ff834d35daf6`
+- `generated/verification_surface/audit/obligations.json` · `generated` · `ok` · `11340bcb361a4234`
 - `generated/verification_surface/audit/run_audit.py` · `generated` · `ok` · `37196aeb81802c1a`
-- `generated/verification_surface/audit/schema.json` · `generated` · `ok` · `2d15ee50f8e9a639`
-- `generated/verification_surface/authority/facts.json` · `generated` · `ok` · `3451437ce08dd425`
-- `generated/verification_surface/authority/obligations.json` · `generated` · `ok` · `e07df5817e96fbbf`
-- `generated/verification_surface/c/generated_contract_test.c` · `generated` · `ok` · `6f7cc94de9f2104e`
-- `generated/verification_surface/coverage/contract.json` · `generated` · `ok` · `d1850da5e994a5f0`
-- `generated/verification_surface/docs/DEVELOPER_WORKFLOW.md` · `generated` · `ok` · `392356f2f6936e50`
-- `generated/verification_surface/docs/LAW.normative.md` · `generated` · `ok` · `b738a5df1ae01e29`
-- `generated/verification_surface/docs/README.status.md` · `generated` · `ok` · `a7bfb9771dc82353`
-- `generated/verification_surface/docs/SPEC.normative.md` · `generated` · `ok` · `dd93f15039ab3692`
-- `generated/verification_surface/docs/UEM.normative.md` · `generated` · `ok` · `9d263b84a1261a5e`
-- `generated/verification_surface/gauntlet/contract.json` · `generated` · `ok` · `bf095e58ba5c88c1`
-- `generated/verification_surface/goldens/manifest.json` · `generated` · `ok` · `0894f7b4a5277464`
-- `generated/verification_surface/goldens/vector-0000.json` · `generated` · `ok` · `bbaaa7b3ab467225`
-- `generated/verification_surface/goldens/vector-0001.json` · `generated` · `ok` · `259bc4ac5b51a676`
-- `generated/verification_surface/goldens/vector-0002.json` · `generated` · `ok` · `d85906a912f6fafd`
-- `generated/verification_surface/goldens/vector-0003.json` · `generated` · `ok` · `246b39ec251dce59`
-- `generated/verification_surface/goldens/vector-0004.json` · `generated` · `ok` · `989cc30f4585b303`
-- `generated/verification_surface/goldens/vector-0005.json` · `generated` · `ok` · `b9a112ff2c96acb1`
-- `generated/verification_surface/goldens/vector-0006.json` · `generated` · `ok` · `d31c0ccc527213ae`
-- `generated/verification_surface/goldens/vector-0007.json` · `generated` · `ok` · `cb843840e42efea7`
-- `generated/verification_surface/goldens/vector-0008.json` · `generated` · `ok` · `0b3f6bb1afe55e12`
-- `generated/verification_surface/goldens/vector-0009.json` · `generated` · `ok` · `20cb03592bcdff58`
-- `generated/verification_surface/goldens/vector-0010.json` · `generated` · `ok` · `e42e1c534708f78e`
-- `generated/verification_surface/goldens/vector-0011.json` · `generated` · `ok` · `157772cc13d6bcbd`
-- `generated/verification_surface/goldens/vector-0012.json` · `generated` · `ok` · `de055bfebfae993f`
-- `generated/verification_surface/goldens/vector-0013.json` · `generated` · `ok` · `6c3452f6c6202ced`
-- `generated/verification_surface/goldens/vector-0014.json` · `generated` · `ok` · `06a7a69184d2c89c`
-- `generated/verification_surface/goldens/vector-0015.json` · `generated` · `ok` · `a5f54b11d39a1d93`
-- `generated/verification_surface/goldens/vector-0016.json` · `generated` · `ok` · `5c19e63358034005`
-- `generated/verification_surface/goldens/vector-0017.json` · `generated` · `ok` · `c3260a84ea71e47a`
-- `generated/verification_surface/goldens/vector-0018.json` · `generated` · `ok` · `2764c58d2b1ac1e3`
-- `generated/verification_surface/goldens/vector-0019.json` · `generated` · `ok` · `ea3f687d51ebe383`
-- `generated/verification_surface/goldens/vector-0020.json` · `generated` · `ok` · `b01553952511ee3f`
-- `generated/verification_surface/goldens/vector-0021.json` · `generated` · `ok` · `b466f4b547379bd8`
-- `generated/verification_surface/goldens/vector-0022.json` · `generated` · `ok` · `4f03ae0ded9c96dd`
-- `generated/verification_surface/goldens/vector-0023.json` · `generated` · `ok` · `526808698a35eaf1`
-- `generated/verification_surface/goldens/vector-0024.json` · `generated` · `ok` · `fa6ccf7275210f26`
-- `generated/verification_surface/goldens/vector-0025.json` · `generated` · `ok` · `7ecbff14035e915f`
-- `generated/verification_surface/goldens/vector-0026.json` · `generated` · `ok` · `3dcd36429022ca04`
-- `generated/verification_surface/goldens/vector-0027.json` · `generated` · `ok` · `d8ef10198776cc73`
-- `generated/verification_surface/goldens/vector-0028.json` · `generated` · `ok` · `1809c0cfc07ef503`
-- `generated/verification_surface/goldens/vector-0029.json` · `generated` · `ok` · `4def87d5263572bd`
-- `generated/verification_surface/goldens/vector-0030.json` · `generated` · `ok` · `9f145f95182221d1`
-- `generated/verification_surface/goldens/vector-0031.json` · `generated` · `ok` · `5a989b14b8e2e104`
-- `generated/verification_surface/goldens/vector-0032.json` · `generated` · `ok` · `63381c79f2ada9e4`
-- `generated/verification_surface/goldens/vector-0033.json` · `generated` · `ok` · `f5ba911f362508f8`
-- `generated/verification_surface/goldens/vector-0034.json` · `generated` · `ok` · `91101555656cccbd`
-- `generated/verification_surface/goldens/vector-0035.json` · `generated` · `ok` · `951188e785fa1edb`
-- `generated/verification_surface/goldens/vector-0036.json` · `generated` · `ok` · `6e5d1dd7c1002ee4`
-- `generated/verification_surface/goldens/vector-0037.json` · `generated` · `ok` · `0acaad19a4deca3a`
-- `generated/verification_surface/goldens/vector-0038.json` · `generated` · `ok` · `2a93396a00f719a5`
-- `generated/verification_surface/goldens/vector-0039.json` · `generated` · `ok` · `79da471d6c43766c`
-- `generated/verification_surface/goldens/vector-0040.json` · `generated` · `ok` · `b626b79dfc762cf1`
-- `generated/verification_surface/goldens/vector-0041.json` · `generated` · `ok` · `ed682ec9ee2c137f`
-- `generated/verification_surface/goldens/vector-0042.json` · `generated` · `ok` · `f52d4fa311417c97`
-- `generated/verification_surface/goldens/vector-0043.json` · `generated` · `ok` · `7a79ef072afe67e6`
-- `generated/verification_surface/goldens/vector-0044.json` · `generated` · `ok` · `eaae91416505d7fc`
-- `generated/verification_surface/goldens/vector-0045.json` · `generated` · `ok` · `f7952d30952c6e5c`
-- `generated/verification_surface/goldens/vector-0046.json` · `generated` · `ok` · `732dbd78d6a06bc7`
-- `generated/verification_surface/goldens/vector-0047.json` · `generated` · `ok` · `ad9a391f34aafb0e`
-- `generated/verification_surface/goldens/vector-0048.json` · `generated` · `ok` · `0b1102101d1e92b9`
-- `generated/verification_surface/goldens/vector-0049.json` · `generated` · `ok` · `bc7b36fe180790ba`
-- `generated/verification_surface/goldens/vector-0050.json` · `generated` · `ok` · `e006a67ef9c7c171`
-- `generated/verification_surface/goldens/vector-0051.json` · `generated` · `ok` · `2ac09c1c01400614`
-- `generated/verification_surface/goldens/vector-0052.json` · `generated` · `ok` · `649bb0cd3249d7de`
-- `generated/verification_surface/goldens/vector-0053.json` · `generated` · `ok` · `572e9e62e6473d44`
-- `generated/verification_surface/goldens/vector-0054.json` · `generated` · `ok` · `d51573af5749c44b`
-- `generated/verification_surface/goldens/vector-0055.json` · `generated` · `ok` · `d6ff5ff0e899f14d`
-- `generated/verification_surface/goldens/vector-0056.json` · `generated` · `ok` · `4174be71a4f4c421`
-- `generated/verification_surface/goldens/vector-0057.json` · `generated` · `ok` · `0f952877f3d3b5e3`
-- `generated/verification_surface/goldens/vector-0058.json` · `generated` · `ok` · `e2f85b08714d1e24`
-- `generated/verification_surface/goldens/vector-0059.json` · `generated` · `ok` · `4050c8f68b1e7722`
-- `generated/verification_surface/goldens/vector-0060.json` · `generated` · `ok` · `e4aa62aba8a4a005`
-- `generated/verification_surface/goldens/vector-0061.json` · `generated` · `ok` · `6a970be56bfa7125`
-- `generated/verification_surface/goldens/vector-0062.json` · `generated` · `ok` · `c952292c9a72f4ba`
-- `generated/verification_surface/goldens/vector-0063.json` · `generated` · `ok` · `c2041e1dd82c4911`
-- `generated/verification_surface/goldens/vector-0064.json` · `generated` · `ok` · `698a49d0c5088c23`
-- `generated/verification_surface/goldens/vector-0065.json` · `generated` · `ok` · `8001e025a5cad3e0`
-- `generated/verification_surface/goldens/vector-0066.json` · `generated` · `ok` · `2fae0ec70a940bc5`
-- `generated/verification_surface/goldens/vector-0067.json` · `generated` · `ok` · `094cddbba5e48614`
-- `generated/verification_surface/goldens/vector-0068.json` · `generated` · `ok` · `b6cd5f59859a3bad`
-- `generated/verification_surface/goldens/vector-0069.json` · `generated` · `ok` · `fd3325bf41651422`
-- `generated/verification_surface/goldens/vector-0070.json` · `generated` · `ok` · `7a9296bb81788e0b`
-- `generated/verification_surface/goldens/vector-0071.json` · `generated` · `ok` · `162f390c09da2588`
-- `generated/verification_surface/goldens/vector-0072.json` · `generated` · `ok` · `f4cb4d4a61cfb281`
-- `generated/verification_surface/goldens/vector-0073.json` · `generated` · `ok` · `7de0a5778223d823`
-- `generated/verification_surface/mutations/manifest.json` · `generated` · `ok` · `4377ffb5ed258ba9`
-- `generated/verification_surface/provenance.json` · `generated` · `ok` · `1727f5cae10554cf`
-- `generated/verification_surface/python/test_generated_contract.py` · `generated` · `ok` · `97ce82b97d53cc25`
-- `generated/verification_surface/tests/cross-host-vectors.json` · `generated` · `ok` · `94541415597be012`
-- `generated/verification_surface/tests/partitions.json` · `generated` · `ok` · `312b8f6a5dbffe12`
-- `generated/verification_surface/verification/ci-inventory.json` · `generated` · `ok` · `ea6c2668c68c9b68`
+- `generated/verification_surface/audit/schema.json` · `generated` · `ok` · `fcc539a7c872fa39`
+- `generated/verification_surface/authority/facts.json` · `generated` · `ok` · `0aca03e7beec1719`
+- `generated/verification_surface/authority/obligations.json` · `generated` · `ok` · `4a42e8cd739af9a6`
+- `generated/verification_surface/c/generated_contract_test.c` · `generated` · `ok` · `5a1923c5b6df7140`
+- `generated/verification_surface/coverage/contract.json` · `generated` · `ok` · `34f8d5993137544e`
+- `generated/verification_surface/docs/DEVELOPER_WORKFLOW.md` · `generated` · `ok` · `7494e9b4d6503454`
+- `generated/verification_surface/docs/LAW.normative.md` · `generated` · `ok` · `dd13a8f0ecf677e5`
+- `generated/verification_surface/docs/README.status.md` · `generated` · `ok` · `f9ca1c411713e71c`
+- `generated/verification_surface/docs/SPEC.normative.md` · `generated` · `ok` · `3661bd1211dc66e9`
+- `generated/verification_surface/docs/UEM.normative.md` · `generated` · `ok` · `39c08edaddc5363b`
+- `generated/verification_surface/gauntlet/contract.json` · `generated` · `ok` · `1560d12467a6dea3`
+- `generated/verification_surface/goldens/manifest.json` · `generated` · `ok` · `af1617d2b8815c5b`
+- `generated/verification_surface/goldens/vector-0000.json` · `generated` · `ok` · `252616784476a9e4`
+- `generated/verification_surface/goldens/vector-0001.json` · `generated` · `ok` · `6afcbbe265884050`
+- `generated/verification_surface/goldens/vector-0002.json` · `generated` · `ok` · `681bfd25c3d28b7c`
+- `generated/verification_surface/goldens/vector-0003.json` · `generated` · `ok` · `2a77615fb56fcb2e`
+- `generated/verification_surface/goldens/vector-0004.json` · `generated` · `ok` · `495b9d39502c1058`
+- `generated/verification_surface/goldens/vector-0005.json` · `generated` · `ok` · `ca3bc700882b8db1`
+- `generated/verification_surface/goldens/vector-0006.json` · `generated` · `ok` · `e913434b62b6d219`
+- `generated/verification_surface/goldens/vector-0007.json` · `generated` · `ok` · `0357aaa98d734d3c`
+- `generated/verification_surface/goldens/vector-0008.json` · `generated` · `ok` · `f281362a6b6a81b3`
+- `generated/verification_surface/goldens/vector-0009.json` · `generated` · `ok` · `1b7be49cd38224b3`
+- `generated/verification_surface/goldens/vector-0010.json` · `generated` · `ok` · `65f4a17db6ef147a`
+- `generated/verification_surface/goldens/vector-0011.json` · `generated` · `ok` · `2f67096eac1f0ba4`
+- `generated/verification_surface/goldens/vector-0012.json` · `generated` · `ok` · `735d16c8503288cb`
+- `generated/verification_surface/goldens/vector-0013.json` · `generated` · `ok` · `bb1bcb57e88d3d4b`
+- `generated/verification_surface/goldens/vector-0014.json` · `generated` · `ok` · `2a360467fa08fe03`
+- `generated/verification_surface/goldens/vector-0015.json` · `generated` · `ok` · `60896145a9c7205e`
+- `generated/verification_surface/goldens/vector-0016.json` · `generated` · `ok` · `81e27ae039bd68b0`
+- `generated/verification_surface/goldens/vector-0017.json` · `generated` · `ok` · `d7ecd421a7af1696`
+- `generated/verification_surface/goldens/vector-0018.json` · `generated` · `ok` · `09e65292fade07b0`
+- `generated/verification_surface/goldens/vector-0019.json` · `generated` · `ok` · `ce4842fc9645a608`
+- `generated/verification_surface/goldens/vector-0020.json` · `generated` · `ok` · `0e2d5df3374fa851`
+- `generated/verification_surface/goldens/vector-0021.json` · `generated` · `ok` · `f804f9f387b90a71`
+- `generated/verification_surface/goldens/vector-0022.json` · `generated` · `ok` · `5950c54f181c2c90`
+- `generated/verification_surface/goldens/vector-0023.json` · `generated` · `ok` · `249919161c89f9c2`
+- `generated/verification_surface/goldens/vector-0024.json` · `generated` · `ok` · `924b108081234420`
+- `generated/verification_surface/goldens/vector-0025.json` · `generated` · `ok` · `309cf879afb4af8a`
+- `generated/verification_surface/goldens/vector-0026.json` · `generated` · `ok` · `8de00ade7290241e`
+- `generated/verification_surface/goldens/vector-0027.json` · `generated` · `ok` · `e088854dfefb4fb8`
+- `generated/verification_surface/goldens/vector-0028.json` · `generated` · `ok` · `a77699e71b318256`
+- `generated/verification_surface/goldens/vector-0029.json` · `generated` · `ok` · `ec308addb0cfa718`
+- `generated/verification_surface/goldens/vector-0030.json` · `generated` · `ok` · `b0ddc831cd9ebe94`
+- `generated/verification_surface/goldens/vector-0031.json` · `generated` · `ok` · `0d01561cb7c3a894`
+- `generated/verification_surface/goldens/vector-0032.json` · `generated` · `ok` · `c97f7036a85dbe5a`
+- `generated/verification_surface/goldens/vector-0033.json` · `generated` · `ok` · `9f3f874c02d88991`
+- `generated/verification_surface/goldens/vector-0034.json` · `generated` · `ok` · `58884f4ca015cf50`
+- `generated/verification_surface/goldens/vector-0035.json` · `generated` · `ok` · `105ca2564009558d`
+- `generated/verification_surface/goldens/vector-0036.json` · `generated` · `ok` · `1f2f58d277234699`
+- `generated/verification_surface/goldens/vector-0037.json` · `generated` · `ok` · `01fff71687f9bd10`
+- `generated/verification_surface/goldens/vector-0038.json` · `generated` · `ok` · `8f2801e5bd71b9cf`
+- `generated/verification_surface/goldens/vector-0039.json` · `generated` · `ok` · `2268849fcb7dfcec`
+- `generated/verification_surface/goldens/vector-0040.json` · `generated` · `ok` · `af07a3f806da2676`
+- `generated/verification_surface/goldens/vector-0041.json` · `generated` · `ok` · `372558d327beafa6`
+- `generated/verification_surface/goldens/vector-0042.json` · `generated` · `ok` · `d217a2b534cf5071`
+- `generated/verification_surface/goldens/vector-0043.json` · `generated` · `ok` · `250d3eaf94f9747e`
+- `generated/verification_surface/goldens/vector-0044.json` · `generated` · `ok` · `8152c9e7998a2519`
+- `generated/verification_surface/goldens/vector-0045.json` · `generated` · `ok` · `e81000f51e23cb97`
+- `generated/verification_surface/goldens/vector-0046.json` · `generated` · `ok` · `a178982ef1da389b`
+- `generated/verification_surface/goldens/vector-0047.json` · `generated` · `ok` · `c562c4e60fe41696`
+- `generated/verification_surface/goldens/vector-0048.json` · `generated` · `ok` · `1b6317f4a481be89`
+- `generated/verification_surface/goldens/vector-0049.json` · `generated` · `ok` · `2d34b450ecdb3082`
+- `generated/verification_surface/goldens/vector-0050.json` · `generated` · `ok` · `b0022c8f4d5dc42a`
+- `generated/verification_surface/goldens/vector-0051.json` · `generated` · `ok` · `91597c1abd83827a`
+- `generated/verification_surface/goldens/vector-0052.json` · `generated` · `ok` · `8a9133a59f12f63a`
+- `generated/verification_surface/goldens/vector-0053.json` · `generated` · `ok` · `20ef5f7b2e29b3df`
+- `generated/verification_surface/goldens/vector-0054.json` · `generated` · `ok` · `cd161d4d6ff28074`
+- `generated/verification_surface/goldens/vector-0055.json` · `generated` · `ok` · `f4b386994475c2fa`
+- `generated/verification_surface/goldens/vector-0056.json` · `generated` · `ok` · `c81f2f1417215a55`
+- `generated/verification_surface/goldens/vector-0057.json` · `generated` · `ok` · `85e7d7d1842fbccb`
+- `generated/verification_surface/goldens/vector-0058.json` · `generated` · `ok` · `aecbc8bdadcc2bc9`
+- `generated/verification_surface/goldens/vector-0059.json` · `generated` · `ok` · `57ffca70a581cc93`
+- `generated/verification_surface/goldens/vector-0060.json` · `generated` · `ok` · `c747199e1a64b581`
+- `generated/verification_surface/goldens/vector-0061.json` · `generated` · `ok` · `c03296ca51544d2d`
+- `generated/verification_surface/goldens/vector-0062.json` · `generated` · `ok` · `78ae783bc0468359`
+- `generated/verification_surface/goldens/vector-0063.json` · `generated` · `ok` · `537d4188f3ce4063`
+- `generated/verification_surface/goldens/vector-0064.json` · `generated` · `ok` · `e8e5b31157bf02a5`
+- `generated/verification_surface/goldens/vector-0065.json` · `generated` · `ok` · `66d780e149afb127`
+- `generated/verification_surface/goldens/vector-0066.json` · `generated` · `ok` · `83dd7b6be5c56a75`
+- `generated/verification_surface/goldens/vector-0067.json` · `generated` · `ok` · `3086a87ebec5adf6`
+- `generated/verification_surface/goldens/vector-0068.json` · `generated` · `ok` · `b511625a28b87ee9`
+- `generated/verification_surface/goldens/vector-0069.json` · `generated` · `ok` · `17f14162a3f8456a`
+- `generated/verification_surface/goldens/vector-0070.json` · `generated` · `ok` · `64a7c79b0cc70e12`
+- `generated/verification_surface/goldens/vector-0071.json` · `generated` · `ok` · `f2a53a449ee856b1`
+- `generated/verification_surface/goldens/vector-0072.json` · `generated` · `ok` · `80ce131c06e5cf71`
+- `generated/verification_surface/goldens/vector-0073.json` · `generated` · `ok` · `2c766fc6a5fd70e2`
+- `generated/verification_surface/mutations/manifest.json` · `generated` · `ok` · `b9e6b586edfbd551`
+- `generated/verification_surface/provenance.json` · `generated` · `ok` · `a24bf72c9c595570`
+- `generated/verification_surface/python/test_generated_contract.py` · `generated` · `ok` · `5748c72f09ff4a8b`
+- `generated/verification_surface/tests/cross-host-vectors.json` · `generated` · `ok` · `c9c4f960f34d892d`
+- `generated/verification_surface/tests/partitions.json` · `generated` · `ok` · `cb8a18ed697a4edc`
+- `generated/verification_surface/verification/ci-inventory.json` · `generated` · `ok` · `dc34bcd0867a16fd`
 - `generated/verification_surface/verification/proof-graph.json` · `generated` · `ok` · `53764eea58c6a6e2`
-- `generated/verification_surface/verification-manifest.json` · `generated` · `ok` · `fb0512bae62c572d`
+- `generated/verification_surface/verification-manifest.json` · `generated` · `ok` · `b08759037c0ad693`
 - `pyproject.toml` · `handwritten-pending` · `standard.gap` · `033818aa172c883b`
 - `scripts/assert_verify_budget.py` · `handwritten-pending` · `standard.gap` · `c0cff5192f23dd74`
 - `scripts/audit_standard_ten.py` · `handwritten-pending` · `standard.gap` · `400c2bdc3650a4bc`
@@ -369,8 +370,8 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `scripts/uc_contract` · `handwritten-pending` · `standard.gap` · `4d25b4802a3e47e7`
 - `scripts/uc_contract.py` · `handwritten-pending` · `standard.gap` · `76fad072500449d6`
 - `scripts/verify_l13_evidence.py` · `handwritten-pending` · `standard.gap` · `52225b679187a5e1`
-- `seed/APPLICATION_SUITE_SCHEMA.json` · `seed` · `ok` · `8bc208989d14af8e`
-- `seed/APPLICATION_V3_SCHEMA.json` · `seed` · `ok` · `d02d5401b7f15aa3`
+- `seed/APPLICATION_SUITE_SCHEMA.json` · `seed` · `ok` · `df61e6075506f3f0`
+- `seed/APPLICATION_V3_SCHEMA.json` · `seed` · `ok` · `1eab3b783da0605d`
 - `seed/MANIFESTATION_SCHEMA.json` · `seed` · `ok` · `a7d6ea56ac0856de`
 - `seed/ROOT.seed.json` · `seed` · `ok` · `9b145882d8aaa29d`
 - `seed/ROOT_CONVERGENCE_SCHEMA.json` · `seed` · `ok` · `c99da7eb29b85967`
@@ -380,17 +381,43 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `seed/STAGE0_SCHEMA.json` · `seed` · `ok` · `3113d916ee229524`
 - `seed/STAGE1_HANDOFF_SCHEMA.json` · `seed` · `ok` · `fa64bccd2d4cc1a9`
 - `seed/THING_V2_SCHEMA.json` · `seed` · `ok` · `ec5fae5c8435f9c7`
-- `seed/application_suite.json` · `seed` · `ok` · `592473b5a7388e7c`
+- `seed/application_language/applications/classic-paddle-duel.seed.json` · `seed` · `ok` · `6d16e56131661a04`
+- `seed/application_language/applications/costed-todo.seed.json` · `seed` · `ok` · `e0baed88c4c52203`
+- `seed/application_language/applications/development-observatory.seed.json` · `seed` · `ok` · `856a2733e2d62385`
+- `seed/application_language/applications/engineering-units.seed.json` · `seed` · `ok` · `f40500d270efd131`
+- `seed/application_language/applications/financial.seed.json` · `seed` · `ok` · `3409fd80cb794bc1`
+- `seed/application_language/applications/graphing.seed.json` · `seed` · `ok` · `18f4f7616250628f`
+- `seed/application_language/applications/matrix-vector.seed.json` · `seed` · `ok` · `cfaf3136bf175b95`
+- `seed/application_language/applications/normal.seed.json` · `seed` · `ok` · `00fdede7ee66b542`
+- `seed/application_language/applications/ohms-law.seed.json` · `seed` · `ok` · `93405d0a4f2cc9f6`
+- `seed/application_language/applications/programmer.seed.json` · `seed` · `ok` · `279fdab6c314c94c`
+- `seed/application_language/applications/quadratic-polynomial.seed.json` · `seed` · `ok` · `3dc84e41005dab3f`
+- `seed/application_language/applications/regular.seed.json` · `seed` · `ok` · `dd40ea628e581746`
+- `seed/application_language/applications/rpn.seed.json` · `seed` · `ok` · `4dfa80922c30c9df`
+- `seed/application_language/applications/scientific.seed.json` · `seed` · `ok` · `d24f93608ca5aa49`
+- `seed/application_language/applications/statistical.seed.json` · `seed` · `ok` · `4c19592c4146fa71`
+- `seed/application_language/applications/todo.seed.json` · `seed` · `ok` · `33b3051e92116bbe`
+- `seed/application_language/bases/בלי_מה.seed.json` · `seed` · `ok` · `20a2234919df2be3`
+- `seed/application_language/catalog.seed.json` · `seed` · `ok` · `7c6f36ecfe1af257`
+- `seed/application_language/families/bounded-simulation.seed.json` · `seed` · `ok` · `485107cc518337ee`
+- `seed/application_language/families/calculator.seed.json` · `seed` · `ok` · `5f16d4bbc033d6aa`
+- `seed/application_language/families/stateful-list.seed.json` · `seed` · `ok` · `18a4bfe3f7cb39f3`
+- `seed/application_language/registries/calculator-keys.seed.json` · `seed` · `ok` · `26dbdf3d260c9133`
+- `seed/application_language/registries/simulation-controls.seed.json` · `seed` · `ok` · `86d782ecb2d521c0`
+- `seed/application_language/registries/stateful-interface-controls.seed.json` · `seed` · `ok` · `0f99e386ebc05674`
+- `seed/application_language/schema.json` · `seed` · `ok` · `1b0d251075e74247`
+- `seed/application_language/suite.seed.json` · `seed` · `ok` · `a4565b5388b54b8e`
+- `seed/application_suite.json` · `seed` · `ok` · `cb18faa0d5367902`
 - `seed/applications/bounded_integer_expression.json` · `seed` · `ok` · `3633c8890ab47530`
-- `seed/applications/calculator.json` · `seed` · `ok` · `f992548a14ba7711`
+- `seed/applications/calculator.json` · `seed` · `ok` · `f8fddb239038137a`
 - `seed/applications/date_duration.json` · `seed` · `ok` · `a1053377dea68a2d`
 - `seed/applications/discount_price.json` · `seed` · `ok` · `146831c7acc3f2c5`
-- `seed/applications/file_editor.json` · `seed` · `ok` · `0667c00e26a056fc`
-- `seed/applications/file_reader.json` · `seed` · `ok` · `0a590575cf924525`
-- `seed/applications/math_library.json` · `seed` · `ok` · `f58f0ce07ef3d7db`
+- `seed/applications/file_editor.json` · `seed` · `ok` · `7f423a21b81b88c3`
+- `seed/applications/file_reader.json` · `seed` · `ok` · `9441e8831f8c204b`
+- `seed/applications/math_library.json` · `seed` · `ok` · `befa6567a074bd50`
 - `seed/applications/mortgage.json` · `seed` · `ok` · `a31a0903fbc5606e`
 - `seed/applications/percentage.json` · `seed` · `ok` · `7bb33da9bd1af139`
-- `seed/applications/pong_game.json` · `seed` · `ok` · `e11a0197d9403b21`
+- `seed/applications/pong_game.json` · `seed` · `ok` · `6280b4e66aaa4838`
 - `seed/applications/scientific_decimal.json` · `seed` · `ok` · `99b21bd40a11bdd8`
 - `seed/applications/statistics.json` · `seed` · `ok` · `a4c88718974c851e`
 - `seed/applications/unit_converter.json` · `seed` · `ok` · `d3a44789317d0168`
@@ -407,8 +434,8 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `seed/operations/catalog.json` · `seed` · `ok` · `cc62e70f9bde6fa1`
 - `seed/platforms/catalog.json` · `seed` · `ok` · `c0c979c4f4e1530a`
 - `seed/quantities/catalog.json` · `seed` · `ok` · `410e6f607ef595fb`
-- `seed/registry.json` · `seed` · `ok` · `7f0bb18da97f265d`
-- `seed/registry.provenance.json` · `seed` · `ok` · `5e9822328a01844d`
+- `seed/registry.json` · `seed` · `ok` · `a7b1df9d02ae7d92`
+- `seed/registry.provenance.json` · `seed` · `ok` · `34de4f170a6234fb`
 - `seed/rules/catalog.json` · `seed` · `ok` · `9d281bf2b1a72135`
 - `seed/stage0/TRUSTED_INPUTS.json` · `seed` · `ok` · `be794e079a807d00`
 - `seed/stamps/generator.lock.json` · `seed` · `ok` · `f910c89e103f18a2`
@@ -416,10 +443,12 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `seed/themes/catalog.json` · `seed` · `ok` · `1611c05c5a3dcade`
 - `seed/thing_v2/orchard_yield.json` · `seed` · `ok` · `dbef860d09797957`
 - `seed/thing_v2/trajectory_meter.json` · `seed` · `ok` · `7d6a462785e2f846`
-- `seed/verification/PROOF_BUNDLE.json` · `seed` · `ok` · `bdd56209d7bcf454`
+- `seed/verification/PROOF_BUNDLE.json` · `seed` · `ok` · `51d329e1886648d8`
 - `seed/verification/PROOF_GRAPH.json` · `seed` · `ok` · `070e52794ee21260`
 - `seed/verification/SYNTHETIC_OBLIGATION.json` · `seed` · `ok` · `ae1dff1127af06ef`
-- `tests/test_application_assembly.py` · `handwritten-pending` · `standard.gap` · `5609c83b8c648778`
+- `tests/conftest.py` · `handwritten-pending` · `standard.gap` · `d4c4ab0decfe883e`
+- `tests/test_alignment_gauntlet.py` · `handwritten-pending` · `standard.gap` · `ef6d517983818d83`
+- `tests/test_application_assembly.py` · `handwritten-pending` · `standard.gap` · `f4fb90feae495b03`
 - `tests/test_benchmark.py` · `handwritten-pending` · `standard.gap` · `4ce9240b671a4c66`
 - `tests/test_binding_mutations.py` · `handwritten-pending` · `standard.gap` · `7ad5942c665486a5`
 - `tests/test_boundary.py` · `handwritten-pending` · `standard.gap` · `bfa6a879dfec4bd1`
@@ -437,7 +466,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `tests/test_l13.py` · `handwritten-pending` · `standard.gap` · `29113370d7bca2cd`
 - `tests/test_l13_coverage.py` · `handwritten-pending` · `standard.gap` · `e28ca779a05fe5c2`
 - `tests/test_l13_deep.py` · `handwritten-pending` · `standard.gap` · `bf363a49551abf3e`
-- `tests/test_manifestation.py` · `handwritten-pending` · `standard.gap` · `63897f15e912e2ce`
+- `tests/test_manifestation.py` · `handwritten-pending` · `standard.gap` · `8b1f43bb4dfdb048`
 - `tests/test_no_python_declarations.py` · `handwritten-pending` · `standard.gap` · `c8552d990c2dee26`
 - `tests/test_oom_mutations.py` · `handwritten-pending` · `standard.gap` · `060f8cffef0861d1`
 - `tests/test_signature.py` · `handwritten-pending` · `standard.gap` · `8e640c56a6580c13`
@@ -450,7 +479,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `tests/test_uem_surface_generation.py` · `handwritten-pending` · `standard.gap` · `6661b0070cbcb158`
 - `tests/test_unfold_stateful.py` · `handwritten-pending` · `standard.gap` · `b8f3c1dcaff383cd`
 - `tests/test_verification_surface_generation.py` · `handwritten-pending` · `standard.gap` · `6819675e10cd1891`
-- `tests/test_verify_flow.py` · `handwritten-pending` · `standard.gap` · `4a1782da0cfa8c2f`
+- `tests/test_verify_flow.py` · `handwritten-pending` · `standard.gap` · `8a8b822a2e60abf7`
 - `unified/__init__.py` · `handwritten-pending` · `standard.gap` · `7ffb124068950347`
 - `unified/__main__.py` · `handwritten-pending` · `standard.gap` · `2b9731d81c4a0fe6`
 - `unified/boundary.py` · `handwritten-pending` · `standard.gap` · `9a76b9d73f1daab0`
@@ -460,7 +489,17 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `unified/dimension.py` · `handwritten-pending` · `standard.gap` · `3aa73e22a6b6a45d`
 - `unified/generator/__init__.py` · `handwritten-pending` · `standard.gap` · `802e4e2dab6e0b01`
 - `unified/generator/__main__.py` · `handwritten-pending` · `standard.gap` · `3af36c6cc1597b0d`
-- `unified/generator/assembly.py` · `handwritten-pending` · `standard.gap` · `046c8fda73966537`
+- `unified/generator/application_language/__init__.py` · `handwritten-pending` · `standard.gap` · `f092c3be054840a7`
+- `unified/generator/application_language/declaration_compiler.py` · `handwritten-pending` · `standard.gap` · `71c168e11cb5bf6e`
+- `unified/generator/application_language/seed_compiler.py` · `handwritten-pending` · `standard.gap` · `fb91301b0a381005`
+- `unified/generator/application_language/semantic_expression.py` · `handwritten-pending` · `standard.gap` · `437b82a56fa01296`
+- `unified/generator/application_language/simulation_compiler.py` · `handwritten-pending` · `standard.gap` · `16fbb397a0ff7bbb`
+- `unified/generator/application_language/stateful_compiler.py` · `handwritten-pending` · `standard.gap` · `19bb8a5ae49b6d17`
+- `unified/generator/application_language/tooling/__init__.py` · `handwritten-pending` · `standard.gap` · `08efb93824357635`
+- `unified/generator/application_language/tooling/build_layout.py` · `handwritten-pending` · `standard.gap` · `aec0e6ec77a59df2`
+- `unified/generator/application_language/tooling/catalog_materializer.py` · `handwritten-pending` · `standard.gap` · `7c57ae484e5e15e5`
+- `unified/generator/application_language/tooling/verify_all.py` · `handwritten-pending` · `standard.gap` · `53b819e95f0f148f`
+- `unified/generator/assembly.py` · `handwritten-pending` · `standard.gap` · `9e96baa6ff88b982`
 - `unified/generator/benchmark.py` · `handwritten-pending` · `standard.gap` · `5e3bef2b43e57115`
 - `unified/generator/build.py` · `handwritten-pending` · `standard.gap` · `9af504e6250e5132`
 - `unified/generator/calculator.py` · `handwritten-pending` · `standard.gap` · `0fc662ad3f7ad112`
@@ -472,7 +511,7 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `unified/generator/gauntlet.py` · `handwritten-pending` · `standard.gap` · `5d8b79d636b348a2`
 - `unified/generator/generate.py` · `handwritten-pending` · `standard.gap` · `e2f992740b0ee252`
 - `unified/generator/gui.py` · `handwritten-pending` · `standard.gap` · `ef5b9c8b2c2505f6`
-- `unified/generator/manifestation.py` · `handwritten-pending` · `standard.gap` · `174802fe1d017bc4`
+- `unified/generator/manifestation.py` · `handwritten-pending` · `standard.gap` · `56bf38e756a75985`
 - `unified/generator/names.py` · `handwritten-pending` · `standard.gap` · `04791c2fa1ca7cf6`
 - `unified/generator/overfit.py` · `handwritten-pending` · `standard.gap` · `f08f29086e672494`
 - `unified/generator/render.py` · `handwritten-pending` · `standard.gap` · `c7d4a443dead9e30`
@@ -504,4 +543,4 @@ Full-tree clean-room regeneration is **not** claimed. See `gap.clean-room-full-t
 - `unified/standard_generate.py` · `handwritten-pending` · `standard.gap` · `78fd6e444cffdc5d`
 - `unified/thing.py` · `handwritten-pending` · `standard.gap` · `7db7669dc8e629b1`
 - `unified/verify.py` · `handwritten-pending` · `standard.gap` · `d72f0665fb484a42`
-- `unified/verify_flow.py` · `handwritten-pending` · `standard.gap` · `7133fc6584d67dcf`
+- `unified/verify_flow.py` · `handwritten-pending` · `standard.gap` · `6fa1b6097e812785`

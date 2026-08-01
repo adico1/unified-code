@@ -1,0 +1,182 @@
+{
+  "application_version": "UC-APPLICATION-3",
+  "application": {"name": "math-library", "package": "math_library", "description": "Generated reusable bounded integer operations.", "canonical_name": "uc://applications/math-library@1", "family": "math-library", "build_group": "libraries", "variation": "bounded-integer", "notation": "operation-request", "numeric_type": "bounded-integer", "interface_identity": "generated-math-library", "capabilities": ["add", "subtract", "multiply", "divide", "remainder", "power", "absolute", "negate", "minimum", "maximum", "sum"], "dependency_contract_ref": "none"},
+  "interface": {"cli": true, "library": true, "browser": true},
+  "program": {
+    "engine": "numeric",
+    "range": [-1000000, 1000000],
+    "numeric_grammar": {"type": "integer", "syntax": "json-integer", "boolean": "rejected"},
+    "result_rules": {"division": "floor", "overflow": "reject"},
+    "representation": "canonical-json",
+    "exported_contract": "part(thing)->thing",
+    "operations": {
+      "add": {"primitive": "plus", "arity": 2},
+      "subtract": {"primitive": "minus", "arity": 2},
+      "multiply": {"primitive": "times", "arity": 2},
+      "divide": {"primitive": "quotient", "arity": 2},
+      "remainder": {"primitive": "residue", "arity": 2},
+      "power": {"primitive": "exponent", "arity": 2},
+      "absolute": {"primitive": "magnitude", "arity": 1},
+      "negate": {"primitive": "negative", "arity": 1},
+      "minimum": {"primitive": "lowest", "arity": 2},
+      "maximum": {"primitive": "highest", "arity": 2},
+      "sum": {"primitive": "sum_many", "arity": 3}
+    }
+  },
+  "boundaries": {"effects": "none", "acceptance_deadline_seconds": 10},
+  "persistence": {"mode": "none"},
+  "formats": {"outer_input": "json-object", "outer_output": "json-object"},
+  "ui": {
+    "page": {
+      "id": "numeric-playground",
+      "title": "Math Library Playground",
+      "description": "Exercise the reusable generated bounded-integer library directly.",
+      "requires_root": false
+    },
+    "theme": {"background": "#0c1220", "surface": "#17233a", "text": "#f7fbff", "muted": "#aebbd0", "primary": "#66e3ff", "danger": "#ff8899"},
+    "layout": {
+      "sections": [
+        {
+          "id": "numeric-contract",
+          "title": "Exported contract",
+          "components": [
+            {"id": "numeric-root", "type": "label", "label": "Runtime root", "accessible_name": "Runtime root"},
+            {"id": "numeric-identity", "type": "label", "label": "Library identity", "accessible_name": "Exported library identity", "derived": "export_identity", "readonly": true},
+            {"id": "numeric-grammar", "type": "label", "label": "Grammar", "accessible_name": "Numeric grammar", "value": "JSON integer; booleans rejected"},
+            {"id": "numeric-range", "type": "label", "label": "Range", "accessible_name": "Numeric range", "value": "-1000000 through 1000000"}
+          ]
+        },
+        {
+          "id": "numeric-operation",
+          "title": "Operation",
+          "components": [
+            {"id": "numeric-operation-select", "type": "select", "label": "Operation", "accessible_name": "Math operation", "options": [
+              {"value": "add", "label": "Add"}, {"value": "subtract", "label": "Subtract"}, {"value": "multiply", "label": "Multiply"},
+              {"value": "divide", "label": "Divide"}, {"value": "remainder", "label": "Remainder"}, {"value": "power", "label": "Power"},
+              {"value": "absolute", "label": "Absolute"}, {"value": "negate", "label": "Negate"}, {"value": "minimum", "label": "Minimum"},
+              {"value": "maximum", "label": "Maximum"}, {"value": "sum", "label": "Sum"}
+            ]},
+            {"id": "numeric-argument-a", "type": "number", "label": "Argument one", "accessible_name": "First numeric argument"},
+            {"id": "numeric-argument-b", "type": "number", "label": "Argument two", "accessible_name": "Second numeric argument"},
+            {"id": "numeric-execute", "type": "button", "label": "Execute", "accessible_name": "Execute operation", "action": "execute-operation", "primary": true},
+            {"id": "numeric-result", "type": "output", "label": "Result", "accessible_name": "Operation result"},
+            {"id": "numeric-status", "type": "status", "label": "Status", "accessible_name": "Operation status"},
+            {"id": "numeric-error", "type": "output", "label": "Error", "accessible_name": "Operation error"}
+          ]
+        }
+      ]
+    },
+    "actions": {
+      "execute-operation": {"mode": "request", "request": {"operation": {"$control": "numeric-operation-select"}, "arguments": [{"$number": "numeric-argument-a"}, {"$number": "numeric-argument-b"}]}}
+    },
+    "bindings": {
+      "result": [{"source": "output.result", "target": "numeric-result", "property": "text"}],
+      "error": {"target": "numeric-error", "property": "text"},
+      "status": {"target": "numeric-status", "property": "text", "success": "Execution complete", "failure": "Execution rejected"},
+      "root": {"target": "numeric-root", "property": "text"}
+    },
+    "keyboard": [{"key": "Enter", "action": "execute-operation"}],
+    "responsive": {"breakpoint_px": 720},
+    "proof": {
+      "fixtures": [],
+      "steps": [
+        {"set": {"numeric-operation-select": "multiply", "numeric-argument-a": 7, "numeric-argument-b": 5}, "control": "numeric-execute", "expect": {"target": "numeric-result", "equals": "35"}},
+        {"set": {"numeric-operation-select": "divide", "numeric-argument-a": 7, "numeric-argument-b": 0}, "control": "numeric-execute", "expect": {"target": "numeric-error", "equals": "zero-divisor"}},
+        {"set": {"numeric-operation-select": "multiply", "numeric-argument-a": 1000000, "numeric-argument-b": 1000000}, "keyboard": "Enter", "expect": {"target": "numeric-error", "equals": "range-overflow"}}
+      ],
+      "expected_error": "zero-divisor"
+    }
+  },
+  "acceptance": [
+    {
+      "id": "operations",
+      "fixtures": [],
+      "steps": [
+        {
+          "request": {"operation": "add", "arguments": [7, 5]},
+          "expect": {
+            "state": "valid", "output": {"operation": "add", "result": 12}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"operation": "subtract", "arguments": [7, 5]},
+          "expect": {
+            "state": "valid", "output": {"operation": "subtract", "result": 2}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"operation": "multiply", "arguments": [7, 5]},
+          "expect": {
+            "state": "valid", "output": {"operation": "multiply", "result": 35}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"operation": "divide", "arguments": [8, 2]},
+          "expect": {
+            "state": "valid", "output": {"operation": "divide", "result": 4}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"operation": "remainder", "arguments": [8, 3]},
+          "expect": {
+            "state": "valid", "output": {"operation": "remainder", "result": 2}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"operation": "power", "arguments": [3, 4]},
+          "expect": {
+            "state": "valid", "output": {"operation": "power", "result": 81}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"operation": "absolute", "arguments": [-9]},
+          "expect": {
+            "state": "valid", "output": {"operation": "absolute", "result": 9}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"operation": "negate", "arguments": [9]},
+          "expect": {
+            "state": "valid", "output": {"operation": "negate", "result": -9}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"operation": "minimum", "arguments": [7, 5]},
+          "expect": {
+            "state": "valid", "output": {"operation": "minimum", "result": 5}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"operation": "maximum", "arguments": [7, 5]},
+          "expect": {
+            "state": "valid", "output": {"operation": "maximum", "result": 7}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"operation": "sum", "arguments": [2, 3, 4]},
+          "expect": {
+            "state": "valid", "output": {"operation": "sum", "result": 9}, "error": null,
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing", "stage:05_core_collect", "stage:06_core_to_inner", "stage:07_inner_to_outer", "boundary:outward"]
+          }
+        },
+        {
+          "request": {"operation": "divide", "arguments": [7, 0]},
+          "expect": {
+            "state": "invalid", "output": null, "error": "zero-divisor",
+            "evidence": ["boundary:inward", "stage:01_outer_to_inner", "stage:02_inner_to_core", "stage:03_core_prepare", "stage:04_core_processing:error", "boundary:outward"]
+          }
+        }
+      ]
+    }
+  ]
+}

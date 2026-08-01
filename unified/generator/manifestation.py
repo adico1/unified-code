@@ -22,6 +22,7 @@ from ..standard import UEM_VERSION
 from ..standard_generate import generate_uem_from_seed_declaration
 from .assembly import (
     APPLICATION_VERSION,
+    audited_assembly_cache_retain_boundary,
     audited_application_language_build_boundary,
     run_assemble,
 )
@@ -1094,7 +1095,8 @@ def outward_artifact_publish(thing):
             state="invalid",
         )
     work_root = Path(value["_manifestation_work_root"])
-    shutil.rmtree(work_root, ignore_errors=True)
+    if not audited_assembly_cache_retain_boundary(work_root):
+        shutil.rmtree(work_root, ignore_errors=True)
     record = value["_registry_record"]
     identity = {
         "registry_snapshot_sha256": value["registry_snapshot_sha256"],

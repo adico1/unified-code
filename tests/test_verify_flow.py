@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import copy
+import contextlib
 import json
 import os
+import threading
 import time
 from pathlib import Path
 
@@ -75,7 +77,15 @@ def request():
 
 
 def materialize(monkeypatch, tmp_path, graph):
+    source = tmp_path / "source"
+    source.mkdir(exist_ok=True)
+    monkeypatch.setattr(flow, "ROOT", source)
     monkeypatch.setattr(flow, "BUNDLE", tmp_path / "PROOF_BUNDLE.json")
+    monkeypatch.setattr(
+        flow,
+        "audited_repository_identity_primitive",
+        lambda _root: {"identity": "test-authority", "file_count": 0, "files": {}},
+    )
     monkeypatch.setenv("UC_VERIFY_MATERIALIZE", "1")
     result = audited_scheduler_primitive(
         request(),
@@ -92,7 +102,11 @@ def test_empty_and_valid_cache_measure_complete_verification(monkeypatch, tmp_pa
     cache = tmp_path / "acceptance-cache"
     cold = audited_scheduler_primitive(request(), graph, cache)
     warm = audited_scheduler_primitive(request(), graph, cache)
-    assert produced["state"] == cold["state"] == warm["state"] == "valid"
+    assert produced["state"] == cold["state"] == warm["state"] == "valid", (
+        produced,
+        cold,
+        warm,
+    )
     assert cold["value"]["cache"] == "cold"
     assert warm["value"]["cache"] == "warm"
     assert cold["value"]["verification_seconds"] <= 5.0
@@ -152,6 +166,27 @@ def test_graph_routing_mutations_are_all_detected():
     dependency = copy.deepcopy(graph)
     dependency["proof_nodes"][0]["requires"] = ["missing"]
     mutations.append(dependency)
+    evidence_dependency = copy.deepcopy(graph)
+    evidence_dependency["evidence_nodes"][0]["requires"] = ["missing"]
+    mutations.append(evidence_dependency)
+    cycle = copy.deepcopy(graph)
+    cycle["evidence_nodes"].append(
+        {
+            "id": "cycle-a",
+            "handler": "command",
+            "requires": ["cycle-b"],
+            "argv": ["{python}", "-c", "print('a')"],
+        }
+    )
+    cycle["evidence_nodes"].append(
+        {
+            "id": "cycle-b",
+            "handler": "command",
+            "requires": ["cycle-a"],
+            "argv": ["{python}", "-c", "print('b')"],
+        }
+    )
+    mutations.append(cycle)
     sequential = copy.deepcopy(graph)
     sequential["scheduler"] = "sequential"
     mutations.append(sequential)
@@ -227,7 +262,7 @@ def test_every_physical_and_logical_proof_mutation_is_detected(
     graph = mini_graph()
     assert materialize(monkeypatch, tmp_path, graph)["state"] == "valid"
     bundle = json.loads(flow.BUNDLE.read_text())
-    authority = audited_repository_identity_primitive(
+    authority = flow.audited_repository_identity_primitive(
         Path(os.environ.get("UC_VERIFY_AUTHORITY_ROOT", flow.ROOT))
     )
     mutations = []
@@ -241,7 +276,15 @@ def test_every_physical_and_logical_proof_mutation_is_detected(
         mutation["verdicts"][index]["status"] = "fail"
         mutation["bundle_identity"] = audited_bundle_identity_primitive(mutation)
         mutations.append(mutation)
-    assert len(mutations) == len(graph["evidence_nodes"]) + len(graph["proof_nodes"])
+    worker_mutation = copy.deepcopy(bundle)
+    worker_mutation["evidence_workers"] += 1
+    worker_mutation["bundle_identity"] = audited_bundle_identity_primitive(
+        worker_mutation
+    )
+    mutations.append(worker_mutation)
+    assert len(mutations) == (
+        len(graph["evidence_nodes"]) + len(graph["proof_nodes"]) + 1
+    )
     assert all(
         not audited_bundle_report_primitive(item, graph, authority)["ok"]
         for item in mutations
@@ -274,3 +317,147 @@ def test_cli_contract_is_one_canonical_operation():
         "command": "verify-all",
         "error": "usage-verify-all",
     }
+
+
+def test_physical_evidence_releases_dependency_levels_concurrently(
+    monkeypatch,
+    tmp_path,
+):
+    released = []
+    first_level = threading.Barrier(2)
+
+    def record(node):
+        if node["id"].startswith("first-"):
+            first_level.wait(timeout=1)
+        released.append(node["id"])
+        return {"id": node["id"], "returncode": 0}
+
+    graph = mini_graph()
+    graph["evidence_nodes"] = [
+        {"id": "first-a", "handler": "record", "requires": []},
+        {"id": "first-b", "handler": "record", "requires": []},
+        {
+            "id": "second",
+            "handler": "record",
+            "requires": ["first-a", "first-b"],
+        },
+    ]
+    graph["proof_nodes"] = [
+        {"id": f"proof-{index:02d}", "requires": ["second"]}
+        for index in range(24)
+    ]
+    monkeypatch.setitem(flow.HANDLER_REGISTRY, "record", record)
+    monkeypatch.setattr(flow, "BUNDLE", tmp_path / "bundle.json")
+    bundle = flow.audited_materialize_bundle_primitive(
+        graph,
+        {"identity": "authority", "file_count": 0},
+    )
+    assert set(released[:2]) == {"first-a", "first-b"}
+    assert released[-1] == "second"
+    assert bundle["evidence_workers"] == 2
+
+
+def test_command_node_confines_temporary_storage_to_owned_boundary(
+    monkeypatch,
+    tmp_path,
+):
+    owned = tmp_path / "owned"
+
+    @contextlib.contextmanager
+    def owned_temporary_directory(prefix):
+        del prefix
+        owned.mkdir()
+        try:
+            yield str(owned)
+        finally:
+            import shutil
+
+            shutil.rmtree(owned)
+
+    monkeypatch.setattr(
+        flow.tempfile,
+        "TemporaryDirectory",
+        owned_temporary_directory,
+    )
+    source = tmp_path / "source"
+    source.mkdir()
+    monkeypatch.setattr(flow, "ROOT", source)
+    monkeypatch.setattr(
+        flow,
+        "audited_repository_identity_primitive",
+        lambda _root: {"identity": "test-authority", "file_count": 0, "files": {}},
+    )
+    result = flow.audited_command_node_primitive(
+        {
+            "id": "storage",
+            "handler": "command",
+            "requires": [],
+            "argv": [
+                "{python}",
+                "-c",
+                "import os,tempfile; assert tempfile.gettempdir()==os.environ['TMPDIR']",
+            ],
+        }
+    )
+    assert result["returncode"] == 0
+    assert result["authority_preserved"]
+    assert not owned.exists()
+
+
+def test_command_node_isolates_repository_writes_from_authority(
+    monkeypatch,
+    tmp_path,
+):
+    monkeypatch.setattr(
+        flow,
+        "audited_repository_identity_primitive",
+        lambda _root: {"identity": "test-authority", "file_count": 0, "files": {}},
+    )
+    source = tmp_path / "source"
+    source.mkdir()
+    monkeypatch.setattr(flow, "ROOT", source)
+    result = flow.audited_command_node_primitive(
+        {
+            "id": "no-clone",
+            "handler": "command",
+            "requires": [],
+            "argv": [
+                "{python}",
+                "-c",
+                "from pathlib import Path; Path('isolated.txt').write_text('proof')",
+            ],
+        }
+    )
+    assert result["returncode"] == 0
+    assert result["authority_preserved"]
+    assert result["failure_summary"] is None
+    assert not (source / "isolated.txt").exists()
+
+
+def test_failed_command_retains_bounded_path_redacted_diagnostics(
+    monkeypatch,
+    tmp_path,
+):
+    source = tmp_path / "source"
+    source.mkdir()
+    monkeypatch.setattr(flow, "ROOT", source)
+    monkeypatch.setattr(
+        flow,
+        "audited_repository_identity_primitive",
+        lambda _root: {"identity": "test-authority", "file_count": 0, "files": {}},
+    )
+    result = flow.audited_command_node_primitive(
+        {
+            "id": "diagnostic",
+            "handler": "command",
+            "requires": [],
+            "argv": [
+                "{python}",
+                "-c",
+                "import pathlib,sys; print(pathlib.Path.cwd(),file=sys.stderr); sys.exit(7)",
+            ],
+        }
+    )
+    assert result["returncode"] == 7
+    assert "{temporary}/repository" in result["failure_summary"]
+    assert len(result["failure_summary"]) <= 2048

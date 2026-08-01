@@ -15,10 +15,9 @@ from pathlib import Path
 from .declaration_compiler import LANGUAGE as DECLARATION_LANGUAGE
 from .declaration_compiler import LANGUAGES as DECLARATION_LANGUAGES
 from .declaration_compiler import compile_declaration
+from .declaration_compiler import declaration_form
 from .declaration_compiler import render_declaration_source
-from .stateful_compiler import LANGUAGE as STATEFUL_LANGUAGE
 from .stateful_compiler import safe_name
-from .simulation_compiler import LANGUAGE as SIMULATION_LANGUAGE
 from .simulation_compiler import render_tests as render_simulation_tests
 
 
@@ -784,8 +783,8 @@ def resolve_seed_document(path, document):
         "kind": "what-authority",
         "sha256": document_digest(document),
     }
-    language = provisions.get("program_language")
-    if language == DECLARATION_LANGUAGE:
+    form = declaration_form(what)
+    if form == "expression":
         registry_authority = next(
             item
             for item in authorities
@@ -798,7 +797,7 @@ def resolve_seed_document(path, document):
             registry_authority,
             leaf_authority,
         )
-    elif language == STATEFUL_LANGUAGE:
+    elif form == "stateful":
         registry_authority = next(
             item
             for item in authorities
@@ -811,7 +810,7 @@ def resolve_seed_document(path, document):
             registry_authority,
             leaf_authority,
         )
-    elif language == SIMULATION_LANGUAGE:
+    elif form == "simulation":
         registry_authority = next(
             item
             for item in authorities
@@ -849,12 +848,13 @@ def validate(seed, tree=None):
     ):
         errors.append("identity")
     language = seed.get("program", {}).get("language")
-    if language == DECLARATION_LANGUAGE:
+    form = declaration_form(seed)
+    if form == "expression":
         if not seed.get("semantics", {}).get("numeric_laws"):
             errors.append("numeric-laws")
         if not seed.get("semantics", {}).get("operations"):
             errors.append("operations")
-    elif language == STATEFUL_LANGUAGE:
+    elif form == "stateful":
         semantics = seed.get("semantics", {})
         commands = semantics.get("commands", ())
         command_ids = [item.get("id") for item in commands]
@@ -893,7 +893,7 @@ def validate(seed, tree=None):
             or not presentation.get("self_tests")
         ):
             errors.append("stateful-presentation")
-    elif language == SIMULATION_LANGUAGE:
+    elif form == "simulation":
         semantics = seed.get("semantics", {})
         presentation = seed.get("presentation", {})
         if (
@@ -1111,9 +1111,10 @@ def render_stateful_tests(seed):
 
 
 def render_tests(seed):
-    if seed["program"]["language"] == STATEFUL_LANGUAGE:
+    form = declaration_form(seed)
+    if form == "stateful":
         return render_stateful_tests(seed)
-    if seed["program"]["language"] == SIMULATION_LANGUAGE:
+    if form == "simulation":
         return render_simulation_tests(seed)
     entrypoint = seed["program"]["case_entrypoint"]
     transition_by_event = {
@@ -1273,7 +1274,7 @@ def verify_runtime_source(seed, tree):
         and isinstance(node.func, ast.Attribute)
         and node.func.attr in (
             {"read_bytes", "read_text"}
-            if seed["program"]["language"] == DECLARATION_LANGUAGE
+            if declaration_form(seed) == "expression"
             else set()
         )
     }
@@ -1349,6 +1350,20 @@ def assemble_resolved(seed, authorities):
         "test_generated.py": tests,
         "traceability.json": trace,
     }
+    generated_roles = {
+        "main.py": "application",
+        "test_generated.py": "test",
+        "traceability.json": "evidence",
+    }
+    unclassified = set(files) - set(generated_roles)
+    manual_application_files = sum(
+        name.endswith(".py") and not name.startswith("test_")
+        for name in unclassified
+    )
+    manual_test_files = sum(
+        name.endswith(".py") and name.startswith("test_")
+        for name in unclassified
+    )
     file_hashes = {
         name: digest(content)
         for name, content in sorted(files.items())
@@ -1373,8 +1388,11 @@ def assemble_resolved(seed, authorities):
         "verification": verification,
         "runtime_seed_files": 0,
         "runtime_shared_engine_files": 0,
-        "manual_application_files": 0,
-        "manual_test_files": 0,
+        "file_provenance": {
+            name: generated_roles[name] for name in sorted(generated_roles)
+        },
+        "manual_application_files": manual_application_files,
+        "manual_test_files": manual_test_files,
         "generated_ast": True,
     }
     files["manifest.json"] = canonical(manifest)

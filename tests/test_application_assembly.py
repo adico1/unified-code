@@ -12,6 +12,7 @@ from pathlib import Path
 
 from unified.boundary import inward
 from unified.generator.assembly import (
+    _ASSEMBLY_PROOF_CACHE,
     DEPTHS,
     STAGES,
     _canonical,
@@ -19,7 +20,12 @@ from unified.generator.assembly import (
     _file_hashes,
     _ordered_seeds,
     audited_assembly_output_boundary,
+    audited_assembly_cache_admission_boundary,
+    audited_assembly_cache_publish_boundary,
+    audited_assembly_cache_retain_boundary,
+    audited_graphical_retry_boundary,
     audited_registry_authority_boundary,
+    audited_registry_projection_boundary,
     derive_application_registry,
     _sha,
     derive_specification,
@@ -51,6 +57,73 @@ def thing(suite, output):
             "gauntlet_depths": 10,
         }
     )
+
+
+def test_stale_ephemeral_cache_is_discarded_and_rebuilt(tmp_path):
+    cache_key = "stale-proof"
+    _ASSEMBLY_PROOF_CACHE[cache_key] = {
+        "output": str(tmp_path / "removed"),
+        "tree_identity": "0" * 64,
+        "manifest": {},
+    }
+    request = thing(SUITE, tmp_path / "fresh")
+    assert audited_assembly_cache_admission_boundary(
+        request,
+        request["value"],
+        tmp_path / "fresh",
+        cache_key,
+    ) is None
+    assert cache_key not in _ASSEMBLY_PROOF_CACHE
+
+
+def test_manifestation_cache_advances_without_duplicate_file_bytes(tmp_path):
+    first_work = tmp_path / "first-work"
+    first_output = first_work / "suite"
+    first_output.mkdir(parents=True)
+    (first_output / "artifact.txt").write_text("artifact", encoding="utf-8")
+    audited_assembly_cache_publish_boundary(
+        "probe",
+        first_output,
+        {"applications": {}, "application_language": {"product_ids": []}},
+    )
+    assert audited_assembly_cache_retain_boundary(first_work)
+
+    second_work = tmp_path / "second-work"
+    second_output = second_work / "suite"
+    request = thing(SUITE, second_output)
+    result = audited_assembly_cache_admission_boundary(
+        request, request["value"], second_output, "probe"
+    )
+
+    assert result["state"] == "valid"
+    assert not first_work.exists()
+    assert (second_output / "artifact.txt").read_text(encoding="utf-8") == "artifact"
+    assert _ASSEMBLY_PROOF_CACHE["probe"]["output"] == str(second_output)
+
+
+def test_graphical_host_bootstrap_retries_once_without_weakening_result(
+    monkeypatch,
+):
+    attempts = iter(
+        (
+            {"ok": False, "error": "graphical-browser-startup"},
+            {"ok": True, "checks": {"rendered": True}},
+        )
+    )
+    shutdowns = []
+    monkeypatch.setattr(
+        "unified.generator.assembly._graphical_browser_proof",
+        lambda _root, _seed: next(attempts),
+    )
+    monkeypatch.setattr(
+        "unified.generator.assembly.audited_browser_shutdown_boundary",
+        lambda: shutdowns.append("shutdown"),
+    )
+    assert audited_graphical_retry_boundary(Path("application"), {}) == {
+        "ok": True,
+        "checks": {"rendered": True},
+    }
+    assert shutdowns == ["shutdown"]
 
 
 def tree_bytes(root):
@@ -344,6 +417,36 @@ def test_application_v3_registry_is_derived_from_seed_identities():
     assert records[exact]["product_family"] == "calculator"
     assert records[exact]["route_options"]["product_key"] == "calculator"
     assert "uc://applications/calculator@1" not in records
+
+
+def test_registry_projection_is_materialized_by_assembly_boundary(tmp_path):
+    source_root = tmp_path / "source"
+    seed_path = source_root / "seed" / "applications" / "probe.json"
+    seed_path.parent.mkdir(parents=True)
+    seed = load(APPLICATIONS / "file_reader.json")
+    seed_path.write_text(json.dumps(seed), encoding="utf-8")
+    staging = tmp_path / "staging"
+    staging.mkdir()
+    suite = {
+        "applications": [{"seed": "seed/applications/probe.json"}],
+        "application_language": {
+            "catalog": "seed/application_language/catalog.seed.json",
+            "suite": "seed/application_language/suite.seed.json",
+        },
+    }
+    registry, provenance = audited_registry_projection_boundary(
+        source_root,
+        staging,
+        suite,
+        [(seed_path, seed)],
+        {seed["application"]["name"]: {"tree_sha256": "a" * 64}},
+        {"records": [], "registry_version": 1},
+    )
+    assert load(source_root / "seed" / "registry.json") == registry
+    assert load(source_root / "seed" / "registry.provenance.json") == provenance
+    assert (source_root / "seed" / "registry.json").read_bytes() == (
+        staging / "registry.json"
+    ).read_bytes()
 
 
 def test_registry_tamper_and_missing_seed_identity_are_rejected(tmp_path):

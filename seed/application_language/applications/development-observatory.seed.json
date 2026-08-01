@@ -3,7 +3,7 @@
     {
       "identity": "uc://manual/seeds/stateful-list-family@1",
       "path": "../families/stateful-list.seed.json",
-      "sha256": "7fe5eed2d365ba4d7ef2ea5b5530a74392d76e1007fe62636ff6a0c8dbc17f24"
+      "sha256": "35456f42375441b794b2d4e9aeb80d6a1580400c6780c8d157e9ee6c98af62e2"
     }
   ],
   "format": "manual-what-seed-4",
@@ -1295,7 +1295,7 @@
     },
     "program": {
       "case_entrypoint": "run_case",
-      "language": "stateful-interface-declaration-1",
+      "language": "unified-application-declaration-1",
       "launch_entrypoint": "launch",
       "projections": [
         "API",

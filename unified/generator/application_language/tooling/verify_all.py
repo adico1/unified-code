@@ -413,17 +413,20 @@ def compile_application_pairs(requests):
     requests = list(requests)
     context = safe_process_context()
     if context is not None:
-        with ProcessPoolExecutor(
-            max_workers=min(12, len(requests)),
-            mp_context=context,
-        ) as workers:
-            return list(
-                workers.map(
-                    compile_application_pair_worker,
-                    requests,
-                    chunksize=max(1, len(requests) // 24),
+        try:
+            with ProcessPoolExecutor(
+                max_workers=min(12, len(requests)),
+                mp_context=context,
+            ) as workers:
+                return list(
+                    workers.map(
+                        compile_application_pair_worker,
+                        requests,
+                        chunksize=max(1, len(requests) // 24),
+                    )
                 )
-            )
+        except (OSError, PermissionError):
+            pass
     with ThreadPoolExecutor(max_workers=min(16, len(requests))) as workers:
         return list(workers.map(compile_application_pair_worker, requests))
 
@@ -508,7 +511,9 @@ def verify_application_self_tests(generated):
         "destroy()\n"
         "print(json.dumps(reports,sort_keys=True))\n"
     )
-    group_count = min(4, len(roots))
+    # Bound GUI-host concurrency: too many simultaneous Tk roots contend for
+    # host window resources, while one group can exceed the verification limit.
+    group_count = min(2, len(roots))
     groups = [
         roots[index::group_count]
         for index in range(group_count)
@@ -519,7 +524,7 @@ def verify_application_self_tests(generated):
             [sys.executable, "-c", batch, json.dumps(group)],
             capture_output=True,
             text=True,
-            timeout=10,
+            timeout=30,
         )
         if result.returncode:
             raise RuntimeError(result.stderr.strip() or result.stdout.strip())
@@ -658,9 +663,8 @@ def verify_concise_declarations(generated):
         forbidden_derived = {"transitions", "boundaries"} & what.keys()
         if forbidden_derived:
             raise ValueError("leaf-derived-meaning:" + ",".join(forbidden_derived))
-        language = what["program"]["language"]
         if (
-            language == "calculator-declaration-1"
+            what["semantics"].get("operations")
             and what["semantics"].get("validation", {}).get("errors")
         ):
             raise ValueError("leaf-reachable-errors")
@@ -926,8 +930,18 @@ def write_report(
         "deterministic_artifact_hashes": hashes,
         "product_tree_sha256": product_tree,
         "compiler_application_vocabulary": separation,
-        "manual_application_code": 0,
-        "manual_application_tests": 0,
+        "manual_application_code": sum(
+            json.loads(item["manifest_path"].read_text(encoding="utf-8"))[
+                "manual_application_files"
+            ]
+            for item in generated
+        ),
+        "manual_application_tests": sum(
+            json.loads(item["manifest_path"].read_text(encoding="utf-8"))[
+                "manual_test_files"
+            ]
+            for item in generated
+        ),
         "runtime_seed_access": 0,
         "build_layout": {
             "format": "manual-product-first-build-1",
@@ -1193,7 +1207,6 @@ def verify_specialization(generated):
     forbidden = (
         b"seed.json",
         b"universal_generator",
-        b"calculator_suite",
         b"seed_compiler",
         b"declaration_compiler",
     )
@@ -1221,8 +1234,14 @@ def verify_seed_graph(compiler):
     try:
         copied = temporary / "seed"
         shutil.copytree(SEED_ROOT, copied)
-        leaf = copied / "applications" / "normal.seed.json"
-        family = copied / "families" / "calculator.seed.json"
+        leaf = next(
+            path
+            for path in (copied / "applications").glob("*.seed.json")
+            if json.loads(path.read_text(encoding="utf-8"))["what"]
+            ["semantics"].get("operations")
+        )
+        leaf_document = json.loads(leaf.read_text(encoding="utf-8"))
+        family = (leaf.parent / leaf_document["bases"][0]["path"]).resolve()
 
         tampered = json.loads(family.read_text(encoding="utf-8"))
         tampered["provides"]["family"] = "tampered"
@@ -1234,7 +1253,12 @@ def verify_seed_graph(compiler):
 
         shutil.rmtree(copied)
         shutil.copytree(SEED_ROOT, copied)
-        leaf = copied / "applications" / "normal.seed.json"
+        leaf = next(
+            path
+            for path in (copied / "applications").glob("*.seed.json")
+            if json.loads(path.read_text(encoding="utf-8"))["what"]
+            ["semantics"].get("operations")
+        )
         unpinned = json.loads(leaf.read_text(encoding="utf-8"))
         del unpinned["bases"][0]["sha256"]
         leaf.write_bytes(canonical(unpinned))
@@ -1320,7 +1344,11 @@ def verify_key_registry(applications, compiler):
         ]:
             raise ValueError("key-resolution-order")
 
-    family_path = SEED_ROOT / "families" / "calculator.seed.json"
+    leaf_document = applications[0]["leaf_document"]
+    family_path = (
+        applications[0]["seed_path"].parent
+        / leaf_document["bases"][0]["path"]
+    ).resolve(strict=True)
     family_document = json.loads(family_path.read_text(encoding="utf-8"))
     inherited, inherited_authorities = compiler.resolve_base(
         family_path,
@@ -1478,7 +1506,7 @@ def verify_key_registry(applications, compiler):
         "registry_identity": next(
             item["identity"]
             for item in authorities
-            if item["identity"].endswith("calculator-keys@1")
+            if item["identity"] == registry_authority["identity"]
         ),
         "definitions": len(registry),
         "selected_identities": len(selected),
@@ -1617,16 +1645,15 @@ def generate_in_stage(*, self_test, build_root, quiet=False):
     )
     generated = [first for first, _second in pairs]
     repeated_generated = [second for _first, second in pairs]
-    calculator_applications = [
+    expression_applications = [
         item
         for item in generated
-        if item["resolved_seed"]["program"]["language"]
-        == "calculator-declaration-1"
+        if item["resolved_seed"]["semantics"].get("operations")
     ]
     stateful_applications = [
         item
         for item in generated
-        if item not in calculator_applications
+        if item not in expression_applications
     ]
     first_trees = {
         item["id"]: classified_tree(item)
@@ -1674,7 +1701,7 @@ def generate_in_stage(*, self_test, build_root, quiet=False):
             "seed_graph": workers.submit(verify_seed_graph, compiler),
             "key_registry": workers.submit(
                 verify_key_registry,
-                calculator_applications,
+                expression_applications,
                 compiler,
             ),
             "control_registry": workers.submit(

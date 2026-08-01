@@ -20,6 +20,8 @@ Start with outcomes, then trace one product back to authority.
 9. Use tests as executable contracts; use generated evidence as measurements,
    not as authority.
 
-Generated files under `build/` explain an assembly result but are disposable.
-Never correct them manually: correct the responsible seed, schema or generic
-compiler law and regenerate.
+Generated files under `build/` are checked in deliberately so educators,
+researchers and reviewers can inspect the exact assembly result without first
+running the toolchain. They remain derived and reproducible, not handwritten
+authority. Never correct them manually: correct the responsible seed, schema or
+generic compiler law, regenerate, and review the resulting diff.
