@@ -328,11 +328,21 @@ def tree_bytes(path):
 def classified_tree(item):
     return {
         "authority": item["authority_path"].read_bytes(),
+        "request": item["request_path"].read_bytes(),
+        "architecture": item["architecture_path"].read_bytes(),
+        "systems": item["systems_path"].read_bytes(),
+        "interfaces": item["interfaces_path"].read_bytes(),
         "specification": item["specification_path"].read_bytes(),
+        "full_specification": item["full_specification_path"].read_bytes(),
+        "specialized_specification": item[
+            "specialized_specification_path"
+        ].read_bytes(),
         "source": item["source_path"].read_bytes(),
+        "manifestation_plan": item["manifestation_plan_path"].read_bytes(),
         "product": item["application"].read_bytes(),
         "test": item["test_path"].read_bytes(),
         "traceability": item["traceability_path"].read_bytes(),
+        "precompile_evidence": item["precompile_evidence_path"].read_bytes(),
         "manifest": item["manifest_path"].read_bytes(),
     }
 
@@ -340,11 +350,19 @@ def classified_tree(item):
 def expected_classified_tree(item, files):
     return {
         "authority": layout_canonical(item["leaf_document"]),
+        "request": files["request.json"],
+        "architecture": files["system-architecture.json"],
+        "systems": files["systems.json"],
+        "interfaces": files["interfaces.json"],
         "specification": layout_canonical(item["resolved_seed"]),
+        "full_specification": files["full-specification.json"],
+        "specialized_specification": files["specialized-specification.json"],
         "source": files["main.py"],
+        "manifestation_plan": files["manifestation-plan.json"],
         "product": files["main.py"],
         "test": files["test_generated.py"],
         "traceability": files["traceability.json"],
+        "precompile_evidence": files["precompile-evidence.json"],
         "manifest": files["manifest.json"],
     }
 
@@ -389,7 +407,17 @@ def compile_application_pair_worker(request):
             "traceability_path": destinations["traceability"],
             "manifest_path": destinations["manifest"],
             "authority_path": destinations["authority"],
+            "request_path": destinations["request"],
+            "architecture_path": destinations["architecture"],
+            "systems_path": destinations["systems"],
+            "interfaces_path": destinations["interfaces"],
             "specification_path": destinations["specification"],
+            "full_specification_path": destinations["full_specification"],
+            "specialized_specification_path": destinations[
+                "specialized_specification"
+            ],
+            "manifestation_plan_path": destinations["manifestation_plan"],
+            "precompile_evidence_path": destinations["precompile_evidence"],
             "evidence": manifest,
             "resolved_seed": resolved_seed,
             "registry_seed_sha256": hashlib.sha256(
@@ -527,7 +555,10 @@ def verify_application_self_tests(generated):
             timeout=30,
         )
         if result.returncode:
-            raise RuntimeError(result.stderr.strip() or result.stdout.strip())
+            detail = result.stderr.strip() or result.stdout.strip() or "no-output"
+            raise RuntimeError(
+                f"gui-self-test:{result.returncode}:{detail}"
+            )
         return json.loads(result.stdout)
 
     with ThreadPoolExecutor(max_workers=len(groups)) as workers:
@@ -898,11 +929,23 @@ def write_report(
                     name: "build/" + path.relative_to(build_root).as_posix()
                     for name, path in {
                         "authority": item["authority_path"],
+                        "request": item["request_path"],
+                        "architecture": item["architecture_path"],
+                        "systems": item["systems_path"],
+                        "interfaces": item["interfaces_path"],
                         "specification": item["specification_path"],
+                        "full_specification": item["full_specification_path"],
+                        "specialized_specification": item[
+                            "specialized_specification_path"
+                        ],
                         "source": item["source_path"],
+                        "manifestation_plan": item["manifestation_plan_path"],
                         "product": item["output_path"],
                         "test": item["test_path"],
                         "traceability": item["traceability_path"],
+                        "precompile_evidence": item[
+                            "precompile_evidence_path"
+                        ],
                         "manifest": item["manifest_path"],
                     }.items()
                 },
@@ -949,6 +992,7 @@ def write_report(
             "product_layers": [
                 "application",
                 "authority",
+                "architecture",
                 "specification",
                 "source",
                 "verification",
@@ -991,11 +1035,23 @@ def build_index(generated, build_root, product_tree):
                     name: "build/" + path.relative_to(build_root).as_posix()
                     for name, path in {
                         "authority": item["authority_path"],
+                        "request": item["request_path"],
+                        "architecture": item["architecture_path"],
+                        "systems": item["systems_path"],
+                        "interfaces": item["interfaces_path"],
                         "specification": item["specification_path"],
+                        "full_specification": item["full_specification_path"],
+                        "specialized_specification": item[
+                            "specialized_specification_path"
+                        ],
                         "source": item["source_path"],
+                        "manifestation_plan": item["manifestation_plan_path"],
                         "product": item["output_path"],
                         "test": item["test_path"],
                         "traceability": item["traceability_path"],
+                        "precompile_evidence": item[
+                            "precompile_evidence_path"
+                        ],
                         "manifest": item["manifest_path"],
                     }.items()
                 },
@@ -1084,6 +1140,7 @@ def verify_product_first_layout(build_root, generated, complete_tree):
         product_root = item["output_path"].parent
         if {path.name for path in product_root.iterdir()} != {
             "application",
+            "architecture",
             "authority",
             "manifest.json",
             "source",

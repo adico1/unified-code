@@ -19,14 +19,9 @@ LANGUAGES = (LANGUAGE,)
 
 
 def declaration_form(seed):
-    semantics = seed.get("semantics", {})
-    return (
-        "stateful"
-        if semantics.get("commands")
-        else "simulation"
-        if semantics.get("clock") and semantics.get("motion")
-        else "expression"
-    )
+    return seed.get("_assembly", {}).get("profile")
+
+
 def semantic_body(value):
     return expression(value)
 

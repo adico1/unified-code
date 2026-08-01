@@ -81,6 +81,14 @@ def test_product_source_and_application_do_not_duplicate_bytes(tmp_path):
         "test_generated.py": b"def run(): return True\n",
         "traceability.json": b"{}\n",
         "manifest.json": b"{}\n",
+        "request.json": b"{}\n",
+        "system-architecture.json": b"{}\n",
+        "systems.json": b"[]\n",
+        "interfaces.json": b"[]\n",
+        "full-specification.json": b"{}\n",
+        "specialized-specification.json": b"{}\n",
+        "manifestation-plan.json": b"{}\n",
+        "precompile-evidence.json": b"{}\n",
     }
     _identity, paths = build_layout.classify(
         tmp_path, leaf, leaf, files, "probes"
