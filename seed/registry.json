@@ -33,7 +33,7 @@
       "seed_sha256": "4741da3b88949c9fd868877eeb46c5302449fb8ed9d0d5c9c6ef7f0789ebeda8"
     },
     {
-      "artifact_tree_sha256": "9ffa20cfc96bb1abd7ffd1144d29948d50cf01a04d6860ca1d6a61a2e109906c",
+      "artifact_tree_sha256": "ea4a65e5e25b787bfb4a304b53081b1d10a13fb664056f59d42a12a733ff163d",
       "canonical_name": "uc://applications/bounded-integer-expression-calculator@1",
       "compiler_route": "application-v3",
       "compiler_version": "UC-APPLICATION-3",
@@ -416,7 +416,7 @@
       "seed_sha256": "0adecc3c92fb1cd3a7fb5fa3b320699a43f0439f1b952316037cc0a9c253720d"
     },
     {
-      "artifact_tree_sha256": "ae0d3844c8be2a493ea600da4fbe93ea584753859dc6dba7f9fd907bdd4f8f01",
+      "artifact_tree_sha256": "3ea67ea0987494831cad6fa106433cf3956e85c4cab12525bf756e980aba83b3",
       "canonical_name": "uc://applications/file-editor@1",
       "compiler_route": "application-v3",
       "compiler_version": "UC-APPLICATION-3",
@@ -431,7 +431,7 @@
       "seed_sha256": "23a865b9fddeee209d8a9b566e70b3e8aa3dada7a02cfd31f0e1f18f31c4187b"
     },
     {
-      "artifact_tree_sha256": "4f8d0d699d152b83b8c1029874678c2d6bac4e83f3d2b3a9c8be17bae2b48167",
+      "artifact_tree_sha256": "25f266626d092f462d39d0bc9765b65207112be7a9df5d50603e65ef513382c3",
       "canonical_name": "uc://applications/file-reader@1",
       "compiler_route": "application-v3",
       "compiler_version": "UC-APPLICATION-3",
@@ -680,7 +680,7 @@
       "seed_sha256": "16a83f06ba4c6cd0d02dbbbafcf7295991ec22665fffb8b7ccb35edc8f98176d"
     },
     {
-      "artifact_tree_sha256": "3f8cec3d4c5f5d9fc5a5becab1129f7a3b2f8d532f75cb18bfef335017c0cd8f",
+      "artifact_tree_sha256": "0b3d933062df00f3952df5984105d058b85ce1354725f2cc8b32fcea5f9b0b3d",
       "canonical_name": "uc://applications/math-library@1",
       "compiler_route": "application-v3",
       "compiler_version": "UC-APPLICATION-3",
@@ -849,7 +849,7 @@
       "seed_sha256": "ecf68e55906699799a7321223ebd0af368c8323c7f008ec4b6c0623ec5f76c19"
     },
     {
-      "artifact_tree_sha256": "3a657e1daf6d08a799f20fbc109a186bf518549d7e43f875548a01a9ca362c57",
+      "artifact_tree_sha256": "b671ceecdda6676f33cc3d64f01bef64483fe68aea9abf2ddeb6d1b5b9fc221d",
       "canonical_name": "uc://applications/pong-game@1",
       "compiler_route": "application-v3",
       "compiler_version": "UC-APPLICATION-3",
@@ -1320,6 +1320,6 @@
       "seed_sha256": "1c71207e0197f65f97a3769394a2517b6b5e44630279bcc61fed01aa10ef2918"
     }
   ],
-  "registry_snapshot_sha256": "87bcc4a1d23878f51ee497dc9ee738a2c5060e22c2e4cd128f2fb5c526c0bfa6",
+  "registry_snapshot_sha256": "ed90ea5f71750f0f8f72a140233a988d734dba3ca12298917f7c20fb54c025c8",
   "registry_version": 1
 }

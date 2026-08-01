@@ -947,7 +947,7 @@ def _generated_test_source(package, persistence_case):
     persistence_test = (
         f'''
 
-def test_failed_atomic_persistence_preserves_original(tmp_path, monkeypatch):
+def test_failed_atomic_persistence_preserves_original(tmp_path):
     case = {persistence_case!r}
     path = tmp_path / case["request"]["path"]
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -957,8 +957,12 @@ def test_failed_atomic_persistence_preserves_original(tmp_path, monkeypatch):
     def refuse(_source, _destination):
         raise OSError("host-secret")
 
-    monkeypatch.setattr(runtime.os, "replace", refuse)
-    result = execute(case["request"], str(tmp_path))
+    original_replace = runtime.os.replace
+    runtime.os.replace = refuse
+    try:
+        result = execute(case["request"], str(tmp_path))
+    finally:
+        runtime.os.replace = original_replace
     assert result["state"] == "invalid"
     assert result["error"] == "persistence-failed"
     assert "ticket" not in result
@@ -970,6 +974,7 @@ def test_failed_atomic_persistence_preserves_original(tmp_path, monkeypatch):
     return f'''"""Generated tests derived from acceptance declarations."""
 
 import json
+import tempfile
 from pathlib import Path
 
 from {package} import cli, runtime
@@ -1022,18 +1027,58 @@ def test_generated_domain_and_composition_have_no_control_flow():
         assert not [type(node).__name__ for node in ast.walk(tree) if isinstance(node, forbidden)]
 
 
-def test_unhandled_failure_is_redacted_and_deterministic(monkeypatch):
+def test_unhandled_failure_is_redacted_and_deterministic():
     def explode(_thing):
         raise RuntimeError("secret-token")
 
-    monkeypatch.setattr(cli, "program", explode)
-    first = execute({{}}, ".")
-    second = execute({{}}, ".")
+    original_program = cli.program
+    cli.program = explode
+    try:
+        first = execute({{}}, ".")
+        second = execute({{}}, ".")
+    finally:
+        cli.program = original_program
     assert first == second
     assert first["error"] == "unhandled-failure"
     assert first["ticket"]["message"] == "[redacted-message]"
     assert "secret-token" not in json.dumps(first)
-{persistence_test}'''
+{persistence_test}
+
+
+def run():
+    checks = [
+        ("unit", lambda root: test_generated_unit_cases(root)),
+        ("failure", lambda root: test_generated_failure_cases(root)),
+        ("integration", lambda root: test_generated_integration_scenarios(root)),
+        ("source-laws", lambda _root: test_generated_domain_and_composition_have_no_control_flow()),
+        ("ticket", lambda _root: test_unhandled_failure_is_redacted_and_deterministic()),
+        {('(\"atomic-persistence\", lambda root: test_failed_atomic_persistence_preserves_original(root))' if persistence_case else '')}
+    ]
+    checks = [item for item in checks if item]
+    results = []
+    with tempfile.TemporaryDirectory(prefix="uc-generated-self-test-") as temporary:
+        root = Path(temporary)
+        for identity, operation in checks:
+            check_root = root / identity
+            check_root.mkdir()
+            try:
+                operation(check_root)
+            except BaseException as error:
+                results.append({{"id": identity, "ok": False, "error": type(error).__name__}})
+            else:
+                results.append({{"id": identity, "ok": True, "error": None}})
+    return {{
+        "passed": sum(item["ok"] for item in results),
+        "total": len(results),
+        "results": results,
+    }}
+
+
+if __name__ == "__main__":
+    report = run()
+    print(json.dumps(report, separators=(",", ":"), sort_keys=True))
+    raise SystemExit(0 if report["passed"] == report["total"] else 1)
+'''
 
 
 def _browser_source():
@@ -1418,43 +1463,52 @@ def _run_generated_tests(app_roots):
     environment = dict(os.environ)
     environment["PYTHONPATH"] = os.pathsep.join(str(path) for path in app_roots)
     environment["PYTHONDONTWRITEBYTECODE"] = "1"
-    reports = {}
-    for root in app_roots:
-        try:
-            process_result = subprocess.run(
-                [
-                    sys.executable,
-                    "-m",
-                    "pytest",
-                    "-q",
-                    "-p",
-                    "no:cacheprovider",
-                    str(root / "tests"),
-                ],
-                cwd=root,
-                env=environment,
-                text=True,
-                capture_output=True,
-                check=False,
-                timeout=60,
-            )
-        except subprocess.TimeoutExpired:
-            reports[root.name] = {
+    roots = [str(path) for path in app_roots]
+    runner = (
+        "import importlib.util,json,pathlib,sys\n"
+        "reports={}\n"
+        "for index,raw in enumerate(json.loads(sys.argv[1])):\n"
+        " root=pathlib.Path(raw)\n"
+        " path=root/'tests'/'test_generated.py'\n"
+        " spec=importlib.util.spec_from_file_location(f'generated_test_{index}',path)\n"
+        " module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)\n"
+        " report=module.run()\n"
+        " reports[root.name]={'ok':report['passed']==report['total'],'exit':0 if report['passed']==report['total'] else 1,'stdout':json.dumps(report,separators=(',',':'),sort_keys=True),'stderr':'','timed_out':False}\n"
+        "print(json.dumps(reports,separators=(',',':'),sort_keys=True))\n"
+    )
+    try:
+        process_result = subprocess.run(
+            [sys.executable, "-c", runner, json.dumps(roots)],
+            cwd=app_roots[0].parent,
+            env=environment,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=60,
+        )
+    except subprocess.TimeoutExpired:
+        return {
+            root.name: {
                 "ok": False,
                 "exit": 124,
                 "stdout": "",
                 "stderr": "generated-tests-timeout",
                 "timed_out": True,
             }
-            continue
-        reports[root.name] = {
-            "ok": process_result.returncode == 0,
-            "exit": process_result.returncode,
-            "stdout": process_result.stdout[-2000:],
-            "stderr": process_result.stderr[-2000:],
-            "timed_out": False,
+            for root in app_roots
         }
-    return reports
+    if process_result.returncode:
+        return {
+            root.name: {
+                "ok": False,
+                "exit": process_result.returncode,
+                "stdout": process_result.stdout[-2000:],
+                "stderr": process_result.stderr[-2000:],
+                "timed_out": False,
+            }
+            for root in app_roots
+        }
+    return json.loads(process_result.stdout)
 
 
 def _build_generated_sources(app_roots):
@@ -1841,14 +1895,22 @@ def _graphical_browser_proof(root, seed):
         return {"ok": False, "applicable": True, "error": "browser-unavailable"}
     outputs = []
     clean_stops = []
-    with tempfile.TemporaryDirectory(prefix="uc-gui-proof-") as temporary:
+    with tempfile.TemporaryDirectory(
+        prefix=".uc-gui-proof-", dir=root.parent.parent
+    ) as temporary:
         base = Path(temporary)
         copied_parent = base / "copied-installation"
-        shutil.copytree(
-            root.parent,
-            copied_parent,
-            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".pytest_cache"),
-        )
+        copied_parent.mkdir()
+        for sibling in sorted(root.parent.iterdir()):
+            if sibling.is_dir():
+                shutil.copytree(
+                    sibling,
+                    copied_parent / sibling.name,
+                    ignore=shutil.ignore_patterns(
+                        "__pycache__", "*.pyc", ".pytest_cache"
+                    ),
+                    copy_function=os.link,
+                )
         for index in range(2):
             authority = base / f"authority-{index}"
             authority.mkdir()
@@ -2771,8 +2833,9 @@ def audited_assembly_cache_admission_boundary(thing, value, output, cache_key):
 
 
 def audited_assembly_cache_publish_boundary(cache_key, output, manifest):
-    _cleanup_ephemeral_assembly_cache()
-    _ASSEMBLY_PROOF_CACHE.clear()
+    previous = _ASSEMBLY_PROOF_CACHE.pop(cache_key, None)
+    if previous and previous.get("ephemeral_root"):
+        shutil.rmtree(previous["ephemeral_root"], ignore_errors=True)
     identity = audited_directory_identity_boundary(output)
     _ASSEMBLY_PROOF_CACHE[cache_key] = {
         "output": str(output),

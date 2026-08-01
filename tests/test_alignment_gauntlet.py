@@ -147,6 +147,41 @@ def test_assembly_cache_does_not_copy_the_complete_output_tree(
     )
 
 
+def test_assembly_cache_retains_each_distinct_authority(tmp_path):
+    assembly._ASSEMBLY_PROOF_CACHE.clear()
+    first = tmp_path / "first"
+    second = tmp_path / "second"
+    first.mkdir()
+    second.mkdir()
+    (first / "artifact.txt").write_text("first", encoding="utf-8")
+    (second / "artifact.txt").write_text("second", encoding="utf-8")
+
+    assembly.audited_assembly_cache_publish_boundary("authority-a", first, {})
+    assembly.audited_assembly_cache_publish_boundary("authority-b", second, {})
+
+    assert set(assembly._ASSEMBLY_PROOF_CACHE) == {
+        "authority-a",
+        "authority-b",
+    }
+    assert assembly._ASSEMBLY_PROOF_CACHE["authority-a"]["output"] == str(first)
+    assert assembly._ASSEMBLY_PROOF_CACHE["authority-b"]["output"] == str(second)
+
+
+def test_generated_application_tests_use_one_self_test_process():
+    runner = assembly._run_generated_tests
+    source = Path(assembly.__file__).read_text(encoding="utf-8")
+    runner_source = source[
+        source.index("def _run_generated_tests") : source.index(
+            "\ndef _execute_acceptance", source.index("def _run_generated_tests")
+        )
+    ]
+    assert runner.__code__.co_argcount == 1
+    assert '"pytest"' not in runner_source
+    generated = assembly._generated_test_source("probe_package", None)
+    assert "def run():" in generated
+    assert "if __name__ == \"__main__\":" in generated
+
+
 def test_physical_evidence_nodes_execute_concurrently(tmp_path, monkeypatch):
     def slow(node):
         time.sleep(0.15)
