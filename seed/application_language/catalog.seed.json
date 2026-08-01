@@ -206,9 +206,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/fraction@1",
-                  "family": "calculator",
-                  "variation": "fraction",
-                  "version": 1
+                  "variation": "fraction"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -217,9 +215,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -297,7 +293,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/fraction@1",
@@ -339,9 +335,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/complex-number@1",
-                  "family": "calculator",
-                  "variation": "complex-number",
-                  "version": 1
+                  "variation": "complex-number"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -350,9 +344,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -399,7 +391,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/complex-number@1",
@@ -431,9 +423,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/arbitrary-precision@1",
-                  "family": "calculator",
-                  "variation": "arbitrary-precision",
-                  "version": 1
+                  "variation": "arbitrary-precision"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -443,8 +433,7 @@
                 "semantics": {
                   "numeric_laws": {
                     "maximum_characters": 512,
-                    "numeric_domain": "integer",
-                    "precision": 12
+                    "numeric_domain": "integer"
                   },
                   "operations": {
                     "functions": [
@@ -472,7 +461,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/arbitrary-precision@1",
@@ -514,9 +503,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/polynomial-algebra@1",
-                  "family": "calculator",
-                  "variation": "polynomial-algebra",
-                  "version": 1
+                  "variation": "polynomial-algebra"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -525,9 +512,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -624,7 +609,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/polynomial-algebra@1",
@@ -666,9 +651,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/calculus@1",
-                  "family": "calculator",
-                  "variation": "calculus",
-                  "version": 1
+                  "variation": "calculus"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -677,9 +660,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -797,7 +778,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/calculus@1",
@@ -839,9 +820,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/probability@1",
-                  "family": "calculator",
-                  "variation": "probability",
-                  "version": 1
+                  "variation": "probability"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -850,9 +829,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -942,7 +919,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/probability@1",
@@ -984,9 +961,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/regression@1",
-                  "family": "calculator",
-                  "variation": "regression",
-                  "version": 1
+                  "variation": "regression"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -995,9 +970,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -1088,7 +1061,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/regression@1",
@@ -1130,9 +1103,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/loan-mortgage@1",
-                  "family": "calculator",
-                  "variation": "loan-mortgage",
-                  "version": 1
+                  "variation": "loan-mortgage"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -1141,9 +1112,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -1226,7 +1195,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/loan-mortgage@1",
@@ -1268,9 +1237,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/tax@1",
-                  "family": "calculator",
-                  "variation": "tax",
-                  "version": 1
+                  "variation": "tax"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -1279,9 +1246,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -1354,7 +1319,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/tax@1",
@@ -1386,9 +1351,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/investment@1",
-                  "family": "calculator",
-                  "variation": "investment",
-                  "version": 1
+                  "variation": "investment"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -1397,9 +1360,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -1442,7 +1403,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/investment@1",
@@ -1474,9 +1435,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/currency@1",
-                  "family": "calculator",
-                  "variation": "currency",
-                  "version": 1
+                  "variation": "currency"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -1485,9 +1444,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -1514,7 +1471,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/currency@1",
@@ -1556,9 +1513,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/geometry@1",
-                  "family": "calculator",
-                  "variation": "geometry",
-                  "version": 1
+                  "variation": "geometry"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -1567,9 +1522,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -1620,7 +1573,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/geometry@1",
@@ -1662,9 +1615,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/date-time@1",
-                  "family": "calculator",
-                  "variation": "date-time",
-                  "version": 1
+                  "variation": "date-time"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -1673,9 +1624,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -1718,7 +1667,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/date-time@1",
@@ -1750,9 +1699,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/health@1",
-                  "family": "calculator",
-                  "variation": "health",
-                  "version": 1
+                  "variation": "health"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -1761,9 +1708,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -1798,7 +1743,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/health@1",
@@ -1830,9 +1775,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/construction@1",
-                  "family": "calculator",
-                  "variation": "construction",
-                  "version": 1
+                  "variation": "construction"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -1841,9 +1784,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -1894,7 +1835,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/construction@1",
@@ -1926,9 +1867,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/cooking@1",
-                  "family": "calculator",
-                  "variation": "cooking",
-                  "version": 1
+                  "variation": "cooking"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -1937,9 +1876,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -1975,7 +1912,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/cooking@1",
@@ -2017,9 +1954,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/subnet@1",
-                  "family": "calculator",
-                  "variation": "subnet",
-                  "version": 1
+                  "variation": "subnet"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -2028,9 +1963,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -2071,7 +2004,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/subnet@1",
@@ -2103,9 +2036,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/chemistry@1",
-                  "family": "calculator",
-                  "variation": "chemistry",
-                  "version": 1
+                  "variation": "chemistry"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -2114,9 +2045,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -2144,7 +2073,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/chemistry@1",
@@ -2176,9 +2105,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/physics@1",
-                  "family": "calculator",
-                  "variation": "physics",
-                  "version": 1
+                  "variation": "physics"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -2187,9 +2114,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -2231,7 +2156,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/physics@1",
@@ -2273,9 +2198,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/navigation@1",
-                  "family": "calculator",
-                  "variation": "navigation",
-                  "version": 1
+                  "variation": "navigation"
                 },
                 "presentation": {
                   "geometry": "620x380+80+80",
@@ -2284,9 +2207,7 @@
                 },
                 "semantics": {
                   "numeric_laws": {
-                    "maximum_characters": 512,
-                    "numeric_domain": "real",
-                    "precision": 12
+                    "maximum_characters": 512
                   },
                   "operations": {
                     "functions": [
@@ -2365,7 +2286,7 @@
             },
             "prototype": {
               "path": "applications/normal.seed.json",
-              "sha256": "e8a30ec62081fb39f8db3f4dc3390e07f2fd9daad3e244a580c1a4cee8f99de1"
+              "sha256": "00fdede7ee66b542db7c68eb927233ede17830b4fbf30ee8c49638b92de510e8"
             }
           },
           "identity": "uc://manual/catalog/calculators/navigation@1",
@@ -2503,9 +2424,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/grocery@1",
-                  "family": "stateful-list",
-                  "variation": "grocery",
-                  "version": 1
+                  "variation": "grocery"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/grocery/state.json",
@@ -2513,8 +2432,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -2523,21 +2440,6 @@
                       "purchased_state_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -2897,8 +2799,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Grocery list"
@@ -3154,15 +3054,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -3171,7 +3068,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/grocery@1",
@@ -3287,9 +3184,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/errands@1",
-                  "family": "stateful-list",
-                  "variation": "errands",
-                  "version": 1
+                  "variation": "errands"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/errands/state.json",
@@ -3297,8 +3192,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -3307,21 +3200,6 @@
                       "completion_state_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -3681,8 +3559,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Errand list"
@@ -3938,15 +3814,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -3955,7 +3828,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/errands@1",
@@ -4071,9 +3944,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/daily-planner@1",
-                  "family": "stateful-list",
-                  "variation": "daily-planner",
-                  "version": 1
+                  "variation": "daily-planner"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/daily-planner/state.json",
@@ -4081,8 +3952,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -4091,21 +3960,6 @@
                       "completion_state_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -4465,8 +4319,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Daily planner"
@@ -4722,15 +4574,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -4739,7 +4588,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/daily-planner@1",
@@ -4855,9 +4704,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/weekly-planner@1",
-                  "family": "stateful-list",
-                  "variation": "weekly-planner",
-                  "version": 1
+                  "variation": "weekly-planner"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/weekly-planner/state.json",
@@ -4865,8 +4712,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -4875,21 +4720,6 @@
                       "carry_forward_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -5249,8 +5079,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Weekly planner"
@@ -5506,15 +5334,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -5523,7 +5348,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/weekly-planner@1",
@@ -5639,9 +5464,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/habits@1",
-                  "family": "stateful-list",
-                  "variation": "habits",
-                  "version": 1
+                  "variation": "habits"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/habits/state.json",
@@ -5649,8 +5472,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -5659,21 +5480,6 @@
                       "daily_observation_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -6033,8 +5839,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Habit tracker"
@@ -6290,15 +6094,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -6307,7 +6108,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/habits@1",
@@ -6423,9 +6224,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/recurring-chores@1",
-                  "family": "stateful-list",
-                  "variation": "recurring-chores",
-                  "version": 1
+                  "variation": "recurring-chores"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/recurring-chores/state.json",
@@ -6433,8 +6232,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -6443,21 +6240,6 @@
                       "next_due_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -6817,8 +6599,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Recurring chores"
@@ -7074,15 +6854,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -7091,7 +6868,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/recurring-chores@1",
@@ -7207,9 +6984,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/reminders@1",
-                  "family": "stateful-list",
-                  "variation": "reminders",
-                  "version": 1
+                  "variation": "reminders"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/reminders/state.json",
@@ -7217,8 +6992,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -7227,21 +7000,6 @@
                       "acknowledgement_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -7601,8 +7359,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Reminder list"
@@ -7858,15 +7614,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -7875,7 +7628,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/reminders@1",
@@ -7991,9 +7744,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/calendar-tasks@1",
-                  "family": "stateful-list",
-                  "variation": "calendar-tasks",
-                  "version": 1
+                  "variation": "calendar-tasks"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/calendar-tasks/state.json",
@@ -8001,8 +7752,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -8011,21 +7760,6 @@
                       "calendar_placement_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -8385,8 +8119,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Calendar tasks"
@@ -8642,15 +8374,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -8659,7 +8388,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/calendar-tasks@1",
@@ -8781,9 +8510,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/gtd@1",
-                  "family": "stateful-list",
-                  "variation": "gtd",
-                  "version": 1
+                  "variation": "gtd"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/gtd/state.json",
@@ -8791,8 +8518,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -8802,21 +8527,6 @@
                       "review_state_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 5,
                     "state_field": "records",
                     "width": 82
@@ -9203,8 +8913,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 8
                   },
                   "title": "Getting Things Done"
@@ -9475,15 +9183,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -9492,7 +9197,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/gtd@1",
@@ -9608,9 +9313,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/eisenhower@1",
-                  "family": "stateful-list",
-                  "variation": "eisenhower",
-                  "version": 1
+                  "variation": "eisenhower"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/eisenhower/state.json",
@@ -9618,8 +9321,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -9628,21 +9329,6 @@
                       "quadrant_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -10002,8 +9688,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Eisenhower matrix"
@@ -10259,15 +9943,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -10276,7 +9957,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/eisenhower@1",
@@ -10392,9 +10073,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/kanban@1",
-                  "family": "stateful-list",
-                  "variation": "kanban",
-                  "version": 1
+                  "variation": "kanban"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/kanban/state.json",
@@ -10402,8 +10081,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -10412,21 +10089,6 @@
                       "card_order_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -10786,8 +10448,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Kanban board"
@@ -11043,15 +10703,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -11060,7 +10717,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/kanban@1",
@@ -11176,9 +10833,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/project-work-breakdown@1",
-                  "family": "stateful-list",
-                  "variation": "project-work-breakdown",
-                  "version": 1
+                  "variation": "project-work-breakdown"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/project-work-breakdown/state.json",
@@ -11186,8 +10841,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -11196,21 +10849,6 @@
                       "progress_rollup_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -11570,8 +11208,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Project work breakdown"
@@ -11827,15 +11463,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -11844,7 +11477,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/project-work-breakdown@1",
@@ -11960,9 +11593,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/dependency-plan@1",
-                  "family": "stateful-list",
-                  "variation": "dependency-plan",
-                  "version": 1
+                  "variation": "dependency-plan"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/dependency-plan/state.json",
@@ -11970,8 +11601,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -11980,21 +11609,6 @@
                       "critical_order_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -12354,8 +11968,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Dependency planning record manager"
@@ -12611,15 +12223,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -12628,7 +12237,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/dependency-plan@1",
@@ -12744,9 +12353,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/team-assignments@1",
-                  "family": "stateful-list",
-                  "variation": "team-assignments",
-                  "version": 1
+                  "variation": "team-assignments"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/team-assignments/state.json",
@@ -12754,8 +12361,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -12764,21 +12369,6 @@
                       "handoff_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -13138,8 +12728,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Team assignments"
@@ -13395,15 +12983,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -13412,7 +12997,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/team-assignments@1",
@@ -13528,9 +13113,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/approvals@1",
-                  "family": "stateful-list",
-                  "variation": "approvals",
-                  "version": 1
+                  "variation": "approvals"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/approvals/state.json",
@@ -13538,8 +13121,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -13548,21 +13129,6 @@
                       "decision_evidence_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -13922,8 +13488,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Approval workflow"
@@ -14179,15 +13743,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -14196,7 +13757,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/approvals@1",
@@ -14318,9 +13879,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/issue-tracker@1",
-                  "family": "stateful-list",
-                  "variation": "issue-tracker",
-                  "version": 1
+                  "variation": "issue-tracker"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/issue-tracker/state.json",
@@ -14328,8 +13887,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -14339,21 +13896,6 @@
                       "discussion_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 5,
                     "state_field": "records",
                     "width": 82
@@ -14740,8 +14282,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 8
                   },
                   "title": "Issue tracker"
@@ -15012,15 +14552,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -15029,7 +14566,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/issue-tracker@1",
@@ -15145,9 +14682,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/bug-tracker@1",
-                  "family": "stateful-list",
-                  "variation": "bug-tracker",
-                  "version": 1
+                  "variation": "bug-tracker"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/bug-tracker/state.json",
@@ -15155,8 +14690,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -15165,21 +14698,6 @@
                       "resolution_state_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -15539,8 +15057,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Bug tracker"
@@ -15796,15 +15312,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -15813,7 +15326,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/bug-tracker@1",
@@ -15929,9 +15442,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/sprint-backlog@1",
-                  "family": "stateful-list",
-                  "variation": "sprint-backlog",
-                  "version": 1
+                  "variation": "sprint-backlog"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/sprint-backlog/state.json",
@@ -15939,8 +15450,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -15949,21 +15458,6 @@
                       "workflow_state_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -16323,8 +15817,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Sprint backlog"
@@ -16580,15 +16072,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -16597,7 +16086,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/sprint-backlog@1",
@@ -16713,9 +16202,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/product-roadmap@1",
-                  "family": "stateful-list",
-                  "variation": "product-roadmap",
-                  "version": 1
+                  "variation": "product-roadmap"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/product-roadmap/state.json",
@@ -16723,8 +16210,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -16733,21 +16218,6 @@
                       "status_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -17107,8 +16577,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Product roadmap"
@@ -17364,15 +16832,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -17381,7 +16846,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/product-roadmap@1",
@@ -17497,9 +16962,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/crm-follow-up@1",
-                  "family": "stateful-list",
-                  "variation": "crm-follow-up",
-                  "version": 1
+                  "variation": "crm-follow-up"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/crm-follow-up/state.json",
@@ -17507,8 +16970,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -17517,21 +16978,6 @@
                       "relationship_stage_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -17891,8 +17337,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "CRM follow-up list"
@@ -18148,15 +17592,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -18165,7 +17606,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/crm-follow-up@1",
@@ -18281,9 +17722,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/support-queue@1",
-                  "family": "stateful-list",
-                  "variation": "support-queue",
-                  "version": 1
+                  "variation": "support-queue"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/support-queue/state.json",
@@ -18291,8 +17730,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -18301,21 +17738,6 @@
                       "response_deadline_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -18675,8 +18097,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Support queue"
@@ -18932,15 +18352,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -18949,7 +18366,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/support-queue@1",
@@ -19065,9 +18482,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/maintenance-work-orders@1",
-                  "family": "stateful-list",
-                  "variation": "maintenance-work-orders",
-                  "version": 1
+                  "variation": "maintenance-work-orders"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/maintenance-work-orders/state.json",
@@ -19075,8 +18490,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -19085,21 +18498,6 @@
                       "technician_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -19459,8 +18857,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Maintenance work orders"
@@ -19716,15 +19112,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -19733,7 +19126,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/maintenance-work-orders@1",
@@ -19849,9 +19242,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/inventory-restock@1",
-                  "family": "stateful-list",
-                  "variation": "inventory-restock",
-                  "version": 1
+                  "variation": "inventory-restock"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/inventory-restock/state.json",
@@ -19859,8 +19250,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -19869,21 +19258,6 @@
                       "quantity_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -20243,8 +19617,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Inventory restock list"
@@ -20500,15 +19872,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -20517,7 +19886,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/inventory-restock@1",
@@ -20633,9 +20002,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/event-planning@1",
-                  "family": "stateful-list",
-                  "variation": "event-planning",
-                  "version": 1
+                  "variation": "event-planning"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/event-planning/state.json",
@@ -20643,8 +20010,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -20653,21 +20018,6 @@
                       "deadline_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -21027,8 +20377,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Event planning checklist"
@@ -21284,15 +20632,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -21301,7 +20646,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/event-planning@1",
@@ -21417,9 +20762,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/travel-checklist@1",
-                  "family": "stateful-list",
-                  "variation": "travel-checklist",
-                  "version": 1
+                  "variation": "travel-checklist"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/travel-checklist/state.json",
@@ -21427,8 +20770,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -21437,21 +20778,6 @@
                       "document_state_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -21811,8 +21137,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Travel checklist"
@@ -22068,15 +21392,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -22085,7 +21406,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/travel-checklist@1",
@@ -22201,9 +21522,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/study-homework@1",
-                  "family": "stateful-list",
-                  "variation": "study-homework",
-                  "version": 1
+                  "variation": "study-homework"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/study-homework/state.json",
@@ -22211,8 +21530,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -22221,21 +21538,6 @@
                       "study_state_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -22595,8 +21897,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Study and homework planner"
@@ -22852,15 +22152,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -22869,7 +22166,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/study-homework@1",
@@ -22985,9 +22282,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/research-pipeline@1",
-                  "family": "stateful-list",
-                  "variation": "research-pipeline",
-                  "version": 1
+                  "variation": "research-pipeline"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/research-pipeline/state.json",
@@ -22995,8 +22290,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -23005,21 +22298,6 @@
                       "review_stage_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -23379,8 +22657,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Research pipeline"
@@ -23636,15 +22912,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -23653,7 +22926,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/research-pipeline@1",
@@ -23769,9 +23042,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/editorial-calendar@1",
-                  "family": "stateful-list",
-                  "variation": "editorial-calendar",
-                  "version": 1
+                  "variation": "editorial-calendar"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/editorial-calendar/state.json",
@@ -23779,8 +23050,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -23789,21 +23058,6 @@
                       "editor_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -24163,8 +23417,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Editorial calendar"
@@ -24420,15 +23672,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -24437,7 +23686,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/editorial-calendar@1",
@@ -24553,9 +23802,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/care-plan@1",
-                  "family": "stateful-list",
-                  "variation": "care-plan",
-                  "version": 1
+                  "variation": "care-plan"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/care-plan/state.json",
@@ -24563,8 +23810,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -24573,21 +23818,6 @@
                       "completion_evidence_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -24947,8 +24177,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Care plan"
@@ -25204,15 +24432,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -25221,7 +24446,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/care-plan@1",
@@ -25337,9 +24562,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/offline-security-plan@1",
-                  "family": "stateful-list",
-                  "variation": "offline-security-plan",
-                  "version": 1
+                  "variation": "offline-security-plan"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/offline-security-plan/state.json",
@@ -25347,8 +24570,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -25357,21 +24578,6 @@
                       "offline_operation_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -25731,8 +24937,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Offline security planning record manager"
@@ -25988,15 +25192,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -26005,7 +25206,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/offline-security-plan@1",
@@ -26121,9 +25322,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/collaboration-sync-plan@1",
-                  "family": "stateful-list",
-                  "variation": "collaboration-sync-plan",
-                  "version": 1
+                  "variation": "collaboration-sync-plan"
                 },
                 "persistence": {
                   "default_path": ".unified-code-manual/collaboration-sync-plan/state.json",
@@ -26131,8 +25330,6 @@
                 },
                 "presentation": {
                   "collection": {
-                    "column": 0,
-                    "columnspan": 4,
                     "display_fields": [
                       "id",
                       "title",
@@ -26141,21 +25338,6 @@
                       "synchronization_field",
                       "completed"
                     ],
-                    "filter_field": "filter",
-                    "filters": {
-                      "all": null,
-                      "completed": {
-                        "equals": true,
-                        "field": "completed"
-                      },
-                      "open": {
-                        "equals": false,
-                        "field": "completed"
-                      }
-                    },
-                    "height": 12,
-                    "identity": "collection.primary",
-                    "identity_field": "id",
                     "row": 4,
                     "state_field": "records",
                     "width": 82
@@ -26515,8 +25697,6 @@
                     }
                   ],
                   "status": {
-                    "column": 0,
-                    "columnspan": 4,
                     "row": 7
                   },
                   "title": "Collaboration and sync planning record manager"
@@ -26772,15 +25952,12 @@
                   ]
                 },
                 "state": {
-                  "authority": "declarations",
                   "fields": [
                     "records",
                     "next_id",
                     "filter"
                   ],
                   "initial": {
-                    "filter": "all",
-                    "next_id": 1,
                     "records": [],
                     "tasks": null
                   }
@@ -26789,7 +25966,7 @@
             },
             "prototype": {
               "path": "applications/todo.seed.json",
-              "sha256": "e7a940bcbf747304a9438286bf358651e41df539acb4776eb33080db4cef0852"
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
             }
           },
           "identity": "uc://manual/catalog/todo/collaboration-sync-plan@1",
@@ -26887,9 +26064,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/solo-paddle-opponent@1",
-                  "family": "bounded-simulation",
-                  "variation": "solo-paddle-opponent",
-                  "version": 1
+                  "variation": "solo-paddle-opponent"
                 },
                 "presentation": {
                   "keys": [
@@ -26979,7 +26154,7 @@
             },
             "prototype": {
               "path": "applications/classic-paddle-duel.seed.json",
-              "sha256": "9b05e354b320c7fcca3ae186da7ac7800c6e81e5daa086edd7f9a987ab4753b4"
+              "sha256": "6d16e56131661a042600752a48e87c5b58c69597d16640cf4f713d96c6cf6e8d"
             }
           },
           "identity": "uc://manual/catalog/paddle-simulation/solo-opponent@1",
@@ -27043,9 +26218,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/wall-return-training@1",
-                  "family": "bounded-simulation",
-                  "variation": "wall-return-training",
-                  "version": 1
+                  "variation": "wall-return-training"
                 },
                 "presentation": {
                   "entities": [
@@ -27160,7 +26333,7 @@
             },
             "prototype": {
               "path": "applications/classic-paddle-duel.seed.json",
-              "sha256": "9b05e354b320c7fcca3ae186da7ac7800c6e81e5daa086edd7f9a987ab4753b4"
+              "sha256": "6d16e56131661a042600752a48e87c5b58c69597d16640cf4f713d96c6cf6e8d"
             }
           },
           "identity": "uc://manual/catalog/paddle-simulation/wall-training@1",
@@ -27240,9 +26413,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/doubles-paddle-duel@1",
-                  "family": "bounded-simulation",
-                  "variation": "doubles-paddle-duel",
-                  "version": 1
+                  "variation": "doubles-paddle-duel"
                 },
                 "presentation": {
                   "entities": [
@@ -27444,14 +26615,6 @@
                         "x": 20,
                         "y": 150
                       },
-                      "orb": {
-                        "height": 10,
-                        "vx": 5,
-                        "vy": 3,
-                        "width": 10,
-                        "x": 195,
-                        "y": 115
-                      },
                       "right-bat": null,
                       "right-bat-a": {
                         "height": 45,
@@ -27469,18 +26632,14 @@
                         "x": 370,
                         "y": 150
                       }
-                    },
-                    "left_score": 0,
-                    "right_score": 0,
-                    "status": "playing",
-                    "tick": 0
+                    }
                   }
                 }
               }
             },
             "prototype": {
               "path": "applications/classic-paddle-duel.seed.json",
-              "sha256": "9b05e354b320c7fcca3ae186da7ac7800c6e81e5daa086edd7f9a987ab4753b4"
+              "sha256": "6d16e56131661a042600752a48e87c5b58c69597d16640cf4f713d96c6cf6e8d"
             }
           },
           "identity": "uc://manual/catalog/paddle-simulation/doubles@1",
@@ -27563,9 +26722,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/multiball-paddle-duel@1",
-                  "family": "bounded-simulation",
-                  "variation": "multiball-paddle-duel",
-                  "version": 1
+                  "variation": "multiball-paddle-duel"
                 },
                 "presentation": {
                   "entities": [
@@ -27840,22 +26997,6 @@
                 "state": {
                   "initial": {
                     "entities": {
-                      "left-bat": {
-                        "height": 60,
-                        "vx": 0,
-                        "vy": 0,
-                        "width": 10,
-                        "x": 20,
-                        "y": 90
-                      },
-                      "orb": {
-                        "height": 10,
-                        "vx": 5,
-                        "vy": 3,
-                        "width": 10,
-                        "x": 195,
-                        "y": 115
-                      },
                       "orb-2": {
                         "height": 10,
                         "vx": -4,
@@ -27863,27 +27004,15 @@
                         "width": 10,
                         "x": 220,
                         "y": 140
-                      },
-                      "right-bat": {
-                        "height": 60,
-                        "vx": 0,
-                        "vy": 0,
-                        "width": 10,
-                        "x": 370,
-                        "y": 90
                       }
-                    },
-                    "left_score": 0,
-                    "right_score": 0,
-                    "status": "playing",
-                    "tick": 0
+                    }
                   }
                 }
               }
             },
             "prototype": {
               "path": "applications/classic-paddle-duel.seed.json",
-              "sha256": "9b05e354b320c7fcca3ae186da7ac7800c6e81e5daa086edd7f9a987ab4753b4"
+              "sha256": "6d16e56131661a042600752a48e87c5b58c69597d16640cf4f713d96c6cf6e8d"
             }
           },
           "identity": "uc://manual/catalog/paddle-simulation/multiball@1",
@@ -27955,9 +27084,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/power-up-paddle-arena@1",
-                  "family": "bounded-simulation",
-                  "variation": "power-up-paddle-arena",
-                  "version": 1
+                  "variation": "power-up-paddle-arena"
                 },
                 "presentation": {
                   "entities": [
@@ -28075,21 +27202,8 @@
                 "state": {
                   "initial": {
                     "entities": {
-                      "left-bat": {
-                        "height": 60,
-                        "vx": 0,
-                        "vy": 0,
-                        "width": 10,
-                        "x": 20,
-                        "y": 90
-                      },
                       "orb": {
-                        "height": 10,
-                        "vx": 5,
-                        "vy": 3,
-                        "width": 10,
-                        "x": 180,
-                        "y": 115
+                        "x": 180
                       },
                       "power-zone": {
                         "height": 100,
@@ -28098,27 +27212,15 @@
                         "width": 20,
                         "x": 200,
                         "y": 70
-                      },
-                      "right-bat": {
-                        "height": 60,
-                        "vx": 0,
-                        "vy": 0,
-                        "width": 10,
-                        "x": 370,
-                        "y": 90
                       }
-                    },
-                    "left_score": 0,
-                    "right_score": 0,
-                    "status": "playing",
-                    "tick": 0
+                    }
                   }
                 }
               }
             },
             "prototype": {
               "path": "applications/classic-paddle-duel.seed.json",
-              "sha256": "9b05e354b320c7fcca3ae186da7ac7800c6e81e5daa086edd7f9a987ab4753b4"
+              "sha256": "6d16e56131661a042600752a48e87c5b58c69597d16640cf4f713d96c6cf6e8d"
             }
           },
           "identity": "uc://manual/catalog/paddle-simulation/power-up@1",
@@ -28190,9 +27292,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/obstacle-paddle-arena@1",
-                  "family": "bounded-simulation",
-                  "variation": "obstacle-paddle-arena",
-                  "version": 1
+                  "variation": "obstacle-paddle-arena"
                 },
                 "presentation": {
                   "entities": [
@@ -28307,42 +27407,17 @@
                         "x": 200,
                         "y": 70
                       },
-                      "left-bat": {
-                        "height": 60,
-                        "vx": 0,
-                        "vy": 0,
-                        "width": 10,
-                        "x": 20,
-                        "y": 90
-                      },
                       "orb": {
-                        "height": 10,
-                        "vx": 5,
-                        "vy": 3,
-                        "width": 10,
-                        "x": 180,
-                        "y": 115
-                      },
-                      "right-bat": {
-                        "height": 60,
-                        "vx": 0,
-                        "vy": 0,
-                        "width": 10,
-                        "x": 370,
-                        "y": 90
+                        "x": 180
                       }
-                    },
-                    "left_score": 0,
-                    "right_score": 0,
-                    "status": "playing",
-                    "tick": 0
+                    }
                   }
                 }
               }
             },
             "prototype": {
               "path": "applications/classic-paddle-duel.seed.json",
-              "sha256": "9b05e354b320c7fcca3ae186da7ac7800c6e81e5daa086edd7f9a987ab4753b4"
+              "sha256": "6d16e56131661a042600752a48e87c5b58c69597d16640cf4f713d96c6cf6e8d"
             }
           },
           "identity": "uc://manual/catalog/paddle-simulation/obstacle@1",
@@ -28406,9 +27481,7 @@
                 ],
                 "identity": {
                   "canonical": "uc://applications/timed-paddle-score-attack@1",
-                  "family": "bounded-simulation",
-                  "variation": "timed-paddle-score-attack",
-                  "version": 1
+                  "variation": "timed-paddle-score-attack"
                 },
                 "presentation": {
                   "mode_label": "deterministic 11-tick match",
@@ -28577,7 +27650,7 @@
             },
             "prototype": {
               "path": "applications/classic-paddle-duel.seed.json",
-              "sha256": "9b05e354b320c7fcca3ae186da7ac7800c6e81e5daa086edd7f9a987ab4753b4"
+              "sha256": "6d16e56131661a042600752a48e87c5b58c69597d16640cf4f713d96c6cf6e8d"
             }
           },
           "identity": "uc://manual/catalog/paddle-simulation/timed-score-attack@1",

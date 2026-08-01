@@ -83,6 +83,16 @@ _BROWSER_CAPTURE_LOCK = threading.Lock()
 _ASSEMBLY_PROOF_CACHE = {}
 
 
+def _cleanup_ephemeral_assembly_cache():
+    for record in tuple(_ASSEMBLY_PROOF_CACHE.values()):
+        root = record.get("ephemeral_root")
+        if root:
+            shutil.rmtree(root, ignore_errors=True)
+
+
+atexit.register(_cleanup_ephemeral_assembly_cache)
+
+
 def _canonical(value):
     return (json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True) + "\n").encode()
 
@@ -1679,6 +1689,7 @@ def audited_browser_capture_boundary(executable, url, deadline_seconds):
         port = audited_browser_bootstrap_boundary(executable, deadline_seconds)
         if port is None:
             return None
+        transport_timeout = max(5, deadline_seconds)
         encoded_url = urllib.parse.quote(url, safe=":/?=&")
         request = urllib.request.Request(
             f"http://127.0.0.1:{port}/json/new?{encoded_url}", method="PUT"
@@ -1686,12 +1697,16 @@ def audited_browser_capture_boundary(executable, url, deadline_seconds):
         target_id = None
         encoded = None
         try:
-            with urllib.request.urlopen(request, timeout=2) as response:
+            with urllib.request.urlopen(
+                request,
+                timeout=transport_timeout,
+            ) as response:
                 target_id = json.load(response).get("id")
-            deadline = time.monotonic() + max(5, deadline_seconds)
+            deadline = time.monotonic() + max(10, deadline_seconds)
             while time.monotonic() < deadline:
                 with urllib.request.urlopen(
-                    f"http://127.0.0.1:{port}/json/list", timeout=1
+                    f"http://127.0.0.1:{port}/json/list",
+                    timeout=transport_timeout,
                 ) as response:
                     pages = json.load(response)
                 target = next(
@@ -1708,7 +1723,8 @@ def audited_browser_capture_boundary(executable, url, deadline_seconds):
             if target_id:
                 try:
                     urllib.request.urlopen(
-                        f"http://127.0.0.1:{port}/json/close/{target_id}", timeout=1
+                        f"http://127.0.0.1:{port}/json/close/{target_id}",
+                        timeout=transport_timeout,
                     ).close()
                 except (OSError, urllib.error.URLError):
                     pass
@@ -1889,6 +1905,15 @@ def _graphical_browser_proof(root, seed):
     }
 
 
+def audited_graphical_retry_boundary(root, seed):
+    """Retry one failed host bootstrap without weakening proof assertions."""
+    first = _graphical_browser_proof(root, seed)
+    if first.get("error") != "graphical-browser-startup":
+        return first
+    audited_browser_shutdown_boundary()
+    return _graphical_browser_proof(root, seed)
+
+
 def audited_graphical_suite_boundary(roots, seed_by_name):
     executable = _browser_executable()
     if executable is None:
@@ -1904,7 +1929,9 @@ def audited_graphical_suite_boundary(roots, seed_by_name):
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as workers:
         futures = {
             root.name: workers.submit(
-                _graphical_browser_proof, root, seed_by_name[root.name]
+                audited_graphical_retry_boundary,
+                root,
+                seed_by_name[root.name],
             )
             for root in roots
         }
@@ -2393,6 +2420,8 @@ def audited_registry_authority_boundary(source_root):
     registry_path = source_root / "seed" / "registry.json"
     provenance_path = source_root / "seed" / "registry.provenance.json"
     registry, error = _read_json(registry_path)
+    if error == "read:FileNotFoundError":
+        return {"records": [], "registry_version": 1}, None
     if error:
         return None, f"registry:{error}"
     provenance, provenance_error = _read_json(provenance_path)
@@ -2449,19 +2478,19 @@ def audited_registry_projection_boundary(
     (staging / "registry.provenance.json").write_text(
         provenance_text, encoding="utf-8"
     )
-    if os.environ.get("UC_REGISTRY_MATERIALIZE") == "1":
-        for name, text in (
-            ("registry.json", registry_text),
-            ("registry.provenance.json", provenance_text),
-        ):
-            target = source_root / "seed" / name
-            temporary = target.with_name("." + target.name + ".uc-new")
-            temporary.write_text(text, encoding="utf-8")
-            os.replace(temporary, target)
+    for name, text in (
+        ("registry.json", registry_text),
+        ("registry.provenance.json", provenance_text),
+    ):
+        target = source_root / "seed" / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        temporary = target.with_name("." + target.name + ".uc-new")
+        temporary.write_text(text, encoding="utf-8")
+        os.replace(temporary, target)
     return registry, provenance
 
 
-def audited_assembly_cache_key_boundary(suite, source_root):
+def audited_assembly_cache_key_boundary(suite, source_root, registry):
     authorities = {
         entry["seed"]: _sha(
             _canonical(
@@ -2476,6 +2505,7 @@ def audited_assembly_cache_key_boundary(suite, source_root):
                 "assembly_version": ASSEMBLY_VERSION,
                 "suite": suite,
                 "authorities": authorities,
+                "registry": _canonical_registry_payload(registry),
             }
         )
     )
@@ -2560,7 +2590,13 @@ def _public_product_index(staging, metadata_root, seeds, manifests, reports, cat
     """Project compiler-private trees into one seed-derived, product-first view."""
     catalog_root = metadata_root / "application-language"
     for group in sorted({item["build_group"] for item in catalog["applications"]}):
-        shutil.copytree(catalog_root / group, staging / group, dirs_exist_ok=True)
+        shutil.copytree(
+            catalog_root / group,
+            staging / group,
+            dirs_exist_ok=True,
+            copy_function=os.link,
+        )
+        shutil.rmtree(catalog_root / group)
 
     records = []
     for item in catalog["applications"]:
@@ -2582,19 +2618,23 @@ def _public_product_index(staging, metadata_root, seeds, manifests, reports, cat
         key = _canonical_product_key(application["canonical_name"])
         product_root = staging / group / key
         application_root = product_root / "application"
-        shutil.copytree(metadata_root / "applications" / name, application_root)
+        shutil.copytree(
+            metadata_root / "applications" / name,
+            application_root,
+            copy_function=os.link,
+        )
         authority = product_root / "authority"
         authority.mkdir(parents=True)
         shutil.copyfile(seed_path, authority / "seed.json")
         specification = product_root / "specification"
         specification.mkdir()
-        shutil.copyfile(
+        os.link(
             application_root / "canonical-specification.json",
             specification / "specification.json",
         )
         verification = product_root / "verification"
         verification.mkdir()
-        shutil.copyfile(
+        os.link(
             application_root / "tests" / "test_generated.py",
             verification / "test_generated.py",
         )
@@ -2654,6 +2694,8 @@ def _public_product_index(staging, metadata_root, seeds, manifests, reports, cat
         )
     )
     (staging / "README.md").write_text("\n".join(lines), encoding="utf-8")
+    shutil.rmtree(metadata_root / "applications", ignore_errors=True)
+    shutil.rmtree(metadata_root / "installation", ignore_errors=True)
     return index
 
 
@@ -2676,23 +2718,31 @@ def audited_assembly_cache_admission_boundary(thing, value, output, cache_key):
     cached = _ASSEMBLY_PROOF_CACHE.get(cache_key)
     if cached is None:
         return None
-    cache_root = Path(cached["tree"])
+    cache_root = Path(cached["output"])
     if (
         not cache_root.is_dir()
         or audited_directory_identity_boundary(cache_root) != cached["tree_identity"]
     ):
-        return _failure(
-            thing,
-            value,
-            "assembly-cache-identity-stale",
-            "assembly:cache-rejected",
-        )
+        _ASSEMBLY_PROOF_CACHE.pop(cache_key, None)
+        ephemeral = cached.get("ephemeral_root")
+        if ephemeral:
+            shutil.rmtree(ephemeral, ignore_errors=True)
+        return None
     output.parent.mkdir(parents=True, exist_ok=True)
     staging = Path(
         tempfile.mkdtemp(prefix="." + output.name + ".uc-cache-", dir=output.parent)
     )
-    shutil.copytree(cache_root, staging, dirs_exist_ok=True)
+    shutil.copytree(
+        cache_root,
+        staging,
+        dirs_exist_ok=True,
+        copy_function=os.link,
+    )
     _atomic_publish(staging, output)
+    previous_ephemeral = cached.pop("ephemeral_root", None)
+    cached["output"] = str(output)
+    if previous_ephemeral:
+        shutil.rmtree(previous_ephemeral, ignore_errors=True)
     return outward(
         {
             **thing,
@@ -2721,20 +2771,29 @@ def audited_assembly_cache_admission_boundary(thing, value, output, cache_key):
 
 
 def audited_assembly_cache_publish_boundary(cache_key, output, manifest):
-    for cached in _ASSEMBLY_PROOF_CACHE.values():
-        shutil.rmtree(cached["owner"], ignore_errors=True)
+    _cleanup_ephemeral_assembly_cache()
     _ASSEMBLY_PROOF_CACHE.clear()
-    cache_parent = Path(tempfile.mkdtemp(prefix="uc-assembly-cache-"))
-    cache_tree = cache_parent / "tree"
-    shutil.copytree(output, cache_tree)
-    identity = audited_directory_identity_boundary(cache_tree)
+    identity = audited_directory_identity_boundary(output)
     _ASSEMBLY_PROOF_CACHE[cache_key] = {
-        "owner": cache_parent,
-        "tree": str(cache_tree),
+        "output": str(output),
         "tree_identity": identity,
         "manifest": copy.deepcopy(manifest),
     }
     return identity
+
+
+def audited_assembly_cache_retain_boundary(work_root):
+    """Retain only an ephemeral manifestation suite while its cache is live."""
+    resolved = Path(work_root).resolve()
+    records = tuple(_ASSEMBLY_PROOF_CACHE.values())
+    retained = tuple(
+        record
+        for record in records
+        if resolved in Path(record["output"]).resolve().parents
+    )
+    for record in retained:
+        record["ephemeral_root"] = str(resolved)
+    return bool(retained)
 
 
 def audited_assembly_output_boundary(source_root, output):
@@ -2792,7 +2851,9 @@ def run_assemble(thing):
         seed_path = source_root / entry["seed"]
         seed, _ = _read_json(seed_path)
         seeds.append((seed_path, seed))
-    cache_key = audited_assembly_cache_key_boundary(suite, source_root)
+    cache_key = audited_assembly_cache_key_boundary(
+        suite, source_root, existing_registry
+    )
     cached = audited_assembly_cache_admission_boundary(
         thing, value, output, cache_key
     )
@@ -2859,7 +2920,7 @@ def run_assemble(thing):
             manifest = manifests[name]
             acceptance = _execute_acceptance(root, seed, roots)
             copied = install_root / name
-            shutil.copytree(root, copied)
+            shutil.copytree(root, copied, copy_function=os.link)
             installed = _execute_acceptance(copied, seed, [install_root / item.name for item in roots])
             rendered = render_application(
                 seed,

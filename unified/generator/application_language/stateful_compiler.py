@@ -8,7 +8,7 @@ import re
 from .semantic_expression import function_source
 
 
-LANGUAGE = "stateful-interface-declaration-1"
+LANGUAGE = "unified-application-declaration-1"
 
 
 def verify_record_contract(seed):
@@ -405,7 +405,7 @@ def render_source(seed):
         f"DISPLAY_FIELDS = {collection['display_fields']!r}",
         *((f"TABLE_COLUMNS = {table['columns']!r}",) if table else ()),
         *((f"DETAIL_FIELDS = {table['detail_fields']!r}",) if table else ()),
-        *((f"DASHBOARD_METRICS = {table['metrics']!r}",) if table else ()),
+        *((f"OBSERVATION_METRICS = {table['metrics']!r}",) if table else ()),
         *((f"PORTFOLIO_COLUMNS = {table['portfolio']['columns']!r}",) if table else ()),
         *((f"PORTFOLIO_RECORDS = {table['portfolio']['records']!r}",) if table else ()),
         f"FILTER_FIELD = {collection.get('filter_field')!r}",
@@ -603,7 +603,7 @@ def render_source(seed):
                 "    Label(surface, textvariable=_summary, foreground='#4a5568').grid(row=1, column=0, columnspan=3, sticky='w', pady=(0, 8))",
                 "    metrics = Frame(surface)",
                 "    metrics.grid(row=2, column=0, columnspan=3, sticky='ew', pady=(0, 10))",
-                "    for index, metric in enumerate(DASHBOARD_METRICS):",
+                "    for index, metric in enumerate(OBSERVATION_METRICS):",
                 "        metrics.columnconfigure(index, weight=1)",
                 "        card = Frame(metrics, highlightbackground='#cbd5e0', highlightthickness=1, padx=12, pady=8)",
                 "        card.grid(row=0, column=index, sticky='nsew', padx=(0, 8))",
@@ -731,7 +731,7 @@ def render_source(seed):
                     f"        table_widget = _collections[{collection['identity']!r}]",
                     "        checks.append(tuple(table_widget['columns']) == tuple(column['field'] for column in TABLE_COLUMNS))",
                     "        checks.append(all(table_widget.heading(column['field'], 'text') == column['label'] for column in TABLE_COLUMNS))",
-                    "        checks.append(tuple(_metric_cards) == tuple(metric['label'] for metric in DASHBOARD_METRICS))",
+                    "        checks.append(tuple(_metric_cards) == tuple(metric['label'] for metric in OBSERVATION_METRICS))",
                     "        checks.append(len(_portfolio.get_children()) == len(PORTFOLIO_RECORDS))",
                     "        _tabs.select(1)",
                     "        checks.append(_tabs.index(_tabs.select()) == 1)",

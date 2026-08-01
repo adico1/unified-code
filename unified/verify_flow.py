@@ -173,6 +173,34 @@ def audited_timing_boundary_report_primitive(graph):
     }
 
 
+def audited_evidence_release_plan_primitive(nodes):
+    """Resolve deterministic dependency levels and their real peak width."""
+    pending = {node["id"]: node for node in nodes}
+    released = set()
+    levels = []
+    while pending:
+        ready = tuple(
+            node["id"]
+            for node in nodes
+            if node["id"] in pending
+            and set(node.get("requires", ())).issubset(released)
+        )
+        if not ready:
+            return {"ok": False, "levels": (), "workers": 0}
+        levels.append(ready)
+        released.update(ready)
+        pending = {
+            identity: node
+            for identity, node in pending.items()
+            if identity not in released
+        }
+    return {
+        "ok": True,
+        "levels": tuple(levels),
+        "workers": max(map(len, levels), default=0),
+    }
+
+
 def audited_graph_report_primitive(graph):
     """Audited graph-law machine for routing and dependency declarations."""
     errors = []
@@ -230,8 +258,17 @@ def audited_graph_report_primitive(graph):
         errors.append("proof-inventory")
     if any(item.get("handler") != "command" for item in evidence):
         errors.append("unregistered-handler")
-    if any(item.get("requires") for item in evidence):
+    evidence_dependencies = {
+        item.get("id"): tuple(item.get("requires", ())) for item in evidence
+    }
+    if any(
+        identity not in evidence_ids
+        for dependencies in evidence_dependencies.values()
+        for identity in dependencies
+    ):
         errors.append("unresolved-dependency")
+    if not audited_evidence_release_plan_primitive(evidence)["ok"]:
+        errors.append("dependency-cycle")
     if any(
         identity not in evidence_ids
         for item in proofs
@@ -277,8 +314,12 @@ def audited_command_node_primitive(node):
         token.replace("{python}", sys.executable).replace("{root}", str(ROOT))
         for token in node["argv"]
     ]
+    authority_root = Path(os.environ.get("UC_VERIFY_AUTHORITY_ROOT", ROOT))
+    source_before = audited_repository_identity_primitive(authority_root)["identity"]
     with tempfile.TemporaryDirectory(prefix="uc-verify-node-") as temporary:
         work = Path(temporary) / "repository"
+        storage = Path(temporary) / "storage"
+        storage.mkdir()
         shutil.copytree(
             ROOT,
             work,
@@ -301,16 +342,30 @@ def audited_command_node_primitive(node):
                 "UC_VERIFY_AUTHORITY_ROOT": str(ROOT),
                 "PYTHONPATH": str(work),
                 "PYTHONDONTWRITEBYTECODE": "1",
+                "TMPDIR": str(storage),
+                "TMP": str(storage),
+                "TEMP": str(storage),
             },
             capture_output=True,
             check=False,
         )
+    source_after = audited_repository_identity_primitive(authority_root)["identity"]
+    failure_bytes = completed.stderr or completed.stdout
+    failure_summary = (
+        failure_bytes.decode("utf-8", errors="replace")[-2048:]
+        .replace(str(ROOT), "{root}")
+        .replace(temporary, "{temporary}")
+        if completed.returncode
+        else None
+    )
     return {
         "id": node["id"],
-        "returncode": completed.returncode,
+        "returncode": completed.returncode or int(source_before != source_after),
         "stdout_sha256": hashlib.sha256(completed.stdout).hexdigest(),
         "stderr_sha256": hashlib.sha256(completed.stderr).hexdigest(),
         "command_identity": _sha(node["argv"]),
+        "authority_preserved": source_before == source_after,
+        "failure_summary": failure_summary,
     }
 
 
@@ -349,13 +404,24 @@ def audited_bundle_identity_primitive(bundle):
 def audited_materialize_bundle_primitive(graph, authority):
     """Produce physical evidence through the same canonical proof graph."""
     nodes = graph["evidence_nodes"]
-    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as workers:
-        results = list(
-            workers.map(
-                lambda node: HANDLER_REGISTRY[node["handler"]](node),
-                nodes,
+    nodes_by_id = {node["id"]: node for node in nodes}
+    completed = {}
+    release_plan = audited_evidence_release_plan_primitive(nodes)
+    if not release_plan["ok"]:
+        raise ValueError("dependency-cycle")
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=max(1, release_plan["workers"])
+    ) as workers:
+        for level in release_plan["levels"]:
+            ready = [nodes_by_id[identity] for identity in level]
+            released = list(
+                workers.map(
+                    lambda node: HANDLER_REGISTRY[node["handler"]](node),
+                    ready,
+                )
             )
-        )
+            completed.update({item["id"]: item for item in released})
+    results = [completed[node["id"]] for node in nodes]
     terminal = {item["id"]: item for item in results}
     verdicts = audited_proof_verdicts_primitive(graph, terminal)
     bundle = {
@@ -371,6 +437,7 @@ def audited_materialize_bundle_primitive(graph, authority):
         ),
         "producer_toolchain": audited_tool_identity_primitive(),
         "stage1_fixed_point": STAGE1_FIXED_POINT,
+        "evidence_workers": release_plan["workers"],
         "results": results,
         "verdicts": verdicts,
     }
@@ -403,6 +470,11 @@ def audited_bundle_report_primitive(bundle, graph, authority):
         errors.append("proof-contract-stale")
     if bundle.get("stage1_fixed_point") != STAGE1_FIXED_POINT:
         errors.append("stage1-stale")
+    expected_workers = audited_evidence_release_plan_primitive(
+        graph["evidence_nodes"]
+    )["workers"]
+    if bundle.get("evidence_workers") != expected_workers:
+        errors.append("worker-count")
     if bundle.get("bundle_identity") != audited_bundle_identity_primitive(bundle):
         errors.append("bundle-corrupt")
     if [item.get("id") for item in results] != evidence_ids:
@@ -632,7 +704,7 @@ def audited_scheduler_primitive(
                 "total_seconds": bootload_seconds + verification_seconds,
                 "critical_path_seconds": verification_seconds,
                 "critical_path_nodes": critical_path_nodes,
-                "parallel_workers": len(graph["proof_nodes"]),
+                "parallel_workers": bundle["evidence_workers"],
                 "structure_hash": structure_hash,
                 "evidence_hash": evidence_hash,
                 "bundle_identity": bundle["bundle_identity"],

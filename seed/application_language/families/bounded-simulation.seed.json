@@ -65,7 +65,7 @@
       ]
     },
     "family": "bounded-simulation",
-    "program_language": "bounded-simulation-declaration-1",
+    "program_language": "unified-application-declaration-1",
     "required_meaning": [
       "identity",
       "semantics",

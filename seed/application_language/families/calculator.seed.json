@@ -172,7 +172,7 @@
       "control_identity_unique": true,
       "grid_position_unique": true
     },
-    "program_language": "calculator-declaration-1",
+    "program_language": "unified-application-declaration-1",
     "required_meaning": [
       "identity",
       "semantics",
