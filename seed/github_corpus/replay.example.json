@@ -1,0 +1,48 @@
+{
+  "completion": {"reason": "exhausted", "records_observed": 3},
+  "evidence": {
+    "acquisition_mode": "replay",
+    "attempts": [
+      {"outcome": "success", "page_index": 0, "retry_ordinal": 0},
+      {"outcome": "success", "page_index": 1, "retry_ordinal": 0}
+    ],
+    "duration_ns": 1250000,
+    "observed_at": "2026-08-01T18:00:00Z"
+  },
+  "format_version": "UC-GITHUB-CORPUS-SNAPSHOT-1",
+  "pages": [
+    {
+      "index": 0,
+      "next_cursor": "cursor:page-2",
+      "raw_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "records": [
+        {"payload": {"name": "alpha", "owner": "example"}, "source_identity": "github:repository:101"},
+        {"payload": {"name": "beta", "owner": "example"}, "source_identity": "github:repository:102"}
+      ],
+      "request_cursor": null
+    },
+    {
+      "index": 1,
+      "next_cursor": null,
+      "raw_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "records": [
+        {"payload": {"name": "gamma", "owner": "example"}, "source_identity": "github:repository:103"}
+      ],
+      "request_cursor": "cursor:page-2"
+    }
+  ],
+  "request": {
+    "api_version": "2022-11-28",
+    "endpoint": "/search/repositories",
+    "format_version": "UC-GITHUB-CORPUS-REQUEST-1",
+    "initial_cursor": null,
+    "page_size": 2,
+    "provider": "github",
+    "query": "topic:calculator archived:false",
+    "record_fields": ["id", "name", "owner"],
+    "transport": "rest",
+    "variables": {"sort": "updated"},
+    "visibility_scope": "public"
+  },
+  "status": "complete"
+}

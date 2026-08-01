@@ -1,0 +1,71 @@
+{
+  "$id": "https://github.com/adico1/unified-code/blob/main/seed/github_corpus/SNAPSHOT_SCHEMA.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "completion": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {"enum": ["exhausted", "operator_limit", "page_limit", "provider_unavailable", "rate_limit", "unknown"]},
+        "records_observed": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["reason", "records_observed"],
+      "type": "object"
+    },
+    "evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "acquisition_mode": {"enum": ["live", "replay"]},
+        "attempts": {"items": {"$ref": "#/$defs/attempt"}, "type": "array"},
+        "duration_ns": {"minimum": 0, "type": "integer"},
+        "observed_at": {"format": "date-time", "type": "string"}
+      },
+      "required": ["acquisition_mode", "observed_at", "duration_ns", "attempts"],
+      "type": "object"
+    },
+    "format_version": {"const": "UC-GITHUB-CORPUS-SNAPSHOT-1"},
+    "pages": {
+      "items": {"$ref": "#/$defs/page"},
+      "type": "array"
+    },
+    "request": {"$ref": "REQUEST_SCHEMA.json"},
+    "status": {"enum": ["complete", "partial", "rate_limited", "unavailable"]}
+  },
+  "required": ["format_version", "request", "status", "completion", "pages", "evidence"],
+  "title": "Unified Code canonical GitHub corpus snapshot",
+  "type": "object",
+  "$defs": {
+    "attempt": {
+      "additionalProperties": false,
+      "properties": {
+        "outcome": {"enum": ["rate_limited", "success", "transport_error", "unavailable"]},
+        "page_index": {"minimum": 0, "type": "integer"},
+        "retry_ordinal": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["page_index", "retry_ordinal", "outcome"],
+      "type": "object"
+    },
+    "page": {
+      "additionalProperties": false,
+      "properties": {
+        "index": {"minimum": 0, "type": "integer"},
+        "next_cursor": {"type": ["string", "null"]},
+        "raw_sha256": {"$ref": "#/$defs/sha256"},
+        "records": {"items": {"$ref": "#/$defs/record"}, "type": "array"},
+        "request_cursor": {"type": ["string", "null"]}
+      },
+      "required": ["index", "request_cursor", "next_cursor", "raw_sha256", "records"],
+      "type": "object"
+    },
+    "record": {
+      "additionalProperties": false,
+      "properties": {
+        "payload": {"type": "object"},
+        "source_identity": {"minLength": 1, "type": "string"}
+      },
+      "required": ["source_identity", "payload"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "format_version": "UC-GITHUB-CORPUS-VECTORS-1",
+  "replay_example": "replay.example.json",
+  "expected": {
+    "request_sha256": "c3c7b660480172bdfe6dc986853e22ae7e2ed3e0f2592d8780e945d01c3e0d4c",
+    "snapshot_sha256": "aff34397057b9696525c3bb19fc5b00ca6815a658cd50e126d850e40f6eabbf8",
+    "evidence_sha256": "37525973e3984d21abe94b1c15dff747e4a02af7a3cae35f26ef9a6423d7f107"
+  },
+  "invalid_mutations": [
+    "request:query",
+    "snapshot:cursor-chain",
+    "snapshot:records-observed",
+    "snapshot:complete-terminal-cursor",
+    "snapshot:unavailable-pages",
+    "snapshot:duplicate-record-identity"
+  ]
+}
