@@ -494,6 +494,22 @@
       "seed_sha256": "d87b369b8f75d6382cf43c4100471fe7f7025caa0f2566e1f9aa4e95960e387a"
     },
     {
+      "artifact_tree_sha256": "c41a70731ca6c5e12d300e0a7978cf086c1ba17c03f265a75dea8a3d79dfa910",
+      "canonical_name": "uc://applications/github-application-atlas@1",
+      "compiler_route": "application-language",
+      "compiler_version": "UC-APPLICATION-LANGUAGE-1",
+      "product_family": "stateful-list",
+      "route_options": {
+        "build_group": "todos",
+        "product_key": "github-application-atlas",
+        "profile_identity": "uc://manual/catalog/todo/github-application-atlas@1",
+        "suite_ref": "application_language/suite.seed.json"
+      },
+      "seed_id": "application-language:uc://applications/github-application-atlas@1",
+      "seed_path": "application_language/catalog.seed.json",
+      "seed_sha256": "8c44faaed0bb8bbf9277b3a82a21f71ae62ec050eb7e79874d8646fa951937a1"
+    },
+    {
       "artifact_tree_sha256": "ed487c57a78e9b400256994765f3e6d1d334035ebc9224feb90567345e3dc5b1",
       "canonical_name": "uc://applications/graphing@1",
       "compiler_route": "application-language",
@@ -1320,6 +1336,6 @@
       "seed_sha256": "1c71207e0197f65f97a3769394a2517b6b5e44630279bcc61fed01aa10ef2918"
     }
   ],
-  "registry_snapshot_sha256": "ebde57690c761ecad59cb2633bd2bb4abe304ca12f81d96d16037661c90d6326",
+  "registry_snapshot_sha256": "3e6a194f5642192526dc1a83a55ed2029838c9aa9c036e0f6e04824cdece21ea",
   "registry_version": 1
 }

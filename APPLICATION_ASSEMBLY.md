@@ -1,9 +1,9 @@
-# Seventy-nine Applications, One Assembly
+# Generated Applications, One Assembly
 
 This milestone makes application generation—not bootstrap infrastructure—the
-observable product. The public suite combines five independent Thing v2 seeds
-with a declarative 74-product catalog. Together they are the authority for 79
-complete generated installations:
+observable product. The public suite combines independent Thing v2 seeds with a
+declarative application catalog. Their pinned identities—not a handwritten
+count—are the authority for the complete generated installations:
 
 ```bash
 uc assemble seed/application_suite.json \
@@ -125,6 +125,6 @@ name-to-manifestation and the root-seed fixed point remain separate support
 tracks.
 
 The suite currently contains two generic compiler profiles behind one public
-operation: Application v3 for the original five products and the
-application-language compiler for the 74-product catalog. This is public
+operation: Application v3 for the original proof products and the
+application-language compiler for the seed-defined catalog. This is public
 assembly convergence, not yet proof of one root-generated compiler.

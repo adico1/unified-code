@@ -185,17 +185,16 @@ deterministic manifest, affected-file churn contract, anti-overfitting
 mutations, and honest limitations are specified in
 [THING_V2.md](THING_V2.md).
 
-### Seventy-nine applications, one assembly
+### Generated applications, one assembly
 
-The application-generation milestone now combines the five original Thing v2
-proof products with the 74-product application-language catalog: 32
-calculators, 33 Todo applications, eight Pong variations, and one development
-observatory. One public command builds and verifies all 79 without handwritten
+The application-generation milestone combines the original Thing v2 proof
+products with the seed-defined application-language catalog. One public command
+builds and verifies every currently proven profile without handwritten
 application code or tests. The original proofs retain responsive browser
 interfaces and real-browser CLI/GUI differential evidence; the catalog retains
 its generated GUI self-verification. The generated `build/` entrance exposes
 six product families directly; compiler-private trees and evidence live under
-`build/.unified/`. [Browse the generated source for all 79 products](build/README.md),
+`build/.unified/`. [Browse all generated product sources](build/README.md),
 follow the [reading guide](docs/HOW_TO_READ.md), or inspect the assembly contract
 in [APPLICATION_ASSEMBLY.md](APPLICATION_ASSEMBLY.md).
 

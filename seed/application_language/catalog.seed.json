@@ -25976,6 +25976,306 @@
         },
         {
           "capabilities": [
+            "deterministic-corpus-snapshot-plan",
+            "project-clustering-plan",
+            "candidate-seed-workflow",
+            "unseen-holdout-evaluation-plan",
+            "contributor-queue-plan"
+          ],
+          "class": "research-planning",
+          "derivation": {
+            "patch": {
+              "what": {
+                "acceptance": [
+                  {
+                    "expected": {
+                      "results": [
+                        {
+                          "error": null,
+                          "result": {
+                            "filter": "all",
+                            "next_id": 2,
+                            "tasks": [
+                              {
+                                "completed": false,
+                                "id": 1,
+                                "title": "Pin immutable GitHub corpus snapshot"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "state": {
+                        "filter": "all",
+                        "next_id": 2,
+                        "tasks": [
+                          {
+                            "completed": false,
+                            "id": 1,
+                            "title": "Pin immutable GitHub corpus snapshot"
+                          }
+                        ]
+                      }
+                    },
+                    "id": "github-application-atlas.snapshot",
+                    "input": {
+                      "steps": [
+                        {
+                          "arguments": {
+                            "title": "Pin immutable GitHub corpus snapshot"
+                          },
+                          "command": "create"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "expected": {
+                      "results": [
+                        {
+                          "error": null,
+                          "result": {
+                            "filter": "all",
+                            "next_id": 2,
+                            "tasks": [
+                              {
+                                "completed": false,
+                                "id": 1,
+                                "title": "Cluster GitHub projects and collapse mirrors"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "state": {
+                        "filter": "all",
+                        "next_id": 2,
+                        "tasks": [
+                          {
+                            "completed": false,
+                            "id": 1,
+                            "title": "Cluster GitHub projects and collapse mirrors"
+                          }
+                        ]
+                      }
+                    },
+                    "id": "github-application-atlas.classification",
+                    "input": {
+                      "steps": [
+                        {
+                          "arguments": {
+                            "title": "Cluster GitHub projects and collapse mirrors"
+                          },
+                          "command": "create"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "expected": {
+                      "results": [
+                        {
+                          "error": null,
+                          "result": {
+                            "filter": "all",
+                            "next_id": 2,
+                            "tasks": [
+                              {
+                                "completed": false,
+                                "id": 1,
+                                "title": "Infer candidate Atlas declarations"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "state": {
+                        "filter": "all",
+                        "next_id": 2,
+                        "tasks": [
+                          {
+                            "completed": false,
+                            "id": 1,
+                            "title": "Infer candidate Atlas declarations"
+                          }
+                        ]
+                      }
+                    },
+                    "id": "github-application-atlas.extraction",
+                    "input": {
+                      "steps": [
+                        {
+                          "arguments": {
+                            "title": "Infer candidate Atlas declarations"
+                          },
+                          "command": "create"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "expected": {
+                      "results": [
+                        {
+                          "error": null,
+                          "result": {
+                            "filter": "all",
+                            "next_id": 2,
+                            "tasks": [
+                              {
+                                "completed": false,
+                                "id": 1,
+                                "title": "Construct Atlas candidates through Unified Code"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "state": {
+                        "filter": "all",
+                        "next_id": 2,
+                        "tasks": [
+                          {
+                            "completed": false,
+                            "id": 1,
+                            "title": "Construct Atlas candidates through Unified Code"
+                          }
+                        ]
+                      }
+                    },
+                    "id": "github-application-atlas.construction",
+                    "input": {
+                      "steps": [
+                        {
+                          "arguments": {
+                            "title": "Construct Atlas candidates through Unified Code"
+                          },
+                          "command": "create"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "expected": {
+                      "results": [
+                        {
+                          "error": null,
+                          "result": {
+                            "filter": "all",
+                            "next_id": 2,
+                            "tasks": [
+                              {
+                                "completed": false,
+                                "id": 1,
+                                "title": "Evaluate unseen holdout without creator changes"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "state": {
+                        "filter": "all",
+                        "next_id": 2,
+                        "tasks": [
+                          {
+                            "completed": false,
+                            "id": 1,
+                            "title": "Evaluate unseen holdout without creator changes"
+                          }
+                        ]
+                      }
+                    },
+                    "id": "github-application-atlas.holdout",
+                    "input": {
+                      "steps": [
+                        {
+                          "arguments": {
+                            "title": "Evaluate unseen holdout without creator changes"
+                          },
+                          "command": "create"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "expected": {
+                      "results": [
+                        {
+                          "error": null,
+                          "result": {
+                            "filter": "all",
+                            "next_id": 2,
+                            "tasks": [
+                              {
+                                "completed": false,
+                                "id": 1,
+                                "title": "Expose searchable Atlas contributor queues"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "state": {
+                        "filter": "all",
+                        "next_id": 2,
+                        "tasks": [
+                          {
+                            "completed": false,
+                            "id": 1,
+                            "title": "Expose searchable Atlas contributor queues"
+                          }
+                        ]
+                      }
+                    },
+                    "id": "github-application-atlas.publication",
+                    "input": {
+                      "steps": [
+                        {
+                          "arguments": {
+                            "title": "Expose searchable Atlas contributor queues"
+                          },
+                          "command": "create"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "identity": {
+                  "canonical": "uc://applications/github-application-atlas@1",
+                  "variation": "github-application-atlas"
+                },
+                "persistence": {
+                  "default_path": ".unified-code/github-application-atlas/state.json",
+                  "environment": "UC_GITHUB_APPLICATION_ATLAS_STATE"
+                },
+                "presentation": {
+                  "title": "GitHub Application Atlas Plan"
+                },
+                "semantics": {
+                  "application_vocabulary": [
+                    "github-application-atlas",
+                    "tasks",
+                    "completed",
+                    "invalid-title",
+                    "duplicate-title",
+                    "unknown-item",
+                    "UC_GITHUB_APPLICATION_ATLAS_STATE"
+                  ]
+                }
+              }
+            },
+            "prototype": {
+              "path": "applications/todo.seed.json",
+              "sha256": "33b3051e92116bbebc8cb59ff2f200b60ccf23ef99abc6c0e2aad69df4f8fb67"
+            }
+          },
+          "identity": "uc://manual/catalog/todo/github-application-atlas@1",
+          "name": "GitHub Application Atlas Plan",
+          "product_identity": "uc://applications/github-application-atlas@1",
+          "status": "proven"
+        },
+        {
+          "capabilities": [
             "persistent-records",
             "generated-calculation",
             "cross-family-composition"

@@ -1,11 +1,11 @@
 {
   "application_language": {
     "acceptance": {
-      "passed": 175,
-      "total": 175
+      "passed": 181,
+      "total": 181
     },
-    "applications": 74,
-    "complete_tree_sha256": "746aa450a1c8adfc6b49c4bb0ad1e9f6d04f52b31cae9952804eea57eb39b035",
+    "applications": 75,
+    "complete_tree_sha256": "d9923a0c9c69ba842a5ffc374e71dd30892054e3409d524ea203ff5a0902cb56",
     "seed_catalog": {
       "catalog": "seed/application_language/catalog.seed.json",
       "suite": "seed/application_language/suite.seed.json"
@@ -14,8 +14,8 @@
   "assembly_version": "UC-ASSEMBLY-1",
   "authority": "application-v3-seeds",
   "generated": true,
-  "registry_file_sha256": "4bc411c01c151de96c8a1b8f2b99bfdc01b6bedbcff1c5672ac60f4aaf42d2c6",
-  "registry_snapshot_sha256": "ebde57690c761ecad59cb2633bd2bb4abe304ca12f81d96d16037661c90d6326",
+  "registry_file_sha256": "a49d27e17c4f7e6e687d6ac9d7cd5846f6fdc50e4304431ac72d987ebf46e902",
+  "registry_snapshot_sha256": "3e6a194f5642192526dc1a83a55ed2029838c9aa9c036e0f6e04824cdece21ea",
   "source_seed_sha256": {
     "applications/calculator.json": "9e46fb6cd2d5e6f98f2a114abe375b59c469fd5cee1b280cb99861b0c18a7ae3",
     "applications/file_editor.json": "23a865b9fddeee209d8a9b566e70b3e8aa3dada7a02cfd31f0e1f18f31c4187b",

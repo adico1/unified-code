@@ -69,6 +69,7 @@ folders explain where it came from and how it was verified.
 - [eisenhower@1](todos/eisenhower@1/)
 - [errands@1](todos/errands@1/)
 - [event-planning@1](todos/event-planning@1/)
+- [github-application-atlas@1](todos/github-application-atlas@1/)
 - [grocery@1](todos/grocery@1/)
 - [gtd@1](todos/gtd@1/)
 - [habits@1](todos/habits@1/)
