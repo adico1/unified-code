@@ -1,7 +1,7 @@
 {
   "records": [
     {
-      "artifact_tree_sha256": "383b74113b974390a3a307101efe3351f34ea85fb8e9ce98e21a88e962a4a029",
+      "artifact_tree_sha256": "e5edc1ca5761ec43bc7155fbe5bcf06cd9e923261d12b22f9587e0aa02ad8a95",
       "canonical_name": "uc://applications/approvals@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -14,10 +14,10 @@
       },
       "seed_id": "application-language:uc://applications/approvals@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "af73fa4c10786d61094e0605fd3b88d18374c1643336b259575a7a3ec26b6bef"
+      "seed_sha256": "2036d346413c7bb86e8e895a7731df40f3ff111d9f8f69aad7183259abc73fce"
     },
     {
-      "artifact_tree_sha256": "4fe28cf881740c9051288294a9b9db1f3c263d434108f9f276663ab7f7a1b100",
+      "artifact_tree_sha256": "ace549b9657a2a619ccf3f0ab4f01c81e26d9a175166f44637c370bd187b002a",
       "canonical_name": "uc://applications/arbitrary-precision@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -30,7 +30,7 @@
       },
       "seed_id": "application-language:uc://applications/arbitrary-precision@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "4741da3b88949c9fd868877eeb46c5302449fb8ed9d0d5c9c6ef7f0789ebeda8"
+      "seed_sha256": "f7470d8e38eac6c2e0410ac28c1d5d2eb89bc32a861d1f7f68cda9bc4b307892"
     },
     {
       "artifact_tree_sha256": "88b32628248bdf9e2974b3273ca88f412fb904d82f6f085d129e08c7a3820cfc",
@@ -48,7 +48,7 @@
       "seed_sha256": "9e46fb6cd2d5e6f98f2a114abe375b59c469fd5cee1b280cb99861b0c18a7ae3"
     },
     {
-      "artifact_tree_sha256": "7d3a5248832ed22e2f252414592357421d07ca4890f691f24b9549c23e2f87df",
+      "artifact_tree_sha256": "6ec9eb9bfdc1d19cb525a35828be5009c54330a3565c92f164a7bc2b1d133753",
       "canonical_name": "uc://applications/bug-tracker@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -61,10 +61,10 @@
       },
       "seed_id": "application-language:uc://applications/bug-tracker@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "bd0126744bef97754dbb5026c3597f5aa09702fc69d665fd675e7249444b8ecc"
+      "seed_sha256": "8771cd759ba3654e6b2b6d9b2c9d5ee3b543ddc8ee1f5b654838786655ca609e"
     },
     {
-      "artifact_tree_sha256": "57d2080edc0c7cf57337afe8f95eab015f7d31f74aa21467f3c2b8acf4dd7c84",
+      "artifact_tree_sha256": "c5966a15ee65f2bf3ca4ebb4ba0c6ab6213b7452a1bfb41ba6b4b6c84bc598a4",
       "canonical_name": "uc://applications/calculus@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -77,10 +77,10 @@
       },
       "seed_id": "application-language:uc://applications/calculus@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "0ce7df1da44ceb7b8b9aa275f23319dbab5ba83db9523d9abd1c752c35558e87"
+      "seed_sha256": "5a336ab3915d013b4da5382f3e5db9631dbad83aa26503e4e310a33b48af95eb"
     },
     {
-      "artifact_tree_sha256": "46a847fc6c8abce1d6de50f0bac7ca0cbc7bb103a585b34309f5ff4db9c6d2a7",
+      "artifact_tree_sha256": "7ec5f45662382ec9a1087f270647350fe6634914a2e83d4ce3f0fd8be76e5bb2",
       "canonical_name": "uc://applications/calendar-tasks@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -93,10 +93,10 @@
       },
       "seed_id": "application-language:uc://applications/calendar-tasks@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "9ef86ae402e6bc4bb69503c57413a8d266eb70600fefa4753d4b6e6910a9229f"
+      "seed_sha256": "cdcefa7a7bab25ed559d12391788e6cde19bc4a546c38de37543be5cd0b89261"
     },
     {
-      "artifact_tree_sha256": "a3bd0bb7c92bd222117944148ca5ecb35ea3cf7a4f58e3993dacfe9af4fe3599",
+      "artifact_tree_sha256": "df557a8b1b7dde76e9ef6ff48556ade614f84951e827a34797a8d35df130357a",
       "canonical_name": "uc://applications/care-plan@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -109,10 +109,10 @@
       },
       "seed_id": "application-language:uc://applications/care-plan@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "5413d58ed961b356dc524e647f8c4ba2114d2df8b30563d83f3fd9782eb57a92"
+      "seed_sha256": "a7ba959b4ab2d1f8ba30d2a0c684f683a28f1bef5c670839cd5634d85d9e2c1d"
     },
     {
-      "artifact_tree_sha256": "9ba79addae3b4fb362d4b049b0edb5cf430b21989449d55b284a964166ea5cbd",
+      "artifact_tree_sha256": "516afd63dbf3723264a7c3e508ca364e22470b684a1ba5f84fd65437357b9e72",
       "canonical_name": "uc://applications/chemistry@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -125,10 +125,10 @@
       },
       "seed_id": "application-language:uc://applications/chemistry@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "f7c2fb9be547c3be31f14bbbdcc8bb7ff54f5b2e372b417087a24bb0ac044b47"
+      "seed_sha256": "416e53469b21e31ef2a55f16c7190afc6afdfc88b36f0fe30e9797fd5ecdace6"
     },
     {
-      "artifact_tree_sha256": "67a1026749a70e10a29021cd542b989bd4d9ff1a8b23560202f6a6b95193a826",
+      "artifact_tree_sha256": "f5112ca695ab3a30f0f301f3be2cc5e19a3d1dfd6523f7db5797c380db744db5",
       "canonical_name": "uc://applications/classic-paddle-duel@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -141,10 +141,10 @@
       },
       "seed_id": "application-language:uc://applications/classic-paddle-duel@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "f8496df01522259665602dbfada7bdb87eb493f9cad9a88652c1aeb247d2f4b5"
+      "seed_sha256": "99143e11b9405bf5d338a1e4125b883e7023a6741b0cedf0a1c637f145351c97"
     },
     {
-      "artifact_tree_sha256": "19979dbf2a56afb15afdfec917440cc720247e92993bc5f378e5b03b8a890efd",
+      "artifact_tree_sha256": "8b563b14eaf06aa4d8e82c120e9f3b402644fca6d309a12d9a59b68deee2356d",
       "canonical_name": "uc://applications/collaboration-sync-plan@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -157,10 +157,10 @@
       },
       "seed_id": "application-language:uc://applications/collaboration-sync-plan@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "42986b43fb9d3189df78ab72b78ed1b5cc29ea46be6abe859efc26c4041b689f"
+      "seed_sha256": "a26fe46a3876b704a1429affbdc7cd117e0e3fa8178f81e4882327cfee718dea"
     },
     {
-      "artifact_tree_sha256": "b6fe3e9e6885e51b142d726b845b2e163dea9fc552184ba1bd70d2e6ea5b806a",
+      "artifact_tree_sha256": "0f532e90b30591cc37bb1487dc86fa556dc4200f7d49c096c3f9759acd2bf526",
       "canonical_name": "uc://applications/complex-number@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -173,10 +173,10 @@
       },
       "seed_id": "application-language:uc://applications/complex-number@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "8df528ac8da5a6093ea807bf850791072f6d2e68ddadf75fe7dd87db1ee9d7f5"
+      "seed_sha256": "0194c0ef4d019c8e2d3ddcda353677ee057723462f32579576fc1c051abcc98b"
     },
     {
-      "artifact_tree_sha256": "8e578e5b80d826c4dbbc4a8b1d5058e8771be4e32ea8beebe136a8f2a8d226f2",
+      "artifact_tree_sha256": "95e56ef05933693549fc066631f05c2e34ccd4a5d282cd9c9dfa222fd6dbad9c",
       "canonical_name": "uc://applications/construction@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -189,10 +189,10 @@
       },
       "seed_id": "application-language:uc://applications/construction@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "614a1d95bb5992b8fc2aec9403c929a264b1cf2a28c61511fb2fd5a12f75adab"
+      "seed_sha256": "2c29923b26a0257f64e72ce4d19993dc2fffdea52a5e3de14f8c0926a5efcffa"
     },
     {
-      "artifact_tree_sha256": "c65c9e80e3f6df95e0b927e507803cde644fa0a21b850bafe90e0e6838a10c33",
+      "artifact_tree_sha256": "8ce32bd61ef7cf2c92563863900a7421b8975bb253650415f6e04190e19fa9ed",
       "canonical_name": "uc://applications/cooking@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -205,10 +205,10 @@
       },
       "seed_id": "application-language:uc://applications/cooking@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "09afa7eb8b1556d3bd88ebc8adf3ab82ee914602d92a7d1f77f83ad244062c58"
+      "seed_sha256": "37d87c7700ec12cfe15a891739982567891bfbf3c570e2ba80b61b1c4eee8f66"
     },
     {
-      "artifact_tree_sha256": "3955e146db3712cc3dfd616cf267b65c087a35548d2ef02e056b03c7b6d5d785",
+      "artifact_tree_sha256": "533e04b6414cdb70ad77f8a09203e90c945281e5e560f3f5a12fdcffa3cc6688",
       "canonical_name": "uc://applications/costed-todo@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -221,10 +221,10 @@
       },
       "seed_id": "application-language:uc://applications/costed-todo@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "830cfea8b6296fe29a47f1d84470d005791e553b85e44682cedf0fe2b7cca7f7"
+      "seed_sha256": "1560d2bf8d3402c34d8793651e3afdc874f9d9ab3ab4dc7d2f8df17e28faed72"
     },
     {
-      "artifact_tree_sha256": "743e36861fd82df4153f54cd3e78642c5672c651a75730e0267b7db248102d4d",
+      "artifact_tree_sha256": "d26cac9112d777cf7953f9c4604c88e5cc9c18327c253bc94f93ee6e2f014984",
       "canonical_name": "uc://applications/crm-follow-up@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -237,10 +237,10 @@
       },
       "seed_id": "application-language:uc://applications/crm-follow-up@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "e7864d36337a563bf06975c9ca7b54eebc30ceccd427a389c4e6c54280943001"
+      "seed_sha256": "3a5e52a5359a523247068e3aae7c1db746b7fecd2d15226fa066a676344c6fe0"
     },
     {
-      "artifact_tree_sha256": "dbe2848ee0f8f88b7eb78f2a48327ea78c6e438bbb5f8e87dd9be9c4af0f7e41",
+      "artifact_tree_sha256": "71a5f0004235c42746fda81dfe293258fa9f6bab7d87fe7218e06acb63434885",
       "canonical_name": "uc://applications/currency@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -253,10 +253,10 @@
       },
       "seed_id": "application-language:uc://applications/currency@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "9307200bd277bc2d2ee6fbde6e7d90e0b719285a26a9e1f0238583f5227cf81e"
+      "seed_sha256": "9f2606ef92adcb0abb441fef93a383bc3f593ae8ba5fabc667c814450dd922ce"
     },
     {
-      "artifact_tree_sha256": "e605afec4611ab5c30421e351add2905caaa30fd1996aff97ac31f8c8c9a196f",
+      "artifact_tree_sha256": "21581f57c8ca6fabf3c61f8c70da25dd796f53f47039accdbb8b9067dacfb2f7",
       "canonical_name": "uc://applications/daily-planner@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -269,10 +269,10 @@
       },
       "seed_id": "application-language:uc://applications/daily-planner@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "fb2732b70e8d95877ee6128ce10e712aef50eddc2c4cdd6619a6360641a5b58f"
+      "seed_sha256": "c81915c6030cf32f53caa9d532ee6a8cb15fbe3fd3d5fa2848e586457bbd9e42"
     },
     {
-      "artifact_tree_sha256": "47c30235c4690850685e3b718e0c14330109cabedece71ecffa9870dba459a66",
+      "artifact_tree_sha256": "95df72bf4f8c4e0f908a4a5f56ec8da942450f8a65abc23e36973af74f73091d",
       "canonical_name": "uc://applications/date-time@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -285,10 +285,10 @@
       },
       "seed_id": "application-language:uc://applications/date-time@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "c5e7fdebf311d98d0235f312c3a866933739d5fb7af8b8baf6af0d061dcc85ca"
+      "seed_sha256": "b7369b6de55fb545277b79f4172889db4768994e2cb62a354375e5610388a0b6"
     },
     {
-      "artifact_tree_sha256": "e11f61cff55ee08399fd17286e41b784611cf70bd0ea50cafa51d4f32ddbe465",
+      "artifact_tree_sha256": "a93a1c164b97c87039f6c8c084615d06c0978c4c10bbe9e6f9f64e9733c37964",
       "canonical_name": "uc://applications/dependency-plan@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -301,10 +301,10 @@
       },
       "seed_id": "application-language:uc://applications/dependency-plan@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "c93baac3c2d2d0dfa5bc51016a01f9bed911fdf53f87ec5bbc19467414c5b4b2"
+      "seed_sha256": "74d4bbcb2ab8b15d0464e5fd9432d3ae535e19360d5596572fac50eda97700be"
     },
     {
-      "artifact_tree_sha256": "9dc37db6db9728899e328cf6892621bf20e44b3d94832e39937d69e463287917",
+      "artifact_tree_sha256": "437cb034b75ec14d6933f45d88bbd70dd120ca6db12690e8961dc79df0790cf0",
       "canonical_name": "uc://applications/development-observatory@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -317,10 +317,10 @@
       },
       "seed_id": "application-language:uc://applications/development-observatory@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "bc3871239369f6b31e8d3141bf5f32d8ba3f43794306e70a9898c36cacad0feb"
+      "seed_sha256": "4d6933f31d7dc412999ab1d0332e4e40dcce1075118f4aa1b730eb43a58e19b1"
     },
     {
-      "artifact_tree_sha256": "de5580145df945875e61eed296f8e4ac77b5bbedb08a4a6c3aeff2030ed67cc5",
+      "artifact_tree_sha256": "f771949a96647ed747b5686d0dc5bcf4d1f46c535d0601b7cd323bad34a6115e",
       "canonical_name": "uc://applications/doubles-paddle-duel@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -333,10 +333,10 @@
       },
       "seed_id": "application-language:uc://applications/doubles-paddle-duel@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "9748eda0f8400d5ee5453b569dbd28c264c29ace21d28cf3b33cb40909de47d4"
+      "seed_sha256": "f62c3401df75932be7059f86bad78f336253fe614774d94d12cc333d00484493"
     },
     {
-      "artifact_tree_sha256": "52162cbaefd9ba71e86e678f0201f4f343ab0e87056ce8f6ab7845c45ee08cf9",
+      "artifact_tree_sha256": "e1b3937644b4d31f7ad3a8467e52f0fb7d6f47415795eda6a62e1b71fd20c6c9",
       "canonical_name": "uc://applications/editorial-calendar@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -349,10 +349,10 @@
       },
       "seed_id": "application-language:uc://applications/editorial-calendar@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "19ffcbf811682c12d10ff4f85ac82a88ab810a0e424906db9564348e01dea51a"
+      "seed_sha256": "f03a6dad93d79dab96da01139184c728dfb8d27b9e2c57ca2e3fd6d26b800d2c"
     },
     {
-      "artifact_tree_sha256": "0e278bd69c3de7ace79574fc029479b835567517499e56075ba85c6a6cdf5cbc",
+      "artifact_tree_sha256": "389d09ab06771a203b7362d780293d01bb3185195c3fc4beb07727c89ee0b2a4",
       "canonical_name": "uc://applications/eisenhower@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -365,10 +365,10 @@
       },
       "seed_id": "application-language:uc://applications/eisenhower@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "d552e7ed05ff44cbf89dc58eeb1b9f28a67e4d034382205ad3873b4563778f82"
+      "seed_sha256": "be17459f407bf6d287b4bee929fece02ba8cf4df068c2e59b0d38e2298b80d9a"
     },
     {
-      "artifact_tree_sha256": "ddfd024c33fe6458062ddbed7e189548456cc069fae63d2133f24cd3ddc7450c",
+      "artifact_tree_sha256": "d0a745662a7d01f98f4bc3dcfbd4feec79f224f84b58a50ba3942b4dbee8a6ce",
       "canonical_name": "uc://applications/engineering-units@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -381,10 +381,10 @@
       },
       "seed_id": "application-language:uc://applications/engineering-units@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "5d9ec0f271730a45c25d6e23b508e72573a2963dab4fe808bd0c9cf479cdccd4"
+      "seed_sha256": "2a055b91e1481847347cb8b44fcee72b820ae3677cd6fcbe6ebac8c352157e7b"
     },
     {
-      "artifact_tree_sha256": "bc206453c75de99ecff1de15c825ec0df28d1295ac5ca13182e4f67d0895b99e",
+      "artifact_tree_sha256": "3ce25a8f5a49c9a9c6d01ec33daefd749e80721ad6106d1bbf89aa9bf9e4e4c0",
       "canonical_name": "uc://applications/errands@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -397,10 +397,10 @@
       },
       "seed_id": "application-language:uc://applications/errands@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "744e6ee3a8b6b819a1ac7219b67a7502fa04cfd4c0aebf1b2b676e453e71d428"
+      "seed_sha256": "51f6f9c3574295b6f258940f1c40f46de1fe1830cdfa67240a273f515c69b2f8"
     },
     {
-      "artifact_tree_sha256": "ad44248c7abe823ef08606251c27ee2f12e7a92c763d1664d98355b61249553a",
+      "artifact_tree_sha256": "ec7c288c3e4dbb30652e720e2a53d66d3fd9ec16651baf73606b7fc509af9489",
       "canonical_name": "uc://applications/event-planning@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -413,7 +413,7 @@
       },
       "seed_id": "application-language:uc://applications/event-planning@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "0adecc3c92fb1cd3a7fb5fa3b320699a43f0439f1b952316037cc0a9c253720d"
+      "seed_sha256": "4d35c716710bc99302b05227d22432977217783987c1e3e8f93363d7ad139ec4"
     },
     {
       "artifact_tree_sha256": "b2eae5af38bbade442e822ffcdbd0ae9f61a99386f44eac0adc24551901dd816",
@@ -446,7 +446,7 @@
       "seed_sha256": "ffcee57680285d4742fb1156194183ce699e51b240ec728438492ebffd97497f"
     },
     {
-      "artifact_tree_sha256": "31c6deda26a5181259e221bf1d2f6ae89ac3754050693512a1e1988e3f24b178",
+      "artifact_tree_sha256": "ce26ac1d5c97eb1912a4cc34ca6da8ae5e1a455fe902a2e4456be40c03d6ba6c",
       "canonical_name": "uc://applications/financial@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -459,10 +459,10 @@
       },
       "seed_id": "application-language:uc://applications/financial@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "931ecb1aeac8585219e7bffc6b1e0c13ac860101cd1beaf34146009121458981"
+      "seed_sha256": "6fe1303c9d11aa9f1a2ff069a29672050b5e0285d46a7645ed1fd1c9c7c9af96"
     },
     {
-      "artifact_tree_sha256": "6589594ee6794af7ed1ee5d430cbea1d8cab9a79666743b512c9e8e8b58029f0",
+      "artifact_tree_sha256": "70b4423488c98f336b5cb59c3ef50dea2b38847382774750daf67ca2c734814e",
       "canonical_name": "uc://applications/fraction@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -475,10 +475,10 @@
       },
       "seed_id": "application-language:uc://applications/fraction@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "a8b2b332dea2fc1b389a85ec7b20c721e8403e00556f44b0b9114db5e904afac"
+      "seed_sha256": "a1036493bb292581aede2f5ed1bc0e3b8f0a1741b99177f18b25b4a9e3efe905"
     },
     {
-      "artifact_tree_sha256": "8369ac3353d5ab138f04e299d66e3b0dc0d122f00a1e59dbf20a323f4a50513a",
+      "artifact_tree_sha256": "2d71d498d58c29409474eeac9060bff7606ce3f77425127afa419e476e09c4da",
       "canonical_name": "uc://applications/geometry@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -491,10 +491,10 @@
       },
       "seed_id": "application-language:uc://applications/geometry@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "d87b369b8f75d6382cf43c4100471fe7f7025caa0f2566e1f9aa4e95960e387a"
+      "seed_sha256": "8694f4017fbc64904d879255eb8cfd7bd61345224713ebce61fc8d0ecb34bc93"
     },
     {
-      "artifact_tree_sha256": "c41a70731ca6c5e12d300e0a7978cf086c1ba17c03f265a75dea8a3d79dfa910",
+      "artifact_tree_sha256": "7e3aa53524efac85576e6009a6f3d36fab98ef4a13fa1bfe3637fe2b39e9b847",
       "canonical_name": "uc://applications/github-application-atlas@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -507,10 +507,10 @@
       },
       "seed_id": "application-language:uc://applications/github-application-atlas@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "8c44faaed0bb8bbf9277b3a82a21f71ae62ec050eb7e79874d8646fa951937a1"
+      "seed_sha256": "5f02482b926898e8bb34292b4a9afc0f9ce1d729b84fc0655ddcb9a55999e83c"
     },
     {
-      "artifact_tree_sha256": "ed487c57a78e9b400256994765f3e6d1d334035ebc9224feb90567345e3dc5b1",
+      "artifact_tree_sha256": "65912346399615e110adb9ca0a41c69f989ba5945608d4c5e718042410c8d6dc",
       "canonical_name": "uc://applications/graphing@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -523,10 +523,10 @@
       },
       "seed_id": "application-language:uc://applications/graphing@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "6b2ccf25ca7344ca2b825377819245fa7125eb1217ea7c05ee2df35dbdb0d70b"
+      "seed_sha256": "690c3dbd46da52b4072c761f1bf88dc98b0b5452b376e61b994695032fa3708c"
     },
     {
-      "artifact_tree_sha256": "054f06afa00ef064e978f6f298f8eddd779f438ef8a1e91ae1e1d72e6e7287bc",
+      "artifact_tree_sha256": "f2a334d032b1a4c288da7b47cd62256f947ced25167f41776b49e5eaf4dca647",
       "canonical_name": "uc://applications/grocery@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -539,10 +539,10 @@
       },
       "seed_id": "application-language:uc://applications/grocery@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "fff24b344216b0de570e982535c2387691f4d62f9feeea703defabaa9f83581e"
+      "seed_sha256": "7282fc597bf4796e5cf3a3604a37851f10758e7639d206d628a10cf8dbfef10d"
     },
     {
-      "artifact_tree_sha256": "a56c3730334f8d4927e9cf715202b43a4bb7a5e33cd40e4a62816737353b26bb",
+      "artifact_tree_sha256": "98de947124e883f2e0d8c1e09b438e81be8f30b52d75ace6457fa55c704e29fd",
       "canonical_name": "uc://applications/gtd@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -555,10 +555,10 @@
       },
       "seed_id": "application-language:uc://applications/gtd@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "80c6f82f41aa7eafd42e53c52ac9501368f9cc25393525f2b44953a3de7764fe"
+      "seed_sha256": "6c58052e2526c3f19fb15afea8295012fae035d52348be598796e2eac2b9b89a"
     },
     {
-      "artifact_tree_sha256": "873ceb1480e8388a66b811f4761c2e9283dbe5a760d2c52d1914b50e4210844a",
+      "artifact_tree_sha256": "bdcff2e0beef3ff744141e6fefca4be08c2c9f31bcebdfeb4476e3bfd0ae1749",
       "canonical_name": "uc://applications/habits@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -571,10 +571,10 @@
       },
       "seed_id": "application-language:uc://applications/habits@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "6eb6932ce6fabc1f21063ab686d80ff19f83b4418a68bdcd574cc719e0128e33"
+      "seed_sha256": "f0ba47626d9a8b48f8ef987213c7cb48e6ed1f4e8144efcbc22731326d893dab"
     },
     {
-      "artifact_tree_sha256": "a3b89e5cb9a1ca8a9a515ae0adbf741c222ddb769c82b800611745c3e540ce85",
+      "artifact_tree_sha256": "47463ede6e7a92dd84eb7746842fea0b2de0316e190860372fdd19979f4f9953",
       "canonical_name": "uc://applications/health@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -587,10 +587,10 @@
       },
       "seed_id": "application-language:uc://applications/health@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "d7192d43e1db2b0e6111f6fc86741c0532332a3509516df9d15ed08693a16e51"
+      "seed_sha256": "768929e2a0b04e26cd88041f8fd9d2f37e366c24169cb5da0e66f4fb37a6a009"
     },
     {
-      "artifact_tree_sha256": "d980e3c59d6143de0980c365a84e983a4fe2f7be612bb495a808ab75701445fb",
+      "artifact_tree_sha256": "ea3c80f2569f250b30e5ec5895e71139b4b74b7dfe05ae11a634981d6611e3e6",
       "canonical_name": "uc://applications/inventory-restock@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -603,10 +603,10 @@
       },
       "seed_id": "application-language:uc://applications/inventory-restock@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "1ef8ee2eb86d3bfd742498aa41b31594392880628f6d4cd0714749a63e3c46fb"
+      "seed_sha256": "edb022eab0e1476a73cdd9939e4f6ce52f272d89d39ef9625899d83c22b36472"
     },
     {
-      "artifact_tree_sha256": "8422c283e0dd7689f1acb13c8f7f976825b27dd1d613259f2408573e9a9c2352",
+      "artifact_tree_sha256": "0106c18408b83605bedb3956b88ea624de267e28d2419922b624089d03090f1d",
       "canonical_name": "uc://applications/investment@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -619,7 +619,7 @@
       },
       "seed_id": "application-language:uc://applications/investment@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "fdc5d028a8274a55fe894d44306f8c3310b226282fe05e33177a631a5460e0b0"
+      "seed_sha256": "846e30a7c087b94134f6a4d943c65ece6a2ebd24c5611cbb39c3aaa87fdf2a35"
     },
     {
       "artifact_tree_sha256": "70e66180b19d80b75ea21be0c42efb617ab58d95b9a0357215243e0e74ede827",
@@ -632,7 +632,7 @@
       "seed_sha256": "d2e2bf262b2b637c66aa2e93c26f84d6798d4903e51cfb6eb8ae64a37c05cdab"
     },
     {
-      "artifact_tree_sha256": "5e08a721d36e2c271c54c49d83ae56607b89751011d80bb989153ba6d16dae29",
+      "artifact_tree_sha256": "39d83b8c6501cb463890fd42c9d5bf275bfe97fdebf6855f61812686049e0fae",
       "canonical_name": "uc://applications/issue-tracker@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -645,10 +645,10 @@
       },
       "seed_id": "application-language:uc://applications/issue-tracker@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "8902b56839bcaf097b07b0fac62076507a2dfc5941892629d352cd2f4c3bcd22"
+      "seed_sha256": "30b9506a68ff6162188449f30de57c673f540ca6a9463040e84ae88246832eed"
     },
     {
-      "artifact_tree_sha256": "fbb821a548fef8e48ad6ccb638ba350eea656813f991df1aacee2913cb335a2e",
+      "artifact_tree_sha256": "9e5c801ad37908c0440c7417574b12e7a4c5607fccb07669e94e576d7a44690a",
       "canonical_name": "uc://applications/kanban@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -661,10 +661,10 @@
       },
       "seed_id": "application-language:uc://applications/kanban@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "6f29dda1b8e03b5bf3f338e62de96c5b7babc3466209020c01407596eebcb9d0"
+      "seed_sha256": "5f4f53cff9197f78d1930d9013e526ca49fa02ef83b0f937aac92da118082e52"
     },
     {
-      "artifact_tree_sha256": "9ced18547bdf21fb8f17d016e5cd4850610b2cb34b5ee69b257cd57daa4b2f70",
+      "artifact_tree_sha256": "8b5eb921ed4baa99d62d93399cdd6e695bb84d9f6c0ec081b648433667a3bd07",
       "canonical_name": "uc://applications/loan-mortgage@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -677,10 +677,10 @@
       },
       "seed_id": "application-language:uc://applications/loan-mortgage@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "ab37ab9bf25941ed082ee996ee3cc1a724c1dfcf5db3d6d842a27de79fa5a04e"
+      "seed_sha256": "a80effeb65abd15414711824eaf9a9893ec74fb0038c70f0c3ffa60564826d71"
     },
     {
-      "artifact_tree_sha256": "a64f72ec8c299eb097cbede7196e66664811608d21957f56a8035a9edf5f39c9",
+      "artifact_tree_sha256": "321c3fb786ca110f89533488016ab75b09fcf278ed4674201115226325c2306f",
       "canonical_name": "uc://applications/maintenance-work-orders@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -693,7 +693,7 @@
       },
       "seed_id": "application-language:uc://applications/maintenance-work-orders@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "16a83f06ba4c6cd0d02dbbbafcf7295991ec22665fffb8b7ccb35edc8f98176d"
+      "seed_sha256": "220827908f9589fe8890d0aedd120853f6945df0609a874e9525f1158696f270"
     },
     {
       "artifact_tree_sha256": "e87fd67030ff67b765a5169206f029644d53777fa130d5949dac7e26df0542d4",
@@ -711,7 +711,7 @@
       "seed_sha256": "dabf6b93cca4012c8a85c0e16e50c0b9dd302c227d52cc5eedd7ed8233648b02"
     },
     {
-      "artifact_tree_sha256": "4cb76914d70615b0e62ed27d7cadb5ac7e9daf4997fd6b6619ba6eea2b02a1ec",
+      "artifact_tree_sha256": "11c72d91f44ed603f6ee660800c3c1b12b012a74487e4c16d3e1cab53b57ba54",
       "canonical_name": "uc://applications/matrix-vector@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -724,10 +724,10 @@
       },
       "seed_id": "application-language:uc://applications/matrix-vector@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "24609ec98b7e9243bcc680b1a9a696daf844731581eca4158eda32615a778800"
+      "seed_sha256": "cbdf0d53b66fb4182250953f019a433347e197a5f84479f718473a055bc821cb"
     },
     {
-      "artifact_tree_sha256": "238d02463a4b56df29953f4d7f25cd38315ec568aa5f37c392872b141bc8d8c2",
+      "artifact_tree_sha256": "87822f9aa8788f33fb8359cf57fca69582d39a3213acbf8b9d7264ec77dbcf80",
       "canonical_name": "uc://applications/multiball-paddle-duel@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -740,10 +740,10 @@
       },
       "seed_id": "application-language:uc://applications/multiball-paddle-duel@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "fb95d8b449531694e1c69cc63cab4d5b7db386d1ca8dac584cf767d6d8c1b54e"
+      "seed_sha256": "7c0f081d252d53814571ee92ac73897e1490f3a6b1c14c7878b398af549738ed"
     },
     {
-      "artifact_tree_sha256": "23b26806d022846c02f23464d3e739f1bb1a1c604ffd3e6747164820364242c2",
+      "artifact_tree_sha256": "1be7d3980d551f68a979e6fdc76ca6029303cad3c7dea9299539027166defb4d",
       "canonical_name": "uc://applications/navigation@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -756,10 +756,10 @@
       },
       "seed_id": "application-language:uc://applications/navigation@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "d0b72c452f1845d19f34c15d6ec105d7688043386bb1ed8eb75431e783fe0b49"
+      "seed_sha256": "a7a3e3f1296ef14efd1af9674fe2c1d3759446631fba24306ecde4b3987ccdaa"
     },
     {
-      "artifact_tree_sha256": "ee85b8a881aa2765a1dcb7feb62089330ee87e056e37b7c46db7cb2b1242697a",
+      "artifact_tree_sha256": "5bba5b0ccb0fd6bb3c91e439301c9e1f26317b1968b09b0d315c52a30cd113bf",
       "canonical_name": "uc://applications/normal@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -772,10 +772,10 @@
       },
       "seed_id": "application-language:uc://applications/normal@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "b63fcf2399d48453a598bf6bf4ea00ab20ce9a2e5ea4634430be982423f1cdef"
+      "seed_sha256": "218eb044af33123e1f123b00484122dedc7bd9078096158245c4df9225797603"
     },
     {
-      "artifact_tree_sha256": "c644e6b8bae8bf31204aceefe4babf5e34f5cbdbdc8220ce500f837ce5169575",
+      "artifact_tree_sha256": "f3dc78f9532b5fe06213c0327383600e9660554d8f67b10b06c261dc0a690929",
       "canonical_name": "uc://applications/obstacle-paddle-arena@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -788,10 +788,10 @@
       },
       "seed_id": "application-language:uc://applications/obstacle-paddle-arena@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "9c720c7c5db0f4cf42ab9d667cc7f17e00445d5758bd2157309740b3e94349f6"
+      "seed_sha256": "0645d59cf3aebeac8bc2741e7116dd33b862040c33da4936956e6ef2309cac67"
     },
     {
-      "artifact_tree_sha256": "7e53fc91f5c76ab81cc391213e51abf630143b09819060fa64f0bb19899427d3",
+      "artifact_tree_sha256": "5b8336db9c82ae12a5a772a58d5e54a406569851c800c28920d69b524b609f33",
       "canonical_name": "uc://applications/offline-security-plan@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -804,10 +804,10 @@
       },
       "seed_id": "application-language:uc://applications/offline-security-plan@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "ddf038b0448dc11d0d54515fccc88d78ba03430a81fa4a3759db55c64659d1b8"
+      "seed_sha256": "64e8d7a427d7b5b934c43673f5b7d434330677020c5e5fb6e9157e87ee7a58be"
     },
     {
-      "artifact_tree_sha256": "489862b9a3cb521da76194afc4335b588c34a03f72415c501d9c45a9230d2ace",
+      "artifact_tree_sha256": "0dd3a0f64403be11a7845b15b960612e59d2ba0d40255cfdc1187bd2041a9758",
       "canonical_name": "uc://applications/ohms-law@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -820,7 +820,7 @@
       },
       "seed_id": "application-language:uc://applications/ohms-law@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "5bfc84ead7835e5d52a5a62de0d75df30cb1e9751ceac0888ece9d3fb270ab26"
+      "seed_sha256": "4c4634a08b3664fde08481e82c134ff3b86def57cc047e712a41d17d7d8e587c"
     },
     {
       "artifact_tree_sha256": "fbd0f362dee131c0148cb064ed8c5bae651c11ad800531dba7df49ee87da5be9",
@@ -833,7 +833,7 @@
       "seed_sha256": "ba9bc1d273250032e5cc64092ee4d6a5f8fb176216baa145d2dce7fe07023c96"
     },
     {
-      "artifact_tree_sha256": "b51cfe4179140d77a84c22bc09f13f1ad97172e483aea7e8721ef5f6e3d1e9e8",
+      "artifact_tree_sha256": "66de160b081e3a0c7f068f5c0843fe31d24ebd790ee6dac61eddc0e7488e9d92",
       "canonical_name": "uc://applications/physics@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -846,10 +846,10 @@
       },
       "seed_id": "application-language:uc://applications/physics@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "bd6300d44dc87514b73a825130cffe8f979427360d1209313c7d54d72ec99ab8"
+      "seed_sha256": "27848e01a4b5d8ebd8a7ab6cd3b180659a8cafbf96ff61a2802ac8f4cc218dfc"
     },
     {
-      "artifact_tree_sha256": "bb0d0f5fbb3a3889e35064e9cf18b54ef52cf8ee0de761b70a5394d83c996ad1",
+      "artifact_tree_sha256": "01f19153f5e2cfc7b0562940b4fa553f91509308a4a2718150dc8236efcd8021",
       "canonical_name": "uc://applications/polynomial-algebra@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -862,7 +862,7 @@
       },
       "seed_id": "application-language:uc://applications/polynomial-algebra@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "ecf68e55906699799a7321223ebd0af368c8323c7f008ec4b6c0623ec5f76c19"
+      "seed_sha256": "e8bb62b29fa4a563cf72e67ba8f117ed136297db657f1ae925e55d22b0787629"
     },
     {
       "artifact_tree_sha256": "3206b51972905cc4365c4b03631dbef6617b9421139581f12253a1412434bc27",
@@ -880,7 +880,7 @@
       "seed_sha256": "f2049becde1a59f98f79b84fcd5749668e103aaf125df0501812ef4499ed9106"
     },
     {
-      "artifact_tree_sha256": "91fedf1ac1eaa6ef90a37034964bdd6fa31dc4c55e58accc5a5c82b52650813b",
+      "artifact_tree_sha256": "8933d634dadcb0e1ed66d821d5c86ecb923b92f502eec206ff01f9307256ad1f",
       "canonical_name": "uc://applications/power-up-paddle-arena@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -893,10 +893,10 @@
       },
       "seed_id": "application-language:uc://applications/power-up-paddle-arena@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "03beca96199facc6ab2dbd1b90bb024a576fbdf0a5a37d727ca3fd1b68321e1a"
+      "seed_sha256": "db242c30f1320ec9726e1d359821783ebb3a78e9e738523e29863527c243dd05"
     },
     {
-      "artifact_tree_sha256": "262e71baee4c6e941f125df89a47e3394747fea554a592e9f9ce0f68dc3b3b45",
+      "artifact_tree_sha256": "2119eb8a87dbc55ad462da18d4beeed88a91d8c8b3c56c96cd4a901829356c54",
       "canonical_name": "uc://applications/probability@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -909,10 +909,10 @@
       },
       "seed_id": "application-language:uc://applications/probability@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "982605da961f6aabc0ea1942aefb633ae9f3bd863af2e3cfc7459a976bde0806"
+      "seed_sha256": "8bbc7d963438518df9a666a7b59765f787a002ea4e7ec2d1acf3e9a345ae1601"
     },
     {
-      "artifact_tree_sha256": "842e7d043d63f3b112c31cde54137409481f8266bc1a6c6aefe732cb5b96cce7",
+      "artifact_tree_sha256": "f37263373e43ae78f130cdfb027bb2c1036a257465ddbed4d0e347a3ef5cc78f",
       "canonical_name": "uc://applications/product-roadmap@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -925,10 +925,10 @@
       },
       "seed_id": "application-language:uc://applications/product-roadmap@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "da397ed0100c7286ce8ad1cc86c97ed77d4e16c4b4ae9563333ed72567a7df0e"
+      "seed_sha256": "be8d219338c3f98381750c19f415c3926c5e0cb4823d99dd056aa6a62d877483"
     },
     {
-      "artifact_tree_sha256": "b738556349a8e08801ca505f212e86b9967460b19d1c94bf58f699a560b7475d",
+      "artifact_tree_sha256": "92df02cad1167395526bccc62aaf92a4cbc278c1f22b34e1d333ba02495a0dfc",
       "canonical_name": "uc://applications/programmer@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -941,10 +941,10 @@
       },
       "seed_id": "application-language:uc://applications/programmer@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "e4501dcca53e37d89130cca349b0040098ecac4b4746d18a44d5bbdfb6d691b9"
+      "seed_sha256": "13e92578e8ddebec3a55017d928b78d35b012aa74ba4317dd0dbce7ee0eb6345"
     },
     {
-      "artifact_tree_sha256": "4910233282461ea7f89243599225431348accda8f9f608ff9cb413d52b359a30",
+      "artifact_tree_sha256": "962d23d05eda7e0385bc15d35daeabd50203fa645f6358d5b8f491a5fe23fae1",
       "canonical_name": "uc://applications/project-work-breakdown@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -957,10 +957,10 @@
       },
       "seed_id": "application-language:uc://applications/project-work-breakdown@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "777f3820b19721eb6c623ca5ba4390db01c052ae4a65c2f7b66e3613cd170476"
+      "seed_sha256": "11ef237c1253eedd0874a760fda741e41d7d74131a9706bbbaf4b5a5e60c650d"
     },
     {
-      "artifact_tree_sha256": "7fe05874ce618a25492cd0c8b4feaeed75e7476c145a7bf7ddfa4e4df065bd14",
+      "artifact_tree_sha256": "78acea97b74d6344056572126e5e16605efc4c939c295f17eb8075d738772085",
       "canonical_name": "uc://applications/quadratic-polynomial@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -973,10 +973,10 @@
       },
       "seed_id": "application-language:uc://applications/quadratic-polynomial@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "e791966ea65d1ade41a6ec078d19bf3a8ffa834071a61114110b0fc397c6e24f"
+      "seed_sha256": "54cc95c2c57e36071572bcd8c56dc7b4d6998c319226cc762f9da4b8654c09fd"
     },
     {
-      "artifact_tree_sha256": "131e36f2f4ed4a41e7d2bcd4f4f960f592cd0787aa861710bb5b3fd1096ebaa1",
+      "artifact_tree_sha256": "2535680f0fb9a27ceb65bab84e5c38457cc0e7139d9b593898bf87916d4999a5",
       "canonical_name": "uc://applications/recurring-chores@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -989,10 +989,10 @@
       },
       "seed_id": "application-language:uc://applications/recurring-chores@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "115c43a60807899647ae0b9336b840aafd68baf1ebfbfb4e627e549272dc98bd"
+      "seed_sha256": "9ff4a1c57f278eb7800d7bdf438c5b9f78c7bedd493678e5c37415af09808b35"
     },
     {
-      "artifact_tree_sha256": "eda7b9f1367c314b3ae7dae3a6499849f5fcdf60c41717f252f8f8d780540562",
+      "artifact_tree_sha256": "580366788292791e06e8cc7b28282345b4aec791ed928479d4b383de06d5d7a6",
       "canonical_name": "uc://applications/regression@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1005,10 +1005,10 @@
       },
       "seed_id": "application-language:uc://applications/regression@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "0b53b2dd9a52076f39a98356758361b7ee175a3a46c0f758d6f7b68dc1c9d90d"
+      "seed_sha256": "fbdce7264d5f0c73b87a33e2f9bddd8a69efc70185043cde551bb1b8d638166a"
     },
     {
-      "artifact_tree_sha256": "e9a5f44d3a3e9c56eca17b5a8ebb3cd8e8cf280d123209e0d77748d9333ea41c",
+      "artifact_tree_sha256": "191fb9feeda7aa74723fc1442953e6e6adafaca2b8463c6c241dc6fcb2230ed3",
       "canonical_name": "uc://applications/regular@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1021,10 +1021,10 @@
       },
       "seed_id": "application-language:uc://applications/regular@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "261bfc551396e725b495210f9c3cbef8ad2f207b5ccf3e18aaf4890d4ec3dc18"
+      "seed_sha256": "4d9736bf19761f0bdc77bf0f57f276df5f6703f8cd9c35957bd0cfe26d4e1bf9"
     },
     {
-      "artifact_tree_sha256": "20e5e022c3c6b94985d31961371a52b817a67514a470457fd88bfc106abe5d27",
+      "artifact_tree_sha256": "a44a76e316e305d33fbe64574fe64b601a75be905c1127078e1ac57fd672eb4a",
       "canonical_name": "uc://applications/reminders@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1037,10 +1037,10 @@
       },
       "seed_id": "application-language:uc://applications/reminders@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "578f45714ad46c08eebd5886bed0b6b742984a170ada204001d7ce8b977cd4cf"
+      "seed_sha256": "a7a46a3e67c796b175e3d3b9d90a61155a3494d2dcd157530b6ba09918eda5c9"
     },
     {
-      "artifact_tree_sha256": "7802fee79da278b4a299d76f7af7b6b3160a2902788498b2ca123b30bf5ce54a",
+      "artifact_tree_sha256": "6881642b4d636ee4ba8d188b7d67aecd9de7285873b91d98769d862e4fe90e75",
       "canonical_name": "uc://applications/research-pipeline@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1053,10 +1053,10 @@
       },
       "seed_id": "application-language:uc://applications/research-pipeline@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "d16a9bd73eac2f4f8c759a10f5ea100c52f8a5bacfc0e04c125c5a4cd533266a"
+      "seed_sha256": "ed097f04517aa8b972dab71b314458bd247053b7bd6b2540ba3f26d7d00ce89a"
     },
     {
-      "artifact_tree_sha256": "b4b1f82cdba0c609560d6d77a3f504df2e8c30537045885715428f0d3e5742d1",
+      "artifact_tree_sha256": "afd5cfa736540c2e731fd6bad46f4fccebc9e907121d27177031cbbb56a7ca77",
       "canonical_name": "uc://applications/rpn@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1069,10 +1069,10 @@
       },
       "seed_id": "application-language:uc://applications/rpn@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "4b58f3cb956a89eaad954ef306a0b3e01e7a516a67222541f59722389bab83da"
+      "seed_sha256": "9589c9e0830a7c79e4fb1fdd24ddeebeba0cdb9ae8d6b2a3876ab166f936cc29"
     },
     {
-      "artifact_tree_sha256": "0ac13eb174831e42a2d45133dc6dc4ed71d759d82bd81f9ddcbf6dac2b37141d",
+      "artifact_tree_sha256": "30ec8fe8fa643a401166e721e383703ea3228928d0ad4b0740883824d6aa065a",
       "canonical_name": "uc://applications/scientific@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1085,7 +1085,7 @@
       },
       "seed_id": "application-language:uc://applications/scientific@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "85d26fba96d9adc771b22305481540185ede86892267e22b369fa1473f6f112f"
+      "seed_sha256": "81169ecb1b45d8eb4242d292fd069d60ec6859c5cf3db3c50e1035641b0c0c08"
     },
     {
       "artifact_tree_sha256": "b5dc40bf58c58b6862a9a337a2d4c5bc12120db2bdb42859e17327b9be3b393f",
@@ -1098,7 +1098,7 @@
       "seed_sha256": "cd808daa959ff3db544595c35919ed160d26464f0982f10248c3581ecd01fab7"
     },
     {
-      "artifact_tree_sha256": "4c2b18fc4c61fcbb23bacea225f8cfa888721b680aabf97dd0787565f89e46f7",
+      "artifact_tree_sha256": "d1af0cc1b1646fcc1147c303d0110d86b5f592bddeb25426be1c4f023b4f572b",
       "canonical_name": "uc://applications/solo-paddle-opponent@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1111,10 +1111,10 @@
       },
       "seed_id": "application-language:uc://applications/solo-paddle-opponent@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "80999f076c0919ded249589bc777cd4f0bca6d4b1fac872be9f64acb1c489b39"
+      "seed_sha256": "250644064f481c46f23fd924d055c444a03a770f5de3ed065149d9abcae16d9c"
     },
     {
-      "artifact_tree_sha256": "e6728368f72b00e2644bd0840ccb3a7ee3478781ac70cb362064f01c7eea6966",
+      "artifact_tree_sha256": "f0f6772809442c4972a75e1a6a59dddf3c90daefdcd0160d32beffe099f60128",
       "canonical_name": "uc://applications/sprint-backlog@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1127,10 +1127,10 @@
       },
       "seed_id": "application-language:uc://applications/sprint-backlog@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "1a2c0e54339dd1beccc94a4d430412597643793b7f8286df4807ca412461ddcf"
+      "seed_sha256": "ef8ef6ab6cb9b6fd0cf30c82001374698672729a2c5b9a89fb32901d73b06364"
     },
     {
-      "artifact_tree_sha256": "8e32927b82b414911a34badc61b234ecd3b7c63f32935de268f9dab8ed446aea",
+      "artifact_tree_sha256": "c45df53341558ef6a075834a25d5ff1e57939e2021680fb8be7a7a00c3fcaa3b",
       "canonical_name": "uc://applications/statistical@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1143,10 +1143,10 @@
       },
       "seed_id": "application-language:uc://applications/statistical@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "bf13c61861c0271c791d5efd87758e5e47026d7b1978821a71153db25edbb205"
+      "seed_sha256": "1f343f6512938d30056e250649ec4fc283cbd2bb3d8b3b02855b4aeb370eb702"
     },
     {
-      "artifact_tree_sha256": "9f0c23369dc2cd4d3d37061b0ace6349e091a9d415036b4f8df993d7c324f624",
+      "artifact_tree_sha256": "90f53c88d4bc10f836b93f945d036ae714eee2e93a2d71439c507be9b253400f",
       "canonical_name": "uc://applications/study-homework@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1159,10 +1159,10 @@
       },
       "seed_id": "application-language:uc://applications/study-homework@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "b5ae18aeedbc48501f66253fd5afd1c4a5676e03941bffad07bf96281731dbc7"
+      "seed_sha256": "a681c1ca70c67c3cd4298e807ab112d09162ddae98f74aa1a6fa9eb159b303a3"
     },
     {
-      "artifact_tree_sha256": "3052afe6b172aed130871dbe26c215bdacddc7d71e285ef990157db8d0c64429",
+      "artifact_tree_sha256": "8c0bdbc5febec0f9f351341e9df82a64c19a54655f02b1e97d57917d81e3f1ff",
       "canonical_name": "uc://applications/subnet@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1175,10 +1175,10 @@
       },
       "seed_id": "application-language:uc://applications/subnet@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "b5bcd8b6f50c5c2169de3d20584c1a1e1590afdde973a8608b0bc35c24b7da91"
+      "seed_sha256": "a4c5c13340c831735f61ecbc8777bc015242a75503ab27794464f88968057433"
     },
     {
-      "artifact_tree_sha256": "9a28649e11089988640c1c555fad443a4c0b93e5a04d65af83f0f079c0d98766",
+      "artifact_tree_sha256": "b3dec1f31e7919542f8c8c19526aadfece2935bafc66e13b521a8d46476fa044",
       "canonical_name": "uc://applications/support-queue@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1191,7 +1191,7 @@
       },
       "seed_id": "application-language:uc://applications/support-queue@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "0a50cf5354ed80c4276e5142f2762508dcd98bc66ebf4512c3b35d7fece667df"
+      "seed_sha256": "e8e57d91761b2d8e949d8ed81c7344cfd90ef7daba69a275235681c9bb6bc691"
     },
     {
       "artifact_tree_sha256": "328ca31cd5f91b7529a003eb14a05d263a9269e4d63a6073de0d39d4f8fc0b32",
@@ -1204,7 +1204,7 @@
       "seed_sha256": "2b62e66d78512e2ef4b19fbd94f7cacf274861647b3023ed3fc508e73d870885"
     },
     {
-      "artifact_tree_sha256": "d5788c8f3740271adb44de397873e13b8d32c3b52bc3ccf9d6c320a3041d55ce",
+      "artifact_tree_sha256": "cd7f5fbd081e7d84883c267ad5cabfdd61c0f9c4a2cf4ea278a263d6023ffc1a",
       "canonical_name": "uc://applications/tax@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1217,10 +1217,10 @@
       },
       "seed_id": "application-language:uc://applications/tax@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "93528c8f86a7c866581ec423c1b30bf591a1bc9556ca56f5a27ad55c8b159cbe"
+      "seed_sha256": "52af65861bf3a43f59164512d7cede9cba2c20ca8386926353b666db9376ec50"
     },
     {
-      "artifact_tree_sha256": "a57ac97a1ca47ff0f9b4bba521825fb6ff7e1bd5261284bad32400f2502986e4",
+      "artifact_tree_sha256": "0afbb9738b16cf6c52ae8e59c6df8c092c78e6be65e78bd78b04c265962620e9",
       "canonical_name": "uc://applications/team-assignments@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1233,7 +1233,7 @@
       },
       "seed_id": "application-language:uc://applications/team-assignments@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "9e0f7f8c1be860799c1f8cbec190b3667603d40c086f6534787e9fc5755707a2"
+      "seed_sha256": "05dd4c0957394daf499f167b493ea8b9e1b628c2bced9763ce52ac90d858091c"
     },
     {
       "artifact_tree_sha256": "15bb2cef1cc1c7813f09a499e4f55456fef89ce493d282191ac7ea0a1bc04b4e",
@@ -1246,7 +1246,7 @@
       "seed_sha256": "bc8539370ffdb1bfbe1b76012df18ebced7bbada7c372fb9dbcc93589be46abe"
     },
     {
-      "artifact_tree_sha256": "a3bd989ebb7b3f8efaa200d350970e26f6a79d1c2d8aff9cb70098a159acb0d1",
+      "artifact_tree_sha256": "19e29238e713e23bd99dbf9f02820380bb0d115064e4936f6095b03a42c37b99",
       "canonical_name": "uc://applications/timed-paddle-score-attack@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1259,10 +1259,10 @@
       },
       "seed_id": "application-language:uc://applications/timed-paddle-score-attack@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "ab10cee383c9195040f8ba590506d05947debdda6d04cfaf612add5ed4a068e0"
+      "seed_sha256": "c5b9a2d593ed7941259eb329896de34c45f8c141d053b2c87aabc9017b9309be"
     },
     {
-      "artifact_tree_sha256": "9d54ac9f2f3aa419f938aab4efd035d5705f5b67f2fd1db4eb6a4da955fca1b6",
+      "artifact_tree_sha256": "03f437f1a21ed8aace9030662be25d98402f753f8c1970ae6b6a61e46dbe8ad7",
       "canonical_name": "uc://applications/todo@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1275,7 +1275,7 @@
       },
       "seed_id": "application-language:uc://applications/todo@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "52a1720f714ebb004c434904b7b18c282ce850e6fd3b51b06adab30f03c3e15d"
+      "seed_sha256": "0c9b256a406541f7955a962fc78d1f30dfac0548c2909c7d813667c3017a700f"
     },
     {
       "artifact_tree_sha256": "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841",
@@ -1288,7 +1288,7 @@
       "seed_sha256": "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
     },
     {
-      "artifact_tree_sha256": "ab4cb34970f38c2f34ca6481d85a49622679f893b32e8745d35f39d861fce030",
+      "artifact_tree_sha256": "1fd9cbe18e24f7dc439fa6558487d0847abf46fa4388bbe787d7cdee2b3e5f95",
       "canonical_name": "uc://applications/travel-checklist@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1301,10 +1301,10 @@
       },
       "seed_id": "application-language:uc://applications/travel-checklist@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "966f4d2c564b90692a67f151cbf40ad5fcc23a9684f905a3ffd7de43eb7ac583"
+      "seed_sha256": "b61008d50fa65ffd589aaa0a016cea6d9156907768a819d6210e3c17956aef8e"
     },
     {
-      "artifact_tree_sha256": "6357c1bff0ebd47cde0116011f023181df90d9d90053eebe3bd0fd6f5ab2308d",
+      "artifact_tree_sha256": "4d88cda0056a4dbea8760cb6b82bac1902cf5cdb9c97781485376eacd2b31874",
       "canonical_name": "uc://applications/wall-return-training@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1317,10 +1317,10 @@
       },
       "seed_id": "application-language:uc://applications/wall-return-training@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "e0946abf4b6c9d35fbf2a5dc4ccd89bf1ec67b9303e8feafaf982b83746be3ca"
+      "seed_sha256": "e5bba27726aec7501982829d34ec040e9433d1f80c18f2efba825b42ab027460"
     },
     {
-      "artifact_tree_sha256": "edab8252bec44cb3273464bdb8ba8aa26d6f7dbc8cbc4016c0c6b9ca547cd483",
+      "artifact_tree_sha256": "093208228028064e65c42a14375480d2c87c7489f530dfdf915cd93a15e019dc",
       "canonical_name": "uc://applications/weekly-planner@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -1333,9 +1333,9 @@
       },
       "seed_id": "application-language:uc://applications/weekly-planner@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "1c71207e0197f65f97a3769394a2517b6b5e44630279bcc61fed01aa10ef2918"
+      "seed_sha256": "f0c17982937ea45dfad5d432d9c8a4627fe92fc36c7e2e24e083f42c7e16b18c"
     }
   ],
-  "registry_snapshot_sha256": "3e6a194f5642192526dc1a83a55ed2029838c9aa9c036e0f6e04824cdece21ea",
+  "registry_snapshot_sha256": "c2d749d1d3b13e4267887e85359e123436eff5a0d27a01245ea01b0f3b091268",
   "registry_version": 1
 }

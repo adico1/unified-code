@@ -13,6 +13,7 @@ from pathlib import Path
 IDENTITY = re.compile(r"^uc://applications/([^/@]+)@(\d+)$")
 LAYERS = (
     "authority",
+    "architecture",
     "specification",
     "source",
     "application",
@@ -71,11 +72,23 @@ def paths(build_root, identity):
     return {
         "root": product,
         "authority": product / "authority" / "seed.json",
+        "request": product / "authority" / "request.json",
+        "architecture": product / "architecture" / "system-architecture.json",
+        "systems": product / "architecture" / "systems.json",
+        "interfaces": product / "architecture" / "interfaces.json",
         "specification": product / "specification" / "specification.json",
+        "full_specification": product / "specification" / "full-specification.json",
+        "specialized_specification": product
+        / "specification"
+        / "specialized-specification.json",
         "source": product / "source" / "main.py",
+        "manifestation_plan": product / "source" / "manifestation-plan.json",
         "product": product / "application",
         "test": product / "verification" / "test_generated.py",
         "traceability": product / "verification" / "traceability.json",
+        "precompile_evidence": product
+        / "verification"
+        / "precompile-evidence.json",
         "manifest": product / "manifest.json",
     }
 
@@ -107,11 +120,22 @@ def classify(build_root, leaf, resolved, files, group):
     identity["group"] = group
     destinations = paths(build_root, identity)
     write(destinations["authority"], canonical(leaf))
+    write(destinations["request"], files["request.json"])
+    write(destinations["architecture"], files["system-architecture.json"])
+    write(destinations["systems"], files["systems.json"])
+    write(destinations["interfaces"], files["interfaces.json"])
     write(destinations["specification"], canonical(resolved))
+    write(destinations["full_specification"], files["full-specification.json"])
+    write(
+        destinations["specialized_specification"],
+        files["specialized-specification.json"],
+    )
     write(destinations["source"], files["main.py"])
+    write(destinations["manifestation_plan"], files["manifestation-plan.json"])
     link(destinations["source"], destinations["product"] / "main.py")
     write(destinations["test"], files["test_generated.py"])
     write(destinations["traceability"], files["traceability.json"])
+    write(destinations["precompile_evidence"], files["precompile-evidence.json"])
     write(destinations["manifest"], files["manifest.json"])
     return identity, destinations
 

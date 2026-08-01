@@ -207,6 +207,12 @@ uc assemble seed/application_suite.json \
   --build --install --verify --gauntlet-depths 10
 ```
 
+Before physical compilation, that operation now derives a canonical
+[request-to-manifestation specialization chain](PRECOMPILE.md): system
+architecture, systems, interfaces, full specification, target-specialized
+specification, seven-stage plan, exact source and generated evidence. Generated
+runtime code does not load those build-time projections.
+
 Qualified names can resolve through a pinned, content-addressed registry to
 one verified artifact through the current Application v3, application-language,
 Thing v2, stateful, or expression/UEM compiler route without implicit version

@@ -162,6 +162,26 @@ def test_all_applications_generate_install_execute_and_pass_ten_depths(tmp_path)
     result = run_assemble(thing(SUITE, output))
     assert result["state"] == "valid", result["value"]
     value = result["value"]
+    normal = output / "calculators" / "normal@1"
+    assert {
+        "authority/request.json",
+        "architecture/system-architecture.json",
+        "architecture/systems.json",
+        "architecture/interfaces.json",
+        "specification/full-specification.json",
+        "specification/specialized-specification.json",
+        "source/manifestation-plan.json",
+        "source/main.py",
+        "application/main.py",
+        "verification/precompile-evidence.json",
+    } <= {
+        path.relative_to(normal).as_posix()
+        for path in normal.rglob("*")
+        if path.is_file()
+    }
+    precompile = load(normal / "verification" / "precompile-evidence.json")
+    assert precompile["verdict"] == "pass"
+    assert precompile["manifestation_exactness"]["verdict"] == "pass"
     suite = load(SUITE)
     catalog = load(ROOT / suite["application_language"]["catalog"])
     catalog_products = {
