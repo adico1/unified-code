@@ -83,6 +83,13 @@ VERIFICATION_ACTIVITIES = (
     "verdict-formation",
 )
 AUTHORITY_EXCLUSIONS = ("seed/verification/PROOF_BUNDLE.json",)
+PROOF_COPY_EXCLUSIONS = (
+    ".git",
+    ".venv",
+    ".pytest_cache",
+    "__pycache__",
+    "*.pyc",
+)
 
 
 def _canonical(value):
@@ -323,14 +330,7 @@ def audited_command_node_primitive(node):
         shutil.copytree(
             ROOT,
             work,
-            ignore=shutil.ignore_patterns(
-                ".git",
-                ".venv",
-                ".pytest_cache",
-                "__pycache__",
-                "*.pyc",
-                "build",
-            ),
+            ignore=shutil.ignore_patterns(*PROOF_COPY_EXCLUSIONS),
         )
         completed = subprocess.run(
             argv,

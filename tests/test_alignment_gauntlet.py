@@ -154,6 +154,10 @@ def test_generated_products_are_a_complete_public_research_surface():
         assert (build / paths["manifest"]).is_file()
 
 
+def test_physical_proof_copy_preserves_generated_products():
+    assert "build" not in verify_flow.PROOF_COPY_EXCLUSIONS
+
+
 def test_assembly_cache_does_not_copy_the_complete_output_tree(
     tmp_path, monkeypatch
 ):
