@@ -4,9 +4,12 @@ Unified Code is an experimental functional construction grammar for writing
 software from one repeatedly practised form.
 
 Start with [Vision](VISION.md), [Goals and boundaries](docs/GOALS_AND_BOUNDARIES.md),
+[Knowledge continuity](docs/KNOWLEDGE_SYNC.md),
 [How to read the code](docs/HOW_TO_READ.md), and [Build output](docs/BUILD_OUTPUT.md).
 
 [Read: The Age of AI Requires Standard Ten — One Unified Code for All Software](https://adico.tech/blog/2026/07/25/the-age-of-ai-requires-standard-ten-one-unified-code-for-all-software/)
+
+[Discuss: Standard Ten — one deterministic software structure for humans and AI](https://github.com/adico1/unified-code/discussions/2)
 
 ```python
 def part(thing):
