@@ -1,0 +1,30 @@
+{
+  "$id": "https://github.com/adico1/unified-code/blob/main/seed/github_corpus/REQUEST_SCHEMA.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "api_version": {"minLength": 1, "type": "string"},
+    "endpoint": {"minLength": 1, "type": "string"},
+    "format_version": {"const": "UC-GITHUB-CORPUS-REQUEST-1"},
+    "initial_cursor": {"type": ["string", "null"]},
+    "page_size": {"maximum": 100, "minimum": 1, "type": "integer"},
+    "provider": {"const": "github"},
+    "query": {"minLength": 1, "type": "string"},
+    "record_fields": {
+      "items": {"minLength": 1, "type": "string"},
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "transport": {"enum": ["graphql", "rest"]},
+    "variables": {"type": "object"},
+    "visibility_scope": {"enum": ["organization-public", "public"]}
+  },
+  "required": [
+    "format_version", "provider", "transport", "api_version", "endpoint",
+    "query", "variables", "visibility_scope", "page_size",
+    "initial_cursor", "record_fields"
+  ],
+  "title": "Unified Code GitHub corpus acquisition request",
+  "type": "object"
+}
