@@ -1,0 +1,205 @@
+{
+  "$schema": "AI_SWARM_ECONOMIC_EXPERIMENT_SCHEMA.json",
+  "format": "uc-ai-swarm-economic-experiment-1",
+  "identity": {
+    "canonical": "uc://experiments/economics/seed-to-application-swarm@1",
+    "version": 1
+  },
+  "status": "designed",
+  "question": "For previously unseen application tasks drawn from the sealed corpus, what is the causal effect of the registered Unified Code workflow versus the registered conventional baseline on successful-delivery cost and time under equal AI-swarm resources?",
+  "authorities": {
+    "protocol_sha256": "pending-seal",
+    "task_schema_sha256": "pending-seal",
+    "grader_sha256": "pending-seal",
+    "price_schedule_sha256": "pending-seal"
+  },
+  "experimental_unit": {
+    "identity_fields": ["holdout_task_sha256", "repeat", "arm", "swarm_identity", "environment_sha256"],
+    "independence_boundary": "A fresh swarm, context, worktree, process set and empty arm-local cache execute exactly one task-repeat-arm unit."
+  },
+  "arms": [
+    {
+      "id": "baseline",
+      "starting_authority": "The pinned pre-task repository and task contract, without Unified Code generated products or access to the unified arm output.",
+      "permitted_work": [
+        "handwritten implementation and tests",
+        "the same pinned language runtimes and declared tools available to the unified arm",
+        "ordinary build-test-debug iterations within the common budget"
+      ],
+      "prohibited_work": [
+        "Unified Code seeds, compiler, generated artifacts or evidence",
+        "outputs, messages, caches or traces from another unit",
+        "unregistered dependencies or human intervention"
+      ],
+      "swarm_contract": {
+        "model_identity": "pending-seal",
+        "agent_count": 4,
+        "roles": ["implementer", "reviewer", "tester", "integrator"],
+        "context_policy": "fresh-per-unit-no-cross-arm-memory",
+        "tool_policy": "Identical pinned tools, permissions, concurrency and model budgets in both arms."
+      }
+    },
+    {
+      "id": "unified",
+      "starting_authority": "The identical pinned pre-task repository and task contract plus the pinned Unified Code assembly system, with no access to the baseline output.",
+      "permitted_work": [
+        "application seed authoring",
+        "the existing single public assembly API",
+        "ordinary seed-build-verify iterations within the common budget"
+      ],
+      "prohibited_work": [
+        "handwritten generated-application source or tests",
+        "task-specific modification of permanent compiler surfaces",
+        "outputs, messages, caches or traces from another unit",
+        "unregistered dependencies or human intervention"
+      ],
+      "swarm_contract": {
+        "model_identity": "pending-seal",
+        "agent_count": 4,
+        "roles": ["implementer", "reviewer", "tester", "integrator"],
+        "context_policy": "fresh-per-unit-no-cross-arm-memory",
+        "tool_policy": "Identical pinned tools, permissions, concurrency and model budgets in both arms."
+      }
+    }
+  ],
+  "isolation": {
+    "fresh_worktree": true,
+    "fresh_processes": true,
+    "cache": "empty-and-arm-local",
+    "network": "deny-except-pinned-dependencies-and-model-api",
+    "cross_arm_exchange": "forbidden",
+    "environment_manifest": [
+      "os",
+      "architecture",
+      "cpu",
+      "memory",
+      "runtime",
+      "compiler",
+      "dependency-lock",
+      "container-image",
+      "model",
+      "model-parameters",
+      "tool-versions",
+      "price-schedule"
+    ]
+  },
+  "holdout": {
+    "task_count": 40,
+    "manifest_sha256": "pending-seal",
+    "encrypted_corpus_sha256": "pending-seal",
+    "seal_algorithm": "sha256-manifest-plus-authenticated-encryption",
+    "key_custody": "independent-custodian-or-automated-timed-release",
+    "exclusion": "no-task-or-equivalent-used-to-design-tune-or-debug-either-arm",
+    "reveal_event": "protocol-frozen-and-authorities-pinned"
+  },
+  "assignment": {
+    "unit": "task-repeat",
+    "method": "paired-block-randomization",
+    "strata": ["application-family", "estimated-complexity", "persistence", "interface-kind", "external-effect-kind"],
+    "seed_sha256": "pending-seal",
+    "order_control": "balanced-independent-arm-order",
+    "concealment": "assignment-hidden-until-unit-start"
+  },
+  "repeats": {
+    "count_per_task_arm": 3,
+    "identity": "sha256(task,arm,repeat,swarm,environment,protocol)",
+    "reuse": "no-agent-context-artifact-cache-or-worktree-reuse"
+  },
+  "budgets": {
+    "wall_seconds": 3600,
+    "model_tokens": 1000000,
+    "model_cost_microusd": 100000000,
+    "human_seconds": 0,
+    "tool_calls": 2000,
+    "compute_core_seconds": 14400,
+    "memory_byte_seconds": 54975581388800
+  },
+  "success_contract": {
+    "primary": "all-task-acceptance-tests-pass-within-budget",
+    "quality_dimensions": ["functional", "security", "determinism", "maintainability", "performance", "accessibility", "provenance"],
+    "blind_grading": true,
+    "preexisting_tests_hidden": true,
+    "accepted_artifact": "content-addressed-complete-tree"
+  },
+  "metrics": [
+    {"id": "wall-time", "unit": "nanoseconds", "source": "monotonic-clock-boundary", "aggregation": "task-paired-median-and-mean", "include_failed_runs": true},
+    {"id": "model-input", "unit": "tokens", "source": "model-provider-usage-event", "aggregation": "sum-per-unit", "include_failed_runs": true},
+    {"id": "model-output", "unit": "tokens", "source": "model-provider-usage-event", "aggregation": "sum-per-unit", "include_failed_runs": true},
+    {"id": "model-cost", "unit": "microusd", "source": "pinned-price-schedule-applied-to-provider-usage", "aggregation": "sum-per-unit", "include_failed_runs": true},
+    {"id": "tool-calls", "unit": "count", "source": "orchestrator-event-log", "aggregation": "sum-per-unit", "include_failed_runs": true},
+    {"id": "compute", "unit": "core-nanoseconds", "source": "isolated-process-accounting", "aggregation": "sum-per-unit", "include_failed_runs": true},
+    {"id": "memory", "unit": "byte-nanoseconds", "source": "isolated-process-accounting", "aggregation": "integral-per-unit", "include_failed_runs": true},
+    {"id": "human-work", "unit": "seconds", "source": "signed-intervention-events", "aggregation": "sum-per-unit", "include_failed_runs": true},
+    {"id": "iterations", "unit": "count", "source": "content-addressed-build-attempt-events", "aggregation": "sum-per-unit", "include_failed_runs": true},
+    {"id": "success", "unit": "boolean", "source": "blind-pinned-grader", "aggregation": "task-paired-risk-difference", "include_failed_runs": true},
+    {"id": "quality", "unit": "predeclared-score", "source": "blind-pinned-grader", "aggregation": "dimension-and-composite", "include_failed_runs": true},
+    {"id": "marginal-cost", "unit": "microusd", "source": "model-plus-compute-plus-human-price-schedule", "aggregation": "intention-to-treat-per-unit", "include_failed_runs": true},
+    {"id": "total-cost", "unit": "microusd", "source": "marginal-cost-plus-preregistered-infrastructure-amortization", "aggregation": "scenario-by-task-volume", "include_failed_runs": true}
+  ],
+  "failure_accounting": {
+    "principle": "intention-to-treat",
+    "classes": ["acceptance-failure", "timeout", "budget-exhaustion", "agent-crash", "tool-failure", "dependency-failure", "infrastructure-failure", "invalid-telemetry", "protocol-deviation"],
+    "timeout": "failure-with-full-budget-cost",
+    "crash": "failure-with-observed-cost-plus-recovery-cost",
+    "infrastructure_failure": "retained-and-reported-separately-never-silently-dropped",
+    "retry": "new-repeat-identity-original-remains-failure",
+    "missing_telemetry": "invalid-unit-no-success-or-savings-credit"
+  },
+  "estimands": [
+    {"id": "marginal-cost-effect", "population": "sealed-holdout-task-distribution", "outcome": "marginal-cost", "contrast": "unified-minus-baseline-paired-intention-to-treat", "cost_scope": "marginal-task"},
+    {"id": "wall-time-effect", "population": "sealed-holdout-task-distribution", "outcome": "wall-time", "contrast": "unified-minus-baseline-paired-intention-to-treat", "cost_scope": "marginal-task"},
+    {"id": "success-effect", "population": "sealed-holdout-task-distribution", "outcome": "success", "contrast": "unified-minus-baseline-paired-intention-to-treat", "cost_scope": "success-probability"},
+    {"id": "quality-effect", "population": "sealed-holdout-task-distribution", "outcome": "quality", "contrast": "unified-minus-baseline-paired-intention-to-treat", "cost_scope": "quality"},
+    {"id": "amortized-total-cost-effect", "population": "sealed-holdout-task-distribution", "outcome": "total-cost-at-preregistered-task-volumes", "contrast": "unified-minus-baseline-paired-intention-to-treat", "cost_scope": "total-with-infrastructure-amortization"}
+  ],
+  "analysis": {
+    "primary_estimand": "marginal-cost-effect",
+    "interval": "two-sided-95-percent",
+    "randomization_inference": "paired-within-task",
+    "bootstrap": "task-clustered-bca-fixed-seed",
+    "multiplicity": "holm-secondary-family",
+    "success_noninferiority_margin": 0.05,
+    "missingness": "no-complete-case-deletion-primary-analysis",
+    "heterogeneity": "predeclared-strata-descriptive-unless-powered",
+    "power": "pilot-excluded-from-holdout-and-power-analysis-frozen-before-reveal"
+  },
+  "evidence": {
+    "event_log": "append-only-canonical-jsonl",
+    "canonical_encoding": "utf8-sorted-keys-no-insignificant-whitespace",
+    "required_run_fields": ["run_identity", "task_sha256", "arm", "repeat", "swarm_identity", "environment_sha256", "protocol_sha256", "started_monotonic_ns", "ended_monotonic_ns", "usage", "cost", "tool_events", "attempt_hashes", "artifact_tree_sha256", "grader_sha256", "grader_result", "failure_class", "protocol_deviations"],
+    "tree_hashes": "sha256-for-input-output-and-environment-trees",
+    "raw_retention": "retain-all-success-failure-timeout-and-invalid-units",
+    "redaction": "secrets-and-personal-data-only-with-redaction-manifest"
+  },
+  "allowed_claims": {
+    "requires": [
+      "all authorities sealed before holdout reveal",
+      "all preregistered units accounted for",
+      "primary interval and effect estimate reported",
+      "success is noninferior before an efficiency claim",
+      "fixed infrastructure cost and amortization assumptions disclosed",
+      "raw evidence and protocol deviations published or independently escrowed"
+    ],
+    "templates": [
+      "Under the registered task distribution, environment, model and budget, the Unified Code arm changed marginal delivery cost by {estimate} with 95% interval {interval} relative to the registered baseline.",
+      "At the preregistered volume of {task_count} comparable tasks, including {infrastructure_cost} of fixed infrastructure cost, the estimated total-cost difference was {estimate} with assumptions {assumptions}.",
+      "No conclusive economic advantage was detected under this protocol; the interval was {interval}."
+    ],
+    "prohibited": [
+      "all software or all application families",
+      "all models, teams, organizations, countries or future environments",
+      "trillions of dollars or any economy-wide extrapolation",
+      "elimination of competition, languages, developers or companies",
+      "causality outside the randomized registered experiment",
+      "savings that omit failed runs, fixed infrastructure, human work or model cost",
+      "equating deterministic output with economic efficiency",
+      "equating statistical significance with practical or universal importance"
+    ]
+  },
+  "stop_rules": {
+    "ordinary": "run-all-preregistered-units",
+    "safety": ["credential exposure", "unexpected external side effect", "resource use beyond hard host safety limit"],
+    "invalid_experiment": ["holdout leak", "cross-arm contamination", "unsealed authority change", "grader identity change", "unrecoverable telemetry loss", "unequal arm resources"],
+    "early_success": "forbidden"
+  }
+}

@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "uc://schemas/economics/ai-swarm-experiment@1",
+  "title": "Unified Code AI-swarm economic experiment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "identity",
+    "status",
+    "question",
+    "authorities",
+    "experimental_unit",
+    "arms",
+    "isolation",
+    "holdout",
+    "assignment",
+    "repeats",
+    "budgets",
+    "success_contract",
+    "metrics",
+    "failure_accounting",
+    "estimands",
+    "analysis",
+    "evidence",
+    "allowed_claims",
+    "stop_rules"
+  ],
+  "properties": {
+    "$schema": {"type": "string", "minLength": 1},
+    "format": {"const": "uc-ai-swarm-economic-experiment-1"},
+    "identity": {"$ref": "#/$defs/identity"},
+    "status": {"enum": ["designed", "sealed", "running", "complete", "invalid"]},
+    "question": {"type": "string", "minLength": 1},
+    "authorities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocol_sha256", "task_schema_sha256", "grader_sha256", "price_schedule_sha256"],
+      "properties": {
+        "protocol_sha256": {"$ref": "#/$defs/sha256OrPending"},
+        "task_schema_sha256": {"$ref": "#/$defs/sha256OrPending"},
+        "grader_sha256": {"$ref": "#/$defs/sha256OrPending"},
+        "price_schedule_sha256": {"$ref": "#/$defs/sha256OrPending"}
+      }
+    },
+    "experimental_unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identity_fields", "independence_boundary"],
+      "properties": {
+        "identity_fields": {
+          "const": ["holdout_task_sha256", "repeat", "arm", "swarm_identity", "environment_sha256"]
+        },
+        "independence_boundary": {"type": "string", "minLength": 1}
+      }
+    },
+    "arms": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/arm"},
+      "allOf": [
+        {"contains": {"properties": {"id": {"const": "baseline"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "unified"}}, "required": ["id"]}}
+      ]
+    },
+    "isolation": {"$ref": "#/$defs/isolation"},
+    "holdout": {"$ref": "#/$defs/holdout"},
+    "assignment": {"$ref": "#/$defs/assignment"},
+    "repeats": {"$ref": "#/$defs/repeats"},
+    "budgets": {"$ref": "#/$defs/budgets"},
+    "success_contract": {"$ref": "#/$defs/successContract"},
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/metric"}
+    },
+    "failure_accounting": {"$ref": "#/$defs/failureAccounting"},
+    "estimands": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"$ref": "#/$defs/estimand"}
+    },
+    "analysis": {"$ref": "#/$defs/analysis"},
+    "evidence": {"$ref": "#/$defs/evidence"},
+    "allowed_claims": {"$ref": "#/$defs/allowedClaims"},
+    "stop_rules": {"$ref": "#/$defs/stopRules"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "sha256OrPending": {
+      "oneOf": [
+        {"$ref": "#/$defs/sha256"},
+        {"const": "pending-seal"}
+      ]
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["canonical", "version"],
+      "properties": {
+        "canonical": {"type": "string", "pattern": "^uc://experiments/economics/[a-z0-9-]+@[1-9][0-9]*$"},
+        "version": {"type": "integer", "minimum": 1}
+      }
+    },
+    "arm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "starting_authority", "permitted_work", "prohibited_work", "swarm_contract"],
+      "properties": {
+        "id": {"enum": ["baseline", "unified"]},
+        "starting_authority": {"type": "string", "minLength": 1},
+        "permitted_work": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "prohibited_work": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "swarm_contract": {"$ref": "#/$defs/swarmContract"}
+      }
+    },
+    "swarmContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_identity", "agent_count", "roles", "context_policy", "tool_policy"],
+      "properties": {
+        "model_identity": {"type": "string", "minLength": 1},
+        "agent_count": {"type": "integer", "minimum": 1},
+        "roles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "context_policy": {"const": "fresh-per-unit-no-cross-arm-memory"},
+        "tool_policy": {"type": "string", "minLength": 1}
+      }
+    },
+    "isolation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fresh_worktree", "fresh_processes", "cache", "network", "cross_arm_exchange", "environment_manifest"],
+      "properties": {
+        "fresh_worktree": {"const": true},
+        "fresh_processes": {"const": true},
+        "cache": {"const": "empty-and-arm-local"},
+        "network": {"const": "deny-except-pinned-dependencies-and-model-api"},
+        "cross_arm_exchange": {"const": "forbidden"},
+        "environment_manifest": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["os", "architecture", "cpu", "memory", "runtime", "compiler", "dependency-lock", "container-image", "model", "model-parameters", "tool-versions", "price-schedule"]}
+        }
+      }
+    },
+    "holdout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_count", "manifest_sha256", "encrypted_corpus_sha256", "seal_algorithm", "key_custody", "exclusion", "reveal_event"],
+      "properties": {
+        "task_count": {"type": "integer", "minimum": 30},
+        "manifest_sha256": {"$ref": "#/$defs/sha256OrPending"},
+        "encrypted_corpus_sha256": {"$ref": "#/$defs/sha256OrPending"},
+        "seal_algorithm": {"const": "sha256-manifest-plus-authenticated-encryption"},
+        "key_custody": {"const": "independent-custodian-or-automated-timed-release"},
+        "exclusion": {"const": "no-task-or-equivalent-used-to-design-tune-or-debug-either-arm"},
+        "reveal_event": {"const": "protocol-frozen-and-authorities-pinned"}
+      }
+    },
+    "assignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit", "method", "strata", "seed_sha256", "order_control", "concealment"],
+      "properties": {
+        "unit": {"const": "task-repeat"},
+        "method": {"const": "paired-block-randomization"},
+        "strata": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "seed_sha256": {"$ref": "#/$defs/sha256OrPending"},
+        "order_control": {"const": "balanced-independent-arm-order"},
+        "concealment": {"const": "assignment-hidden-until-unit-start"}
+      }
+    },
+    "repeats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count_per_task_arm", "identity", "reuse"],
+      "properties": {
+        "count_per_task_arm": {"type": "integer", "minimum": 3},
+        "identity": {"const": "sha256(task,arm,repeat,swarm,environment,protocol)"},
+        "reuse": {"const": "no-agent-context-artifact-cache-or-worktree-reuse"}
+      }
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wall_seconds", "model_tokens", "model_cost_microusd", "human_seconds", "tool_calls", "compute_core_seconds", "memory_byte_seconds"],
+      "properties": {
+        "wall_seconds": {"type": "integer", "minimum": 1},
+        "model_tokens": {"type": "integer", "minimum": 1},
+        "model_cost_microusd": {"type": "integer", "minimum": 1},
+        "human_seconds": {"type": "integer", "minimum": 0},
+        "tool_calls": {"type": "integer", "minimum": 1},
+        "compute_core_seconds": {"type": "integer", "minimum": 1},
+        "memory_byte_seconds": {"type": "integer", "minimum": 1}
+      }
+    },
+    "successContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary", "quality_dimensions", "blind_grading", "preexisting_tests_hidden", "accepted_artifact"],
+      "properties": {
+        "primary": {"const": "all-task-acceptance-tests-pass-within-budget"},
+        "quality_dimensions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["functional", "security", "determinism", "maintainability", "performance", "accessibility", "provenance"]}
+        },
+        "blind_grading": {"const": true},
+        "preexisting_tests_hidden": {"const": true},
+        "accepted_artifact": {"const": "content-addressed-complete-tree"}
+      }
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "unit", "source", "aggregation", "include_failed_runs"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "unit": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "minLength": 1},
+        "aggregation": {"type": "string", "minLength": 1},
+        "include_failed_runs": {"const": true}
+      }
+    },
+    "failureAccounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["principle", "classes", "timeout", "crash", "infrastructure_failure", "retry", "missing_telemetry"],
+      "properties": {
+        "principle": {"const": "intention-to-treat"},
+        "classes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "timeout": {"const": "failure-with-full-budget-cost"},
+        "crash": {"const": "failure-with-observed-cost-plus-recovery-cost"},
+        "infrastructure_failure": {"const": "retained-and-reported-separately-never-silently-dropped"},
+        "retry": {"const": "new-repeat-identity-original-remains-failure"},
+        "missing_telemetry": {"const": "invalid-unit-no-success-or-savings-credit"}
+      }
+    },
+    "estimand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "population", "outcome", "contrast", "cost_scope"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "population": {"const": "sealed-holdout-task-distribution"},
+        "outcome": {"type": "string", "minLength": 1},
+        "contrast": {"const": "unified-minus-baseline-paired-intention-to-treat"},
+        "cost_scope": {"enum": ["marginal-task", "total-with-infrastructure-amortization", "success-probability", "quality"]}
+      }
+    },
+    "analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary_estimand", "interval", "randomization_inference", "bootstrap", "multiplicity", "success_noninferiority_margin", "missingness", "heterogeneity", "power"],
+      "properties": {
+        "primary_estimand": {"type": "string", "minLength": 1},
+        "interval": {"const": "two-sided-95-percent"},
+        "randomization_inference": {"const": "paired-within-task"},
+        "bootstrap": {"const": "task-clustered-bca-fixed-seed"},
+        "multiplicity": {"const": "holm-secondary-family"},
+        "success_noninferiority_margin": {"type": "number", "minimum": 0, "maximum": 0.05},
+        "missingness": {"const": "no-complete-case-deletion-primary-analysis"},
+        "heterogeneity": {"const": "predeclared-strata-descriptive-unless-powered"},
+        "power": {"const": "pilot-excluded-from-holdout-and-power-analysis-frozen-before-reveal"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_log", "canonical_encoding", "required_run_fields", "tree_hashes", "raw_retention", "redaction"],
+      "properties": {
+        "event_log": {"const": "append-only-canonical-jsonl"},
+        "canonical_encoding": {"const": "utf8-sorted-keys-no-insignificant-whitespace"},
+        "required_run_fields": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "tree_hashes": {"const": "sha256-for-input-output-and-environment-trees"},
+        "raw_retention": {"const": "retain-all-success-failure-timeout-and-invalid-units"},
+        "redaction": {"const": "secrets-and-personal-data-only-with-redaction-manifest"}
+      }
+    },
+    "allowedClaims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requires", "templates", "prohibited"],
+      "properties": {
+        "requires": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "templates": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "prohibited": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+      }
+    },
+    "stopRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ordinary", "safety", "invalid_experiment", "early_success"],
+      "properties": {
+        "ordinary": {"const": "run-all-preregistered-units"},
+        "safety": {"type": "array", "items": {"type": "string"}},
+        "invalid_experiment": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "early_success": {"const": "forbidden"}
+      }
+    }
+  }
+}

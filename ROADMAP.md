@@ -1,5 +1,14 @@
 # Roadmap
 
+## Economic measurement — designed, not yet executed
+
+The registered [AI-swarm economic proof](ECONOMIC_PROOF.md) defines a paired,
+sealed comparison of conventional and Unified Code workflows with complete
+failure and cost accounting. It currently proves only that the experiment
+contract is deterministic and internally guarded. Live economic results remain
+unknown until the model-provider telemetry boundary and every preregistered
+authority are pinned and all 240 units execute.
+
 ## Milestone 1 — Seed-to-application product
 
 Public contract:
