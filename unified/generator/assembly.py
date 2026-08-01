@@ -971,6 +971,12 @@ def test_failed_atomic_persistence_preserves_original(tmp_path):
         if persistence_case
         else ""
     )
+    persistence_runner = (
+        '        ("atomic-persistence", lambda root: '
+        "test_failed_atomic_persistence_preserves_original(root)),\n"
+        if persistence_case
+        else ""
+    )
     return f'''"""Generated tests derived from acceptance declarations."""
 
 import json
@@ -1052,8 +1058,7 @@ def run():
         ("integration", lambda root: test_generated_integration_scenarios(root)),
         ("source-laws", lambda _root: test_generated_domain_and_composition_have_no_control_flow()),
         ("ticket", lambda _root: test_unhandled_failure_is_redacted_and_deterministic()),
-        {('(\"atomic-persistence\", lambda root: test_failed_atomic_persistence_preserves_original(root))' if persistence_case else '')}
-    ]
+{persistence_runner}    ]
     checks = [item for item in checks if item]
     results = []
     with tempfile.TemporaryDirectory(prefix="uc-generated-self-test-") as temporary:
@@ -2740,10 +2745,22 @@ def _public_product_index(staging, metadata_root, seeds, manifests, reports, cat
     lines = [
         "# Unified Code generated products",
         "",
-        "Choose a product family, then a product. Each `application/` directory",
-        "is runnable. This entire tree is generated; do not edit it manually.",
+        "This checked-in tree is generated for education, research and reproducible",
+        "inspection. Choose a product family, then a product. Each `application/`",
+        "directory is runnable. Do not edit generated files manually.",
         "",
         f"Products: {len(records)}",
+        "",
+        "## How to read one generated product",
+        "",
+        "Follow the same path in every product:",
+        "",
+        "1. `authority/seed.json` — the application program supplied to assembly.",
+        "2. `specification/specification.json` — the normalized semantic structure.",
+        "3. `application/` — the exact specialized runnable code.",
+        "4. `verification/test_generated.py` — tests generated from acceptance cases.",
+        "5. `verification/` — measured report or seed-to-code traceability.",
+        "6. `manifest.json` — hashes and seed-to-file traceability.",
         "",
     ]
     for group, count in groups.items():

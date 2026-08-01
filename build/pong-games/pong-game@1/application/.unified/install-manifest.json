@@ -1,0 +1,1 @@
+{"application":"pong-game","entry_point":"pong_game.cli:main","interface":{"browser":true,"cli":true,"library":false},"package":"pong_game"}

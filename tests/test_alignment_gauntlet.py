@@ -131,6 +131,29 @@ def test_public_projection_moves_runtime_out_of_private_metadata(tmp_path):
     assert not list(metadata.rglob("main.py"))
 
 
+def test_generated_products_are_a_complete_public_research_surface():
+    ignored = (ROOT / ".gitignore").read_text(encoding="utf-8").splitlines()
+    assert "build/" not in {line.strip() for line in ignored}
+    assert "[Browse the generated source for all 79 products](build/README.md)" in (
+        ROOT / "README.md"
+    ).read_text(encoding="utf-8")
+
+    build = ROOT / "build"
+    index = json.loads((build / "index.json").read_text(encoding="utf-8"))
+    assert index["total_products"] == 79 == len(index["products"])
+    assert sum(index["groups"].values()) == 79
+    for product in index["products"]:
+        paths = product["paths"]
+        assert (build / paths["authority"]).is_file()
+        assert (build / paths["specification"]).is_file()
+        application = paths.get("application", paths.get("product"))
+        evidence = paths.get("verification", paths.get("traceability"))
+        assert application is not None and (build / application).is_dir()
+        assert (build / paths["test"]).is_file()
+        assert evidence is not None and (build / evidence).is_file()
+        assert (build / paths["manifest"]).is_file()
+
+
 def test_assembly_cache_does_not_copy_the_complete_output_tree(
     tmp_path, monkeypatch
 ):

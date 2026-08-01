@@ -195,8 +195,9 @@ application code or tests. The original proofs retain responsive browser
 interfaces and real-browser CLI/GUI differential evidence; the catalog retains
 its generated GUI self-verification. The generated `build/` entrance exposes
 six product families directly; compiler-private trees and evidence live under
-`build/.unified/`. See
-[APPLICATION_ASSEMBLY.md](APPLICATION_ASSEMBLY.md).
+`build/.unified/`. [Browse the generated source for all 79 products](build/README.md),
+follow the [reading guide](docs/HOW_TO_READ.md), or inspect the assembly contract
+in [APPLICATION_ASSEMBLY.md](APPLICATION_ASSEMBLY.md).
 
 ```bash
 uc assemble seed/application_suite.json \

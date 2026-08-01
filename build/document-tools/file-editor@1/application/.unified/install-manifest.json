@@ -1,0 +1,1 @@
+{"application":"file-editor","entry_point":"file_editor.cli:main","interface":{"browser":true,"cli":true,"library":false},"package":"file_editor"}

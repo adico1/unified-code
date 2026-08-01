@@ -5,7 +5,8 @@ contract_status.json
 .uc/
 .venv/
 __pycache__/
-build/
+# `build/` is intentionally tracked: it is the deterministic education and
+# research projection of the generated applications.
 dist/
 .coverage
 coverage_py.json
