@@ -6,6 +6,7 @@ import copy
 import contextlib
 import json
 import os
+import threading
 import time
 from pathlib import Path
 
@@ -323,9 +324,11 @@ def test_physical_evidence_releases_dependency_levels_concurrently(
     tmp_path,
 ):
     released = []
+    first_level = threading.Barrier(2)
 
     def record(node):
-        time.sleep(0.05)
+        if node["id"].startswith("first-"):
+            first_level.wait(timeout=1)
         released.append(node["id"])
         return {"id": node["id"], "returncode": 0}
 
@@ -345,12 +348,10 @@ def test_physical_evidence_releases_dependency_levels_concurrently(
     ]
     monkeypatch.setitem(flow.HANDLER_REGISTRY, "record", record)
     monkeypatch.setattr(flow, "BUNDLE", tmp_path / "bundle.json")
-    started = time.monotonic()
     bundle = flow.audited_materialize_bundle_primitive(
         graph,
         {"identity": "authority", "file_count": 0},
     )
-    assert time.monotonic() - started < 0.14
     assert set(released[:2]) == {"first-a", "first-b"}
     assert released[-1] == "second"
     assert bundle["evidence_workers"] == 2

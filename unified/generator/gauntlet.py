@@ -658,7 +658,14 @@ def _g3_execution(project_path: str, decl_data: dict | None = None) -> dict:
         else:
             failed.append(name)
 
-    env = {**os.environ, "PYTHONPATH": str(root)}
+    env = {
+        **os.environ,
+        "PYTHONPATH": os.pathsep.join(
+            item
+            for item in (str(root), os.environ.get("PYTHONPATH", ""))
+            if item
+        ),
+    }
     pkg = _pkg_dir(project_path)
     if not pkg:
         return {"executed": 1, "passed": 0, "failed_checks": ("package-missing",), "verdict": "fail"}

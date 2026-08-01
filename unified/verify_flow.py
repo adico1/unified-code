@@ -340,7 +340,11 @@ def audited_command_node_primitive(node):
                 "PYTHON": sys.executable,
                 "UC_PYTHON": sys.executable,
                 "UC_VERIFY_AUTHORITY_ROOT": str(ROOT),
-                "PYTHONPATH": str(work),
+                "PYTHONPATH": os.pathsep.join(
+                    item
+                    for item in (str(work), os.environ.get("PYTHONPATH", ""))
+                    if item
+                ),
                 "PYTHONDONTWRITEBYTECODE": "1",
                 "TMPDIR": str(storage),
                 "TMP": str(storage),

@@ -264,6 +264,16 @@ def test_repository_tests_do_not_install_a_global_tmp_path_cleanup_policy():
     assert "autouse=True" not in source
 
 
+def test_isolated_python_boundaries_preserve_declared_tool_dependencies():
+    sources = (
+        Path(verify_flow.__file__).read_text(encoding="utf-8"),
+        (ROOT / "unified" / "generator" / "gauntlet.py").read_text(
+            encoding="utf-8"
+        ),
+    )
+    assert all('os.environ.get("PYTHONPATH", "")' in source for source in sources)
+
+
 def test_existing_single_public_assembly_api_is_preserved():
     parsed = _parse_argv(
         [
