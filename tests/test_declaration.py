@@ -202,7 +202,14 @@ def test_uc_new_from_declaration_generates_runnable_app(tmp_path):
     assert "unique_words" in parts
     assert 'evidence": (*thing["evidence"], "part:validate_text")' not in parts or "validate_text:ok" in parts
 
-    env = {**dict(**__import__("os").environ), "PYTHONPATH": str(root)}
+    env = {
+        **os.environ,
+        "PYTHONPATH": os.pathsep.join(
+            item
+            for item in (str(root), os.environ.get("PYTHONPATH", ""))
+            if item
+        ),
+    }
     sample = root / "sample.txt"
     sample.write_text("Go go GO", encoding="utf-8")
     proc = subprocess.run(

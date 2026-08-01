@@ -44,7 +44,9 @@ SEED_ROOT = ROOT / "seed"
 NATIVE_SEED = SEED_ROOT / "thing_v2" / "trajectory_meter.json"
 FOREIGN_SEED = SEED_ROOT / "thing_v2" / "orchard_yield.json"
 QUALIFIED_NAME = "uc://applications/trajectory-meter@1"
-SNAPSHOT = "87bcc4a1d23878f51ee497dc9ee738a2c5060e22c2e4cd128f2fb5c526c0bfa6"
+SNAPSHOT = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))[
+    "registry_snapshot_sha256"
+]
 ARTIFACT_SHA = "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841"
 SEED_SHA = "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
 SUCCESS_EVIDENCE = (
