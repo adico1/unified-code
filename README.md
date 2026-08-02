@@ -88,6 +88,15 @@ python -m unified.selftest
 python -m generated_demo
 ```
 
+Execute a canonical JSON application through an ephemeral request adapter:
+
+```bash
+uc run examples/run/invoice-total.request.json
+```
+
+See [Unified Application Preprocessor](STANDARD_TEN_PREPROCESSOR.md) for the
+bounded adapter → existing compiler → UEM proof and explicit materialization.
+
 ## Small example
 
 ```python
