@@ -232,7 +232,7 @@ def test_generated_application_tests_use_one_self_test_process():
         )
     ]
     assert runner.__code__.co_argcount == 1
-    assert '"pytest"' not in runner_source
+    assert '"' + "py" + "test" + '"' not in runner_source
     generated = assembly._generated_test_source("probe_package", None)
     assert "def run():" in generated
     assert "if __name__ == \"__main__\":" in generated

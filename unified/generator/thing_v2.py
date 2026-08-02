@@ -298,9 +298,6 @@ requires-python = ">=3.11"
 [tool.setuptools.packages.find]
 include = [{(application["package"] + "*")!r}]
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = "-q"
 """
 
 
@@ -1267,10 +1264,25 @@ def _python_executable() -> str:
     return sys.executable or "python3"
 
 
+def _stable_selftest_detail(stdout: str, stderr: str, limit: int) -> str:
+    try:
+        report = json.loads(stdout)
+    except json.JSONDecodeError:
+        return (stdout + stderr)[-limit:]
+    report.pop("duration_ns", None)
+    return (json.dumps(report, separators=(",", ":"), sort_keys=True) + stderr)[
+        -limit:
+    ]
+
+
 def _run_generated_tests(root: Path) -> dict:
     try:
         result = subprocess.run(
-            [_python_executable(), "-m", "pytest", "tests", "-q", "--tb=line"],
+            [
+                _python_executable(),
+                str(Path(__file__).resolve().parents[2] / "unified" / "selftest.py"),
+                "tests",
+            ],
             cwd=str(root),
             capture_output=True,
             text=True,
@@ -1282,7 +1294,9 @@ def _run_generated_tests(root: Path) -> dict:
     return {
         "ok": result.returncode == 0,
         "exit": result.returncode,
-        "detail": ((result.stdout or "") + (result.stderr or ""))[-1200:],
+        "detail": _stable_selftest_detail(
+            result.stdout or "", result.stderr or "", 1200
+        ),
     }
 
 
@@ -1335,7 +1349,7 @@ def _seedless_copy_check(root: Path, package: str) -> dict:
         shutil.copytree(
             root,
             copied,
-            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".pytest_cache"),
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".uc-cache"),
         )
         result = _run_acceptance(copied, package)
         result["path"] = str(copied)

@@ -11,7 +11,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
+from unified import selftest
 
 from unified.boundary import inward
 from unified.generator import manifestation
@@ -47,7 +47,7 @@ QUALIFIED_NAME = "uc://applications/trajectory-meter@1"
 SNAPSHOT = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))[
     "registry_snapshot_sha256"
 ]
-ARTIFACT_SHA = "a8c08f617be16b5916616a30834ad6444e81ea737559eca5747ce7082e1d3841"
+ARTIFACT_SHA = "280a14254fcf1d2bfaba5944c633b03572b43908a3c7ef0761d27e448f147a83"
 SEED_SHA = "762f633c12a87bcf8a462002c253b047b980c1e1ab442a307154230c988fda49"
 SUCCESS_EVIDENCE = (
     "boundary:inward",
@@ -153,7 +153,7 @@ def _tree_bytes(root: Path) -> dict[str, bytes]:
         for path in sorted(root.rglob("*"))
         if path.is_file()
         and "__pycache__" not in path.parts
-        and ".pytest_cache" not in path.parts
+        and ".uc-cache" not in path.parts
     }
 
 
@@ -331,7 +331,7 @@ def test_generated_runtime_executes_after_copy_without_registry_seed_or_repo(tmp
     shutil.copytree(
         output,
         copied,
-        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".pytest_cache"),
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".uc-cache"),
     )
     package_source = "\n".join(
         path.read_text(encoding="utf-8")
@@ -393,7 +393,7 @@ def test_unknown_qualified_name_is_valid_domain_outcome(tmp_path):
     )
 
 
-@pytest.mark.parametrize(
+@selftest.mark.parametrize(
     ("name", "resolution", "markers"),
     (
         (

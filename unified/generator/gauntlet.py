@@ -277,7 +277,7 @@ def _g0_hygiene(project_path: str) -> dict:
     gi = (root / ".gitignore").read_text(encoding="utf-8") if (root / ".gitignore").is_file() else ""
     check("gitignore-present", bool(gi))
     check("gitignore-pycache", "__pycache__" in gi or "*.py[cod]" in gi)
-    check("gitignore-pytest", ".pytest_cache" in gi)
+    check("gitignore-selftest", ".uc-cache" in gi)
 
     planned_pyc = [
         p
@@ -680,7 +680,10 @@ def _g3_execution(project_path: str, decl_data: dict | None = None) -> dict:
     check("import-modules", proc.returncode == 0)
 
     proc = subprocess.run(
-        [sys.executable, "-m", "pytest", "-q"],
+        [
+            sys.executable,
+            str(Path(__file__).resolve().parents[2] / "unified" / "selftest.py"),
+        ],
         cwd=str(root),
         env=env,
         capture_output=True,
@@ -1422,7 +1425,7 @@ def _g7_mutations(project_path: str, decl_data: dict | None = None) -> dict:
             shutil.copytree(
                 src,
                 dest,
-                ignore=shutil.ignore_patterns(".venv", "__pycache__", "*.egg-info", ".pytest_cache"),
+                ignore=shutil.ignore_patterns(".venv", "__pycache__", "*.egg-info", ".uc-cache"),
             )
             mutator(dest)
             with contextlib.redirect_stdout(io.StringIO()):
@@ -2051,7 +2054,7 @@ def _g9_l10_control_flow(project_path: str, decl_data: dict | None = None) -> di
                 src,
                 dest,
                 ignore=shutil.ignore_patterns(
-                    ".venv", "__pycache__", "*.egg-info", ".pytest_cache"
+                    ".venv", "__pycache__", "*.egg-info", ".uc-cache"
                 ),
             )
             mutator(dest)

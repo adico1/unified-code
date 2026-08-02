@@ -217,7 +217,7 @@ name-to-manifestation.
 ## Conformance
 
 ```bash
-pytest tests/test_stage0.py -q
+python -m unified.selftest tests/test_stage0.py
 ```
 
 The focused suite proves independent-directory determinism, record-order

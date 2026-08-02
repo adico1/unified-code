@@ -10,7 +10,7 @@ import os
 import subprocess
 from pathlib import Path
 
-import pytest
+from unified import selftest
 
 from unified.machine.bytecode import encode_program, _decode
 from unified.machine.compile_decl import (
@@ -74,7 +74,7 @@ def test_binding_order_mutation_detected():
 
 
 def test_unknown_binding_ref_at_compile():
-    with pytest.raises(ValueError, match="unknown-binding-ref"):
+    with selftest.raises(ValueError, match="unknown-binding-ref"):
         _binding_eval_order({"a": {"op": "ref", "name": "does_not_exist"}})
 
 
@@ -82,7 +82,7 @@ def test_null_binding_distinct_from_missing():
     from unified.machine.primitives import eval_expr, _is_expr_fail, args_error_path
 
     assert eval_expr({"op": "ref", "name": "x"}, {"bindings": {"x": None}, "path": []}) is None
-    with pytest.raises(Exception) as ei:
+    with selftest.raises(Exception) as ei:
         eval_expr({"op": "ref", "name": "x"}, {"bindings": {}, "path": []})
     assert _is_expr_fail(ei.value)
     err, path = args_error_path(ei.value)
@@ -108,7 +108,7 @@ def test_artifact_binding_order_matches_compile():
 
 def test_c_detects_binding_order_mutation():
     if not Path(UEM_C).is_file():
-        pytest.skip("uem-c not built")
+        selftest.skip("uem-c not built")
     compiled = _compile_invoice()
     v = dict(value_of(compiled))
     image = dict(v["image"])

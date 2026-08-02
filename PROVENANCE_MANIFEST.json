@@ -1,5 +1,5 @@
 {
-  "file_count": 481,
+  "file_count": 515,
   "files": [
     {
       "compliance": "standard.gap",
@@ -39,8 +39,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": ".github/workflows/test.yml",
       "provenance": "handwritten-pending",
-      "sha256": "ecdcab5357112a43cf7c8ff23f4c93c0e65de467904c4de148991b0fb5b431d7",
-      "size": 7491,
+      "sha256": "c6a516ec03444f8c2acb82bc4723f77ddbf0067ec93cb7692421381d99296dce",
+      "size": 6335,
       "standard_ten_class_ok": false
     },
     {
@@ -60,8 +60,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": ".gitignore",
       "provenance": "handwritten-pending",
-      "sha256": "699c693cc407b22156d8e19756cf9ef375a72ecc63fecdbf53725b4a64e32a94",
-      "size": 168,
+      "sha256": "c45b442282c5b0e22794ffc5a8788b9ab4019745d1bb459c6b4f0ad2e379582e",
+      "size": 289,
       "standard_ten_class_ok": false
     },
     {
@@ -81,8 +81,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "APPLICATION_ASSEMBLY.md",
       "provenance": "handwritten-pending",
-      "sha256": "b07a7da4774bc644238b5edc55c810aa5220624e27caad1132f92a88ded18312",
-      "size": 6492,
+      "sha256": "1c43ad68797b4224a484a1b93c695ddd9f8d0743d31b7de740d4a5cf430a3010",
+      "size": 6527,
       "standard_ten_class_ok": false
     },
     {
@@ -101,8 +101,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "6118d899a69f93be35247b18e09880a76f617d74466cc1db8ccad5904a740162",
-      "size": 50057,
+      "sha256": "bebb98f6c19a44bacf2062b9cc850b2e8bbb9e4e05d649da4a6bc33a0bc78b6a",
+      "size": 53462,
       "standard_ten_class_ok": true
     },
     {
@@ -127,6 +127,27 @@
       "standard_ten_class_ok": false
     },
     {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "ECONOMIC_PROOF.md",
+      "provenance": "handwritten-pending",
+      "sha256": "98332d4b37cfddbed7833ac92cb770f55576f1c4ad6521e33e5b2b20e2789800",
+      "size": 10509,
+      "standard_ten_class_ok": false
+    },
+    {
       "compliance": "ok",
       "control_flow": {
         "classes": 0,
@@ -145,6 +166,27 @@
       "sha256": "0fa0d5bc6bb62286eb26a5d92b5e0e959c22b76b52042eb68479c2a70167076a",
       "size": 1331,
       "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "GITHUB_CORPUS.md",
+      "provenance": "handwritten-pending",
+      "sha256": "5d1f29d4218dbff3a67259b5721e3b2d7c1ea62079c88fab8171d1bce6633c29",
+      "size": 3229,
+      "standard_ten_class_ok": false
     },
     {
       "compliance": "standard.gap",
@@ -210,6 +252,27 @@
       "standard_ten_class_ok": false
     },
     {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "PRECOMPILE.md",
+      "provenance": "handwritten-pending",
+      "sha256": "645f81bc97f5d5629fc6de5d02f426abb8c32fbe951a6c5f61a5db32000d57de",
+      "size": 2940,
+      "standard_ten_class_ok": false
+    },
+    {
       "compliance": "ok",
       "control_flow": {
         "classes": 0,
@@ -225,8 +288,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "cc58400868f7f3f10a46f90f0e9cd1539c9143f44c281b719fef1007c1b2fed6",
-      "size": 299205,
+      "sha256": "cd067ba304772c7986fe1d635fd8cdbd19ce8cdaf3c19ec841d60188af758667",
+      "size": 320572,
       "standard_ten_class_ok": true
     },
     {
@@ -246,8 +309,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "README.md",
       "provenance": "handwritten-pending",
-      "sha256": "d882950840e254f8baf6538d2728e6b72037be9024e21b595c79a75060f9d49b",
-      "size": 14365,
+      "sha256": "d226533a044fda1bb0fbded91de75f6b1e9fc4482d6e54d381ca5f560cc90a90",
+      "size": 15436,
       "standard_ten_class_ok": false
     },
     {
@@ -267,8 +330,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "ROADMAP.md",
       "provenance": "handwritten-pending",
-      "sha256": "ca0c3f7fe075a25924704077918ee928d58b69187136ecaf8435ebfb2447d4e1",
-      "size": 9631,
+      "sha256": "02b0f64139aff69f56dda2c14917a98b2cfe8f6d1d650935d2c842e0026ed60b",
+      "size": 10118,
       "standard_ten_class_ok": false
     },
     {
@@ -330,8 +393,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "STAGE0.md",
       "provenance": "handwritten-pending",
-      "sha256": "9e2bae9dd4ed3f3adf24d7b89a4265149de2b6ffc96dde7e1af30d4eb23532aa",
-      "size": 8413,
+      "sha256": "c6e196a04b3d2bfaf9629543dcb7dc18465ef07778793ca7d5866f110d43f5a6",
+      "size": 8430,
       "standard_ten_class_ok": false
     },
     {
@@ -455,8 +518,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "VERIFY_FLOW.md",
       "provenance": "handwritten-pending",
-      "sha256": "a8a4df82c4ef96ad06884f1841b736f633055d2112f68de8816716800cd168ac",
-      "size": 3360,
+      "sha256": "ff2a617cda44b53eb8a2b8358fcc2e36ba2fbd313021350c9934ae2d6226931e",
+      "size": 3916,
       "standard_ten_class_ok": false
     },
     {
@@ -476,8 +539,92 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "VISION.md",
       "provenance": "handwritten-pending",
-      "sha256": "090dda43f5dccb9890dec65d7003c4e69a842ef14ad2820bb92e285cafcc0b2f",
-      "size": 1810,
+      "sha256": "6c891740bfe9e5fe7db8367a667fba46b9ecc9715237279ab1dbda9ba5714184",
+      "size": 4892,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "artifacts/economics/github-duplication-pilot.json",
+      "provenance": "handwritten-pending",
+      "sha256": "1746e1b731f76d57ccfa6fbc68f44cb8e3f0068522ee8e64ce2d18edaa1ee6af",
+      "size": 59559,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "artifacts/economics/github-duplication-pilot.snapshot.json",
+      "provenance": "handwritten-pending",
+      "sha256": "a6fe937c3382f28b300960fc4405cd620ea123f32a126aeaa0fec7ce29b6cf76",
+      "size": 961480,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "artifacts/economics/retrospective-v1.json",
+      "provenance": "handwritten-pending",
+      "sha256": "79ee7000ab56b2c0a5b77fa168dad59db426e3a36a3f17c78fcaa02c3bcd2664",
+      "size": 48212,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "artifacts/economics/semantic-reuse-pilot.json",
+      "provenance": "handwritten-pending",
+      "sha256": "4aedc2f01f5cb1ae7b3bbe421272fca63b870a3e25adf005884c07640c8d316c",
+      "size": 2674,
       "standard_ten_class_ok": false
     },
     {
@@ -3559,8 +3706,29 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "docs/HOW_TO_READ.md",
       "provenance": "handwritten-pending",
-      "sha256": "31f03b6ada100176d51fac2baea8220ad49c2088c0d42bd77b74c4cd06148195",
-      "size": 1364,
+      "sha256": "e64a15a23eecfd35f1e1f26d7ca377a186039065e18ed71fa5f93d0d126ebe0a",
+      "size": 1553,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "docs/KNOWLEDGE_SYNC.md",
+      "provenance": "handwritten-pending",
+      "sha256": "43390db683ba7bc6365d34f10294bd2883b69d51a94e6519dbada78b6b0ef6a4",
+      "size": 4504,
       "standard_ten_class_ok": false
     },
     {
@@ -4213,7 +4381,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/audit/generated_audit.py",
       "provenance": "generated",
-      "sha256": "d009ff834d35daf678e205fdf42a4375ed5cc8132ed72cbe052bda4de3910f42",
+      "sha256": "47f261197a649d41b7d7c401fb840c8ce6df6c931ace1949073ae4d46e6c8810",
       "size": 8323,
       "standard_ten_class_ok": true
     },
@@ -4233,7 +4401,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/audit/obligations.json",
       "provenance": "generated",
-      "sha256": "11340bcb361a4234dcc1f36b8418ef36a450e9ca6165d6eb99fac5c3057b48dd",
+      "sha256": "10f5c1560bddec0abfb702b13ae02a270a2580c8b81e311617012e56556f842b",
       "size": 493,
       "standard_ten_class_ok": true
     },
@@ -4276,7 +4444,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/audit/schema.json",
       "provenance": "generated",
-      "sha256": "fcc539a7c872fa397ca06049e78b6b915844d9f08b21f98f36bbc4fcd45eb2b8",
+      "sha256": "1f5ef40df9076bb1011525ab1a9aa741b81f150f5751d2de39efecb3aa50953e",
       "size": 366,
       "standard_ten_class_ok": true
     },
@@ -4296,7 +4464,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/authority/facts.json",
       "provenance": "generated",
-      "sha256": "0aca03e7beec1719a2e71a97ddc82715890331c4dad34976b26e1f5b9c68f136",
+      "sha256": "b0cb55b2f646285b95cd8208c57c0714de6755078a5367b38b967c597a3ca369",
       "size": 146765,
       "standard_ten_class_ok": true
     },
@@ -4316,7 +4484,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/authority/obligations.json",
       "provenance": "generated",
-      "sha256": "4a42e8cd739af9a6544264f880b618e802ce8ca189da7063b5bdc692f1e27d22",
+      "sha256": "2f9157c8aa23ecf278930ca03e6cb140f754394eae3763172c4e579432cc030b",
       "size": 6351,
       "standard_ten_class_ok": true
     },
@@ -4337,7 +4505,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/c/generated_contract_test.c",
       "provenance": "generated",
-      "sha256": "5a1923c5b6df7140ad23b4b16c3754b62f411e8049a7ccf542f4f4c6702f855f",
+      "sha256": "a25940a3c08e40d3673bea560d2fd7bf378da90cd914274f5b73ff85edbf0f24",
       "size": 1347,
       "standard_ten_class_ok": true
     },
@@ -4357,7 +4525,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/coverage/contract.json",
       "provenance": "generated",
-      "sha256": "34f8d5993137544e96cd7194cbedde91d7db0c852bba22ac2519cd1b9a0e8eee",
+      "sha256": "6de512cba84a71a5678d33b46268bfdf17541eea19949988fd729a45cace9208",
       "size": 427,
       "standard_ten_class_ok": true
     },
@@ -4377,7 +4545,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/docs/DEVELOPER_WORKFLOW.md",
       "provenance": "generated",
-      "sha256": "7494e9b4d65034543409a11188d10b9a6b79c4f94ef2b47ecc48d5ef285fb765",
+      "sha256": "9d22a62cd169c7b4124562453545c34edcff8f58c960e8d80f794fd73c6c69e8",
       "size": 825,
       "standard_ten_class_ok": true
     },
@@ -4397,7 +4565,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/docs/LAW.normative.md",
       "provenance": "generated",
-      "sha256": "dd13a8f0ecf677e5451a994b703df56041be58607bcca8c7fadd7a221a358512",
+      "sha256": "d21cc23e7c45edbd4ddc322d312754f39476d1714ead8dc9fb0ae77111db295d",
       "size": 546,
       "standard_ten_class_ok": true
     },
@@ -4417,7 +4585,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/docs/README.status.md",
       "provenance": "generated",
-      "sha256": "f9ca1c411713e71cb4a1b07ee481f2c9952d72524918ae22d5cf356636425034",
+      "sha256": "ceb8857ba1e3863faa68a60416719eb0c6bd25b3958072ae165d3105b41bf568",
       "size": 1063,
       "standard_ten_class_ok": true
     },
@@ -4437,7 +4605,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/docs/SPEC.normative.md",
       "provenance": "generated",
-      "sha256": "3661bd1211dc66e9745a3f7bb4270cb00e22141013a3bd617af3c3899c0f52bc",
+      "sha256": "62b5d0cad28573bd3c4249e9fa39b15d6223aa58a868e582a6c4e822e5d2f7d7",
       "size": 615,
       "standard_ten_class_ok": true
     },
@@ -4457,7 +4625,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/docs/UEM.normative.md",
       "provenance": "generated",
-      "sha256": "39c08edaddc5363b8c6bd806b382d59ec7a49a290a7e50fcfa3da8db3b1fcd15",
+      "sha256": "637797025f180dcedb3d889de2577fe260c891fd16c38e517a6d0f8adbb27114",
       "size": 754,
       "standard_ten_class_ok": true
     },
@@ -4477,7 +4645,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/gauntlet/contract.json",
       "provenance": "generated",
-      "sha256": "1560d12467a6dea3bf593f26e94e73b30eb78190a8adf76e2bc6e4e2e8e32785",
+      "sha256": "d6e990e8d0e143c2e31a628f25f1e6b7fdffa5774567ab0a9b8920b4f8c40e72",
       "size": 2399,
       "standard_ten_class_ok": true
     },
@@ -4497,7 +4665,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/manifest.json",
       "provenance": "generated",
-      "sha256": "af1617d2b8815c5b44c027e558511a00db049e1730ce9acc63fcd99c3f92fe2e",
+      "sha256": "3a06de1c45356673a2b75e1e3941bbdf6fb6aba636ed4c463b5f33b60aa641af",
       "size": 18253,
       "standard_ten_class_ok": true
     },
@@ -4517,7 +4685,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0000.json",
       "provenance": "generated",
-      "sha256": "252616784476a9e45f86ab448212805ac31e5954d1bb4d2ce03acef53aa353bc",
+      "sha256": "941514365e1581759c586ba41591c7f3c5bfac97469221a8ad0b713e8c35b8b0",
       "size": 474,
       "standard_ten_class_ok": true
     },
@@ -4537,7 +4705,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0001.json",
       "provenance": "generated",
-      "sha256": "6afcbbe2658840502ec540286b31b8d1c6860c9e114ef34cc30bb4c6cd2588ca",
+      "sha256": "043372ce2683bf545125d2e249af26f8d318b1097ded484df6e8fc078400bebe",
       "size": 477,
       "standard_ten_class_ok": true
     },
@@ -4557,7 +4725,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0002.json",
       "provenance": "generated",
-      "sha256": "681bfd25c3d28b7c835793f517a592d64f8599c915768b9ebfb405db50d34580",
+      "sha256": "dad0c8c58f574e41775862677e9c835e141378f835e867de44bdf41d37aa8abc",
       "size": 479,
       "standard_ten_class_ok": true
     },
@@ -4577,7 +4745,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0003.json",
       "provenance": "generated",
-      "sha256": "2a77615fb56fcb2ee3360f11e98d948b0d0245cd2af6822ac2aa6495785c23bb",
+      "sha256": "284e127b7f188d774300a6680826b5a0d759e9f56b34bf16eae9178b7897447f",
       "size": 481,
       "standard_ten_class_ok": true
     },
@@ -4597,7 +4765,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0004.json",
       "provenance": "generated",
-      "sha256": "495b9d39502c1058f3740f6a621c376fb48f51a452b55abf646353bad1ede3ad",
+      "sha256": "4f7826a793d93fd3eb429ef03a4680d3a638f3c344cd2c9c3c27b742035f7dac",
       "size": 475,
       "standard_ten_class_ok": true
     },
@@ -4617,7 +4785,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0005.json",
       "provenance": "generated",
-      "sha256": "ca3bc700882b8db19d7579157caf4ea00ac1827c048872302948c4135cc17818",
+      "sha256": "427d8844d6b7bd8d49d5acbe111df574d65f4559fd40fa5e46f7b5746cd18e4e",
       "size": 481,
       "standard_ten_class_ok": true
     },
@@ -4637,7 +4805,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0006.json",
       "provenance": "generated",
-      "sha256": "e913434b62b6d2198ff1c1b8e206f8c8d71c1bf9b47491e4035a238a87f2b205",
+      "sha256": "f4b44cedcc2d076657daa11c31bbe8bf0de5d607520e31fc38d35934ade2292a",
       "size": 476,
       "standard_ten_class_ok": true
     },
@@ -4657,7 +4825,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0007.json",
       "provenance": "generated",
-      "sha256": "0357aaa98d734d3cd99f5974dd8442af29ee07892165ae4f45f1ee7589110b4b",
+      "sha256": "e9bfa0d57a95e06dee717ef5aca76b6fe9434f9013bd9002520b4a303103be10",
       "size": 475,
       "standard_ten_class_ok": true
     },
@@ -4677,7 +4845,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0008.json",
       "provenance": "generated",
-      "sha256": "f281362a6b6a81b367d3d624f60ad9b42079e28d6a4a6687c197bc8954e71bfe",
+      "sha256": "c42564917561b6d4b13687777b0b749c73af794876ec7eb7c351b7c78a4625c9",
       "size": 474,
       "standard_ten_class_ok": true
     },
@@ -4697,7 +4865,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0009.json",
       "provenance": "generated",
-      "sha256": "1b7be49cd38224b32142a663219e454363a0ce1303f692fd13a6a22732579859",
+      "sha256": "d138426c8808b6428874f0cca994b6f36da5ea61d7229fdfba089f1a83137730",
       "size": 482,
       "standard_ten_class_ok": true
     },
@@ -4717,7 +4885,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0010.json",
       "provenance": "generated",
-      "sha256": "65f4a17db6ef147a7639019ba6dd15abb7eb2646e90ffe73873b288c3123e6c6",
+      "sha256": "b4944b59de965cb398ba0e75a7d585bd24db23a76c523bb4147f68c6af70fb33",
       "size": 475,
       "standard_ten_class_ok": true
     },
@@ -4737,7 +4905,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0011.json",
       "provenance": "generated",
-      "sha256": "2f67096eac1f0ba433e0e0c3598b28dceb4c521bba8f5f79c7e966052b7afc28",
+      "sha256": "1add63d10eea8e17b5ae5ae13dd6bd1ea1b39506598b26e0bab507e93d1bc559",
       "size": 477,
       "standard_ten_class_ok": true
     },
@@ -4757,7 +4925,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0012.json",
       "provenance": "generated",
-      "sha256": "735d16c8503288cb97ca489ccac2d570008eefa2f391b59873a2a975531a63b2",
+      "sha256": "2df475298173ee9f70649208eb18c56d02f9909d0e1ee7ace306bb651f193d41",
       "size": 476,
       "standard_ten_class_ok": true
     },
@@ -4777,7 +4945,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0013.json",
       "provenance": "generated",
-      "sha256": "bb1bcb57e88d3d4ba46309b04c67aabc2ed5b67fac249ca4abedafc92ed191cf",
+      "sha256": "7c8d80b63f6410f2eb0af1df5e9962c306c55383ee31614757486c27a0b96055",
       "size": 480,
       "standard_ten_class_ok": true
     },
@@ -4797,7 +4965,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0014.json",
       "provenance": "generated",
-      "sha256": "2a360467fa08fe03ad753524d03772bd4383e524a46d2d15a1a5f7352febb977",
+      "sha256": "c09001678346a3dda020ad8968c6a80deab6405dc4337fb7a71fc37527fd4c99",
       "size": 480,
       "standard_ten_class_ok": true
     },
@@ -4817,7 +4985,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0015.json",
       "provenance": "generated",
-      "sha256": "60896145a9c7205e8ef719cd044ef921c1df09c74b668e8f044228ba934f73b9",
+      "sha256": "251a2f1f68bb51b9ff14894d04f1c02a2c18a3977977e6827c0ca2c1b7217f47",
       "size": 477,
       "standard_ten_class_ok": true
     },
@@ -4837,7 +5005,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0016.json",
       "provenance": "generated",
-      "sha256": "81e27ae039bd68b02f6a6568c1d1d165407bb65e316922a4e99dacda90c765f3",
+      "sha256": "94de11ca402efe5d6bece1e1a5549130ca44c11cc1cc3f6566797a4c2d7cb7cb",
       "size": 519,
       "standard_ten_class_ok": true
     },
@@ -4857,7 +5025,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0017.json",
       "provenance": "generated",
-      "sha256": "d7ecd421a7af1696efe5e06f52a82d98c2f614313d0125d538af0e0e17e445ac",
+      "sha256": "bd09f84abb42a7a07b56e2572c2ef11bcf231025be61c790dc85031bf48a005c",
       "size": 522,
       "standard_ten_class_ok": true
     },
@@ -4877,7 +5045,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0018.json",
       "provenance": "generated",
-      "sha256": "09e65292fade07b07a68d69753fea14701255fa3c3309ca7f3b1068560da7775",
+      "sha256": "f267ae804645f9639910120cab19051e84a028bfebae70c3e183ef447b73f777",
       "size": 501,
       "standard_ten_class_ok": true
     },
@@ -4897,7 +5065,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0019.json",
       "provenance": "generated",
-      "sha256": "ce4842fc9645a6080d5f48897f129ebf462d85dc508e427df707861c66fc67b4",
+      "sha256": "b6e2de201ee51a7e60be8f8f13c92467f862c24eedbbf34e8521924866c5a38a",
       "size": 495,
       "standard_ten_class_ok": true
     },
@@ -4917,7 +5085,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0020.json",
       "provenance": "generated",
-      "sha256": "0e2d5df3374fa85185ac4a488d73394613564d1de9fb9ce709403f20c4a63a9e",
+      "sha256": "cb9c2ea8b241d0105c6fc047af89db48f5dd53947dd62adfb09d6a60a88a89c2",
       "size": 510,
       "standard_ten_class_ok": true
     },
@@ -4937,7 +5105,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0021.json",
       "provenance": "generated",
-      "sha256": "f804f9f387b90a71443d40f3a985b07790cdf62d7cdaf03b98e87e0b02a1adc2",
+      "sha256": "abeb462e54ba8e99560a0107595afee9f45153029b874db3ce6738dbb1d7f9a1",
       "size": 504,
       "standard_ten_class_ok": true
     },
@@ -4957,7 +5125,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0022.json",
       "provenance": "generated",
-      "sha256": "5950c54f181c2c90df22e6592180739564f1835900c6f1b642e0427d94e50205",
+      "sha256": "89ea626591855a7a0c9f6bf33fc8b30b3b866379e00886ab4582d78938282fdd",
       "size": 513,
       "standard_ten_class_ok": true
     },
@@ -4977,7 +5145,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0023.json",
       "provenance": "generated",
-      "sha256": "249919161c89f9c213d0b8bc10049cbd90821bb3841293b7105e0829e24782cb",
+      "sha256": "0de3833de373872a2d5317d13a0ebc81cee7f34eb53a20938af65712c09259a2",
       "size": 513,
       "standard_ten_class_ok": true
     },
@@ -4997,7 +5165,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0024.json",
       "provenance": "generated",
-      "sha256": "924b1080812344203a3c55d96df2cc516314b51f2fa4966ab9e4e074bd36a90a",
+      "sha256": "93a4430cc32529c978885d043ba68dae2f1a60f6df64d20051a5cd85b635d767",
       "size": 519,
       "standard_ten_class_ok": true
     },
@@ -5017,7 +5185,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0025.json",
       "provenance": "generated",
-      "sha256": "309cf879afb4af8aff2ab609b2cf51c8222bbd73d9094280c1ef9e66a121c152",
+      "sha256": "bc12a1aa504f2fa16dfe9f89e19ab93ae90edab1df12f5a29c4c23e504a65cc3",
       "size": 525,
       "standard_ten_class_ok": true
     },
@@ -5037,7 +5205,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0026.json",
       "provenance": "generated",
-      "sha256": "8de00ade7290241e37298ba14c5ef8616ab7da8f4db11dc0f79e5ad8cc657057",
+      "sha256": "b9e048f4f598793268e18cb6753a23855d68802984e412181cca8968cd9a86ad",
       "size": 516,
       "standard_ten_class_ok": true
     },
@@ -5057,7 +5225,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0027.json",
       "provenance": "generated",
-      "sha256": "e088854dfefb4fb8b6cd9a7bf6464e791c6d538c738fc35aa02fb3ff5a8bccbe",
+      "sha256": "899783b52702db2e589d59b1780e7bc1e9fe3f5b053011ec577a71c9858ffe73",
       "size": 502,
       "standard_ten_class_ok": true
     },
@@ -5077,7 +5245,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0028.json",
       "provenance": "generated",
-      "sha256": "a77699e71b318256bf1d412ab064fbd6914635f65ba797861f417451d00bf8ce",
+      "sha256": "a390a673d214a328d0addd342ea641e5f47a952b282041a7d87d0c8d4eeabcce",
       "size": 488,
       "standard_ten_class_ok": true
     },
@@ -5097,7 +5265,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0029.json",
       "provenance": "generated",
-      "sha256": "ec308addb0cfa71892111822a64f72cfb4523bcec70bb954a29c8a10a3213cf3",
+      "sha256": "10ac37e9d58ec47d6c04b480b30f1fda7f1f4546b154d912f99842827f3f1c10",
       "size": 494,
       "standard_ten_class_ok": true
     },
@@ -5117,7 +5285,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0030.json",
       "provenance": "generated",
-      "sha256": "b0ddc831cd9ebe94225259259c7b582f28acd7ae79ee41798425fc465edc8a1c",
+      "sha256": "d91dd048fa3a666dbea91cb71709723e30f038e9896d1be85abdec6750ae5f89",
       "size": 490,
       "standard_ten_class_ok": true
     },
@@ -5137,7 +5305,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0031.json",
       "provenance": "generated",
-      "sha256": "0d01561cb7c3a894a6e56ced3478efdaef7ef0591ac919be4ba8003933a669b7",
+      "sha256": "1314716f88452b183be04a809717ef11b534e753f9c7ecc7f10fc8765eca87f2",
       "size": 581,
       "standard_ten_class_ok": true
     },
@@ -5157,7 +5325,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0032.json",
       "provenance": "generated",
-      "sha256": "c97f7036a85dbe5aaf41c18dc733de04ff465f4adc97647f1cd74d66b3b8bece",
+      "sha256": "7c5643f2df068e6d31baa1749da5e9e1f71fec2ba8841596606b93aa643c8f5a",
       "size": 583,
       "standard_ten_class_ok": true
     },
@@ -5177,7 +5345,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0033.json",
       "provenance": "generated",
-      "sha256": "9f3f874c02d8899134bddc0005da89f2d0aa89d9f62af8bc36561e82f444cc86",
+      "sha256": "fe0376f322beef72f8f79c7a49e6a903c5680382968d5bb1299fcdddfbcf1b93",
       "size": 527,
       "standard_ten_class_ok": true
     },
@@ -5197,7 +5365,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0034.json",
       "provenance": "generated",
-      "sha256": "58884f4ca015cf50d3bb5521c7493b0158f6cb9f9126fbd55fd5cffb8f034535",
+      "sha256": "6398590ea33ae755ddd168f9e673a44941c36193079acbdae7376cca7b51bb84",
       "size": 527,
       "standard_ten_class_ok": true
     },
@@ -5217,7 +5385,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0035.json",
       "provenance": "generated",
-      "sha256": "105ca2564009558d58e4e9a6eecb628546a992719d4bb10f6fecf3bbecfd1215",
+      "sha256": "b89f7315a0a10a89aafc2a71250771e3134955b3a6e189eb31e49463bfbd3c53",
       "size": 534,
       "standard_ten_class_ok": true
     },
@@ -5237,7 +5405,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0036.json",
       "provenance": "generated",
-      "sha256": "1f2f58d27723469928c9e69632839c5dba49322b42fa3ed7402d90563c5ceb1b",
+      "sha256": "57c8e99f5e00de59dfe1b3eb98aa4c49e10805859bd48d0efe646b99c7b8c354",
       "size": 528,
       "standard_ten_class_ok": true
     },
@@ -5257,7 +5425,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0037.json",
       "provenance": "generated",
-      "sha256": "01fff71687f9bd10ddfa385d1719491556c5576d11f191eafe603e45b76ce417",
+      "sha256": "b1f4629316b75db6911fc7c0b22c0b61e1c106a31efb0bed8988d5442ea3a456",
       "size": 531,
       "standard_ten_class_ok": true
     },
@@ -5277,7 +5445,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0038.json",
       "provenance": "generated",
-      "sha256": "8f2801e5bd71b9cfee64c506384faa5e8aee90f8a768ca81f88e9e28c20ea0a6",
+      "sha256": "46fa521666837e94f2cb9c1a55f610f49bcabc2ddad6ec785be2336febf30b20",
       "size": 533,
       "standard_ten_class_ok": true
     },
@@ -5297,7 +5465,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0039.json",
       "provenance": "generated",
-      "sha256": "2268849fcb7dfcec12d2150347af0430b3b058512ddaa6248132c477b2917fde",
+      "sha256": "1cd1f04ad964e88bfe2c00da942d33c863379da27abbc979821d8468e22868e2",
       "size": 531,
       "standard_ten_class_ok": true
     },
@@ -5317,7 +5485,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0040.json",
       "provenance": "generated",
-      "sha256": "af07a3f806da2676352b2df823d6f532b2a6a07ddfe56b057bff7f4675946b06",
+      "sha256": "c079fdb6bf84d69e47f4cca0db6d2ff2899bef1e4a0af94dd613cc1b48a9cc30",
       "size": 583,
       "standard_ten_class_ok": true
     },
@@ -5337,7 +5505,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0041.json",
       "provenance": "generated",
-      "sha256": "372558d327beafa66ac9f2d12c591657683564c60697537683ce4ccbaa8b2c90",
+      "sha256": "a5a2f9c83abd7c174c3d67a2574f4d5d70b7d30a9cfb63c2af7ce6a098877b80",
       "size": 535,
       "standard_ten_class_ok": true
     },
@@ -5357,7 +5525,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0042.json",
       "provenance": "generated",
-      "sha256": "d217a2b534cf507130fa66345a2a86d511370ff8f06624365a7b3c9c50ee28fb",
+      "sha256": "3e50cb4d0a2e904e2236f4b9a51bc4e92ebce41b5611224f734d075c0300be94",
       "size": 537,
       "standard_ten_class_ok": true
     },
@@ -5377,7 +5545,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0043.json",
       "provenance": "generated",
-      "sha256": "250d3eaf94f9747e2b52aa5354e7035b1310b5b4922c1ac24d13c299adf0c183",
+      "sha256": "c7a6d4c9f698ceb8b562d0942ecbe8f69fa0034365881ccda2cb263da14c09b2",
       "size": 533,
       "standard_ten_class_ok": true
     },
@@ -5397,7 +5565,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0044.json",
       "provenance": "generated",
-      "sha256": "8152c9e7998a2519c014933c3553ff67bb40caac14086acec086ff7fa8ac7de6",
+      "sha256": "e2d5a3e61ecb422afe38fcfc59d63e281550919cf728eceb5d08231c88e41d26",
       "size": 544,
       "standard_ten_class_ok": true
     },
@@ -5417,7 +5585,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0045.json",
       "provenance": "generated",
-      "sha256": "e81000f51e23cb978d1f039c444ce2810990b9b6b53caeb078f19fb2f03bf15d",
+      "sha256": "117d2aecd56953ff790bd85ee483992b798ed58c8aa4988300907034b58746bd",
       "size": 544,
       "standard_ten_class_ok": true
     },
@@ -5437,7 +5605,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0046.json",
       "provenance": "generated",
-      "sha256": "a178982ef1da389bddb1760ff406ef0e58d34245c138b07663a649e00ff01640",
+      "sha256": "2ae0f137f2f19b94a82144f9c002d70377e4fd2416e7f3376999e0cc83d6287e",
       "size": 539,
       "standard_ten_class_ok": true
     },
@@ -5457,7 +5625,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0047.json",
       "provenance": "generated",
-      "sha256": "c562c4e60fe41696aafb630d281150ca4ad72ebee4280acc2b4b1b040266f174",
+      "sha256": "19ace2190dd1ebefe44d77f7143535d80e287dd60039f120719f9af0e8433b49",
       "size": 531,
       "standard_ten_class_ok": true
     },
@@ -5477,7 +5645,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0048.json",
       "provenance": "generated",
-      "sha256": "1b6317f4a481be896ce5d3c999c3bc269e8d56a8913e3ec5b4fa9c781a2ea131",
+      "sha256": "8442577892ac6d82060a804b6e54b232917ef808dd59d19d6382243614647f1e",
       "size": 542,
       "standard_ten_class_ok": true
     },
@@ -5497,7 +5665,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0049.json",
       "provenance": "generated",
-      "sha256": "2d34b450ecdb308242eb1aebb85ca25126cf6a7b97670182d28fea17f0829645",
+      "sha256": "f3d261da9bd6c2365a21a37120211f7a5f0cb09ab412d5966d11729f3a6702a1",
       "size": 531,
       "standard_ten_class_ok": true
     },
@@ -5517,7 +5685,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0050.json",
       "provenance": "generated",
-      "sha256": "b0022c8f4d5dc42a088a47eabb73dce2fcfdded0193f9498ad7142f18dcbb970",
+      "sha256": "8876b810e944b6d3d52784b1a81ee7e401bf9d945b401e2d1e99ae6851b60266",
       "size": 531,
       "standard_ten_class_ok": true
     },
@@ -5537,7 +5705,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0051.json",
       "provenance": "generated",
-      "sha256": "91597c1abd83827a589e5e1709f6204db18bbcdfae52282ff7555385d6f42700",
+      "sha256": "2e1f600ba82fd1be2a33891f7ba285ed76b4f5240091adbf41afdcb7f912d170",
       "size": 581,
       "standard_ten_class_ok": true
     },
@@ -5557,7 +5725,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0052.json",
       "provenance": "generated",
-      "sha256": "8a9133a59f12f63ab096581496f4591d5de4afd09bbedebbc457704b15d0cd45",
+      "sha256": "c0d799d102f61eb1948c2c08e667909bd891dd2613e30bd69310695e8857ff68",
       "size": 599,
       "standard_ten_class_ok": true
     },
@@ -5577,7 +5745,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0053.json",
       "provenance": "generated",
-      "sha256": "20ef5f7b2e29b3df6d94e8880e10fbd10b04f032413d9a86c09925ae4e852839",
+      "sha256": "fa15a26ddba12f8816cb8179d927ae628f5ff8cd91b9efd96fdd491eef04f5ff",
       "size": 699,
       "standard_ten_class_ok": true
     },
@@ -5597,7 +5765,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0054.json",
       "provenance": "generated",
-      "sha256": "cd161d4d6ff28074f2ce109b4ba4c7308403d078bffb69f7242478d3ddb11f36",
+      "sha256": "c772679d9868484e60e9154285db3fe8673d35826d92b23e2a8c9919b699da14",
       "size": 581,
       "standard_ten_class_ok": true
     },
@@ -5617,7 +5785,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0055.json",
       "provenance": "generated",
-      "sha256": "f4b386994475c2fadfbadb9bb131dbec8e1a1523b2966239b44c6a784107dc9c",
+      "sha256": "b3a15c0ffdec2d363bb36b7a6182a22cc01f763238f6525affe60ec7a111235e",
       "size": 583,
       "standard_ten_class_ok": true
     },
@@ -5637,7 +5805,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0056.json",
       "provenance": "generated",
-      "sha256": "c81f2f1417215a551d12d3f4be9aa8e174b27221c62dcd561e8f32a70acb41fd",
+      "sha256": "9d856717da8786cc30b3d6c3cbcfa5671b551254c015c32033403eb1ea04e381",
       "size": 581,
       "standard_ten_class_ok": true
     },
@@ -5657,7 +5825,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0057.json",
       "provenance": "generated",
-      "sha256": "85e7d7d1842fbccbff541cd05ad515edb2764107200d3132633ae64979a55fcf",
+      "sha256": "6c68974c1f3deaa75e831f1dd6432ed5abeb7164129811f121f897570e0ef6b2",
       "size": 581,
       "standard_ten_class_ok": true
     },
@@ -5677,7 +5845,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0058.json",
       "provenance": "generated",
-      "sha256": "aecbc8bdadcc2bc9672361af79908e5497bdbf52f0be02884d3616b3839da1cd",
+      "sha256": "b96228631a99efbeacef5dde2a4671a9ba669c95b2f5116e6e1fcde3adddcb0b",
       "size": 581,
       "standard_ten_class_ok": true
     },
@@ -5697,7 +5865,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0059.json",
       "provenance": "generated",
-      "sha256": "57ffca70a581cc93602327ffb55a1fba0890cc497cbe3a92a93f3678b03a7be9",
+      "sha256": "6f2b45e0f4922e8c369876e99fadb5eeb8cbec124b69e55f0a8b8d4c93f486f5",
       "size": 528,
       "standard_ten_class_ok": true
     },
@@ -5717,7 +5885,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0060.json",
       "provenance": "generated",
-      "sha256": "c747199e1a64b581dedef4f73e5fa3bb9dfd1836a26d952e6fcf8a9e614a6c87",
+      "sha256": "3ef563a4e39af21025c682a6005f60dba8b629e758f651d6e3ee151b0be8b5f5",
       "size": 572,
       "standard_ten_class_ok": true
     },
@@ -5737,7 +5905,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0061.json",
       "provenance": "generated",
-      "sha256": "c03296ca51544d2de2000b58cdb97115c23a2b72e2ae02b4ec1ec723abff010a",
+      "sha256": "aaa753695c6dc4ceeb3f5af005c27a582629284bb98a6d7219def11650f237de",
       "size": 573,
       "standard_ten_class_ok": true
     },
@@ -5757,7 +5925,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0062.json",
       "provenance": "generated",
-      "sha256": "78ae783bc04683590ba2d2496c7840d96d8b70763b2f3acedee86108e4f22717",
+      "sha256": "7ad7cb2e705d58ffb0ffde6c8c3740bda0ecf39c3107ffd885d0128f6c2d1ca3",
       "size": 582,
       "standard_ten_class_ok": true
     },
@@ -5777,7 +5945,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0063.json",
       "provenance": "generated",
-      "sha256": "537d4188f3ce4063d7ae70706c95fc94f2a507bea4a8c0bb1f7128e5ba05e91c",
+      "sha256": "5b85fd6248de9746d77acabd25d3d8a34bd767600b7795331633702dac16af96",
       "size": 697,
       "standard_ten_class_ok": true
     },
@@ -5797,7 +5965,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0064.json",
       "provenance": "generated",
-      "sha256": "e8e5b31157bf02a5cf1f74dec6c612a64c0edbbbc60e41ae8fe317ac66c0db4a",
+      "sha256": "f827145acd444e22b47a5e4f3e00222cc1788b3ac2e1e418b49be43d7ca18bef",
       "size": 572,
       "standard_ten_class_ok": true
     },
@@ -5817,7 +5985,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0065.json",
       "provenance": "generated",
-      "sha256": "66d780e149afb12751f7ddb2573072e439a122a4ab14653c0d7752596591d4a8",
+      "sha256": "fd9d06301eff5bcf4f06cda0e533a7bff7d051719395bc0e767c12c26f14b99e",
       "size": 572,
       "standard_ten_class_ok": true
     },
@@ -5837,7 +6005,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0066.json",
       "provenance": "generated",
-      "sha256": "83dd7b6be5c56a752beabe99b1a64ded6f06cc1a1625e4de505d8de546538260",
+      "sha256": "e20cc934c275a715737ff6487483f4dec7eaae8ddba69fd2c7d0acda29bcd82b",
       "size": 573,
       "standard_ten_class_ok": true
     },
@@ -5857,7 +6025,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0067.json",
       "provenance": "generated",
-      "sha256": "3086a87ebec5adf61fe62c5e51927382c198eb860a5cbc60630799c23cd7a828",
+      "sha256": "719606e9d4c58f0daf09e9a7a8255f748acc9f5bc7c73de4f3d56d8ca1760d55",
       "size": 528,
       "standard_ten_class_ok": true
     },
@@ -5877,7 +6045,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0068.json",
       "provenance": "generated",
-      "sha256": "b511625a28b87ee934d4cfb6ac011e970aaae2f601a122f1c2fd86af5870605f",
+      "sha256": "7f5f26cb6628d451697c8fe94d7e4d0cd7d87f96c303595e596f4295fadfe6b9",
       "size": 526,
       "standard_ten_class_ok": true
     },
@@ -5897,7 +6065,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0069.json",
       "provenance": "generated",
-      "sha256": "17f14162a3f8456aed5a3adf78f0f6b5db121c550da70d212316a163140cb236",
+      "sha256": "71dc1de3f937b0207a1c773d0e70b3bc5fc4be9c9efa7b2309e688928ec6f3d8",
       "size": 794,
       "standard_ten_class_ok": true
     },
@@ -5917,7 +6085,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0070.json",
       "provenance": "generated",
-      "sha256": "64a7c79b0cc70e1269fd652d9d603d12476cf56d2bd077fcedfae046d508a431",
+      "sha256": "02a50ca3de144f0ba3fa79b8d15a24665a603752462901425394ab5a54945bff",
       "size": 731,
       "standard_ten_class_ok": true
     },
@@ -5937,7 +6105,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0071.json",
       "provenance": "generated",
-      "sha256": "f2a53a449ee856b1934871fc869d57030ac98ef26fbebbc0949d860d8bf796d2",
+      "sha256": "95e7db785efb3dfe22e740643a3b9ac0f680279c840f40587729e86a78cc2f0f",
       "size": 794,
       "standard_ten_class_ok": true
     },
@@ -5957,7 +6125,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0072.json",
       "provenance": "generated",
-      "sha256": "80ce131c06e5cf711ea3e754952ae8b5b98bd921e2163a9de84acee4724b30b7",
+      "sha256": "0d96c87e3eab40fc73902f9771ba70287cf174fe47afce13fd9b4e8433032a01",
       "size": 794,
       "standard_ten_class_ok": true
     },
@@ -5977,7 +6145,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/goldens/vector-0073.json",
       "provenance": "generated",
-      "sha256": "2c766fc6a5fd70e22ca10438e61e4877cda450650fa2a9963fade465b6e96157",
+      "sha256": "56ec34a996f1ae880b75a6ea335fea446b949668d16d88bb7eb9dba2f0ea8bc3",
       "size": 681,
       "standard_ten_class_ok": true
     },
@@ -5997,7 +6165,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/mutations/manifest.json",
       "provenance": "generated",
-      "sha256": "b9e6b586edfbd5516430336063c2479f8ce11465bba0df8ccd9ad362f4549fe0",
+      "sha256": "ed9a2cb52229780358ced42e35251534f2dfeb6018efe77c6e7c31a0498d7c45",
       "size": 3272,
       "standard_ten_class_ok": true
     },
@@ -6017,7 +6185,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/provenance.json",
       "provenance": "generated",
-      "sha256": "a24bf72c9c595570461c86422f6c0b77854e4aa14b4e77d3619adb000d8d5e62",
+      "sha256": "78093459ce52bf5f081ca1823c02a363a26afeb5b2507773ebc5f3f3c789be55",
       "size": 40901,
       "standard_ten_class_ok": true
     },
@@ -6060,7 +6228,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/tests/cross-host-vectors.json",
       "provenance": "generated",
-      "sha256": "c9c4f960f34d892d6cb6752dc26a9fb626aff632d8c5adf41c728e56ccf8fa00",
+      "sha256": "134db9ac5055012172c65d068c1489f4356457455187ee25eff263ce167ff55c",
       "size": 2387,
       "standard_ten_class_ok": true
     },
@@ -6080,7 +6248,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/tests/partitions.json",
       "provenance": "generated",
-      "sha256": "cb8a18ed697a4edcf63862654edcfa8b358bd839fc07acf8d1d30fd2bee1c382",
+      "sha256": "46f6b140a5497dfedfbb09f015c33d06863d521024d67a3c33ffbe7cd211a42d",
       "size": 11542,
       "standard_ten_class_ok": true
     },
@@ -6100,7 +6268,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/verification/ci-inventory.json",
       "provenance": "generated",
-      "sha256": "dc34bcd0867a16fd2532e4b181e92aaa6003263ebad89e9eff31751541980252",
+      "sha256": "9a6e29b895af403c267c1bfdb05ad6e21905e616804037c27fc3f2fda23c76c3",
       "size": 927,
       "standard_ten_class_ok": true
     },
@@ -6120,8 +6288,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/verification/proof-graph.json",
       "provenance": "generated",
-      "sha256": "53764eea58c6a6e2494d0b6ce01bfcd9d7173347504e6124c375ed4d5006ca79",
-      "size": 4090,
+      "sha256": "89525292c6ce359acd1abfae4f5860c50c4b4a647fe130274b2078625a435443",
+      "size": 4185,
       "standard_ten_class_ok": true
     },
     {
@@ -6140,7 +6308,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "generated/verification_surface/verification-manifest.json",
       "provenance": "generated",
-      "sha256": "b08759037c0ad6933cf9b118683cae20e4207f2535a7e06904996f0a1403513d",
+      "sha256": "d35e5bbf394825f702ff0d956797ffbb7fdff4811e612da21d03d1c32571d06f",
       "size": 20993,
       "standard_ten_class_ok": true
     },
@@ -6161,8 +6329,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "pyproject.toml",
       "provenance": "handwritten-pending",
-      "sha256": "033818aa172c883be500f15489d0292f98f03506b62258645396babb07869b40",
-      "size": 586,
+      "sha256": "9d57657dada0a9e538fb40cf617927f3ddfca09570c0a080ae7fd9ef37062437",
+      "size": 453,
       "standard_ten_class_ok": false
     },
     {
@@ -6211,6 +6379,78 @@
       "provenance": "handwritten-pending",
       "sha256": "400c2bdc3650a4bcf6bd46429d802b1bfd2d704d9cfc6e8acdeb7bbab4999dcf",
       "size": 1451,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 27,
+        "for": 2,
+        "if": 5,
+        "match": 0,
+        "total": 36,
+        "try": 2,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "scripts/build_economic_retrospective.py",
+      "provenance": "handwritten-pending",
+      "sha256": "9da9542ae8f9ef1bb9a93a4661e79da0efdf56638d9bdf288f0edd1c5d068ff5",
+      "size": 12890,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 1,
+        "comp": 27,
+        "for": 10,
+        "if": 12,
+        "match": 0,
+        "total": 52,
+        "try": 3,
+        "while": 0
+      },
+      "gap_id": "gap.oop",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 1,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "scripts/build_github_duplication_pilot.py",
+      "provenance": "handwritten-pending",
+      "sha256": "d2194a14d8636972f4ef714a1e6c6b70fcb9d3a0f646344146c367d72904b903",
+      "size": 14135,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 8,
+        "for": 3,
+        "if": 17,
+        "match": 0,
+        "total": 28,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "scripts/build_semantic_reuse_pilot.py",
+      "provenance": "handwritten-pending",
+      "sha256": "412659933b26712d2879ca85e182e7ee8225ccbed5ef1b96da822992ea1814a6",
+      "size": 10359,
       "standard_ten_class_ok": false
     },
     {
@@ -6302,8 +6542,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "scripts/emit_l13_report.py",
       "provenance": "handwritten-pending",
-      "sha256": "3810ee0ccf9dc694b93fe9dc92d9e800b6c5d0f83abdbf5e73621890d01c974b",
-      "size": 7364,
+      "sha256": "b39b00fcb19fab905fe2df2ed194c33e996440d8091b3a78fef69b4b3db55d89",
+      "size": 7302,
       "standard_ten_class_ok": false
     },
     {
@@ -6323,8 +6563,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "scripts/run_l13.sh",
       "provenance": "handwritten-pending",
-      "sha256": "f0655cb2c9a828ffc0ec152b4d33c6ece35e2d3bc6d7b0d0f148dc2f6c25e5b5",
-      "size": 1306,
+      "sha256": "95726f1abcab9848d7ca0f8787522b6375c9a16ab723136a8b639bc9a404f3fd",
+      "size": 1317,
       "standard_ten_class_ok": false
     },
     {
@@ -6389,8 +6629,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "scripts/uc_contract.py",
       "provenance": "handwritten-pending",
-      "sha256": "76fad072500449d62ad3e12728da1d10c8a36e1d02a2c0f083be3b968c2c7f4c",
-      "size": 37987,
+      "sha256": "2a3bdd10ff99aba882d72de80472810a9e4202f45d10c1ebdc3d82b78c2207a3",
+      "size": 37967,
       "standard_ten_class_ok": false
     },
     {
@@ -6993,8 +7233,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/application_language/catalog.seed.json",
       "provenance": "seed",
-      "sha256": "7c6f36ecfe1af25799d0af28c693fb906ba85e63b284784129db8390dce3f841",
-      "size": 1052797,
+      "sha256": "2f204e15d7aad202aa35af987fdf911a8c99cba3128bad47dc7937fc737e5c82",
+      "size": 1063958,
       "standard_ten_class_ok": true
     },
     {
@@ -7591,10 +7831,230 @@
       "handwritten": false,
       "oop_classes": 0,
       "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/economics/AI_SWARM_ECONOMIC_EXPERIMENT_SCHEMA.json",
+      "provenance": "seed",
+      "sha256": "f131851bd7a4f2d072d2c807c5afb71135beefc7e0883525c16af6b66108fe57",
+      "size": 13218,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/economics/ECONOMIC_RETROSPECTIVE_SCHEMA.json",
+      "provenance": "seed",
+      "sha256": "ead77ce1c15b4d964ce57dbb6c4dc3c6ced31b8b6da52375e77873287093428b",
+      "size": 1109,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/economics/GITHUB_DUPLICATION_PILOT_SCHEMA.json",
+      "provenance": "seed",
+      "sha256": "1fde7eb9c894291c015259198018d1cd50ed9387ab7f0bec1c310456ce2f566a",
+      "size": 1167,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/economics/SEMANTIC_REUSE_PILOT_SCHEMA.json",
+      "provenance": "seed",
+      "sha256": "a0458be072319960528e4dc6f3213d1736b3482130d0d81c5f3ea42433b29227",
+      "size": 676,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/economics/ai-swarm-economic-experiment.seed.json",
+      "provenance": "seed",
+      "sha256": "d2b832beff74b91114e3e08f9061fa226e13053e2c4290e2b0e58f61948a6be5",
+      "size": 12012,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/economics/github-duplication-pilot.seed.json",
+      "provenance": "seed",
+      "sha256": "8702374c1ee56b64c3f9759703bfb57ae49be4f2b1a464a190401a499b1a04ed",
+      "size": 2769,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/economics/semantic-reuse-pilot.seed.json",
+      "provenance": "seed",
+      "sha256": "b65aeaf787b818bbc020015a2e3d32c2dc5d8f3c0cc0908db91f6a152ed91654",
+      "size": 3516,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/formulas/catalog.json",
       "provenance": "seed",
       "sha256": "2e68b595356a872db28fa9d412f7d8c2e9243fab4925fd4ebc4c9d86b8e16a57",
       "size": 5934,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/CONTRACT_VECTORS.json",
+      "provenance": "seed",
+      "sha256": "89ab86b2ae34b3e0e7763a8a542b7d7e5a93d0a1de585a9ba353cd3db2eb3ced",
+      "size": 617,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/REQUEST_SCHEMA.json",
+      "provenance": "seed",
+      "sha256": "68568427d6c15969ceb8b403280c828bebb79145a0c1b89a76e2d51418b7f159",
+      "size": 1173,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/SNAPSHOT_SCHEMA.json",
+      "provenance": "seed",
+      "sha256": "80a40f0bcdf605e2c2ff3cdc7cd7307427da6051fab5f0da82caadb99ab64327",
+      "size": 2691,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/replay.example.json",
+      "provenance": "seed",
+      "sha256": "bbdc3c82e75d6c1471016dfb1cd7df13448f29f8f1debbee833f24a262397fde",
+      "size": 1588,
       "standard_ten_class_ok": true
     },
     {
@@ -7713,8 +8173,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/registry.json",
       "provenance": "seed",
-      "sha256": "a7b1df9d02ae7d9253e97c35f8cf75ba2bb557ca9f7c8cfe121894eae1853281",
-      "size": 64198,
+      "sha256": "b1e845f3854271421514aa06aa3d7d005f3fdf982f3c73a210ddd7f1cf632c01",
+      "size": 65020,
       "standard_ten_class_ok": true
     },
     {
@@ -7733,7 +8193,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/registry.provenance.json",
       "provenance": "seed",
-      "sha256": "34de4f170a6234fb01209a341510e62e8b975c05cdb91b322c89efc734a2823d",
+      "sha256": "9140a82364770a9775b51276cf147b96fd17aba6edde2815c9189293ecc31fe8",
       "size": 1309,
       "standard_ten_class_ok": true
     },
@@ -7893,8 +8353,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/verification/PROOF_BUNDLE.json",
       "provenance": "seed",
-      "sha256": "51d329e1886648d8aa745ae0b27be1e9a710754408515198282f6f90472cc49d",
-      "size": 4598,
+      "sha256": "884991b12baa033980d24fb528cfa7036f28933e8209f4c5de21b41124c07b72",
+      "size": 5243,
       "standard_ten_class_ok": true
     },
     {
@@ -7913,8 +8373,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/verification/PROOF_GRAPH.json",
       "provenance": "seed",
-      "sha256": "070e52794ee21260dc42b6c164e59952b04f3597ade37ba7420aed174ed1b64d",
-      "size": 4936,
+      "sha256": "df31f6719a61151ecd1918026cbb359a48940ed2a72b3ffb9dddfd06890f6eab",
+      "size": 4990,
       "standard_ten_class_ok": true
     },
     {
@@ -7957,19 +8417,19 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/conftest.py",
       "provenance": "handwritten-pending",
-      "sha256": "d4c4ab0decfe883e80d864511054cd0738c322caddc280fd8fb1bbd6fc1209d3",
-      "size": 188,
+      "sha256": "c7e79eedc32cc34af9d1a3f60343a3a15a6936b60108672255f53dd5e356b469",
+      "size": 191,
       "standard_ten_class_ok": false
     },
     {
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 8,
-        "for": 2,
+        "comp": 13,
+        "for": 3,
         "if": 2,
         "match": 0,
-        "total": 12,
+        "total": 18,
         "try": 0,
         "while": 0
       },
@@ -7981,19 +8441,19 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_alignment_gauntlet.py",
       "provenance": "handwritten-pending",
-      "sha256": "ef6d517983818d83bf57acd2dc2d6ab22ea86eff36bb547515a82e9f70662ebc",
-      "size": 8009,
+      "sha256": "6ab6d16f40940b0a650b6e328c21cd48d9fe1d0c0843440736d3f0851e389aa3",
+      "size": 12096,
       "standard_ten_class_ok": false
     },
     {
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 33,
+        "comp": 36,
         "for": 11,
         "if": 4,
         "match": 0,
-        "total": 48,
+        "total": 51,
         "try": 0,
         "while": 0
       },
@@ -8005,8 +8465,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_application_assembly.py",
       "provenance": "handwritten-pending",
-      "sha256": "f4fb90feae495b0336a7fdf2a6bbf8703f299f4bcfdc6d4c65bd20efb5bca12e",
-      "size": 29811,
+      "sha256": "fb884e5500a47eb632fca5b023c84f3d9b8dcb67c0331a657a2097afb34f27e0",
+      "size": 31216,
       "standard_ten_class_ok": false
     },
     {
@@ -8029,8 +8489,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_benchmark.py",
       "provenance": "handwritten-pending",
-      "sha256": "4ce9240b671a4c6618628a6ea10ea20c870ef36748c86c090a0460fdabe3872b",
-      "size": 8732,
+      "sha256": "b3e0242a093481954927a8983ac0a1c0315bc2dd45215e1c8029192b3ddff40c",
+      "size": 8747,
       "standard_ten_class_ok": false
     },
     {
@@ -8053,8 +8513,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_binding_mutations.py",
       "provenance": "handwritten-pending",
-      "sha256": "7ad5942c665486a5a4c6b5235891fc804838544518d2428e48a2859a1d5f75c3",
-      "size": 4694,
+      "sha256": "12e8f9f92e34df9eac523b21845d1e1618e8998e29af7eba10e27c87fceb1980",
+      "size": 4715,
       "standard_ten_class_ok": false
     },
     {
@@ -8125,8 +8585,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_calculator_generator.py",
       "provenance": "handwritten-pending",
-      "sha256": "84c3b449b2c9283965e07507a8bf01a8b6ec13463659b895a7296e11db43de74",
-      "size": 8101,
+      "sha256": "42df16880c8bfc72869ef28a0b0c1611c23313150cf4b7bf0ba38ced535a67d4",
+      "size": 8120,
       "standard_ten_class_ok": false
     },
     {
@@ -8173,19 +8633,19 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_convergence.py",
       "provenance": "handwritten-pending",
-      "sha256": "1743aec67b95a5e4ca0cbbad246968625bfe2c1a739d909714ded1c1b9ad4be7",
-      "size": 11325,
+      "sha256": "b849c38ca25e7202aa2fa0b2d3bd3344eb3e77be680486129fc536570d6e547d",
+      "size": 11342,
       "standard_ten_class_ok": false
     },
     {
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 2,
+        "comp": 3,
         "for": 0,
         "if": 3,
         "match": 0,
-        "total": 5,
+        "total": 6,
         "try": 0,
         "while": 0
       },
@@ -8197,8 +8657,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_declaration.py",
       "provenance": "handwritten-pending",
-      "sha256": "3cb0346491016cba522eeb31bffb4640f052e14cc7b10f5762d27a3251c45e63",
-      "size": 9094,
+      "sha256": "3e22b6d95fd4b8f5adbd823ef8214b8fe4e5e8291cf85da4a7594b2627924079",
+      "size": 9267,
       "standard_ten_class_ok": false
     },
     {
@@ -8223,6 +8683,54 @@
       "provenance": "handwritten-pending",
       "sha256": "b2b4af310463fe7e89a41f03485ca872f677b3a9bb7048fd9191a7a6ceaaf46b",
       "size": 698,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 5,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 5,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_economic_proof_contract.py",
+      "provenance": "handwritten-pending",
+      "sha256": "46e89eafd61f5710206f13cbd8ba15818a91f3db422281480c88dc7ba6cec08f",
+      "size": 3944,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 3,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 3,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_economic_retrospective.py",
+      "provenance": "handwritten-pending",
+      "sha256": "76c4c8462b277825849c7e907ef645aba809e7288701e56e73034963a8d0bf3e",
+      "size": 4374,
       "standard_ten_class_ok": false
     },
     {
@@ -8293,8 +8801,80 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_generator.py",
       "provenance": "handwritten-pending",
-      "sha256": "5455ca54048d663e04dbff7a4cde6951d04fd458728ce4775d4716b6afe26949",
-      "size": 10300,
+      "sha256": "a078c9bd924c8299aafc8003e2e6447a1db4b3bd31c9854b77b653af814c8eb1",
+      "size": 10382,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 12,
+        "for": 6,
+        "if": 2,
+        "match": 0,
+        "total": 20,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_github_corpus.py",
+      "provenance": "handwritten-pending",
+      "sha256": "69db66fd1c0ce8cc8c0cd4ba7c8406a8ccb5e4a282016e5d6b38145c0505f85c",
+      "size": 9919,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 7,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 8,
+        "try": 1,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_github_duplication_pilot.py",
+      "provenance": "handwritten-pending",
+      "sha256": "e3d7ed67d79087a4c5e10238d7f1df76ed8033d3c950a449da473650706eaa5d",
+      "size": 4597,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 0,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 0,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_gui_selftest_host.py",
+      "provenance": "handwritten-pending",
+      "sha256": "0ff27ec0841430d8284edc30cbc8a7884464854cf90f2b22bda6964242de3133",
+      "size": 859,
       "standard_ten_class_ok": false
     },
     {
@@ -8365,8 +8945,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_l13.py",
       "provenance": "handwritten-pending",
-      "sha256": "29113370d7bca2cd2bcde0e013a0cdfc63fc37434426892f67674d46eb191275",
-      "size": 17252,
+      "sha256": "d8ff0b90e80b7e272b2f8623c2f596ff9b351c87c967b5cef714fe141ca89b4c",
+      "size": 17267,
       "standard_ten_class_ok": false
     },
     {
@@ -8389,8 +8969,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_l13_coverage.py",
       "provenance": "handwritten-pending",
-      "sha256": "e28ca779a05fe5c287982983757e863cc3f5ff244fbbe25b72bfdf6ed455aab4",
-      "size": 35518,
+      "sha256": "a1895c3f622a481eec623ed810f8de26c6abeeff3e5143dfecdc2bc6358c689b",
+      "size": 35569,
       "standard_ten_class_ok": false
     },
     {
@@ -8437,8 +9017,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_manifestation.py",
       "provenance": "handwritten-pending",
-      "sha256": "8b1f43bb4dfdb048c7f50ac7e36f51156cb48de2121fbfc8116e08061bf4b924",
-      "size": 28678,
+      "sha256": "e4b50bd636307d76e5f72af064e928fbd8d5172bdc883774ad9f039704818a98",
+      "size": 28697,
       "standard_ten_class_ok": false
     },
     {
@@ -8461,8 +9041,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_no_python_declarations.py",
       "provenance": "handwritten-pending",
-      "sha256": "c8552d990c2dee26ba94c22ab43842742a4b00f5a9b382c454a588e0fdee0f9b",
-      "size": 3818,
+      "sha256": "a3842530ace25a5eb71876f5fe659d25e2042a5506045cf8361a3fe47a9df25e",
+      "size": 3835,
       "standard_ten_class_ok": false
     },
     {
@@ -8485,8 +9065,80 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_oom_mutations.py",
       "provenance": "handwritten-pending",
-      "sha256": "060f8cffef0861d11d29a8335d002b3c3da683d05da2c48d091ba882747730eb",
-      "size": 1778,
+      "sha256": "9f1d55ea98fb33aa16bba96ed815a21894a4d8622aa8a514b2d9fb9ec24f5179",
+      "size": 1797,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 1,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 2,
+        "try": 1,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_precompile_pipeline.py",
+      "provenance": "handwritten-pending",
+      "sha256": "1129f66b15f018bb84cfa24add085554f7a429ec5cb6ef5dc2293b085d0b7e4e",
+      "size": 5617,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 3,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 3,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_selftest.py",
+      "provenance": "handwritten-pending",
+      "sha256": "a71851581c297d4e4d771fa5956a11b8787d13907f4cd873ba5ae8e60c91e052",
+      "size": 1615,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 9,
+        "for": 2,
+        "if": 0,
+        "match": 0,
+        "total": 12,
+        "try": 1,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_semantic_reuse_pilot.py",
+      "provenance": "handwritten-pending",
+      "sha256": "c5fab8c0b270f7670e14ed3e5e9aba1250042da514805e5a1922024e3414e226",
+      "size": 3295,
       "standard_ten_class_ok": false
     },
     {
@@ -8533,8 +9185,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_stage0.py",
       "provenance": "handwritten-pending",
-      "sha256": "d02db1119138989bb18827e73e35e0117f813a784e00eddb1ca9efe908cf423c",
-      "size": 16234,
+      "sha256": "36b2019f989d0ac7376948ceb6017b72e5bb0c9b021e14495658f97f1f8bdda8",
+      "size": 16251,
       "standard_ten_class_ok": false
     },
     {
@@ -8557,8 +9209,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_stage1_bootstrap.py",
       "provenance": "handwritten-pending",
-      "sha256": "b6d347ce57acefade03d4d694f58baf38fd3cfba2db37be4193c9a6e67bf16d0",
-      "size": 9872,
+      "sha256": "125e6da746d538f91f885288463c77856115131fabbd3e2a16496e64c0be704b",
+      "size": 9889,
       "standard_ten_class_ok": false
     },
     {
@@ -8629,8 +9281,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_thing_v2.py",
       "provenance": "handwritten-pending",
-      "sha256": "71daee0236721782040dd020349c07443ec81a4b34a50412bd15ad06415c582f",
-      "size": 11070,
+      "sha256": "bdac82c63cbc2380b26e835ec797f517e83c253d528a04c01eaf727b2ca01c0d",
+      "size": 11066,
       "standard_ten_class_ok": false
     },
     {
@@ -8701,8 +9353,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_unfold_stateful.py",
       "provenance": "handwritten-pending",
-      "sha256": "b8f3c1dcaff383cd07b44ea40c4cddecdd93cc9167fe05bac9713a929eae5499",
-      "size": 7743,
+      "sha256": "29385d874d64db05b67881cde90a472074e96c0e8b6799fce6b93eb20c9d67c5",
+      "size": 7746,
       "standard_ten_class_ok": false
     },
     {
@@ -8735,9 +9387,9 @@
         "classes": 0,
         "comp": 6,
         "for": 4,
-        "if": 3,
+        "if": 4,
         "match": 0,
-        "total": 14,
+        "total": 15,
         "try": 1,
         "while": 0
       },
@@ -8749,8 +9401,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "tests/test_verify_flow.py",
       "provenance": "handwritten-pending",
-      "sha256": "8a8b822a2e60abf7d416c1b20b4d767d65692867dfd2ffeca97aa2d38b4462c0",
-      "size": 15666,
+      "sha256": "92180e77576229392a5035beec871d6efb7b2ea09ec06211ac4c33aff5e7d4f5",
+      "size": 15705,
       "standard_ten_class_ok": false
     },
     {
@@ -9013,19 +9665,43 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/application_language/declaration_compiler.py",
       "provenance": "handwritten-pending",
-      "sha256": "71c168e11cb5bf6e5904bd857bee0a4e74cfccccfaea0be7d5254f2f47a733ea",
-      "size": 28639,
+      "sha256": "ec587aa34464e94c9e75f596969dc03473c597c5c184ab0bcc006eabd37af19e",
+      "size": 28478,
       "standard_ten_class_ok": false
     },
     {
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 96,
-        "for": 13,
-        "if": 94,
+        "comp": 44,
+        "for": 0,
+        "if": 7,
         "match": 0,
-        "total": 205,
+        "total": 51,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "unified/generator/application_language/precompile.py",
+      "provenance": "handwritten-pending",
+      "sha256": "7c21aa1f7bbe04bab61b5a427738d7b01e0dea5c0325265cd3b5a86288e62bc6",
+      "size": 12601,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 95,
+        "for": 13,
+        "if": 93,
+        "match": 0,
+        "total": 203,
         "try": 2,
         "while": 0
       },
@@ -9037,8 +9713,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/application_language/seed_compiler.py",
       "provenance": "handwritten-pending",
-      "sha256": "fb91301b0a3810054f3a36ec545fa0c98dd22c153cf6425afb4437450d3ebe8d",
-      "size": 53600,
+      "sha256": "29d1bb07deb3d20b8aae2de59f1798a68143d0ccc6acc1331395ce6c6d659dd5",
+      "size": 55215,
       "standard_ten_class_ok": false
     },
     {
@@ -9085,8 +9761,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/application_language/simulation_compiler.py",
       "provenance": "handwritten-pending",
-      "sha256": "16fbb397a0ff7bbb2550dffb09c363defe21a6e52c9b01f381e64d019b9546b9",
-      "size": 14624,
+      "sha256": "41002b72163d5851235ce8390c877cf7bb398a57ebef2c1a28ac582a6559994a",
+      "size": 14670,
       "standard_ten_class_ok": false
     },
     {
@@ -9109,8 +9785,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/application_language/stateful_compiler.py",
       "provenance": "handwritten-pending",
-      "sha256": "19bb8a5ae49b6d1732c9ab3ada44847eecff7a6db0e33a199ff2889fa87e6a5b",
-      "size": 38055,
+      "sha256": "60e9822ed4f6f04eac7e9346ba991eb02d136eadacf545941ba873e50b02ddda",
+      "size": 38204,
       "standard_ten_class_ok": false
     },
     {
@@ -9157,8 +9833,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/application_language/tooling/build_layout.py",
       "provenance": "handwritten-pending",
-      "sha256": "aec0e6ec77a59df289d29b1a1d00e9b0c9f7814adc0c60097949a143f7640e88",
-      "size": 4164,
+      "sha256": "fc95a8caa4c4f8992327e144688f0daf87b50146cb3ccc7c03d21656e901e26c",
+      "size": 5446,
       "standard_ten_class_ok": false
     },
     {
@@ -9205,19 +9881,19 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/application_language/tooling/verify_all.py",
       "provenance": "handwritten-pending",
-      "sha256": "53b819e95f0f148f55e1515a8f9d1668eaa0a33082e1123ed2dfcd08368b92cc",
-      "size": 68372,
+      "sha256": "fe0542fe9c7b37ff83afdd031257866c5fdc3d6f595999e3a7bbb501509f09c0",
+      "size": 71511,
       "standard_ten_class_ok": false
     },
     {
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 111,
+        "comp": 114,
         "for": 42,
-        "if": 110,
+        "if": 113,
         "match": 0,
-        "total": 285,
+        "total": 291,
         "try": 18,
         "while": 4
       },
@@ -9229,8 +9905,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/assembly.py",
       "provenance": "handwritten-pending",
-      "sha256": "9e96baa6ff88b982a683e117194962b2ba24cc9a55d6096aa6ace23afaa36c06",
-      "size": 115748,
+      "sha256": "57971763a1f865a6eba92910a5c8c73a4ea518c3ee93c6e378f4715a7644be80",
+      "size": 119260,
       "standard_ten_class_ok": false
     },
     {
@@ -9429,11 +10105,11 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 29,
+        "comp": 30,
         "for": 41,
         "if": 197,
         "match": 0,
-        "total": 293,
+        "total": 294,
         "try": 26,
         "while": 0
       },
@@ -9445,8 +10121,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/gauntlet.py",
       "provenance": "handwritten-pending",
-      "sha256": "5d8b79d636b348a2024b077e592e1059c2683a734afdc6a20b6aeb12a346d182",
-      "size": 87753,
+      "sha256": "9342b9413d391fc5deb389e459175aa8d0b52e1cb7d0a16e182b58134262e0b5",
+      "size": 87973,
       "standard_ten_class_ok": false
     },
     {
@@ -9589,8 +10265,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/render.py",
       "provenance": "handwritten-pending",
-      "sha256": "c7d4a443dead9e30373e662d2f6e6d60f3b1919c8d0ed89940ff92cfc608faa2",
-      "size": 9909,
+      "sha256": "ddcb7ae993f3135df1f34b8b4784bb3a4731592f88f166d36e88b7c31d1fb0dc",
+      "size": 9811,
       "standard_ten_class_ok": false
     },
     {
@@ -9613,8 +10289,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/render_declared.py",
       "provenance": "handwritten-pending",
-      "sha256": "b5e91bd42c4f39c85ea29e9518a6025ba586988e2058eb9fa51eaa27dda7889c",
-      "size": 51127,
+      "sha256": "8baab947457c07624b92253efba5b021b22680c0f2a912d567ce3c59b96c4419",
+      "size": 51025,
       "standard_ten_class_ok": false
     },
     {
@@ -9649,8 +10325,8 @@
         "for": 22,
         "if": 64,
         "match": 0,
-        "total": 117,
-        "try": 7,
+        "total": 118,
+        "try": 8,
         "while": 0
       },
       "gap_id": "gap.untracked-or-handwritten",
@@ -9661,8 +10337,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/thing_v2.py",
       "provenance": "handwritten-pending",
-      "sha256": "b79e75266ce657d0386a7d2795c79aa0bbb78d9e3fb674f52cc22135868efa60",
-      "size": 52836,
+      "sha256": "026e0bdf138eb9006519c92a9fa5ef82e70c483cbfaf6b29b054f3bdae8259c9",
+      "size": 53240,
       "standard_ten_class_ok": false
     },
     {
@@ -9673,8 +10349,8 @@
         "for": 4,
         "if": 43,
         "match": 0,
-        "total": 61,
-        "try": 9,
+        "total": 62,
+        "try": 10,
         "while": 0
       },
       "gap_id": "gap.untracked-or-handwritten",
@@ -9685,8 +10361,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/unfold.py",
       "provenance": "handwritten-pending",
-      "sha256": "68473f68bf0418bb973437320c3b50acf5b46cde02cf645fc183828ea081eadd",
-      "size": 28323,
+      "sha256": "95130110e2f454307be321f64e0fb3ad58ccf3cdfb0af9a6b4acfccdd435b762",
+      "size": 28700,
       "standard_ten_class_ok": false
     },
     {
@@ -9759,6 +10435,54 @@
       "provenance": "handwritten-pending",
       "sha256": "57e811ec50762428a2392a2f4e44e85295b3662385f4886635a81affe0d3b1f5",
       "size": 9096,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 9,
+        "for": 4,
+        "if": 56,
+        "match": 0,
+        "total": 69,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "unified/github_corpus.py",
+      "provenance": "handwritten-pending",
+      "sha256": "445da4c721936c0be1b10713ba1abac0979f9737861c20934436d41ea170c0e9",
+      "size": 15739,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 1,
+        "for": 2,
+        "if": 7,
+        "match": 0,
+        "total": 10,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "unified/gui_selftest_host.py",
+      "provenance": "handwritten-pending",
+      "sha256": "c61f60372dcf1c9bc04200b5c96b4e5b2c0991d4c19aa13f84496ee1fe842b00",
+      "size": 6016,
       "standard_ten_class_ok": false
     },
     {
@@ -9972,8 +10696,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/machine/l13.py",
       "provenance": "handwritten-pending",
-      "sha256": "85332bc9c0977640f057c459055b88e6c87455c91f9956164a710fd61ada2eed",
-      "size": 22374,
+      "sha256": "7f740d3451671d314b0378e407288f982ff80971e4bf50c4b8b3689cc501b036",
+      "size": 22332,
       "standard_ten_class_ok": false
     },
     {
@@ -10148,6 +10872,30 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
+        "comp": 8,
+        "for": 7,
+        "if": 9,
+        "match": 0,
+        "total": 27,
+        "try": 3,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "unified/selftest.py",
+      "provenance": "handwritten-pending",
+      "sha256": "c5247fdb0c4b151e8f9e1d63786a1d335c5432378048ef29b6885f6f172f31b1",
+      "size": 8439,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
         "comp": 0,
         "for": 0,
         "if": 8,
@@ -10268,11 +11016,11 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 35,
+        "comp": 36,
         "for": 2,
         "if": 41,
         "match": 0,
-        "total": 81,
+        "total": 82,
         "try": 2,
         "while": 1
       },
@@ -10284,13 +11032,15 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/verify_flow.py",
       "provenance": "handwritten-pending",
-      "sha256": "6fa1b6097e8127857033b742c6c4368aa61de0f4c4bf0ee432c2c0a4091ab370",
-      "size": 25793,
+      "sha256": "cfae702b2adc99b5a2e157a05e36682ebbe8acad45913d9bd6d5b83d846e967a",
+      "size": 25901,
       "standard_ten_class_ok": false
     }
   ],
-  "illegal_provenance_count": 253,
-  "oop_files": [],
+  "illegal_provenance_count": 276,
+  "oop_files": [
+    "scripts/build_github_duplication_pilot.py"
+  ],
   "open_gaps": [
     {
       "id": "gap.seed-expresses-full-framework",

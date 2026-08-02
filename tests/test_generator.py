@@ -7,13 +7,15 @@ import sys
 from inspect import Parameter, signature
 from pathlib import Path
 
-import pytest
+from unified import selftest
 
 from unified.boundary import inward, outward
 from unified.generator import generate, run_command, validate, verify_plan, write_project
 from unified.generator.cli import host_main
 from unified.generator.names import is_valid_feature_name, is_valid_project_name
 from unified.thing import is_thing
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def _new_payload(tmp_path: Path, name: str = "demo-app") -> dict:
@@ -71,7 +73,7 @@ def test_generated_project_tests_pass(tmp_path):
     assert result["state"] == "valid"
     root = tmp_path / "test-me"
     proc = subprocess.run(
-        [sys.executable, "-m", "pytest"],
+        [sys.executable, str(ROOT / "unified" / "selftest.py")],
         cwd=str(root),
         capture_output=True,
         text=True,

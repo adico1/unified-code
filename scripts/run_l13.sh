@@ -14,10 +14,10 @@ make -C c posix CFLAGS="-std=c99 -Wall -O2 -Iinclude -Ithird_party -Icore -Ihost
 echo "=== L12 native report (physical target) ==="
 "$PYTHON_BIN" c/scripts/run_l12_report.py >/tmp/l12.json || true
 
-echo "=== pytest production tests ==="
-UEM_C="$ROOT/c/build/uem-c" "$PYTHON_BIN" -m pytest \
+echo "=== dependency-free production self-tests ==="
+UEM_C="$ROOT/c/build/uem-c" "$PYTHON_BIN" -m unified.selftest \
   tests/test_l13.py tests/test_l13_deep.py tests/test_l13_coverage.py \
-  tests/test_l11.py tests/test_uem.py -q --tb=line
+  tests/test_l11.py tests/test_uem.py
 
 echo "=== L13 gauntlet (all dimensions) ==="
 UEM_C="$ROOT/c/build/uem-c" "$PYTHON_BIN" - <<'PY'

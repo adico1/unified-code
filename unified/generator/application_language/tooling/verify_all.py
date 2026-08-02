@@ -517,7 +517,9 @@ def verify_isolated(generated):
 def verify_application_self_tests(generated):
     roots = [str(item["output_path"]) for item in generated]
     batch = (
-        "import importlib.util,json,pathlib,sys,tkinter as tk\n"
+        "import importlib.util,json,pathlib,sys\n"
+        "from unified.gui_selftest_host import install\n"
+        "tk=install()\n"
         "sys.dont_write_bytecode=True\n"
         "reports=[]\n"
         "master=tk.Tk();master.withdraw()\n"
@@ -539,9 +541,8 @@ def verify_application_self_tests(generated):
         "destroy()\n"
         "print(json.dumps(reports,sort_keys=True))\n"
     )
-    # Bound GUI-host concurrency: too many simultaneous Tk roots contend for
-    # host window resources, while one group can exceed the verification limit.
-    group_count = min(2, len(roots))
+    # Virtual host processes preserve isolation while avoiding optional Tk.
+    group_count = min(8, len(roots))
     groups = [
         roots[index::group_count]
         for index in range(group_count)

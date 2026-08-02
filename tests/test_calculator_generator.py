@@ -5,7 +5,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
+from unified import selftest
 
 from unified.generator.assembly import (
     _browser_executable,
@@ -120,7 +120,7 @@ def test_suite_is_deterministic_and_complete(tmp_path):
         assert report["generated_flow_conditionals"] == report["generated_flow_loops"] == 0
 
 
-@pytest.mark.parametrize("request_name", REQUESTS)
+@selftest.mark.parametrize("request_name", REQUESTS)
 def test_cli_target_executes_shared_vectors(tmp_path, request_name):
     request = ROOT / "seed" / "applications" / f"{request_name}.json"
     output = tmp_path / request_name
@@ -180,7 +180,7 @@ def test_stale_hash_unknown_version_cycle_and_atomic_preservation(tmp_path):
     catalog = json.loads(quantities.read_text())
     catalog["seeds"][0]["authority_hash"] = "0" * 64
     quantities.write_text(json.dumps(catalog))
-    with pytest.raises(ValueError, match="stale-hash"):
+    with selftest.raises(ValueError, match="stale-hash"):
         _load_registry(copied)
     output = tmp_path / "installed"
     output.mkdir()

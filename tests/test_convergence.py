@@ -5,7 +5,7 @@ from __future__ import annotations
 import copy
 import json
 
-import pytest
+from unified import selftest
 
 from unified.boundary import inward
 from unified.convergence import (
@@ -230,7 +230,7 @@ def test_authority_identity_is_hashed_even_when_content_is_equal():
     ]
 
 
-@pytest.mark.parametrize(
+@selftest.mark.parametrize(
     ("verdict", "error"),
     [
         ("missing", "invalid-letter"),

@@ -216,3 +216,27 @@ outcomes. It can measure historical volume, iteration and reuse proxies. It is
 not an isolated counterfactual and therefore cannot establish that Unified Code
 caused savings. Its output is a pilot and power-analysis input for the sealed
 experiment, not a replacement for that experiment.
+
+## Bounded semantic-reuse pilot
+
+The content-addressed
+[`semantic-reuse-pilot`](artifacts/economics/semantic-reuse-pilot.json) advances
+one coordinate beyond structural similarity. It reads three exact MIT-licensed
+calculator implementations at pinned public commits, verifies their source and
+selected-AST identities before execution, and runs only the registered valid
+bounded-integer multiplication vector. No copied source is published and no
+third-party package is installed or loaded.
+
+All three independent public witnesses and two existing generated products—the
+bounded-integer expression calculator and costed Todo—return `42` for `7 × 6`.
+This proves one narrow reusable behavior coordinate. It does not prove that the
+applications share validation, errors, interfaces, complete semantics or
+historical cost. Those remain unknown.
+
+```bash
+# deterministic replay of committed evidence
+python scripts/build_semantic_reuse_pilot.py
+
+# one explicit wet read of the already pinned public commits
+python scripts/build_semantic_reuse_pilot.py --acquire
+```

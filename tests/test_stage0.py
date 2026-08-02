@@ -11,7 +11,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
+from unified import selftest
 
 REPO = Path(__file__).resolve().parents[1]
 STAGE0_SPEC = importlib.util.spec_from_file_location(
@@ -148,7 +148,7 @@ def test_contract_record_order_is_semantically_irrelevant(tmp_path):
     assert first["value"]["handoff_sha256"] == second["value"]["handoff_sha256"]
 
 
-@pytest.mark.parametrize(
+@selftest.mark.parametrize(
     ("mutation", "error"),
     [
         (lambda contract: contract["allowed_operations"].append("execute-domain-command"), "allowed-operations"),

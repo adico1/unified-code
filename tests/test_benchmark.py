@@ -6,7 +6,7 @@ import os
 from inspect import Parameter, signature
 from pathlib import Path
 
-import pytest
+from unified import selftest
 
 from unified import LIMIT_NS, clock_end, clock_start, inward, is_thing
 from unified.generator.benchmark import (
