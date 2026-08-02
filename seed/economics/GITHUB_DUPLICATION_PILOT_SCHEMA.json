@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "uc://schemas/economics/github-duplication-pilot@1",
+  "title": "Unified Code bounded public GitHub duplication pilot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "extractor_version", "status", "seed_sha256", "snapshot_sha256", "cohort", "metrics", "exact_groups", "structure_groups", "dependency_groups", "repositories", "claim_boundary", "dataset_sha256"],
+  "properties": {
+    "format": {"const": "uc-github-duplication-pilot-1"},
+    "extractor_version": {"const": "UC-GITHUB-DUPLICATION-PILOT-1"},
+    "status": {"const": "bounded-public-pilot"},
+    "seed_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "snapshot_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "cohort": {"type": "object"},
+    "metrics": {"type": "object"},
+    "exact_groups": {"type": "array"},
+    "structure_groups": {"type": "array"},
+    "dependency_groups": {"type": "array"},
+    "repositories": {"type": "array", "minItems": 2},
+    "claim_boundary": {"type": "object"},
+    "dataset_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}
