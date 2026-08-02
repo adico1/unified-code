@@ -1,0 +1,34 @@
+{
+  "$id": "https://github.com/adico1/unified-code/blob/main/seed/github_corpus/NORMALIZATION_SCHEMA.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "archived": {"type": "boolean"},
+    "availability": {"enum": ["available", "deleted", "unavailable"]},
+    "candidate_boundaries": {
+      "items": {"minLength": 1, "type": "string"},
+      "type": "array",
+      "uniqueItems": true
+    },
+    "previous_names": {
+      "items": {"minLength": 1, "type": "string"},
+      "type": "array",
+      "uniqueItems": true
+    },
+    "relationships": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_url": {"format": "uri", "type": "string"},
+          "kind": {"enum": ["fork_of", "mirror_of"]},
+          "target_identity": {"minLength": 1, "type": "string"}
+        },
+        "required": ["kind", "target_identity", "evidence_url"],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "title": "Unified Code GitHub repository normalization payload extension",
+  "type": "object"
+}
