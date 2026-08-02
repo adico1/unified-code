@@ -6,7 +6,8 @@ software from one repeatedly practised form.
 Start with [Vision](VISION.md), [Goals and boundaries](docs/GOALS_AND_BOUNDARIES.md),
 [Knowledge continuity](docs/KNOWLEDGE_SYNC.md),
 [How to read the code](docs/HOW_TO_READ.md), [Build output](docs/BUILD_OUTPUT.md),
-and the [AI-swarm economic proof contract](ECONOMIC_PROOF.md).
+the [AI-swarm economic proof contract](ECONOMIC_PROOF.md), and its bounded
+[public-code duplication pilot](artifacts/economics/github-duplication-pilot.json).
 
 [Read: The Age of AI Requires Standard Ten — One Unified Code for All Software](https://adico.tech/blog/2026/07/25/the-age-of-ai-requires-standard-ten-one-unified-code-for-all-software/)
 

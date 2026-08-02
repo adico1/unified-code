@@ -168,6 +168,40 @@ economic-result = unknown
 Synthetic fixtures may test accounting and analysis code, but they are not
 economic observations and may never produce `economic-leverage.proven`.
 
+## Public-code duplication pilot
+
+The content-addressed
+[`github-duplication-pilot`](artifacts/economics/github-duplication-pilot.json)
+measures a deliberately small, non-random projection of twelve pinned public
+repositories across calculator, Todo and Pong cohorts. It publishes no copied
+source text. It distinguishes exact source-byte recurrence, normalized
+Python-AST recurrence and declared dependency recurrence.
+
+These are reuse signals, not interchangeable economic quantities. Exact bytes
+provide a lower bound for content-addressable storage reuse inside the measured
+projection. Normalized AST identities are a structural proxy, not behavioral
+equivalence. Recurrent dependencies show shared infrastructure demand, not
+waste. Causal effort, private code, semantic equivalence and worldwide savings
+remain `unknown`.
+
+The pinned pilot currently observes 180 Python source files (990,448 bytes).
+Whole-file content addressing saves 0 nonempty source bytes: its only exact
+cross-repository identity is the empty file. At the bounded 12–80-node AST
+motif level, however, it finds 93 cross-repository structural groups, 57 of
+which cross the calculator/Todo/Pong family boundary, plus three recurrent
+dependency identities. This is evidence that reuse opportunities depend on
+semantic or structural factoring rather than a naive whole-file cache. It is
+not evidence that all 93 structures should be unified or that their historical
+development cost was avoidable.
+
+```bash
+# deterministic replay from the committed pinned snapshot
+python scripts/build_github_duplication_pilot.py
+
+# explicit wet GitHub boundary; refreshes the snapshot at already pinned commits
+python scripts/build_github_duplication_pilot.py --acquire
+```
+
 ## Retrospective evidence already available
 
 The privacy-preserving

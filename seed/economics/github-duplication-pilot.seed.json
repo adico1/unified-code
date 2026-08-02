@@ -1,0 +1,30 @@
+{
+  "format": "uc-github-duplication-pilot-seed-1",
+  "identity": "uc://experiments/economics/github-duplication-pilot@1",
+  "measurement": {
+    "families": ["calculator", "pong", "todo"],
+    "file_extensions": [".py"],
+    "dependency_files": ["Pipfile", "pyproject.toml", "requirements.txt"],
+    "maximum_file_bytes": 131072,
+    "excluded_path_segments": [".git", ".tox", ".venv", "build", "dist", "node_modules", "site-packages", "vendor", "venv"]
+  },
+  "repositories": [
+    {"family": "calculator", "full_name": "Futura-Py/FluxCalc", "commit_sha": "56aea799ad7a71d251bd2aa9d799870aa3045402", "license_spdx": "MIT"},
+    {"family": "calculator", "full_name": "JordanLeich/Ultimate-Calculator", "commit_sha": "9ab5073bce78a9f661532205bb2aafb3a6005fa6", "license_spdx": "MIT"},
+    {"family": "calculator", "full_name": "akashblackhat/akash.Calculator", "commit_sha": "faf4d6f8c7d965028f571dd26c7329529666f508", "license_spdx": "MIT"},
+    {"family": "calculator", "full_name": "idanpa/calcpy", "commit_sha": "df061bd2b9fe34f72583f457bb43351289d95612", "license_spdx": "MIT"},
+    {"family": "pong", "full_name": "Amey-Thakur/PONG-GAME", "commit_sha": "01181d06445359959b30875415083e03eebba66e", "license_spdx": "MIT"},
+    {"family": "pong", "full_name": "Shivamgera/Pong-game-kivy", "commit_sha": "416cabf92ddd9948351e373b0f31367dad494350", "license_spdx": "NOASSERTION"},
+    {"family": "pong", "full_name": "aimaster-dev/pong-motion-control", "commit_sha": "477dacf340778d7a7a57a7aae40b4678d9ec97fb", "license_spdx": "NOASSERTION"},
+    {"family": "pong", "full_name": "vocdex/pong-wars-python", "commit_sha": "cb884f5eec515c708848e54a4faf83171f3a2290", "license_spdx": "MIT"},
+    {"family": "todo", "full_name": "Q1CHENL/todoism", "commit_sha": "a85a20074d013aefd2d133c1b953eab965627b9a", "license_spdx": "MIT"},
+    {"family": "todo", "full_name": "brkahmed/taskly", "commit_sha": "df985e4923da4c8683c798d3cace0b3d6971ea80", "license_spdx": "NOASSERTION"},
+    {"family": "todo", "full_name": "danst0/ReinschriftTodo", "commit_sha": "accefd4bc67114a1456d74c4ff3759c1341732ad", "license_spdx": "GPL-3.0"},
+    {"family": "todo", "full_name": "eladgunders/fastapi-todos", "commit_sha": "c059889336b7497ce80b9948a3720fb8c4b469e5", "license_spdx": "MIT"}
+  ],
+  "claim_boundary": {
+    "allowed": "This pinned public pilot measures exact source-byte recurrence, normalized Python-AST recurrence, and declared dependency recurrence inside its measured projection.",
+    "unknown": ["causal development effort", "private repositories", "semantic behavior equivalence", "worldwide savings"],
+    "prohibited": ["all repeated code is waste", "competition is wholly wasteful", "the pilot proves trillion-dollar savings", "the pilot represents all software"]
+  }
+}
