@@ -11,7 +11,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
+from unified import selftest
 
 REPO = Path(__file__).resolve().parents[1]
 CONTRACT = REPO / "seed" / "stage0" / "TRUSTED_INPUTS.json"
@@ -208,7 +208,7 @@ def test_invalid_stage1_seed_cannot_replace_generated_tree(tmp_path):
     assert tree_bytes(output) == before
 
 
-@pytest.mark.parametrize(
+@selftest.mark.parametrize(
     ("mutate", "error"),
     [
         (

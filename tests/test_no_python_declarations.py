@@ -18,7 +18,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
+from unified import selftest
 
 from unified.boundary import inward
 from unified.generator.declaration import load_declaration_module
@@ -75,7 +75,7 @@ def test_clean_room_does_not_enable_python_declarations():
     assert "allow_python_declaration" not in text
 
 
-@pytest.mark.parametrize(
+@selftest.mark.parametrize(
     "stem", ["text_stats_v2", "invoice_total", "text_stats_program"]
 )
 def test_json_twin_is_authoritative_and_loads_without_optin(monkeypatch, stem):

@@ -14,12 +14,5 @@ authors = [{ name = "Adi Ovadia Cohen" }]
 [project.scripts]
 uc = "unified.generator.cli:host_main"
 
-[project.optional-dependencies]
-test = ["coverage>=7", "pytest>=8"]
-
 [tool.setuptools.packages.find]
 include = ["unified*"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = "-q"

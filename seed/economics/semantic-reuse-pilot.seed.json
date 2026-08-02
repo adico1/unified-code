@@ -1,0 +1,77 @@
+{
+  "format": "uc-semantic-reuse-pilot-seed-1",
+  "identity": "uc://experiments/economics/semantic-reuse-pilot@1",
+  "contract": {
+    "identity": "uc://behaviors/bounded-integer-multiply@1",
+    "inputs": {"left": 7, "right": 6},
+    "expected": 42,
+    "scope": "one measured valid bounded-integer multiplication vector"
+  },
+  "public_witnesses": [
+    {
+      "adapter": "fluxcalc-equals",
+      "archive_sha256": "c48c9f66bc7ae7c0eef67e983acda5399bf0d36c6fb763095b8651fb744d8dac",
+      "commit_sha": "56aea799ad7a71d251bd2aa9d799870aa3045402",
+      "file_sha256": "f36ee12085be303f68981609bcb6739437833cb0779227ba2cfbd1655b3a3e6e",
+      "license_spdx": "MIT",
+      "path": "src/calculations.py",
+      "repository": "Futura-Py/FluxCalc",
+      "selected_ast_sha256": "0854ee06d1e8ea2c52f2808c862671817cae42c25f6a0adac9cf946097bddd2e",
+      "symbols": ["bracketcheck", "_btnEqualsInput"]
+    },
+    {
+      "adapter": "ultimate-equals",
+      "archive_sha256": "b6308efaae44ce8dd36448fdc0c81f50fa9011bae8b426be054f748f031a58d5",
+      "commit_sha": "9ab5073bce78a9f661532205bb2aafb3a6005fa6",
+      "file_sha256": "050d46910e71ba2284a1219ff538fff2e9e16ddb72e870ecde48cef463e2a497",
+      "license_spdx": "MIT",
+      "path": "uis/arith_calculator_ui.py",
+      "repository": "JordanLeich/Ultimate-Calculator",
+      "selected_ast_sha256": "4b2982017297881c8fed1398b4324a0444254bd75845b343eddb5f86bfbaca36",
+      "symbols": ["Arithmetic.equals"]
+    },
+    {
+      "adapter": "akash-result",
+      "archive_sha256": "0c7e2cd02dcff5c32730d8ecb8118ca25717f5da4b0d92b5ae5a2b5f89ed4cc6",
+      "commit_sha": "faf4d6f8c7d965028f571dd26c7329529666f508",
+      "file_sha256": "fb2f593e11947faf874c196a1f43232396e749b0b9ce41d1b168878c14c970fc",
+      "license_spdx": "MIT",
+      "path": "Calculator.py",
+      "repository": "akashblackhat/akash.Calculator",
+      "selected_ast_sha256": "d88ad9cd1bba4db2b63e091de258f12ed8f4b0ab34e9b9c08af86b6e4469957c",
+      "symbols": ["app.result"]
+    }
+  ],
+  "generated_projections": [
+    {
+      "identity": "uc://applications/bounded-integer-expression-calculator@1",
+      "kind": "calculator-expression",
+      "generated_file": "build/calculators/bounded-integer-expression-calculator@1/application/calculator_app/stage_04_core_processing.py",
+      "generated_file_sha256": "8801608f2e6666d1a97c97f164b6370d9621cb41010d13100902634f03426d9a",
+      "seed": "seed/applications/calculator.json",
+      "seed_sha256": "f8fddb239038137a1c02551341b4ad37c7ddb641a7846a13924633f35806fc18"
+    },
+    {
+      "identity": "uc://applications/costed-todo@1",
+      "kind": "costed-todo-line-total",
+      "generated_file": "build/todos/costed-todo@1/application/main.py",
+      "generated_file_sha256": "4f047089a157ca0f6625e890acfe5fda970d653a23a5d5de038b9ee8e84b37bd",
+      "seed": "build/todos/costed-todo@1/authority/seed.json",
+      "seed_sha256": "48fc7c25bfddd6c18b9aaf4fee915bdf66f807af3d5752e15909d7e7c8768c16"
+    }
+  ],
+  "claim_boundary": {
+    "allowed": "Three pinned independent public calculator implementations and two generated products return 42 for the registered 7*6 behavior vector.",
+    "unknown": [
+      "equivalence outside the registered vector",
+      "equivalent validation and error behavior",
+      "historical implementation cost",
+      "worldwide economic savings"
+    ],
+    "prohibited": [
+      "all calculator behavior is equivalent",
+      "all repeated code is removable",
+      "this pilot proves trillion-dollar savings"
+    ]
+  }
+}

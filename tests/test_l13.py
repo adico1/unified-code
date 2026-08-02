@@ -7,7 +7,7 @@ import os
 import sys
 from pathlib import Path
 
-import pytest
+from unified import selftest
 
 ROOT = Path(__file__).resolve().parents[1]
 os.environ.setdefault("UEM_C", str(ROOT / "c" / "build" / "uem-c"))

@@ -59,7 +59,7 @@ def _tree_bytes(root: Path) -> dict[str, bytes]:
         for path in sorted(root.rglob("*"))
         if path.is_file()
         and "__pycache__" not in path.parts
-        and ".pytest_cache" not in path.parts
+        and ".uc-cache" not in path.parts
     }
 
 

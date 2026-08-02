@@ -9,7 +9,7 @@ from decimal import Decimal
 from pathlib import Path
 from unittest import mock
 
-import pytest
+from unified import selftest
 
 from unified.machine.bytecode import (
     _decode,
@@ -205,19 +205,19 @@ def test_stateful_transition_expression_and_defensive_paths():
 
 
 def test_bytecode_truncated_helpers_and_mid_stream():
-    with pytest.raises(ValueError, match="truncated"):
+    with selftest.raises(ValueError, match="truncated"):
         _read_u16(b"\x00", 0)
-    with pytest.raises(ValueError, match="truncated"):
+    with selftest.raises(ValueError, match="truncated"):
         _read_u32(b"\x00\x00\x00", 0)
 
     # count=1 but no opcode bytes → truncated at instruction loop head (line 147)
     header = MAGIC + struct.pack(">HH", FORMAT_VERSION, 0) + struct.pack(">I", 1)
-    with pytest.raises(ValueError, match="truncated"):
+    with selftest.raises(ValueError, match="truncated"):
         _decode(header)
 
     # opcode present, tag missing → truncated (line 153)
     only_op = header + bytes([NAME_TO_BYTE["STOP"]])
-    with pytest.raises(ValueError, match="truncated"):
+    with selftest.raises(ValueError, match="truncated"):
         _decode(only_op)
 
     # TAG_STRING length field truncated → _read_u32
@@ -226,13 +226,13 @@ def test_bytecode_truncated_helpers_and_mid_stream():
         + bytes([NAME_TO_BYTE["LOAD"], TAG_STRING])
         + b"\x00\x00"
     )
-    with pytest.raises(ValueError, match="truncated"):
+    with selftest.raises(ValueError, match="truncated"):
         _decode(half_len)
 
     # full re-encode mismatch → noncanonical-encoding
     good = _encode((("STOP", None),), {})
     with mock.patch("unified.machine.bytecode._encode", return_value=b"not-the-same"):
-        with pytest.raises(ValueError, match="noncanonical-encoding"):
+        with selftest.raises(ValueError, match="noncanonical-encoding"):
             _decode(good)
 
 
@@ -262,7 +262,7 @@ def test_compile_unsupported_boundary_and_validate_encode_fail():
         ],
         "boundaries": [{"kind": "read_socket", "name": "b"}],
     }
-    with pytest.raises(ValueError, match="unsupported-boundary"):
+    with selftest.raises(ValueError, match="unsupported-boundary"):
         _compile(decl)
 
     out = compile_declaration(
@@ -335,7 +335,7 @@ def test_write_artifacts_without_bytecode_bytes(tmp_path):
 def test_default_json_helpers():
     assert _default((1, 2)) == [1, 2]
     assert _default({3, 1}) == [1, 3]
-    with pytest.raises(TypeError):
+    with selftest.raises(TypeError):
         _default(object())
 
 
@@ -884,28 +884,28 @@ def test_eval_expr_all_failure_and_edge_ops():
         "bindings": {},
     }
 
-    with pytest.raises(Exception, match="bad-node"):
+    with selftest.raises(Exception, match="bad-node"):
         eval_expr("not-a-dict", ctx)  # line 388
 
     assert eval_expr({"op": "count", "of": {"op": "literal", "value": None}}, ctx) == 0  # 410
 
-    with pytest.raises(Exception):
+    with selftest.raises(Exception):
         eval_expr(
             {"op": "as_int", "of": {"op": "literal", "value": None}, "missing_error": "mi"},
             ctx,
         )  # 422
-    with pytest.raises(Exception):
+    with selftest.raises(Exception):
         eval_expr(
             {"op": "as_int", "of": {"op": "literal", "value": True}, "type_error": "ti"},
             ctx,
         )  # 424 bool
-    with pytest.raises(Exception):
+    with selftest.raises(Exception):
         eval_expr(
             {"op": "as_int", "of": {"op": "literal", "value": "x"}, "type_error": "ti"},
             ctx,
         )
 
-    with pytest.raises(Exception):
+    with selftest.raises(Exception):
         eval_expr(
             {
                 "op": "as_decimal",
@@ -917,12 +917,12 @@ def test_eval_expr_all_failure_and_edge_ops():
     # already Decimal returns as-is (432)
     d = Decimal("1.5")
     assert eval_expr({"op": "as_decimal", "of": {"op": "literal", "value": d}}, ctx) == d
-    with pytest.raises(Exception):
+    with selftest.raises(Exception):
         eval_expr(
             {"op": "as_decimal", "of": {"op": "literal", "value": 1.2}, "type_error": "nd"},
             ctx,
         )  # 434 not str
-    with pytest.raises(Exception):
+    with selftest.raises(Exception):
         eval_expr(
             {
                 "op": "as_decimal",
@@ -944,7 +944,7 @@ def test_eval_expr_all_failure_and_edge_ops():
         ctx,
     ) == Decimal("3")
 
-    with pytest.raises(Exception, match="items-not-a-list"):
+    with selftest.raises(Exception, match="items-not-a-list"):
         eval_expr(
             {
                 "op": "sum_each",
@@ -954,7 +954,7 @@ def test_eval_expr_all_failure_and_edge_ops():
             ctx,
         )  # 473
 
-    with pytest.raises(Exception, match="item-not-an-object"):
+    with selftest.raises(Exception, match="item-not-an-object"):
         eval_expr(
             {
                 "op": "sum_each",
@@ -1000,7 +1000,7 @@ def test_eval_expr_all_failure_and_edge_ops():
     assert ds == "1.00"
 
     for op in ("str_len", "line_count", "word_count", "unique_casefold_word_count"):
-        with pytest.raises(Exception, match="invalid-text"):
+        with selftest.raises(Exception, match="invalid-text"):
             eval_expr({"op": op, "of": {"op": "literal", "value": 123}}, ctx)
 
 

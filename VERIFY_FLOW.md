@@ -2,6 +2,11 @@
 
 `uc verify-all` is the single verification operation.
 
+Repository and generated-product tests are plain functions with plain
+assertions, executed by `python -m unified.selftest`. The runner uses only the
+Python standard library. Generated Thing v2 applications do not install or
+invoke a third-party test framework.
+
 ```text
 verification.requested
 → tools.boot.requested
@@ -50,6 +55,11 @@ It is produced by the same graph (`UC_VERIFY_MATERIALIZE=1 uc verify-all`) and
 contains no timestamps, durations, temporary paths or process identities.
 Release materialization is expensive; acceptance verification is the
 content-addressed acquisition and validation of that evidence.
+
+Materialization is the one-time evidence-production boundary. Ordinary local
+and CI verification is lazy: it validates the content-addressed bundle and
+aggregates every proof verdict under the five-second law without rerunning
+unchanged physical browser, compiler, sanitizer or coverage work.
 
 ## Browser boundary
 

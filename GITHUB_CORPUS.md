@@ -93,5 +93,5 @@ assert result["state"] == "valid"
 The schemas and frozen vectors are under `seed/github_corpus/`. Run:
 
 ```bash
-pytest -q tests/test_github_corpus.py
+python -m unified.selftest tests/test_github_corpus.py
 ```

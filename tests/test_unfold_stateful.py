@@ -128,7 +128,7 @@ def test_second_stateful_application_uses_independent_vocabulary(tmp_path):
 
 def test_generic_generator_has_no_application_vocabulary():
     result = subprocess.run(
-        [sys.executable, "scripts/check_stateful_overfit.py"],
+        [sys.executable, "-m", "scripts.check_stateful_overfit"],
         cwd=ROOT,
         capture_output=True,
         text=True,

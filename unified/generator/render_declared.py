@@ -1034,15 +1034,8 @@ description = "{description}"
 requires-python = ">=3.11"
 readme = "README.md"
 {script}
-[project.optional-dependencies]
-test = ["pytest>=8"]
-
 [tool.setuptools.packages.find]
 include = ["{package}*"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = "-q"
 
 [tool.unified-code]
 generated = true
@@ -1064,7 +1057,7 @@ Generated from a code-based PROGRAM declaration (not a stub scaffold).
 ```bash
 {script} path/to/file.txt
 printf 'text' | {script} -
-pytest
+python -m unified.selftest
 ```
 """
 
@@ -1073,7 +1066,7 @@ def _gitignore() -> str:
     return """.venv/
 __pycache__/
 *.py[cod]
-.pytest_cache/
+.uc-cache/
 *.egg-info/
 dist/
 build/

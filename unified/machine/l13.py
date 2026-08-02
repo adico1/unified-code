@@ -57,14 +57,12 @@ def measure_python_coverage() -> dict:
             "run",
             "--rcfile=" + str(ROOT / ".coveragerc"),
             "-m",
-            "pytest",
+            "unified.selftest",
             "tests/test_l13.py",
             "tests/test_l13_deep.py",
             "tests/test_l13_coverage.py",
             "tests/test_l11.py",
             "tests/test_uem.py",
-            "-q",
-            "--tb=no",
         ],
         cwd=str(ROOT),
         env=env,
@@ -266,19 +264,17 @@ def measure_c_coverage() -> dict:
     if harness.is_file():
         _run([str(harness)], cwd=str(CROOT), timeout=120)
         _run([str(harness)], cwd=str(ROOT), timeout=120)
-    # 2) Public host exercise via pytest + catalogs + goldens
+    # 2) Public host exercise via dependency-free self-tests + catalogs + goldens
     _run(
         [
             sys.executable,
             "-m",
-            "pytest",
+            "unified.selftest",
             "tests/test_l13.py",
             "tests/test_l13_deep.py",
             "tests/test_l13_coverage.py",
             "tests/test_l11.py",
             "tests/test_uem.py",
-            "-q",
-            "--tb=no",
         ],
         cwd=str(ROOT),
         env=env,

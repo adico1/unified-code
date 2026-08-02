@@ -5,7 +5,7 @@
       "total": 181
     },
     "applications": 75,
-    "complete_tree_sha256": "8f2b13909fd828bc5373001f11132cf867af93de10540366f5ade4a54e564021",
+    "complete_tree_sha256": "d7e9c47e4ba7b175003c90800c7006968e8490d286da2edec7dccc85d2c79ed0",
     "seed_catalog": {
       "catalog": "seed/application_language/catalog.seed.json",
       "suite": "seed/application_language/suite.seed.json"
@@ -14,8 +14,8 @@
   "assembly_version": "UC-ASSEMBLY-1",
   "authority": "application-v3-seeds",
   "generated": true,
-  "registry_file_sha256": "97ccd1dd33da8e2074895d6c2450716c173209c7d95ce5dac8706a890b271e4a",
-  "registry_snapshot_sha256": "c2d749d1d3b13e4267887e85359e123436eff5a0d27a01245ea01b0f3b091268",
+  "registry_file_sha256": "b1e845f3854271421514aa06aa3d7d005f3fdf982f3c73a210ddd7f1cf632c01",
+  "registry_snapshot_sha256": "06a7ebbe5f2a21f594681472b53d441848fc7a1a2f80e5fc8261cf4feeae9eac",
   "source_seed_sha256": {
     "applications/calculator.json": "9e46fb6cd2d5e6f98f2a114abe375b59c469fd5cee1b280cb99861b0c18a7ae3",
     "applications/file_editor.json": "23a865b9fddeee209d8a9b566e70b3e8aa3dada7a02cfd31f0e1f18f31c4187b",

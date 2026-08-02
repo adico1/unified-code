@@ -80,36 +80,36 @@
       "id": "repository-tests",
       "handler": "command",
       "requires": [],
-      "argv": ["{python}", "-m", "pytest", "-q"]
+      "argv": ["{python}", "-m", "unified.selftest"]
     },
-    {
-      "id": "l13-gauntlet",
-      "handler": "command",
-      "requires": [],
+  {
+    "id": "l13-gauntlet",
+    "handler": "command",
+    "requires": ["repository-tests"],
       "argv": ["{python}", "scripts/verify_l13_evidence.py"]
     },
-    {
-      "id": "standard-audit",
-      "handler": "command",
-      "requires": [],
+  {
+    "id": "standard-audit",
+    "handler": "command",
+    "requires": ["repository-tests"],
       "argv": ["{python}", "scripts/audit_standard_ten.py", "audit"]
     },
-    {
-      "id": "clean-room",
-      "handler": "command",
-      "requires": [],
+  {
+    "id": "clean-room",
+    "handler": "command",
+    "requires": ["repository-tests"],
       "argv": ["bash", "scripts/clean_room_ten.sh"]
     },
-    {
-      "id": "uem-gauntlet",
-      "handler": "command",
-      "requires": [],
+  {
+    "id": "uem-gauntlet",
+    "handler": "command",
+    "requires": ["repository-tests"],
       "argv": ["{python}", "-m", "unified.generator.cli", "gauntlet", "examples/declarations/text_stats_v2.json"]
     },
-    {
-      "id": "issue7-generated-surface",
-      "handler": "command",
-      "requires": [],
+  {
+    "id": "issue7-generated-surface",
+    "handler": "command",
+    "requires": ["repository-tests"],
       "argv": ["{python}", "generated/verification_surface/audit/run_audit.py"]
     }
   ],

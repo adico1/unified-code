@@ -29,6 +29,17 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
+def _stable_selftest_detail(stdout: str, stderr: str, limit: int) -> str:
+    try:
+        report = json.loads(stdout)
+    except json.JSONDecodeError:
+        return (stdout + stderr)[-limit:]
+    report.pop("duration_ns", None)
+    return (json.dumps(report, separators=(",", ":"), sort_keys=True) + stderr)[
+        -limit:
+    ]
+
+
 def _tree_sha256(root: Path, exclude=frozenset()) -> str:
     """Deterministic content hash of a generated tree: sorted rel-path + file sha256."""
     root = Path(root)
@@ -150,7 +161,7 @@ def _run_verify(project_path: Path) -> dict:
         py = Path("python3")
     try:
         r = subprocess.run(
-            [str(py), "-m", "pytest", str(tests), "-q", "--tb=line"],
+            [str(py), str(_repo_root() / "unified" / "selftest.py"), str(tests)],
             cwd=str(project_path),
             capture_output=True,
             text=True,
@@ -161,7 +172,9 @@ def _run_verify(project_path: Path) -> dict:
         return {"ok": False, "detail": f"verify-exec:{exc}", "exit": -1}
     return {
         "ok": r.returncode == 0,
-        "detail": (r.stdout or "")[-800:] + (r.stderr or "")[-400:],
+        "detail": _stable_selftest_detail(
+            r.stdout or "", r.stderr or "", 1200
+        ),
         "exit": r.returncode,
     }
 
@@ -601,7 +614,7 @@ def install_atomic(thing):
     shutil.copytree(
         project_path,
         staging,
-        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".pytest_cache"),
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".uc-cache"),
     )
     # write unfold manifest
     manifest = {

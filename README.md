@@ -80,11 +80,11 @@ git clone https://github.com/adico1/unified-code.git
 cd unified-code
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install -e ".[test]"
-pytest
+python -m pip install -e .
+uc verify-all
 uc new generated-demo
 cd generated-demo
-pytest
+python -m unified.selftest
 python -m generated_demo
 ```
 
@@ -111,7 +111,7 @@ script:
 ./scripts/uc_contract status        # live pass/fail criteria
 ./scripts/uc_contract conservation  # baseline equation only
 ./scripts/uc_contract ledger        # regenerate branch ledger
-./scripts/uc_contract verify        # full gates (pytest/C/L13/audit)
+./scripts/uc_contract verify        # full gates (self-test/C/L13/audit)
 ./scripts/uc_contract report        # honest 14-point final report
 ```
 
@@ -172,6 +172,11 @@ isolated byte-identical two-stage proof is documented in
 The complete dependency-aware verification graph is executed once with
 [`uc verify-all`](VERIFY_FLOW.md), with tool bootstrap measured separately from
 the enforced five-second evidence-verification budget.
+
+The default path is lazy and content-addressed. Repository tests use the
+dependency-free [`unified.selftest`](unified/selftest.py) runner; unchanged
+physical browser, compiler, sanitizer and coverage evidence is admitted only
+after its complete authority identity is validated.
 
 ### Thing v2 — compile-time specialization
 
@@ -235,7 +240,7 @@ repeated structure.
 ```bash
 uc new my-project
 cd my-project
-pytest
+python -m unified.selftest
 python -m my_project
 uc add double
 ```

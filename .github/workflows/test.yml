@@ -15,20 +15,14 @@ jobs:
       matrix:
         include:
           - python-version: "3.11"
-            verification-command: >-
-              python -m pytest -q
-              --ignore=tests/test_application_assembly.py
-              --ignore=tests/test_manifestation.py
-            evidence-command: python -c "print('compatibility shard complete')"
+            verification-command: uc verify-all
+            evidence-command: python scripts/assert_verify_budget.py
           - python-version: "3.12"
             verification-command: uc verify-all
             evidence-command: python scripts/assert_verify_budget.py
           - python-version: "3.13"
-            verification-command: >-
-              python -m pytest -q
-              --ignore=tests/test_application_assembly.py
-              --ignore=tests/test_manifestation.py
-            evidence-command: python -c "print('compatibility shard complete')"
+            verification-command: uc verify-all
+            evidence-command: python scripts/assert_verify_budget.py
 
     steps:
       - name: Checkout
@@ -42,7 +36,7 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[test]"
+          pip install -e .
 
       - name: Run functional tests
         run: ${{ matrix.verification-command }}
@@ -67,7 +61,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install
-        run: pip install -e ".[test]"
+        run: pip install -e .
 
       - name: Generate calculator suite
         run: >-
@@ -97,35 +91,13 @@ jobs:
           python-version: "3.12"
 
       - name: Install
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[test]"
+        run: pip install -e .
 
-      - name: Build C host
-        run: make -C c posix CFLAGS="-std=c99 -Wall -O2 -Iinclude -Ithird_party -Icore -Ihost/mcu"
+      - name: Validate content-addressed L1-L13 evidence lazily
+        run: uc verify-all
 
-      - name: L13 gauntlet (fail on any dimension below 100%)
-        run: |
-          set -euo pipefail
-          chmod +x scripts/run_l13.sh
-          export UEM_C="$PWD/c/build/uem-c"
-          ./scripts/run_l13.sh
-
-      - name: Assert coverage.json all dimensions OK
-        run: |
-          python - <<'PY'
-          import json, sys
-          rep = json.load(open("coverage.json", encoding="utf-8"))
-          dims = rep.get("dimensions") or {}
-          bad = []
-          for k, d in sorted(dims.items()):
-              if not d.get("ok"):
-                  bad.append(f"{k}: actual={d.get('actual')} required={d.get('required')}")
-          if rep.get("verdict") != "pass" or bad:
-              print("FAIL dimensions:", bad or rep)
-              raise SystemExit(1)
-          print("L13 PASS — all", len(dims), "dimensions at 100%")
-          PY
+      - name: Enforce five-second and complete-proof contract
+        run: python scripts/assert_verify_budget.py
 
   standard_ten:
     name: Standard Ten (governing contract)
@@ -142,7 +114,7 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[test]"
+          pip install -e .
 
       - name: STANDARD_TEN.md present
         run: test -f STANDARD_TEN.md && test -f seed/ROOT.seed.json

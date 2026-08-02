@@ -865,19 +865,17 @@ def cmd_verify(args: argparse.Namespace) -> int:
 
     # always: conservation + ledger refresh
     step("branch_ledger", [_py(), str(CROOT / "scripts" / "branch_ledger.py")], cwd=CROOT)
-    # pytest subset or full
+    # dependency-free self-test subset or full
     if args.quick:
         step(
-            "pytest-core",
+            "selftest-core",
             [
                 _py(),
                 "-m",
-                "pytest",
+                "unified.selftest",
                 "tests/test_binding_mutations.py",
                 "tests/test_oom_mutations.py",
                 "tests/test_uem.py",
-                "-q",
-                "--tb=line",
             ],
         )
     else:

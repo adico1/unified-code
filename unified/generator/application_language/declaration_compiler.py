@@ -439,11 +439,15 @@ def gui_source(seed, routes, transitions):
         else None
     )
     globals_ = "display, mode_text, canvas" if series else "display, mode_text"
+    widgets = ["Button", "Entry", "Label", "StringVar", "Tk"]
+    if series:
+        widgets.append("Canvas")
     lines = [
         f"SELF_TEST_CONTROLS = {self_test_controls!r}",
         "",
         "def build_interface():",
-        f"    global {globals_}",
+        f"    global {globals_}, {', '.join(widgets)}",
+        f"    from tkinter import {', '.join(widgets)}",
         "    root = Tk()",
         f"    root.title({presentation['title']!r})",
         f"    root.geometry({presentation['geometry']!r})",
@@ -621,14 +625,10 @@ def stamp_01_outer_to_inner(seed):
     imports = ["ast", "json", "operator", "sys", *required_imports(seed)]
     if laws["kind"] == "stack":
         imports.remove("ast")
-    widgets = ["Button", "Entry", "Label", "StringVar", "Tk"]
-    if "series" in laws:
-        widgets.append("Canvas")
     return [
         "# stamp: 01_outer_to_inner",
         '"""Generated from concise declarations; no seed is loaded at runtime."""',
         *(f"import {name}" for name in dict.fromkeys(imports)),
-        f"from tkinter import {', '.join(widgets)}",
         f"IDENTITY = {seed['identity']['variation']!r}",
         "THING_STATES = ('unknown', 'absent', 'false', 'formed', 'valid', 'invalid')",
         "TEN_DEPTHS = ('01_identity', '02_authority', '03_declaration', '04_composition', '05_processing', '06_state', '07_boundary', '08_manifestation', '09_evidence', '10_fixed_point')",

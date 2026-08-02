@@ -7,7 +7,7 @@ import os
 import subprocess
 from pathlib import Path
 
-import pytest
+from unified import selftest
 
 ROOT = Path(__file__).resolve().parents[1]
 UEM_C = os.environ.get("UEM_C", str(ROOT / "c" / "build" / "uem-c"))
@@ -17,7 +17,7 @@ HARNESS = ROOT / "c" / "build" / "core-coverage"
 def test_c_oom_harness_clean():
     """core-coverage includes assert_oom_paths; must exit 0 under normal and ASan builds."""
     if not HARNESS.is_file():
-        pytest.skip("core-coverage not built")
+        selftest.skip("core-coverage not built")
     r = subprocess.run(
         [str(HARNESS)],
         cwd=str(ROOT / "c"),
@@ -32,7 +32,7 @@ def test_c_oom_harness_clean():
 
 def test_invoice_still_valid_after_allocator_wire():
     if not Path(UEM_C).is_file():
-        pytest.skip("uem-c not built")
+        selftest.skip("uem-c not built")
     host = {
         "document": {
             "tax_rate": "0.10",

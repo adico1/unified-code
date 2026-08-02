@@ -15,7 +15,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
+from unified import selftest
 
 from unified.boundary import inward
 from unified.generator import run_command
@@ -65,7 +65,7 @@ def _reorder_representational_keys(obj, parent_key=None):
     return obj
 
 
-@pytest.mark.parametrize("decl", JSON_DECLARATIONS, ids=lambda p: p.stem)
+@selftest.mark.parametrize("decl", JSON_DECLARATIONS, ids=lambda p: p.stem)
 def test_json_declaration_rebuild_is_deterministic(decl, tmp_path):
     """Building the same JSON declaration twice yields byte-identical trees."""
     h1 = _build_hash(decl, tmp_path / "a")
@@ -74,7 +74,7 @@ def test_json_declaration_rebuild_is_deterministic(decl, tmp_path):
     assert len(h1) == 64
 
 
-@pytest.mark.parametrize("decl", JSON_DECLARATIONS, ids=lambda p: p.stem)
+@selftest.mark.parametrize("decl", JSON_DECLARATIONS, ids=lambda p: p.stem)
 def test_json_reordered_keys_are_byte_identical(decl, tmp_path):
     """Reordering representational JSON keys at every nested level is inert.
 
@@ -95,7 +95,7 @@ def test_json_reordered_keys_are_byte_identical(decl, tmp_path):
     assert canonical == reordered
 
 
-@pytest.mark.parametrize(
+@selftest.mark.parametrize(
     "decl", [DECLS / "text_stats_v2.json", DECLS / "invoice_total.json"], ids=lambda p: p.stem
 )
 def test_json_canonical_symbolic_hash_is_stable(decl):
@@ -149,11 +149,11 @@ def test_json_declaration_semantic_output(tmp_path):
     assert '"total":"13.20"' in out
 
 
-@pytest.mark.skipif(
+@selftest.mark.skipif(
     os.environ.get("UC_ALLOW_PY_DECLARATIONS") != "1",
     reason="legacy Python-declaration equivalence is migration-only (set UC_ALLOW_PY_DECLARATIONS=1)",
 )
-@pytest.mark.parametrize(
+@selftest.mark.parametrize(
     "stem",
     ["text_stats_program"],
     ids=lambda s: s,
@@ -224,7 +224,7 @@ def test_uc_new_from_declaration_generates_runnable_app(tmp_path):
     assert '"unique_words":1' in proc.stdout.replace(" ", "")
 
     proc_t = subprocess.run(
-        [sys.executable, "-m", "pytest"],
+        [sys.executable, str(ROOT / "unified" / "selftest.py")],
         cwd=str(root),
         env=env,
         capture_output=True,
