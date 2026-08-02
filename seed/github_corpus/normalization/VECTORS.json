@@ -1,0 +1,118 @@
+{
+  "format_version": "UC-GITHUB-REPOSITORY-NORMALIZATION-VECTORS-1",
+  "records": [
+    {
+      "payload": {
+        "archived": false,
+        "candidate_boundaries": ["."],
+        "full_name": "contract/root",
+        "source_url": "https://example.invalid/contract/root"
+      },
+      "source_identity": "github:repository:vector-root"
+    },
+    {
+      "payload": {
+        "archived": false,
+        "full_name": "contract/fork",
+        "relationships": [
+          {
+            "evidence_url": "https://example.invalid/evidence/fork-root",
+            "kind": "fork_of",
+            "target_identity": "github:repository:vector-root"
+          }
+        ],
+        "source_url": "https://example.invalid/contract/fork"
+      },
+      "source_identity": "github:repository:vector-fork"
+    },
+    {
+      "payload": {
+        "archived": false,
+        "full_name": "contract/mirror",
+        "relationships": [
+          {
+            "evidence_url": "https://example.invalid/evidence/mirror-root",
+            "kind": "mirror_of",
+            "target_identity": "github:repository:vector-root"
+          }
+        ],
+        "source_url": "https://example.invalid/contract/mirror"
+      },
+      "source_identity": "github:repository:vector-mirror"
+    },
+    {
+      "payload": {
+        "archived": false,
+        "candidate_boundaries": ["."],
+        "full_name": "contract/current-name",
+        "previous_names": ["contract/previous-name"],
+        "source_url": "https://example.invalid/contract/current-name"
+      },
+      "source_identity": "github:repository:vector-renamed"
+    },
+    {
+      "payload": {
+        "archived": false,
+        "availability": "deleted",
+        "candidate_boundaries": ["."],
+        "full_name": "contract/deleted",
+        "source_url": "https://example.invalid/contract/deleted"
+      },
+      "source_identity": "github:repository:vector-deleted"
+    },
+    {
+      "payload": {
+        "archived": true,
+        "candidate_boundaries": ["."],
+        "full_name": "contract/archived",
+        "source_url": "https://example.invalid/contract/archived"
+      },
+      "source_identity": "github:repository:vector-archived"
+    },
+    {
+      "payload": {
+        "availability": "unavailable",
+        "candidate_boundaries": ["."],
+        "full_name": "contract/unavailable",
+        "relationships": [
+          {
+            "evidence_url": "https://example.invalid/evidence/missing-target",
+            "kind": "mirror_of",
+            "target_identity": "github:repository:vector-missing"
+          }
+        ],
+        "source_url": "https://example.invalid/contract/unavailable"
+      },
+      "source_identity": "github:repository:vector-unavailable"
+    },
+    {
+      "payload": {
+        "archived": false,
+        "full_name": "contract/ambiguous",
+        "relationships": [
+          {
+            "evidence_url": "https://example.invalid/evidence/ambiguous-root",
+            "kind": "fork_of",
+            "target_identity": "github:repository:vector-root"
+          },
+          {
+            "evidence_url": "https://example.invalid/evidence/ambiguous-renamed",
+            "kind": "fork_of",
+            "target_identity": "github:repository:vector-renamed"
+          }
+        ],
+        "source_url": "https://example.invalid/contract/ambiguous"
+      },
+      "source_identity": "github:repository:vector-ambiguous"
+    },
+    {
+      "payload": {
+        "archived": false,
+        "candidate_boundaries": ["packages/one", "packages/two"],
+        "full_name": "contract/monorepo",
+        "source_url": "https://example.invalid/contract/monorepo"
+      },
+      "source_identity": "github:repository:vector-monorepo"
+    }
+  ]
+}

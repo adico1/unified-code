@@ -118,3 +118,31 @@ verification command remains the repository's single cached operation:
 ```bash
 uc verify-all
 ```
+
+## Deterministic repository normalization
+
+The next pure Part consumes a complete or explicitly partial canonical
+snapshot:
+
+```python
+normalize_repositories(thing) -> thing
+```
+
+It produces stable repository records, explicit `fork_of` and `mirror_of`
+edges, relationship components, declared monorepo boundaries and unresolved
+verdicts. Provider source identity remains the repository identity. Names may
+change and retain ordered rename history without silently creating a new
+identity.
+
+An explicit fork or mirror relation places repositories in one relationship
+component. A multi-member component deliberately has
+`selection_status = unresolved`; normalization does not choose an implicit
+winner or claim semantic equivalence. Missing boundary declarations also
+remain unresolved. Archived, deleted, unavailable, renamed and ambiguous
+states remain distinct.
+
+The golden identity graph and ambiguity vectors are under
+`seed/github_corpus/normalization/`. These are contract vectors, not public
+repository observations. The public fixture pack supplies the separate
+measured positive proof. Normalization performs no network access, ranking,
+classification, seed inference or fuzzy matching.

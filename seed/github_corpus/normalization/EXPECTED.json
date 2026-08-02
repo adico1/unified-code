@@ -1,0 +1,48 @@
+{
+  "fixture": {
+    "candidate_group_count": 3,
+    "normalization_sha256": "a33cfe69ae715a984b09ae240c880ebeaf34b8691f8a559667fd5bec03a4b9eb",
+    "repository_count": 3,
+    "unresolved_count": 6
+  },
+  "format_version": "UC-GITHUB-REPOSITORY-NORMALIZATION-EXPECTED-1",
+  "vector": {
+    "candidate_groups": {
+      "explicit-fork-mirror-component": {
+        "identity": "13e3f45be9ebb7d1d20cea3f790f2ab8c98ae088c367b81319d33905a16f1fdb",
+        "members": [
+          "github:repository:vector-fork",
+          "github:repository:vector-mirror",
+          "github:repository:vector-root"
+        ],
+        "selection_status": "unresolved"
+      }
+    },
+    "monorepo_boundaries": {
+      "packages/one": "03951bf7bc4f1cf8110874086b323647d0dd52d40d81ff6b8adf67fc74824342",
+      "packages/two": "76c1087689a80dba8ca3684db2459805ff063eddd2cd7c3764cb446028b6349a"
+    },
+    "normalization_sha256": "dd33975e64b1ecd9e09e9c02bdd9fac5f0b961bddd63598ec498737d76e71958",
+    "relationship_statuses": {
+      "github:repository:vector-ambiguous|fork_of|github:repository:vector-renamed": "ambiguous",
+      "github:repository:vector-ambiguous|fork_of|github:repository:vector-root": "ambiguous",
+      "github:repository:vector-fork|fork_of|github:repository:vector-root": "resolved",
+      "github:repository:vector-mirror|mirror_of|github:repository:vector-root": "resolved",
+      "github:repository:vector-unavailable|mirror_of|github:repository:vector-missing": "unresolved"
+    },
+    "repository_states": {
+      "github:repository:vector-archived": ["available", "archived"],
+      "github:repository:vector-deleted": ["deleted", "active"],
+      "github:repository:vector-renamed": ["available", "active"],
+      "github:repository:vector-unavailable": ["unavailable", "unknown"]
+    },
+    "snapshot_sha256": "0033f0f0dc5eca45628c19455c15451560de37e907c13e7de4b22b8b25933bc5",
+    "unresolved_reasons": [
+      "archive-state-unresolved",
+      "candidate-boundary-unresolved",
+      "canonical-winner-unresolved",
+      "relationship-ambiguous",
+      "relationship-unresolved"
+    ]
+  }
+}
