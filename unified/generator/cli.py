@@ -55,6 +55,10 @@ def host_main(argv=None):
         from .assembly import run_assemble
 
         result = run_assemble(inward(payload))
+    elif command == "run":
+        from ..run_pipeline import run_ephemeral
+
+        result = run_ephemeral(inward(payload))
     elif command == "calculator":
         from .calculator import run_calculator
 
@@ -399,6 +403,24 @@ def _parse_argv(argv: list[str]) -> dict:
             "output": output,
             **gates,
             "gauntlet_depths": depths,
+        }
+
+    if command == "run":
+        if len(argv) < 2:
+            return {"command": "run", "error": "usage-run"}
+        request_path = argv[1]
+        materialize = None
+        i = 2
+        while i < len(argv):
+            if argv[i] == "--materialize" and i + 1 < len(argv):
+                materialize = argv[i + 1]
+                i += 2
+                continue
+            return {"command": "run", "error": f"unknown-flag:{argv[i]}"}
+        return {
+            "command": "run",
+            "request_path": request_path,
+            "materialize": materialize,
         }
 
     if command == "calculator":
