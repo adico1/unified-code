@@ -1,0 +1,34 @@
+{
+  "$id": "https://github.com/adico1/unified-code/blob/main/seed/github_corpus/FIXTURE_PACK_SCHEMA.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "completion": {"type": "object"},
+    "evidence": {"type": "object"},
+    "format_version": {"const": "UC-GITHUB-CORPUS-FIXTURE-PACK-1"},
+    "pages": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "content_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+          "index": {"minimum": 0, "type": "integer"},
+          "next_cursor": {"type": ["string", "null"]},
+          "path": {"pattern": "^pages/", "type": "string"},
+          "request_cursor": {"type": ["string", "null"]},
+          "retrieval_contract_version": {"const": "UC-GITHUB-CORPUS-SNAPSHOT-1"},
+          "source_url": {"format": "uri", "type": "string"}
+        },
+        "required": ["index", "path", "source_url", "retrieval_contract_version", "content_sha256", "request_cursor", "next_cursor"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "request": {"$ref": "REQUEST_SCHEMA.json"},
+    "retrieval_contract_version": {"const": "UC-GITHUB-CORPUS-SNAPSHOT-1"},
+    "status": {"enum": ["complete", "partial", "rate_limited", "unavailable"]}
+  },
+  "required": ["format_version", "retrieval_contract_version", "request", "status", "completion", "evidence", "pages"],
+  "title": "Unified Code canonical public-repository fixture pack",
+  "type": "object"
+}

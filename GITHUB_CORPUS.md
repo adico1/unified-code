@@ -95,3 +95,26 @@ The schemas and frozen vectors are under `seed/github_corpus/`. Run:
 ```bash
 python -m unified.selftest tests/test_github_corpus.py
 ```
+
+## Canonical offline fixture pack
+
+`seed/github_corpus/fixtures/` contains three minimal public-repository records
+across two content-addressed pages. Each record retains its GitHub source URL
+and available SPDX license metadata. Each page pins the retrieval-contract
+version, source URL and canonical content hash. The pack is deliberately small:
+it proves replay mechanics, not application classification or corpus coverage.
+
+Replay supplies the checked-in manifest and page text to the pure public Part:
+
+```python
+replay_fixture_pack(thing) -> thing
+```
+
+The Part performs no network or credential access. Missing, duplicate,
+malformed and content-altered pages are rejected without tickets; record and
+manifest page order do not change the canonical identity. The contributor
+verification command remains the repository's single cached operation:
+
+```bash
+uc verify-all
+```
