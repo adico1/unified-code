@@ -167,3 +167,18 @@ economic-result = unknown
 
 Synthetic fixtures may test accounting and analysis code, but they are not
 economic observations and may never produce `economic-leverage.proven`.
+
+## Retrospective evidence already available
+
+The privacy-preserving
+[`retrospective-v1`](artifacts/economics/retrospective-v1.json) records the
+project's pre-registered-cutoff Codex counters, tool events, Git history,
+generated-product inventory and canonical proof outcomes. It excludes raw
+conversation content, tool payloads, source patches, personal paths and raw
+session identities.
+
+This is real observational evidence of development activity and generated
+outcomes. It can measure historical volume, iteration and reuse proxies. It is
+not an isolated counterfactual and therefore cannot establish that Unified Code
+caused savings. Its output is a pilot and power-analysis input for the sealed
+experiment, not a replacement for that experiment.
