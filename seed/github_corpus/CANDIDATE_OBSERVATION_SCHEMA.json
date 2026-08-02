@@ -1,0 +1,69 @@
+{
+  "$id": "https://github.com/adico1/unified-code/blob/main/seed/github_corpus/CANDIDATE_OBSERVATION_SCHEMA.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {"items": {"$ref": "#/$defs/candidate"}, "minItems": 1, "type": "array"},
+    "evidence": {"items": {"$ref": "#/$defs/evidence"}, "minItems": 1, "type": "array"},
+    "format_version": {"const": "UC-GITHUB-CANDIDATE-OBSERVATIONS-1"},
+    "normalization_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "required": ["format_version", "normalization_sha256", "evidence", "candidates"],
+  "title": "Unified Code evidence-bearing candidate observations",
+  "type": "object",
+  "$defs": {
+    "assessment": {
+      "additionalProperties": false,
+      "properties": {
+        "assessment_id": {"minLength": 1, "type": "string"},
+        "evidence_ids": {"items": {"minLength": 1, "type": "string"}, "type": "array"},
+        "expected_role": {"minLength": 1, "type": "string"},
+        "letter_id": {"minLength": 1, "type": "string"},
+        "observed_role": {"minLength": 1, "type": "string"},
+        "reason": {"type": ["string", "null"]},
+        "value": {},
+        "verdict": {"enum": ["valid", "missing", "foreign", "duplicate", "misplaced", "unresolved"]}
+      },
+      "required": ["assessment_id", "letter_id", "expected_role", "observed_role", "value", "verdict", "evidence_ids", "reason"],
+      "type": "object"
+    },
+    "candidate": {
+      "additionalProperties": false,
+      "properties": {
+        "assessments": {"items": {"$ref": "#/$defs/assessment"}, "minItems": 1, "type": "array"},
+        "boundary_evidence_ids": {"items": {"minLength": 1, "type": "string"}, "minItems": 1, "type": "array"},
+        "boundary_path": {"minLength": 1, "type": "string"},
+        "human_review": {
+          "additionalProperties": false,
+          "properties": {
+            "reviewer": {"type": ["string", "null"]},
+            "status": {"enum": ["pending", "reviewed-candidate", "rejected"]},
+            "verdict": {"type": ["string", "null"]}
+          },
+          "required": ["status", "reviewer", "verdict"],
+          "type": "object"
+        },
+        "repository_identity": {"minLength": 1, "type": "string"}
+      },
+      "required": ["repository_identity", "boundary_path", "boundary_evidence_ids", "assessments", "human_review"],
+      "type": "object"
+    },
+    "evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {"minLength": 1, "type": "string"},
+        "license_spdx": {"minLength": 1, "type": "string"},
+        "location": {"minLength": 1, "type": "string"},
+        "observation": {"minLength": 1, "type": "string"},
+        "repository_identity": {"minLength": 1, "type": "string"},
+        "revision": {"minLength": 1, "type": "string"},
+        "source_path": {"minLength": 1, "type": "string"},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "source_url": {"format": "uri", "type": "string"}
+      },
+      "required": ["evidence_id", "repository_identity", "revision", "source_path", "source_url", "source_sha256", "license_spdx", "location", "observation"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

@@ -146,3 +146,30 @@ The golden identity graph and ambiguity vectors are under
 repository observations. The public fixture pack supplies the separate
 measured positive proof. Normalization performs no network access, ranking,
 classification, seed inference or fuzzy matching.
+
+## Traceable candidate seeds
+
+Evidence-bearing observations may be projected from normalized repositories by
+the pure public Part:
+
+```python
+extract_candidate_seeds(thing) -> thing
+```
+
+Each semantic letter is either traced to a pinned repository revision, source
+path and source SHA-256, or retained with an explicit `missing` or `unresolved`
+verdict. The full verdict vocabulary keeps `valid`, `missing`, `foreign`,
+`duplicate`, `misplaced` and `unresolved` distinct. Collection order and
+repository names do not select behavior or change stable candidate identity.
+
+Candidate seeds are not proven application seeds. They always carry
+`catalog_status = candidate` and `promotion_eligible = false`; the production
+manifestation registry rejects their shape. Human review can retain or reject a
+candidate, but cannot silently promote it. Independent acceptance and a
+separate proven-seed operation remain required.
+
+The checked-in observation authority, schema and golden identities are under
+`seed/github_corpus/candidates/`. They pin two public repository families and
+copy no opaque source blobs. Extraction performs no network access, untrusted
+source execution, application ranking, seed inference, compiler mutation or
+live acquisition.

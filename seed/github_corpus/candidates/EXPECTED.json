@@ -1,0 +1,18 @@
+{
+  "candidate_seeds": [
+    {
+      "candidate_identity": "3b4fab14db3f4d2665ee67875af0f4256d6f67322c82e2254220f4748d88d524",
+      "candidate_seed_sha256": "69e3356cccdb54346815d60cfd6f95f71b751ad35f3a8568b4d75d537371d8db",
+      "repository_identity": "github:repository:452939204"
+    },
+    {
+      "candidate_identity": "418b9d56d94275a855d0f2a6aac6b840dbab12fdd9e711bb278d08be2e667298",
+      "candidate_seed_sha256": "7162d8cdb3ecd20655f09796c0ebb38bb05207a445f33dbd6acf3d748386a558",
+      "repository_identity": "github:repository:768511682"
+    }
+  ],
+  "extraction_sha256": "24cd7584254a715590da4e0162904a36a1649ed179cc564fccf5750b2ef5487c",
+  "format_version": "UC-GITHUB-CANDIDATE-EXPECTED-1",
+  "normalization_sha256": "a33cfe69ae715a984b09ae240c880ebeaf34b8691f8a559667fd5bec03a4b9eb",
+  "observation_authority_sha256": "c20c26423f5fd83bb57a0731d4cc12969797d2ad1f47ffbc721e96df0edaeb57"
+}
