@@ -1,0 +1,232 @@
+{
+  "candidates": [
+    {
+      "assessments": [
+        {
+          "assessment_id": "flux-family",
+          "evidence_ids": ["flux-readme-family"],
+          "expected_role": "family",
+          "letter_id": "family",
+          "observed_role": "family",
+          "reason": null,
+          "value": "calculator",
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "flux-interface",
+          "evidence_ids": ["flux-readme-interface"],
+          "expected_role": "interface",
+          "letter_id": "interface",
+          "observed_role": "interface",
+          "reason": null,
+          "value": "graphical-user-interface",
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "flux-targets",
+          "evidence_ids": ["flux-readme-platforms"],
+          "expected_role": "target",
+          "letter_id": "supported-platforms",
+          "observed_role": "target",
+          "reason": null,
+          "value": ["windows-10", "windows-11"],
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "flux-operations-missing",
+          "evidence_ids": [],
+          "expected_role": "behavior",
+          "letter_id": "operation-set",
+          "observed_role": "behavior",
+          "reason": "The pinned README does not enumerate arithmetic operations.",
+          "value": null,
+          "verdict": "missing"
+        },
+        {
+          "assessment_id": "flux-numeric-law-unresolved",
+          "evidence_ids": [],
+          "expected_role": "numeric-law",
+          "letter_id": "numeric-law",
+          "observed_role": "numeric-law",
+          "reason": "Range, precision, rounding and division laws are not determined by the permitted evidence.",
+          "value": null,
+          "verdict": "unresolved"
+        }
+      ],
+      "boundary_evidence_ids": ["flux-readme-family"],
+      "boundary_path": ".",
+      "human_review": {"reviewer": null, "status": "pending", "verdict": null},
+      "repository_identity": "github:repository:452939204"
+    },
+    {
+      "assessments": [
+        {
+          "assessment_id": "todo-family",
+          "evidence_ids": ["todo-readme-family"],
+          "expected_role": "family",
+          "letter_id": "family",
+          "observed_role": "family",
+          "reason": null,
+          "value": "task-list",
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "todo-interface",
+          "evidence_ids": ["todo-readme-interface"],
+          "expected_role": "interface",
+          "letter_id": "interface",
+          "observed_role": "interface",
+          "reason": null,
+          "value": "terminal-user-interface",
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "todo-search",
+          "evidence_ids": ["todo-readme-search"],
+          "expected_role": "capability",
+          "letter_id": "task-search",
+          "observed_role": "capability",
+          "reason": null,
+          "value": true,
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "todo-input",
+          "evidence_ids": ["todo-readme-input"],
+          "expected_role": "input",
+          "letter_id": "input-modes",
+          "observed_role": "input",
+          "reason": null,
+          "value": ["keyboard", "mouse"],
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "todo-storage",
+          "evidence_ids": ["todo-readme-storage"],
+          "expected_role": "persistence",
+          "letter_id": "persistent-data-location",
+          "observed_role": "persistence",
+          "reason": null,
+          "value": "user-configuration-directory",
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "todo-transitions-missing",
+          "evidence_ids": [],
+          "expected_role": "behavior",
+          "letter_id": "state-transitions",
+          "observed_role": "behavior",
+          "reason": "The pinned README does not enumerate complete task transition semantics.",
+          "value": null,
+          "verdict": "missing"
+        },
+        {
+          "assessment_id": "todo-schema-unresolved",
+          "evidence_ids": [],
+          "expected_role": "state-schema",
+          "letter_id": "state-schema",
+          "observed_role": "state-schema",
+          "reason": "Task, category and settings schemas remain undetermined without additional permitted evidence.",
+          "value": null,
+          "verdict": "unresolved"
+        }
+      ],
+      "boundary_evidence_ids": ["todo-readme-family"],
+      "boundary_path": ".",
+      "human_review": {"reviewer": null, "status": "pending", "verdict": null},
+      "repository_identity": "github:repository:768511682"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "flux-readme-family",
+      "license_spdx": "MIT",
+      "location": "docs/README.md:About FluxCalc",
+      "observation": "The README describes the repository as a simple calculator.",
+      "repository_identity": "github:repository:452939204",
+      "revision": "56aea799ad7a71d251bd2aa9d799870aa3045402",
+      "source_path": "docs/README.md",
+      "source_sha256": "083e98ce71eec2bec00fca62eca0a495d0f78a31a45dc5f4f0e8351877911a3c",
+      "source_url": "https://github.com/Futura-Py/FluxCalc/blob/56aea799ad7a71d251bd2aa9d799870aa3045402/docs/README.md"
+    },
+    {
+      "evidence_id": "flux-readme-interface",
+      "license_spdx": "MIT",
+      "location": "docs/README.md:About FluxCalc",
+      "observation": "The README describes a modern user interface.",
+      "repository_identity": "github:repository:452939204",
+      "revision": "56aea799ad7a71d251bd2aa9d799870aa3045402",
+      "source_path": "docs/README.md",
+      "source_sha256": "083e98ce71eec2bec00fca62eca0a495d0f78a31a45dc5f4f0e8351877911a3c",
+      "source_url": "https://github.com/Futura-Py/FluxCalc/blob/56aea799ad7a71d251bd2aa9d799870aa3045402/docs/README.md"
+    },
+    {
+      "evidence_id": "flux-readme-platforms",
+      "license_spdx": "MIT",
+      "location": "docs/README.md:Supported Platforms",
+      "observation": "The README lists Windows 10 and Windows 11 as supported platforms.",
+      "repository_identity": "github:repository:452939204",
+      "revision": "56aea799ad7a71d251bd2aa9d799870aa3045402",
+      "source_path": "docs/README.md",
+      "source_sha256": "083e98ce71eec2bec00fca62eca0a495d0f78a31a45dc5f4f0e8351877911a3c",
+      "source_url": "https://github.com/Futura-Py/FluxCalc/blob/56aea799ad7a71d251bd2aa9d799870aa3045402/docs/README.md"
+    },
+    {
+      "evidence_id": "todo-readme-family",
+      "license_spdx": "MIT",
+      "location": "README.md:introduction",
+      "observation": "The README describes the repository as a todo terminal user interface.",
+      "repository_identity": "github:repository:768511682",
+      "revision": "a85a20074d013aefd2d133c1b953eab965627b9a",
+      "source_path": "README.md",
+      "source_sha256": "94d1d24aedee15fa36daea519c0c3a79a7f53c52a220f657cfab41592c2435b8",
+      "source_url": "https://github.com/Q1CHENL/todoism/blob/a85a20074d013aefd2d133c1b953eab965627b9a/README.md"
+    },
+    {
+      "evidence_id": "todo-readme-interface",
+      "license_spdx": "MIT",
+      "location": "README.md:introduction",
+      "observation": "The README explicitly identifies a terminal user interface.",
+      "repository_identity": "github:repository:768511682",
+      "revision": "a85a20074d013aefd2d133c1b953eab965627b9a",
+      "source_path": "README.md",
+      "source_sha256": "94d1d24aedee15fa36daea519c0c3a79a7f53c52a220f657cfab41592c2435b8",
+      "source_url": "https://github.com/Q1CHENL/todoism/blob/a85a20074d013aefd2d133c1b953eab965627b9a/README.md"
+    },
+    {
+      "evidence_id": "todo-readme-search",
+      "license_spdx": "MIT",
+      "location": "README.md:Highlights",
+      "observation": "The README lists task search as a capability.",
+      "repository_identity": "github:repository:768511682",
+      "revision": "a85a20074d013aefd2d133c1b953eab965627b9a",
+      "source_path": "README.md",
+      "source_sha256": "94d1d24aedee15fa36daea519c0c3a79a7f53c52a220f657cfab41592c2435b8",
+      "source_url": "https://github.com/Q1CHENL/todoism/blob/a85a20074d013aefd2d133c1b953eab965627b9a/README.md"
+    },
+    {
+      "evidence_id": "todo-readme-input",
+      "license_spdx": "MIT",
+      "location": "README.md:Highlights and Keycode recording",
+      "observation": "The README lists mouse interaction and keyboard editing shortcuts.",
+      "repository_identity": "github:repository:768511682",
+      "revision": "a85a20074d013aefd2d133c1b953eab965627b9a",
+      "source_path": "README.md",
+      "source_sha256": "94d1d24aedee15fa36daea519c0c3a79a7f53c52a220f657cfab41592c2435b8",
+      "source_url": "https://github.com/Q1CHENL/todoism/blob/a85a20074d013aefd2d133c1b953eab965627b9a/README.md"
+    },
+    {
+      "evidence_id": "todo-readme-storage",
+      "license_spdx": "MIT",
+      "location": "README.md:Develop",
+      "observation": "The README states that normal configuration and data files use the user todoism directory.",
+      "repository_identity": "github:repository:768511682",
+      "revision": "a85a20074d013aefd2d133c1b953eab965627b9a",
+      "source_path": "README.md",
+      "source_sha256": "94d1d24aedee15fa36daea519c0c3a79a7f53c52a220f657cfab41592c2435b8",
+      "source_url": "https://github.com/Q1CHENL/todoism/blob/a85a20074d013aefd2d133c1b953eab965627b9a/README.md"
+    }
+  ],
+  "format_version": "UC-GITHUB-CANDIDATE-OBSERVATIONS-1",
+  "normalization_sha256": "a33cfe69ae715a984b09ae240c880ebeaf34b8691f8a559667fd5bec03a4b9eb"
+}
