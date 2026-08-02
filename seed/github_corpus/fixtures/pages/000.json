@@ -1,0 +1,39 @@
+{
+  "format_version": "UC-GITHUB-CORPUS-FIXTURE-PAGE-1",
+  "records": [
+    {
+      "payload": {
+        "default_branch": "main",
+        "full_name": "Futura-Py/FluxCalc",
+        "html_url": "https://github.com/Futura-Py/FluxCalc",
+        "id": 452939204,
+        "license": {
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit"
+        },
+        "node_id": "R_kgDOGv9NxA",
+        "source_url": "https://api.github.com/repos/Futura-Py/FluxCalc"
+      },
+      "source_identity": "github:repository:452939204"
+    },
+    {
+      "payload": {
+        "default_branch": "main",
+        "full_name": "Q1CHENL/todoism",
+        "html_url": "https://github.com/Q1CHENL/todoism",
+        "id": 768511682,
+        "license": {
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit"
+        },
+        "node_id": "R_kgDOLc6Owg",
+        "source_url": "https://api.github.com/repos/Q1CHENL/todoism"
+      },
+      "source_identity": "github:repository:768511682"
+    }
+  ],
+  "retrieval_contract_version": "UC-GITHUB-CORPUS-SNAPSHOT-1",
+  "source_url": "https://api.github.com/search/repositories?q=repo%3AFutura-Py%2FFluxCalc+OR+repo%3AQ1CHENL%2Ftodoism+OR+repo%3AAmey-Thakur%2FPONG-GAME&per_page=2&page=1"
+}

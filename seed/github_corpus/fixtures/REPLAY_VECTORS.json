@@ -1,0 +1,25 @@
+{
+  "format_version": "UC-GITHUB-CORPUS-FIXTURE-VECTORS-1",
+  "invalid": [
+    "fixture:page:missing:pages/001.json",
+    "snapshot:duplicate-record-identity",
+    "fixture:page:malformed:pages/000.json",
+    "fixture:page:sha256:pages/000.json"
+  ],
+  "order_invariance": [
+    "manifest-page-order",
+    "record-order",
+    "dictionary-order"
+  ],
+  "valid": {
+    "canonical_page_records": {
+      "0": [
+        "github:repository:452939204",
+        "github:repository:768511682"
+      ],
+      "1": ["github:repository:383116942"]
+    },
+    "expected_file": "EXPECTED.json",
+    "manifest": "PACK.json"
+  }
+}

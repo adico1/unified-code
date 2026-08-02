@@ -1,0 +1,59 @@
+{
+  "completion": {
+    "reason": "exhausted",
+    "records_observed": 3
+  },
+  "evidence": {
+    "acquisition_mode": "replay",
+    "attempts": [
+      {"outcome": "success", "page_index": 0, "retry_ordinal": 0},
+      {"outcome": "success", "page_index": 1, "retry_ordinal": 0}
+    ],
+    "duration_ns": 0,
+    "observed_at": "2026-08-02T00:00:00Z"
+  },
+  "format_version": "UC-GITHUB-CORPUS-FIXTURE-PACK-1",
+  "pages": [
+    {
+      "content_sha256": "4ca948d259dad606ffbcc6e7177a355078c7aca0dac8d1cf192aa9bcf5ecee92",
+      "index": 0,
+      "next_cursor": "fixture:page-2",
+      "path": "pages/000.json",
+      "request_cursor": null,
+      "retrieval_contract_version": "UC-GITHUB-CORPUS-SNAPSHOT-1",
+      "source_url": "https://api.github.com/search/repositories?q=repo%3AFutura-Py%2FFluxCalc+OR+repo%3AQ1CHENL%2Ftodoism+OR+repo%3AAmey-Thakur%2FPONG-GAME&per_page=2&page=1"
+    },
+    {
+      "content_sha256": "3849af0dcdee8bb0f1fa3d110c5a4a926f6f37952793cdea7848a21a2aa06dc6",
+      "index": 1,
+      "next_cursor": null,
+      "path": "pages/001.json",
+      "request_cursor": "fixture:page-2",
+      "retrieval_contract_version": "UC-GITHUB-CORPUS-SNAPSHOT-1",
+      "source_url": "https://api.github.com/search/repositories?q=repo%3AFutura-Py%2FFluxCalc+OR+repo%3AQ1CHENL%2Ftodoism+OR+repo%3AAmey-Thakur%2FPONG-GAME&per_page=2&page=2"
+    }
+  ],
+  "request": {
+    "api_version": "2022-11-28",
+    "endpoint": "/search/repositories",
+    "format_version": "UC-GITHUB-CORPUS-REQUEST-1",
+    "initial_cursor": null,
+    "page_size": 2,
+    "provider": "github",
+    "query": "repo:Futura-Py/FluxCalc OR repo:Q1CHENL/todoism OR repo:Amey-Thakur/PONG-GAME",
+    "record_fields": [
+      "default_branch",
+      "full_name",
+      "html_url",
+      "id",
+      "license",
+      "node_id",
+      "source_url"
+    ],
+    "transport": "rest",
+    "variables": {"sort": "indexed"},
+    "visibility_scope": "public"
+  },
+  "retrieval_contract_version": "UC-GITHUB-CORPUS-SNAPSHOT-1",
+  "status": "complete"
+}

@@ -1,0 +1,12 @@
+{
+  "evidence_sha256": "916f044879c513d9093cc89dc55db341ce7ee27a3007f9bb9410aaf00f0d4154",
+  "fixture_pack_sha256": "b3c8b9464f3867ef742d63985d148e8075e20533219a1b2425dad2d8ae01262f",
+  "format_version": "UC-GITHUB-CORPUS-FIXTURE-EXPECTED-1",
+  "page_content_sha256": {
+    "pages/000.json": "4ca948d259dad606ffbcc6e7177a355078c7aca0dac8d1cf192aa9bcf5ecee92",
+    "pages/001.json": "3849af0dcdee8bb0f1fa3d110c5a4a926f6f37952793cdea7848a21a2aa06dc6"
+  },
+  "record_count": 3,
+  "request_sha256": "7484bd1c1983b0d2e25d361778baa35788ddd8b11e434de2d1bb149a7d48886f",
+  "snapshot_sha256": "e69517fc5087b44f1541467bc619e484a4a16cf2121b6dd3c7938c93b0d160a4"
+}

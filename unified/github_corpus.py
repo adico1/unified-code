@@ -7,6 +7,7 @@ produced a snapshot document.
 
 from __future__ import annotations
 
+import json
 import re
 
 from .machine.canonical import canonical_sha256
@@ -15,6 +16,8 @@ from .thing import is_thing
 
 REQUEST_VERSION = "UC-GITHUB-CORPUS-REQUEST-1"
 SNAPSHOT_VERSION = "UC-GITHUB-CORPUS-SNAPSHOT-1"
+FIXTURE_PACK_VERSION = "UC-GITHUB-CORPUS-FIXTURE-PACK-1"
+FIXTURE_PAGE_VERSION = "UC-GITHUB-CORPUS-FIXTURE-PAGE-1"
 TRANSPORTS = frozenset({"graphql", "rest"})
 VISIBILITY_SCOPES = frozenset({"organization-public", "public"})
 SNAPSHOT_STATUSES = frozenset(
@@ -436,3 +439,201 @@ def audited_identify_snapshot_primitive(thing):
 def identify_snapshot(thing):
     """Public Part: one Thing in, one Thing out."""
     return audited_identify_snapshot_primitive(thing)
+
+
+def audited_fixture_manifest_errors_primitive(manifest):
+    """Host control flow for the offline fixture-pack boundary."""
+    if not isinstance(manifest, dict):
+        return ("fixture:manifest:type",)
+    expected = {
+        "completion",
+        "evidence",
+        "format_version",
+        "pages",
+        "request",
+        "retrieval_contract_version",
+        "status",
+    }
+    errors = []
+    if set(manifest) != expected:
+        errors.append("fixture:manifest:fields")
+    if manifest.get("format_version") != FIXTURE_PACK_VERSION:
+        errors.append("fixture:manifest:format-version")
+    if manifest.get("retrieval_contract_version") != SNAPSHOT_VERSION:
+        errors.append("fixture:manifest:retrieval-contract-version")
+    pages = manifest.get("pages")
+    if not isinstance(pages, list) or not pages:
+        errors.append("fixture:manifest:pages")
+        return tuple(errors)
+    page_fields = {
+        "content_sha256",
+        "index",
+        "next_cursor",
+        "path",
+        "request_cursor",
+        "retrieval_contract_version",
+        "source_url",
+    }
+    paths = []
+    indices = []
+    for page in pages:
+        if not isinstance(page, dict) or set(page) != page_fields:
+            errors.append("fixture:page:declaration")
+            continue
+        path = page.get("path")
+        index = page.get("index")
+        paths.append(path)
+        indices.append(index)
+        if not isinstance(path, str) or not path.startswith("pages/"):
+            errors.append("fixture:page:path")
+        if not isinstance(index, int) or isinstance(index, bool) or index < 0:
+            errors.append("fixture:page:index")
+        if not audited_is_sha256_primitive(page.get("content_sha256")):
+            errors.append("fixture:page:content-sha256")
+        if not isinstance(page.get("source_url"), str) or not page.get("source_url"):
+            errors.append("fixture:page:source-url")
+        if page.get("retrieval_contract_version") != SNAPSHOT_VERSION:
+            errors.append("fixture:page:retrieval-contract-version")
+    if len(paths) != len(set(paths)):
+        errors.append("fixture:page:duplicate-path")
+    if len(indices) != len(set(indices)):
+        errors.append("fixture:page:duplicate-index")
+    return tuple(errors)
+
+
+def audited_fixture_page_payload_primitive(page):
+    return {
+        "format_version": page["format_version"],
+        "records": sorted(
+            (_canonical_record(record) for record in page["records"]),
+            key=lambda record: (
+                record["source_identity"],
+                canonical_sha256(record["payload"]),
+            ),
+        ),
+        "retrieval_contract_version": page["retrieval_contract_version"],
+        "source_url": page["source_url"],
+    }
+
+
+def audited_decode_fixture_pages_primitive(manifest, page_texts):
+    """Decode and authenticate supplied page text at one audited boundary."""
+    errors = []
+    decoded = []
+    if not isinstance(page_texts, dict):
+        return (), ("fixture:pages:type",)
+    for declaration in manifest["pages"]:
+        path = declaration["path"]
+        text = page_texts.get(path)
+        if not isinstance(text, str):
+            errors.append(f"fixture:page:missing:{path}")
+            continue
+        try:
+            page = json.loads(text)
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            errors.append(f"fixture:page:malformed:{path}")
+            continue
+        expected = {
+            "format_version",
+            "records",
+            "retrieval_contract_version",
+            "source_url",
+        }
+        if not isinstance(page, dict) or set(page) != expected:
+            errors.append(f"fixture:page:fields:{path}")
+            continue
+        if page.get("format_version") != FIXTURE_PAGE_VERSION:
+            errors.append(f"fixture:page:format-version:{path}")
+        if page.get("retrieval_contract_version") != declaration[
+            "retrieval_contract_version"
+        ]:
+            errors.append(f"fixture:page:retrieval-contract-version:{path}")
+        if page.get("source_url") != declaration["source_url"]:
+            errors.append(f"fixture:page:source-url:{path}")
+        records = page.get("records")
+        if not isinstance(records, list):
+            errors.append(f"fixture:page:records:{path}")
+            continue
+        record_errors = tuple(
+            error
+            for record in records
+            for error in audited_record_errors_primitive(record, declaration["index"])
+        )
+        errors.extend(record_errors)
+        if record_errors:
+            continue
+        canonical_page = audited_fixture_page_payload_primitive(page)
+        content_sha256 = canonical_sha256(canonical_page)
+        if content_sha256 != declaration["content_sha256"]:
+            errors.append(f"fixture:page:sha256:{path}")
+            continue
+        decoded.append(
+            {
+                "index": declaration["index"],
+                "next_cursor": declaration["next_cursor"],
+                "raw_sha256": content_sha256,
+                "records": records,
+                "request_cursor": declaration["request_cursor"],
+            }
+        )
+    return tuple(decoded), tuple(errors)
+
+
+def canonical_fixture_manifest_payload(manifest):
+    return {
+        **manifest,
+        "pages": sorted(manifest["pages"], key=lambda page: page["index"]),
+        "request": canonical_request_payload(manifest["request"]),
+    }
+
+
+def audited_replay_fixture_pack_primitive(thing):
+    """Authenticate offline pages and enter the canonical snapshot contract."""
+    if not is_thing(thing):
+        return audited_invalid_primitive(
+            thing, "fixture_pack", ("thing:invalid",), "corpus:fixture-invalid"
+        )
+    value = thing.get("value")
+    fixture_pack = value.get("fixture_pack") if isinstance(value, dict) else None
+    manifest = fixture_pack.get("manifest") if isinstance(fixture_pack, dict) else None
+    page_texts = fixture_pack.get("page_texts") if isinstance(fixture_pack, dict) else None
+    errors = audited_fixture_manifest_errors_primitive(manifest)
+    if errors:
+        return audited_invalid_primitive(
+            thing, "fixture_pack", errors, "corpus:fixture-invalid"
+        )
+    pages, errors = audited_decode_fixture_pages_primitive(manifest, page_texts)
+    if errors:
+        return audited_invalid_primitive(
+            thing, "fixture_pack", errors, "corpus:fixture-invalid"
+        )
+    snapshot = {
+        "completion": manifest["completion"],
+        "evidence": manifest["evidence"],
+        "format_version": manifest["retrieval_contract_version"],
+        "pages": list(pages),
+        "request": manifest["request"],
+        "status": manifest["status"],
+    }
+    identified = audited_identify_snapshot_primitive(
+        {**thing, "value": {"snapshot": snapshot}}
+    )
+    if identified["state"] == "invalid":
+        return identified
+    result = identified["value"]
+    return _result(
+        thing,
+        {
+            **result,
+            "fixture_pack_sha256": canonical_sha256(
+                canonical_fixture_manifest_payload(manifest)
+            ),
+        },
+        "corpus:fixture-replayed",
+        "valid",
+    )
+
+
+def replay_fixture_pack(thing):
+    """Public Part: one offline fixture-pack Thing in, one Thing out."""
+    return audited_replay_fixture_pack_primitive(thing)
