@@ -7,6 +7,13 @@ assertions, executed by `python -m unified.selftest`. The runner uses only the
 Python standard library. Generated Thing v2 applications do not install or
 invoke a third-party test framework.
 
+The default `local` profile excludes physical browser, compiler, clean-room,
+whole-assembly and fixed-point suites. Those slow suites are declared in
+[`TEST_PROFILES.json`](seed/verification/TEST_PROFILES.json) and execute through
+the `complete` profile only in the GitHub physical-evidence workflow. Local
+development uses `python -m unified.selftest` and `uc verify-all`; neither
+rematerializes unchanged physical evidence.
+
 ```text
 verification.requested
 → tools.boot.requested

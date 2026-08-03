@@ -1,0 +1,37 @@
+{
+  "format_version": "UC-TEST-PROFILES-1",
+  "default_profile": "local",
+  "profiles": {
+    "local": {
+      "exclude_files": [
+        "test_application_assembly.py",
+        "test_benchmark.py",
+        "test_binding_mutations.py",
+        "test_build_gauntlet.py",
+        "test_calculator_generator.py",
+        "test_declaration.py",
+        "test_event_l10.py",
+        "test_generator.py",
+        "test_github_duplication_pilot.py",
+        "test_github_holdout.py",
+        "test_l11.py",
+        "test_l13.py",
+        "test_manifestation.py",
+        "test_oom_mutations.py",
+        "test_stage0.py",
+        "test_stage1_bootstrap.py",
+        "test_stage1_fixed_point.py",
+        "test_standard_ten.py",
+        "test_thing_v2.py",
+        "test_uem.py",
+        "test_uem_surface_generation.py",
+        "test_unfold_stateful.py",
+        "test_verification_surface_generation.py",
+        "test_verify_flow.py"
+      ]
+    },
+    "complete": {
+      "exclude_files": []
+    }
+  }
+}

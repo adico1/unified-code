@@ -7,8 +7,37 @@ on:
     branches: [main]
 
 jobs:
+  physical_evidence:
+    name: Complete physical evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: pip install -e .
+
+      - name: Run every slow physical proof
+        env:
+          UC_VERIFY_MATERIALIZE: "1"
+        run: uc verify-all
+
+      - name: Upload exact physical proof bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: physical-proof-bundle
+          path: seed/verification/PROOF_BUNDLE.json
+          if-no-files-found: error
+
   functional:
     name: Functional suite (Python ${{ matrix.python-version }})
+    needs: physical_evidence
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -37,6 +66,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e .
+
+      - name: Acquire exact physical proof bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: physical-proof-bundle
+          path: seed/verification
 
       - name: Run functional tests
         run: ${{ matrix.verification-command }}
@@ -80,6 +115,7 @@ jobs:
 
   l13:
     name: L13 Complete Testing Gauntlet
+    needs: physical_evidence
     runs-on: macos-26-intel
     steps:
       - name: Checkout
@@ -92,6 +128,12 @@ jobs:
 
       - name: Install
         run: pip install -e .
+
+      - name: Acquire exact physical proof bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: physical-proof-bundle
+          path: seed/verification
 
       - name: Validate content-addressed L1-L13 evidence lazily
         run: uc verify-all

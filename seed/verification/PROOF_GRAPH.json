@@ -80,7 +80,7 @@
       "id": "repository-tests",
       "handler": "command",
       "requires": [],
-      "argv": ["{python}", "-m", "unified.selftest"]
+      "argv": ["{python}", "-m", "unified.selftest", "--profile", "complete"]
     },
   {
     "id": "l13-gauntlet",

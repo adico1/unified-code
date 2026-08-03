@@ -27,6 +27,13 @@ from types import SimpleNamespace
 
 sys.modules.setdefault("unified.selftest", sys.modules[__name__])
 
+PROFILE_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "seed"
+    / "verification"
+    / "TEST_PROFILES.json"
+)
+
 
 @contextlib.contextmanager
 def raises(expected, match=None):
@@ -165,7 +172,14 @@ def _load(path, ordinal):
     return module
 
 
-def _files(arguments):
+def _profile():
+    declaration = json.loads(PROFILE_PATH.read_text(encoding="utf-8"))
+    if declaration.get("format_version") != "UC-TEST-PROFILES-1":
+        raise ValueError("selftest:profile-version")
+    return declaration
+
+
+def _files(arguments, profile=None):
     roots = arguments or ("tests",)
     discovered = []
     for raw in roots:
@@ -173,7 +187,16 @@ def _files(arguments):
         discovered.extend(
             sorted(path.glob("test_*.py")) if path.is_dir() else (path,)
         )
-    return tuple(dict.fromkeys(item.resolve() for item in discovered))
+    files = tuple(dict.fromkeys(item.resolve() for item in discovered))
+    declaration = _profile()
+    selected = profile or os.environ.get(
+        "UC_SELFTEST_PROFILE", declaration["default_profile"]
+    )
+    profiles = declaration.get("profiles") or {}
+    if selected not in profiles:
+        raise ValueError("selftest:unknown-profile")
+    excluded = set(profiles[selected].get("exclude_files") or ())
+    return tuple(path for path in files if path.name not in excluded), selected
 
 
 def _functions(module):
@@ -210,7 +233,7 @@ def _invoke(function, parameters, temporary):
         patch.undo()
 
 
-def _local_report(paths):
+def _local_report(paths, profile):
     started = time.monotonic_ns()
     results = []
     cwd = str(Path.cwd())
@@ -218,7 +241,7 @@ def _local_report(paths):
         sys.path.insert(0, cwd)
     with tempfile.TemporaryDirectory(prefix="uc-selftest-") as owner:
         owner_path = Path(owner).resolve()
-        for ordinal, path in enumerate(_files(paths)):
+        for ordinal, path in enumerate(paths):
             module = _load(path, ordinal)
             for function in _functions(module):
                 cases = tuple(getattr(function, "__selftest_cases__", ({},)))
@@ -250,6 +273,8 @@ def _local_report(paths):
         "failed": len(failures),
         "total": len(results),
         "duration_ns": time.monotonic_ns() - started,
+        "profile": profile,
+        "files": len(paths),
         "failures": failures,
         "results": results,
         "ok": not failures,
@@ -257,9 +282,16 @@ def _local_report(paths):
 
 
 def _run_shard_boundary(item):
-    ordinal, path = item
+    ordinal, paths, profile = item
     completed = subprocess.run(
-        [sys.executable, str(Path(__file__).resolve()), "--worker", str(path)],
+        [
+            sys.executable,
+            str(Path(__file__).resolve()),
+            "--worker",
+            "--profile",
+            profile,
+            *(str(path) for path in paths),
+        ],
         cwd=str(Path.cwd()),
         capture_output=True,
         text=True,
@@ -270,7 +302,7 @@ def _run_shard_boundary(item):
         report = json.loads(lines[-1])
     except (IndexError, json.JSONDecodeError):
         detail = (completed.stderr or completed.stdout or "no-report").strip()
-        identity = f"{path.name}::worker[0]"
+        identity = f"shard-{ordinal}::worker[0]"
         report = {
             "passed": 0,
             "skipped": 0,
@@ -286,8 +318,16 @@ def _run_shard_boundary(item):
     return ordinal, report
 
 
-def _parallel_reports(files, workers):
-    indexed = tuple(enumerate(files))
+def _parallel_reports(files, workers, profile):
+    batches = tuple(
+        tuple(files[index::workers])
+        for index in range(workers)
+        if files[index::workers]
+    )
+    indexed = tuple(
+        (ordinal, paths, profile)
+        for ordinal, paths in enumerate(batches)
+    )
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
         completed = executor.map(_run_shard_boundary, indexed)
         return tuple(report for _ordinal, report in completed)
@@ -306,14 +346,14 @@ def _worker_count(requested, file_count):
     return max(1, min(workers, max(1, file_count)))
 
 
-def run(paths=(), workers=None):
+def run(paths=(), workers=None, profile=None):
     started = time.monotonic_ns()
-    files = _files(paths)
+    files, selected_profile = _files(paths, profile)
     worker_count = _worker_count(workers, len(files))
     reports = (
-        (_local_report(files),)
+        (_local_report(files, selected_profile),)
         if worker_count == 1
-        else _parallel_reports(files, worker_count)
+        else _parallel_reports(files, worker_count, selected_profile)
     )
     failures = [
         failure
@@ -327,6 +367,8 @@ def run(paths=(), workers=None):
         "failed": sum(report["failed"] for report in reports),
         "total": sum(report["total"] for report in reports),
         "duration_ns": time.monotonic_ns() - started,
+        "profile": selected_profile,
+        "files": len(files),
         "workers": worker_count,
         "failures": failures,
         "ok": not failures,
@@ -336,13 +378,19 @@ def run(paths=(), workers=None):
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="python -m unified.selftest")
     parser.add_argument("--workers", type=int)
+    parser.add_argument("--profile")
     parser.add_argument("--worker", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("paths", nargs="*")
     arguments = parser.parse_args(argv)
+    files, selected_profile = _files(arguments.paths, arguments.profile)
     report = (
-        _local_report(_files(arguments.paths))
+        _local_report(files, selected_profile)
         if arguments.worker
-        else run(arguments.paths, workers=arguments.workers)
+        else run(
+            arguments.paths,
+            workers=arguments.workers,
+            profile=arguments.profile,
+        )
     )
     print(json.dumps(report, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
     return 0 if report["ok"] else 1

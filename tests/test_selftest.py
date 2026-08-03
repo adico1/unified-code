@@ -58,7 +58,7 @@ def test_parallel_shards_are_concurrent_and_aggregated_in_source_order(monkeypat
     lock = threading.Lock()
 
     def boundary(item):
-        ordinal, path = item
+        ordinal, paths, _profile = item
         with lock:
             active["count"] += 1
             active["maximum"] = max(active["maximum"], active["count"])
@@ -72,12 +72,12 @@ def test_parallel_shards_are_concurrent_and_aggregated_in_source_order(monkeypat
             "total": 1,
             "failures": [],
             "ok": True,
-            "results": [{"id": path.name, "status": "pass", "error": None}],
+            "results": [{"id": paths[0].name, "status": "pass", "error": None}],
         }
 
     monkeypatch.setattr(selftest, "_run_shard_boundary", boundary)
     reports = selftest._parallel_reports(
-        (Path("second.py"), Path("first.py")), workers=2
+        (Path("second.py"), Path("first.py")), workers=2, profile="complete"
     )
     assert active["maximum"] == 2
     assert [report["results"][0]["id"] for report in reports] == [
@@ -91,9 +91,43 @@ def test_parallel_runner_preserves_failures_and_counts(tmp_path):
     failing = tmp_path / "test_b.py"
     passing.write_text("def test_ok():\n    assert True\n", encoding="utf-8")
     failing.write_text("def test_bad():\n    assert False\n", encoding="utf-8")
-    report = selftest.run((passing, failing), workers=2)
+    report = selftest.run((passing, failing), workers=2, profile="complete")
     assert report["passed"] == 1
     assert report["failed"] == 1
     assert report["total"] == 2
     assert report["workers"] == 2
     assert report["failures"][0]["id"] == "test_b.py::test_bad[0]"
+
+
+def test_local_profile_excludes_physical_suites_and_complete_profile_keeps_them():
+    local, local_name = selftest._files(("tests",), "local")
+    complete, complete_name = selftest._files(("tests",), "complete")
+    local_names = {path.name for path in local}
+    complete_names = {path.name for path in complete}
+    assert local_name == "local"
+    assert complete_name == "complete"
+    assert "test_application_assembly.py" not in local_names
+    assert "test_l13.py" not in local_names
+    assert "test_application_assembly.py" in complete_names
+    assert "test_l13.py" in complete_names
+    assert local_names < complete_names
+
+
+def test_unknown_profile_fails_closed():
+    with selftest.raises(ValueError, match="selftest:unknown-profile"):
+        selftest._files(("tests",), "unregistered")
+
+
+def test_complete_profile_is_bound_to_github_physical_evidence():
+    root = Path(__file__).resolve().parents[1]
+    graph = __import__("json").loads(
+        (root / "seed/verification/PROOF_GRAPH.json").read_text()
+    )
+    repository = next(
+        node for node in graph["evidence_nodes"] if node["id"] == "repository-tests"
+    )
+    assert repository["argv"][-2:] == ["--profile", "complete"]
+    workflow = (root / ".github/workflows/test.yml").read_text()
+    assert "physical_evidence:" in workflow
+    assert 'UC_VERIFY_MATERIALIZE: "1"' in workflow
+    assert "physical-proof-bundle" in workflow
