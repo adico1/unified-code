@@ -1,0 +1,185 @@
+{
+  "format_version": "UC-EXTERNAL-DEPENDENCIES-1",
+  "canonicalization": "UC-CANONICAL-JSON-1",
+  "vendored_roots": ["c/third_party"],
+  "dependencies": [
+    {
+      "id": "cjson@1.7.18",
+      "canonical_name": "github.com/DaveGamble/cJSON",
+      "kind": "external-vendored",
+      "role": "C host JSON parsing and canonical result serialization",
+      "version": "1.7.18",
+      "upstream": {
+        "source": "https://github.com/DaveGamble/cJSON",
+        "immutable_revision": "acc76239bee01d8e9c858ae2cab296704e52d916"
+      },
+      "artifacts": [
+        {
+          "artifact_id": "cjson-source",
+          "path": "c/third_party/cJSON.c",
+          "sha256": "75c51de8fa40ac9d7a99319c6330719bd692eb81c0a869265f3d4c682533f9b9",
+          "size": 78800,
+          "immutable_source": "https://raw.githubusercontent.com/DaveGamble/cJSON/acc76239bee01d8e9c858ae2cab296704e52d916/cJSON.c",
+          "root_reference": {"id": "cJSON", "license": "MIT"}
+        },
+        {
+          "artifact_id": "cjson-header",
+          "path": "c/third_party/cJSON.h",
+          "sha256": "0578cc29132912edbc88f83207a8fc76e5db3db0605497e909a9384ef3cc474b",
+          "size": 16193,
+          "immutable_source": "https://raw.githubusercontent.com/DaveGamble/cJSON/acc76239bee01d8e9c858ae2cab296704e52d916/cJSON.h",
+          "root_reference": {"id": "cJSON-h", "license": "MIT"}
+        },
+        {
+          "artifact_id": "cjson-license",
+          "path": "c/third_party/LICENSE.cJSON",
+          "sha256": "a36dda207c36db5818729c54e7ad4e8b0c6fba847491ba64f372c1a2037b6d5c",
+          "size": 1084,
+          "immutable_source": "https://raw.githubusercontent.com/DaveGamble/cJSON/acc76239bee01d8e9c858ae2cab296704e52d916/LICENSE",
+          "root_reference": null
+        }
+      ],
+      "license": {
+        "spdx": "MIT",
+        "files": [
+          {
+            "path": "c/third_party/LICENSE.cJSON",
+            "sha256": "a36dda207c36db5818729c54e7ad4e8b0c6fba847491ba64f372c1a2037b6d5c"
+          }
+        ],
+        "note": "Exact license bytes from the pinned upstream revision."
+      },
+      "acquisition": {
+        "status": "content-addressed",
+        "procedure": "Fetch each immutable_source URL and accept only when its SHA-256 and size match this record."
+      },
+      "verification": {
+        "status": "offline",
+        "procedure": "python -m unified.dependency_provenance verify"
+      },
+      "reproducibility": {
+        "status": "byte-reproducible",
+        "procedure": "The three artifacts match upstream commit acc76239bee01d8e9c858ae2cab296704e52d916 byte-for-byte."
+      },
+      "offline_bootstrap": {
+        "status": "available",
+        "procedure": "Use the committed artifacts; verification performs no network access."
+      },
+      "maintenance": {
+        "update_cadence": "Review upstream releases and security advisories before each bootstrap release.",
+        "security_owner": "Unified Code maintainers"
+      },
+      "replacement_plan": {
+        "status": "retained",
+        "plan": "Replace only through a separately reviewed dependency record and equivalent Python/C L11 proof."
+      },
+      "dependents": {
+        "stage0": [],
+        "stage1": ["uem-c-host", "uem-posix-target", "uem-wasm-target", "uem-mcu-target"]
+      }
+    },
+    {
+      "id": "unified-code-sha256@ed7d5feb",
+      "canonical_name": "github.com/adico1/unified-code/c/third_party/sha256",
+      "kind": "project-originated",
+      "role": "C host SHA-256 identity primitive",
+      "version": "ed7d5febac95a21f8cd3489b76175ecf5ba05a50",
+      "upstream": {
+        "source": "https://github.com/adico1/unified-code",
+        "immutable_revision": "ed7d5febac95a21f8cd3489b76175ecf5ba05a50"
+      },
+      "artifacts": [
+        {
+          "artifact_id": "sha256-source",
+          "path": "c/third_party/sha256.c",
+          "sha256": "7512aca9136ce6e26d58126600e605f6f2c4da7109f63478606291634998eb41",
+          "size": 3445,
+          "immutable_source": "https://raw.githubusercontent.com/adico1/unified-code/ed7d5febac95a21f8cd3489b76175ecf5ba05a50/c/third_party/sha256.c",
+          "root_reference": {"id": "sha256", "license": "public-domain-or-project"}
+        },
+        {
+          "artifact_id": "sha256-header",
+          "path": "c/third_party/sha256.h",
+          "sha256": "ee296ea123f062e6d1734d4498b1f3104bec814ec1b69301c8afdff16462adfb",
+          "size": 269,
+          "immutable_source": "https://raw.githubusercontent.com/adico1/unified-code/ed7d5febac95a21f8cd3489b76175ecf5ba05a50/c/third_party/sha256.h",
+          "root_reference": {"id": "sha256-h", "license": "public-domain-or-project"}
+        }
+      ],
+      "license": {
+        "spdx": "MIT",
+        "files": [
+          {
+            "path": "LICENSE",
+            "sha256": "af6b910929ec375c1c1fba0a15dadf007a967b1faa8279c56f2eca0ce6debc07"
+          }
+        ],
+        "note": "Project-originated code introduced at the pinned commit and distributed under the repository MIT license; the source comment is not treated as an independent provenance claim."
+      },
+      "acquisition": {
+        "status": "content-addressed",
+        "procedure": "Recover the two files from the pinned Unified Code commit and accept only the recorded SHA-256 and size."
+      },
+      "verification": {
+        "status": "offline",
+        "procedure": "python -m unified.dependency_provenance verify"
+      },
+      "reproducibility": {
+        "status": "byte-reproducible",
+        "procedure": "The artifacts match their first repository commit byte-for-byte."
+      },
+      "offline_bootstrap": {
+        "status": "available",
+        "procedure": "Use the committed artifacts; verification performs no network access."
+      },
+      "maintenance": {
+        "update_cadence": "Review with every change to C host cryptographic identity behavior.",
+        "security_owner": "Unified Code maintainers"
+      },
+      "replacement_plan": {
+        "status": "move-planned",
+        "plan": "Move project-originated SHA-256 code out of third_party only in a focused change preserving C-host identities and L11 equivalence."
+      },
+      "dependents": {
+        "stage0": [],
+        "stage1": ["uem-c-host", "uem-posix-target", "uem-wasm-target", "uem-mcu-target"]
+      }
+    }
+  ],
+  "substrate_requirements": [
+    {
+      "id": "cpython",
+      "role": "Stage-0 and Python host execution",
+      "constraint": "CPython 3.11 or newer with the standard library",
+      "boundary": "Physical host substrate; Issue #9 must pin the clean-room environment identity."
+    },
+    {
+      "id": "c99-toolchain",
+      "role": "Independent C host and target compilation",
+      "constraint": "C99 compiler and standard library",
+      "boundary": "Physical host substrate; no compiler binary is vendored by this repository."
+    },
+    {
+      "id": "posix-build-tools",
+      "role": "Portable C build and verification commands",
+      "constraint": "POSIX shell and make",
+      "boundary": "Physical host substrate; exact instances are environment evidence, not semantic dependency bytes."
+    },
+    {
+      "id": "chromium-family-browser",
+      "role": "Optional physical browser proof for generated GUI applications",
+      "constraint": "Chromium-family browser with remote debugging support",
+      "boundary": "Optional OUTWARD physical proof; not part of Stage-0 or Stage-1 generation."
+    }
+  ],
+  "excluded_external_surfaces": [
+    {
+      "surface": ".github/workflows",
+      "reason": "CI orchestration consumes the repository but is not a vendored bootstrap dependency."
+    },
+    {
+      "surface": "setuptools build backend",
+      "reason": "Packaging infrastructure is not imported by uc verify-all or the dependency-free self-test runner."
+    }
+  ]
+}

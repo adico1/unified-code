@@ -105,7 +105,9 @@ This milestone is deliberately non-blocking for Milestone 1. Open items:
   boundaries and honest target declarations; physical support remains gated by
   native goldens.
 - Generate repository tests, mutations, goldens, documentation, and audit tools.
-- Account for vendored dependencies without claiming they were generated.
+- Maintain the complete offline-verifiable
+  [external dependency provenance inventory](docs/EXTERNAL_DEPENDENCIES.md)
+  without claiming vendored bytes were generated.
 - Rebuild the complete repository in a clean room from Stage 0 plus the root
   seed.
 - Reach a whole-tree fixed point with byte-identical hashes.
