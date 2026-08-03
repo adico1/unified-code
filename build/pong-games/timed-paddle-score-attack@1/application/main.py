@@ -2,7 +2,6 @@
 from copy import deepcopy
 import json
 import sys
-from tkinter import Button, Canvas, Label, StringVar, Tk
 
 APPLICATION_ID = 'uc://applications/timed-paddle-score-attack@1'
 TEN_DEPTHS = ('01_identity', '02_authority', '03_declaration', '04_composition', '05_processing', '06_state', '07_boundary', '08_manifestation', '09_evidence', '10_fixed_point')
@@ -97,7 +96,8 @@ def present_state():
         _status.set(str(state.get('status', 'ready')))
 
 def build_interface():
-    global _root, _surface, _status
+    global _root, _surface, _status, Button, Canvas, Label, StringVar, Tk
+    from tkinter import Button, Canvas, Label, StringVar, Tk
     _root = Tk()
     _root.title('Timed Paddle Score Attack')
     _root.geometry('420x330+80+80')

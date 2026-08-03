@@ -3,7 +3,6 @@
 import json
 import operator
 import sys
-from tkinter import Button, Entry, Label, StringVar, Tk
 IDENTITY = 'rpn'
 THING_STATES = ('unknown', 'absent', 'false', 'formed', 'valid', 'invalid')
 TEN_DEPTHS = ('01_identity', '02_authority', '03_declaration', '04_composition', '05_processing', '06_state', '07_boundary', '08_manifestation', '09_evidence', '10_fixed_point')
@@ -103,7 +102,8 @@ def apply(symbol):
 SELF_TEST_CONTROLS = [{'identity': 'digit.7', 'label': '7', 'row': 2, 'column': 0, 'action': 'append', 'value': '7'}, {'identity': 'digit.8', 'label': '8', 'row': 2, 'column': 1, 'action': 'append', 'value': '8'}, {'identity': 'digit.9', 'label': '9', 'row': 2, 'column': 2, 'action': 'append', 'value': '9'}, {'identity': 'operator.stack.divide', 'label': '÷', 'row': 2, 'column': 3, 'action': 'apply', 'value': '/'}, {'identity': 'digit.4', 'label': '4', 'row': 3, 'column': 0, 'action': 'append', 'value': '4'}, {'identity': 'digit.5', 'label': '5', 'row': 3, 'column': 1, 'action': 'append', 'value': '5'}, {'identity': 'digit.6', 'label': '6', 'row': 3, 'column': 2, 'action': 'append', 'value': '6'}, {'identity': 'operator.stack.multiply', 'label': '×', 'row': 3, 'column': 3, 'action': 'apply', 'value': '*'}, {'identity': 'digit.1', 'label': '1', 'row': 4, 'column': 0, 'action': 'append', 'value': '1'}, {'identity': 'digit.2', 'label': '2', 'row': 4, 'column': 1, 'action': 'append', 'value': '2'}, {'identity': 'digit.3', 'label': '3', 'row': 4, 'column': 2, 'action': 'append', 'value': '3'}, {'identity': 'operator.stack.subtract', 'label': '−', 'row': 4, 'column': 3, 'action': 'apply', 'value': '-'}, {'identity': 'digit.0', 'label': '0', 'row': 5, 'column': 0, 'action': 'append', 'value': '0'}, {'identity': 'syntax.decimal', 'label': '.', 'row': 5, 'column': 1, 'action': 'append', 'value': '.'}, {'identity': 'command.stack.enter', 'label': 'ENTER', 'row': 5, 'column': 2, 'action': 'push'}, {'identity': 'operator.stack.add', 'label': '+', 'row': 5, 'column': 3, 'action': 'apply', 'value': '+'}, {'identity': 'operator.stack.power', 'label': 'xʸ', 'row': 6, 'column': 0, 'action': 'apply', 'value': '^'}, {'identity': 'command.backspace', 'label': '⌫', 'row': 6, 'column': 1, 'action': 'backspace'}, {'identity': 'command.clear.stack', 'label': 'CLEAR', 'row': 6, 'column': 2, 'action': 'clear'}, {'identity': 'command.stack.push', 'label': 'PUSH', 'row': 6, 'column': 3, 'action': 'push'}]
 
 def build_interface():
-    global display, mode_text
+    global display, mode_text, Button, Entry, Label, StringVar, Tk
+    from tkinter import Button, Entry, Label, StringVar, Tk
     root = Tk()
     root.title('RPN Stack Calculator')
     root.geometry('390x360+1470+80')

@@ -5,7 +5,6 @@ import os
 from pathlib import Path
 import sys
 import tempfile
-from tkinter import Button, Entry, Frame, Label, Listbox, StringVar, Text, Tk
 
 APPLICATION_ID = 'uc://applications/eisenhower@1'
 THING_STATES = ('unknown', 'absent', 'false', 'formed', 'valid', 'invalid')
@@ -250,7 +249,8 @@ def control_6():
     return _last_outcome
 
 def build_interface():
-    global _root, _status, _summary, _portfolio, _tabs
+    global _root, _status, _summary, _portfolio, _tabs, Button, Entry, Frame, Label, Listbox, StringVar, Text, Tk
+    from tkinter import Button, Entry, Frame, Label, Listbox, StringVar, Text, Tk
     _inputs.clear()
     _collections.clear()
     _details.clear()

@@ -5,7 +5,6 @@ import json
 import operator
 import sys
 import math
-from tkinter import Button, Entry, Label, StringVar, Tk, Canvas
 IDENTITY = 'graphing'
 THING_STATES = ('unknown', 'absent', 'false', 'formed', 'valid', 'invalid')
 TEN_DEPTHS = ('01_identity', '02_authority', '03_declaration', '04_composition', '05_processing', '06_state', '07_boundary', '08_manifestation', '09_evidence', '10_fixed_point')
@@ -150,7 +149,8 @@ def plot():
 SELF_TEST_CONTROLS = [{'identity': 'variable.x', 'label': 'x', 'row': 2, 'column': 0, 'action': 'append', 'value': 'x'}, {'identity': 'function.sin', 'label': 'sin', 'row': 2, 'column': 1, 'action': 'append', 'value': 'sin('}, {'identity': 'function.cos', 'label': 'cos', 'row': 2, 'column': 2, 'action': 'append', 'value': 'cos('}, {'identity': 'operator.expression.power', 'label': 'xʸ', 'row': 2, 'column': 3, 'action': 'append', 'value': '**'}, {'identity': 'command.plot', 'label': 'PLOT', 'row': 2, 'column': 4, 'action': 'plot'}, {'identity': 'digit.7', 'label': '7', 'row': 3, 'column': 0, 'action': 'append', 'value': '7'}, {'identity': 'digit.8', 'label': '8', 'row': 3, 'column': 1, 'action': 'append', 'value': '8'}, {'identity': 'digit.9', 'label': '9', 'row': 3, 'column': 2, 'action': 'append', 'value': '9'}, {'identity': 'operator.expression.divide', 'label': '÷', 'row': 3, 'column': 3, 'action': 'append', 'value': '/'}, {'identity': 'command.clear.compact', 'label': 'C', 'row': 3, 'column': 4, 'action': 'clear'}, {'identity': 'digit.4', 'label': '4', 'row': 4, 'column': 0, 'action': 'append', 'value': '4'}, {'identity': 'digit.5', 'label': '5', 'row': 4, 'column': 1, 'action': 'append', 'value': '5'}, {'identity': 'digit.6', 'label': '6', 'row': 4, 'column': 2, 'action': 'append', 'value': '6'}, {'identity': 'operator.expression.multiply', 'label': '×', 'row': 4, 'column': 3, 'action': 'append', 'value': '*'}, {'identity': 'command.backspace', 'label': '⌫', 'row': 4, 'column': 4, 'action': 'backspace'}, {'identity': 'digit.1', 'label': '1', 'row': 5, 'column': 0, 'action': 'append', 'value': '1'}, {'identity': 'digit.2', 'label': '2', 'row': 5, 'column': 1, 'action': 'append', 'value': '2'}, {'identity': 'digit.3', 'label': '3', 'row': 5, 'column': 2, 'action': 'append', 'value': '3'}, {'identity': 'operator.expression.subtract', 'label': '−', 'row': 5, 'column': 3, 'action': 'append', 'value': '-'}, {'identity': 'operator.expression.add', 'label': '+', 'row': 5, 'column': 4, 'action': 'append', 'value': '+'}, {'identity': 'digit.0', 'label': '0', 'row': 6, 'column': 0, 'action': 'append', 'value': '0'}, {'identity': 'syntax.decimal', 'label': '.', 'row': 6, 'column': 1, 'action': 'append', 'value': '.'}, {'identity': 'syntax.left', 'label': '(', 'row': 6, 'column': 2, 'action': 'append', 'value': '('}, {'identity': 'syntax.right', 'label': ')', 'row': 6, 'column': 3, 'action': 'append', 'value': ')'}, {'identity': 'command.evaluate.function', 'label': 'f(x)', 'row': 6, 'column': 4, 'action': 'evaluate'}]
 
 def build_interface():
-    global display, mode_text, canvas
+    global display, mode_text, canvas, Button, Entry, Label, StringVar, Tk, Canvas
+    from tkinter import Button, Entry, Label, StringVar, Tk, Canvas
     root = Tk()
     root.title('Graphing Calculator')
     root.geometry('430x530+70+850')

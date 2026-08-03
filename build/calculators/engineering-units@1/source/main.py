@@ -4,7 +4,6 @@ import ast
 import json
 import operator
 import sys
-from tkinter import Button, Entry, Label, StringVar, Tk
 IDENTITY = 'engineering-units'
 THING_STATES = ('unknown', 'absent', 'false', 'formed', 'valid', 'invalid')
 TEN_DEPTHS = ('01_identity', '02_authority', '03_declaration', '04_composition', '05_processing', '06_state', '07_boundary', '08_manifestation', '09_evidence', '10_fixed_point')
@@ -126,7 +125,8 @@ def evaluate():
 SELF_TEST_CONTROLS = [{'identity': 'function.ctof', 'label': '°C→°F', 'row': 2, 'column': 0, 'action': 'append', 'value': 'c_to_f('}, {'identity': 'function.ftoc', 'label': '°F→°C', 'row': 2, 'column': 1, 'action': 'append', 'value': 'f_to_c('}, {'identity': 'function.kmtomi', 'label': 'km→mi', 'row': 2, 'column': 2, 'action': 'append', 'value': 'km_to_mi('}, {'identity': 'function.mitokm', 'label': 'mi→km', 'row': 2, 'column': 3, 'action': 'append', 'value': 'mi_to_km('}, {'identity': 'function.kgtolb', 'label': 'kg→lb', 'row': 2, 'column': 4, 'action': 'append', 'value': 'kg_to_lb('}, {'identity': 'function.lbtokg', 'label': 'lb→kg', 'row': 2, 'column': 5, 'action': 'append', 'value': 'lb_to_kg('}, {'identity': 'digit.7', 'label': '7', 'row': 3, 'column': 0, 'action': 'append', 'value': '7'}, {'identity': 'digit.8', 'label': '8', 'row': 3, 'column': 1, 'action': 'append', 'value': '8'}, {'identity': 'digit.9', 'label': '9', 'row': 3, 'column': 2, 'action': 'append', 'value': '9'}, {'identity': 'syntax.right', 'label': ')', 'row': 3, 'column': 3, 'action': 'append', 'value': ')'}, {'identity': 'operator.expression.subtract', 'label': '−', 'row': 3, 'column': 4, 'action': 'append', 'value': '-'}, {'identity': 'command.clear.compact', 'label': 'C', 'row': 3, 'column': 5, 'action': 'clear'}, {'identity': 'digit.4', 'label': '4', 'row': 4, 'column': 0, 'action': 'append', 'value': '4'}, {'identity': 'digit.5', 'label': '5', 'row': 4, 'column': 1, 'action': 'append', 'value': '5'}, {'identity': 'digit.6', 'label': '6', 'row': 4, 'column': 2, 'action': 'append', 'value': '6'}, {'identity': 'digit.1', 'label': '1', 'row': 4, 'column': 3, 'action': 'append', 'value': '1'}, {'identity': 'digit.2', 'label': '2', 'row': 4, 'column': 4, 'action': 'append', 'value': '2'}, {'identity': 'digit.3', 'label': '3', 'row': 4, 'column': 5, 'action': 'append', 'value': '3'}, {'identity': 'digit.0', 'label': '0', 'row': 5, 'column': 0, 'action': 'append', 'value': '0'}, {'identity': 'syntax.decimal', 'label': '.', 'row': 5, 'column': 1, 'action': 'append', 'value': '.'}, {'identity': 'syntax.left', 'label': '(', 'row': 5, 'column': 2, 'action': 'append', 'value': '('}, {'identity': 'command.backspace', 'label': '⌫', 'row': 5, 'column': 3, 'action': 'backspace'}, {'identity': 'operator.expression.add', 'label': '+', 'row': 5, 'column': 4, 'action': 'append', 'value': '+'}, {'identity': 'command.evaluate', 'label': '=', 'row': 5, 'column': 5, 'action': 'evaluate'}]
 
 def build_interface():
-    global display, mode_text
+    global display, mode_text, Button, Entry, Label, StringVar, Tk
+    from tkinter import Button, Entry, Label, StringVar, Tk
     root = Tk()
     root.title('Engineering Unit Calculator')
     root.geometry('600x350+1080+850')

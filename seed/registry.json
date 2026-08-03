@@ -494,7 +494,7 @@
       "seed_sha256": "8694f4017fbc64904d879255eb8cfd7bd61345224713ebce61fc8d0ecb34bc93"
     },
     {
-      "artifact_tree_sha256": "b9913e0133150ade72e1f2414eba145783338c835467bfc2036bc9326c91424a",
+      "artifact_tree_sha256": "bf4ce6bdf5823f6a71c5a9e7404d229cffd04b79b4bc39909d2d4b9ab8b1c56a",
       "canonical_name": "uc://applications/github-application-atlas@1",
       "compiler_route": "application-language",
       "compiler_version": "UC-APPLICATION-LANGUAGE-1",
@@ -507,7 +507,7 @@
       },
       "seed_id": "application-language:uc://applications/github-application-atlas@1",
       "seed_path": "application_language/catalog.seed.json",
-      "seed_sha256": "5f02482b926898e8bb34292b4a9afc0f9ce1d729b84fc0655ddcb9a55999e83c"
+      "seed_sha256": "682600c16ccdc87abc1ab8940384fca8dec516d3b6f0f973869d8af6074c896f"
     },
     {
       "artifact_tree_sha256": "d463b34929422f0ac0e8a0bb95ea33f00ab3b483243bab87f2d691c5ac5ec252",
@@ -1336,6 +1336,6 @@
       "seed_sha256": "f0c17982937ea45dfad5d432d9c8a4627fe92fc36c7e2e24e083f42c7e16b18c"
     }
   ],
-  "registry_snapshot_sha256": "06a7ebbe5f2a21f594681472b53d441848fc7a1a2f80e5fc8261cf4feeae9eac",
+  "registry_snapshot_sha256": "7b00531e05714fa6918077d13ab0ccde349ce9f859ff8e17e589cf1cdb043855",
   "registry_version": 1
 }
