@@ -6,9 +6,6 @@ from pathlib import Path
 import sys
 import tempfile
 import webbrowser
-from tkinter import Button, Entry, Frame, Label, Listbox, StringVar, Text, Tk
-from tkinter.messagebox import askyesno
-from tkinter.ttk import Notebook, Scrollbar, Treeview
 
 APPLICATION_ID = 'uc://applications/development-observatory@1'
 THING_STATES = ('unknown', 'absent', 'false', 'formed', 'valid', 'invalid')
@@ -42,7 +39,10 @@ _summary = None
 _status = None
 _last_outcome = None
 _open_url = webbrowser.open
-_confirm = askyesno
+def _confirm(*arguments, **options):
+    from tkinter.messagebox import askyesno
+    return askyesno(*arguments, **options)
+
 
 def state_path():
     selected = os.environ.get(STATE_ENVIRONMENT)
@@ -264,7 +264,10 @@ def control_7():
     return _last_outcome
 
 def build_interface():
-    global _root, _status, _summary, _portfolio, _tabs
+    global _root, _status, _summary, _portfolio, _tabs, Button, Entry, Frame, Label, Listbox, StringVar, Text, Tk
+    from tkinter import Button, Entry, Frame, Label, Listbox, StringVar, Text, Tk
+    global Notebook, Scrollbar, Treeview
+    from tkinter.ttk import Notebook, Scrollbar, Treeview
     _inputs.clear()
     _collections.clear()
     _details.clear()

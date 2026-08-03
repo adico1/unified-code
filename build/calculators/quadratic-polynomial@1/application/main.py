@@ -4,7 +4,6 @@ import ast
 import json
 import operator
 import sys
-from tkinter import Button, Entry, Label, StringVar, Tk
 IDENTITY = 'quadratic-polynomial'
 THING_STATES = ('unknown', 'absent', 'false', 'formed', 'valid', 'invalid')
 TEN_DEPTHS = ('01_identity', '02_authority', '03_declaration', '04_composition', '05_processing', '06_state', '07_boundary', '08_manifestation', '09_evidence', '10_fixed_point')
@@ -117,7 +116,8 @@ def evaluate():
 SELF_TEST_CONTROLS = [{'identity': 'function.polynomial', 'label': 'f(a,b,c,x)', 'row': 2, 'column': 0, 'action': 'append', 'value': 'polynomial('}, {'identity': 'function.discriminant', 'label': 'Δ(a,b,c)', 'row': 2, 'column': 1, 'action': 'append', 'value': 'discriminant('}, {'identity': 'function.vertex-x', 'label': 'xᵥ(a,b)', 'row': 2, 'column': 2, 'action': 'append', 'value': 'vertex_x('}, {'identity': 'syntax.comma', 'label': ',', 'row': 2, 'column': 3, 'action': 'append', 'value': ','}, {'identity': 'syntax.left', 'label': '(', 'row': 2, 'column': 4, 'action': 'append', 'value': '('}, {'identity': 'syntax.right', 'label': ')', 'row': 2, 'column': 5, 'action': 'append', 'value': ')'}, {'identity': 'command.clear.compact', 'label': 'C', 'row': 2, 'column': 6, 'action': 'clear'}, {'identity': 'digit.7', 'label': '7', 'row': 3, 'column': 0, 'action': 'append', 'value': '7'}, {'identity': 'digit.8', 'label': '8', 'row': 3, 'column': 1, 'action': 'append', 'value': '8'}, {'identity': 'digit.9', 'label': '9', 'row': 3, 'column': 2, 'action': 'append', 'value': '9'}, {'identity': 'operator.expression.divide', 'label': '÷', 'row': 3, 'column': 3, 'action': 'append', 'value': '/'}, {'identity': 'operator.expression.multiply', 'label': '×', 'row': 3, 'column': 4, 'action': 'append', 'value': '*'}, {'identity': 'operator.expression.power.caret', 'label': '^', 'row': 3, 'column': 5, 'action': 'append', 'value': '**'}, {'identity': 'command.backspace', 'label': '⌫', 'row': 3, 'column': 6, 'action': 'backspace'}, {'identity': 'digit.4', 'label': '4', 'row': 4, 'column': 0, 'action': 'append', 'value': '4'}, {'identity': 'digit.5', 'label': '5', 'row': 4, 'column': 1, 'action': 'append', 'value': '5'}, {'identity': 'digit.6', 'label': '6', 'row': 4, 'column': 2, 'action': 'append', 'value': '6'}, {'identity': 'operator.expression.subtract', 'label': '−', 'row': 4, 'column': 3, 'action': 'append', 'value': '-'}, {'identity': 'operator.expression.add', 'label': '+', 'row': 4, 'column': 4, 'action': 'append', 'value': '+'}, {'identity': 'digit.0', 'label': '0', 'row': 4, 'column': 5, 'action': 'append', 'value': '0'}, {'identity': 'syntax.decimal', 'label': '.', 'row': 4, 'column': 6, 'action': 'append', 'value': '.'}, {'identity': 'digit.1', 'label': '1', 'row': 5, 'column': 0, 'action': 'append', 'value': '1'}, {'identity': 'digit.2', 'label': '2', 'row': 5, 'column': 1, 'action': 'append', 'value': '2'}, {'identity': 'digit.3', 'label': '3', 'row': 5, 'column': 2, 'action': 'append', 'value': '3'}, {'identity': 'command.evaluate', 'label': '=', 'row': 5, 'column': 6, 'action': 'evaluate'}]
 
 def build_interface():
-    global display, mode_text
+    global display, mode_text, Button, Entry, Label, StringVar, Tk
+    from tkinter import Button, Entry, Label, StringVar, Tk
     root = Tk()
     root.title('Quadratic Polynomial Calculator')
     root.geometry('840x390+400+200')
