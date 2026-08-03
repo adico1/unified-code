@@ -1,0 +1,187 @@
+{
+  "candidates": [
+    {
+      "assessments": [
+        {
+          "assessment_id": "accepted-family",
+          "evidence_ids": ["accepted-readme-family"],
+          "expected_role": "family",
+          "letter_id": "family",
+          "observed_role": "family",
+          "reason": null,
+          "value": "calculator",
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "accepted-interface",
+          "evidence_ids": ["accepted-readme-interface"],
+          "expected_role": "interface",
+          "letter_id": "interface",
+          "observed_role": "interface",
+          "reason": null,
+          "value": "desktop-keyboard-gui",
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "accepted-operations",
+          "evidence_ids": ["accepted-readme-operators"],
+          "expected_role": "behavior",
+          "letter_id": "binary-operations",
+          "observed_role": "behavior",
+          "reason": null,
+          "value": ["add", "subtract", "multiply", "divide"],
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "accepted-input",
+          "evidence_ids": ["accepted-readme-input"],
+          "expected_role": "input",
+          "letter_id": "keyboard-controls",
+          "observed_role": "input",
+          "reason": null,
+          "value": ["digits", "decimal", "operators", "evaluate", "clear", "backspace"],
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "accepted-layout",
+          "evidence_ids": ["accepted-source-layout"],
+          "expected_role": "presentation",
+          "letter_id": "layout",
+          "observed_role": "presentation",
+          "reason": null,
+          "value": "four-column-calculator-grid",
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "accepted-dynamic-eval-foreign",
+          "evidence_ids": ["accepted-source-eval"],
+          "expected_role": "safe-declared-operation",
+          "letter_id": "dynamic-code-execution",
+          "observed_role": "foreign-implementation",
+          "reason": "Dynamic evaluation belongs to the acquired implementation, not the accepted seed semantics.",
+          "value": "eval",
+          "verdict": "foreign"
+        },
+        {
+          "assessment_id": "accepted-extra-controls-foreign",
+          "evidence_ids": ["accepted-source-extra-controls"],
+          "expected_role": "documented-keyboard-projection",
+          "letter_id": "source-only-controls",
+          "observed_role": "outside-selected-projection",
+          "reason": "Percent and sign controls are not part of the README keyboard contract selected for this holdout proof.",
+          "value": ["percent", "change-sign"],
+          "verdict": "foreign"
+        },
+        {
+          "assessment_id": "accepted-cases-missing",
+          "evidence_ids": [],
+          "expected_role": "verification",
+          "letter_id": "acceptance-cases",
+          "observed_role": "verification",
+          "reason": "The pinned repository does not publish executable acceptance cases for the selected projection.",
+          "value": null,
+          "verdict": "missing"
+        },
+        {
+          "assessment_id": "accepted-error-unresolved",
+          "evidence_ids": [],
+          "expected_role": "validation",
+          "letter_id": "error-law",
+          "observed_role": "validation",
+          "reason": "The README does not fully determine a canonical error contract.",
+          "value": null,
+          "verdict": "unresolved"
+        }
+      ],
+      "boundary_evidence_ids": ["accepted-readme-family"],
+      "boundary_path": "calculator.py",
+      "human_review": {
+        "reviewer": "issue-47-independent-acceptance",
+        "status": "reviewed-candidate",
+        "verdict": "documented-keyboard-projection-accepted"
+      },
+      "repository_identity": "github:repository:995929651"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "accepted-readme-family",
+      "license_spdx": "MIT",
+      "location": "README.md:title",
+      "observation": "The README identifies the repository as a calculator application.",
+      "repository_identity": "github:repository:995929651",
+      "revision": "4d2fa2752f30c42dbca87a469879a4781f79502e",
+      "source_path": "README.md",
+      "source_sha256": "ddc09d7c8fcebf2eef4957849af36ab8741e255c7d6cb34d8ca2d5eb29c34358",
+      "source_url": "https://github.com/nityasaini/calculator/blob/4d2fa2752f30c42dbca87a469879a4781f79502e/README.md"
+    },
+    {
+      "evidence_id": "accepted-readme-interface",
+      "license_spdx": "MIT",
+      "location": "README.md:features",
+      "observation": "The README declares desktop GUI and keyboard operation.",
+      "repository_identity": "github:repository:995929651",
+      "revision": "4d2fa2752f30c42dbca87a469879a4781f79502e",
+      "source_path": "README.md",
+      "source_sha256": "ddc09d7c8fcebf2eef4957849af36ab8741e255c7d6cb34d8ca2d5eb29c34358",
+      "source_url": "https://github.com/nityasaini/calculator/blob/4d2fa2752f30c42dbca87a469879a4781f79502e/README.md"
+    },
+    {
+      "evidence_id": "accepted-readme-operators",
+      "license_spdx": "MIT",
+      "location": "README.md:keyboard-shortcuts",
+      "observation": "The README maps plus, minus, multiply and divide keys to arithmetic operations.",
+      "repository_identity": "github:repository:995929651",
+      "revision": "4d2fa2752f30c42dbca87a469879a4781f79502e",
+      "source_path": "README.md",
+      "source_sha256": "ddc09d7c8fcebf2eef4957849af36ab8741e255c7d6cb34d8ca2d5eb29c34358",
+      "source_url": "https://github.com/nityasaini/calculator/blob/4d2fa2752f30c42dbca87a469879a4781f79502e/README.md"
+    },
+    {
+      "evidence_id": "accepted-readme-input",
+      "license_spdx": "MIT",
+      "location": "README.md:keyboard-shortcuts",
+      "observation": "The README maps digits, decimal, Enter or equals, Escape and Backspace to calculator input actions.",
+      "repository_identity": "github:repository:995929651",
+      "revision": "4d2fa2752f30c42dbca87a469879a4781f79502e",
+      "source_path": "README.md",
+      "source_sha256": "ddc09d7c8fcebf2eef4957849af36ab8741e255c7d6cb34d8ca2d5eb29c34358",
+      "source_url": "https://github.com/nityasaini/calculator/blob/4d2fa2752f30c42dbca87a469879a4781f79502e/README.md"
+    },
+    {
+      "evidence_id": "accepted-source-layout",
+      "license_spdx": "MIT",
+      "location": "calculator.py:create_widgets",
+      "observation": "The desktop source defines a four-column, five-row calculator grid.",
+      "repository_identity": "github:repository:995929651",
+      "revision": "4d2fa2752f30c42dbca87a469879a4781f79502e",
+      "source_path": "calculator.py",
+      "source_sha256": "4931d3a3650116a9b33f91347ab0000b3904c85d9a107204a87492cc4aa820d2",
+      "source_url": "https://github.com/nityasaini/calculator/blob/4d2fa2752f30c42dbca87a469879a4781f79502e/calculator.py"
+    },
+    {
+      "evidence_id": "accepted-source-eval",
+      "license_spdx": "MIT",
+      "location": "calculator.py:button_click",
+      "observation": "The acquired source evaluates editable expressions dynamically.",
+      "repository_identity": "github:repository:995929651",
+      "revision": "4d2fa2752f30c42dbca87a469879a4781f79502e",
+      "source_path": "calculator.py",
+      "source_sha256": "4931d3a3650116a9b33f91347ab0000b3904c85d9a107204a87492cc4aa820d2",
+      "source_url": "https://github.com/nityasaini/calculator/blob/4d2fa2752f30c42dbca87a469879a4781f79502e/calculator.py"
+    },
+    {
+      "evidence_id": "accepted-source-extra-controls",
+      "license_spdx": "MIT",
+      "location": "calculator.py:button_data",
+      "observation": "The acquired source also displays percent and change-sign controls.",
+      "repository_identity": "github:repository:995929651",
+      "revision": "4d2fa2752f30c42dbca87a469879a4781f79502e",
+      "source_path": "calculator.py",
+      "source_sha256": "4931d3a3650116a9b33f91347ab0000b3904c85d9a107204a87492cc4aa820d2",
+      "source_url": "https://github.com/nityasaini/calculator/blob/4d2fa2752f30c42dbca87a469879a4781f79502e/calculator.py"
+    }
+  ],
+  "format_version": "UC-GITHUB-CANDIDATE-OBSERVATIONS-1",
+  "normalization_sha256": "cd9ac53dc93eba8dcfbd77e9983424c2a2c394b958aed2a7e126551631985445"
+}

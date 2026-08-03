@@ -1,0 +1,49 @@
+{
+  "accepted": {
+    "acceptance": {
+      "cases": [
+        "holdout.add",
+        "holdout.subtract",
+        "holdout.multiply",
+        "holdout.divide",
+        "holdout.divide-zero",
+        "derived.division-by-zero",
+        "derived.invalid-expression"
+      ],
+      "passed": 7,
+      "total": 7
+    },
+    "application_seed_sha256": "00b20b1cef28f9bb13647227b02af475daddba2bc8c5ea49a929493c24ec5889",
+    "artifact_path": "build/holdouts/documented-keyboard-calculator-holdout@1",
+    "candidate_identity": "62187c089719bbfdd9ba8277c86137245dd4ddeaba06dd4edfa8f9d168fc3ba6",
+    "candidate_seed_sha256": "e2ed67bbe75ab108ca8aa891bff7dceecb1dc7d8e17752b07ae2d6c509c22c4c",
+    "extraction_sha256": "6b50b3ade95408270f34d7dfa0723a8293a12c75960b04ff8c1443603c3594b4",
+    "normalization_sha256": "cd9ac53dc93eba8dcfbd77e9983424c2a2c394b958aed2a7e126551631985445",
+    "pin_commit": "e4b8aaec189a2fd8b0ec6f6514280715f9aaa130",
+    "repeated_tree_sha256": [
+      "bc4a12032771aaaec094bec5240c66817a6fec19c9c71ae778461d60de58ded8",
+      "bc4a12032771aaaec094bec5240c66817a6fec19c9c71ae778461d60de58ded8"
+    ],
+    "repository_identity": "github:repository:995929651",
+    "verdict": "generated-and-verified"
+  },
+  "compiler": {
+    "application_language_sha256_after": "ca64e9fe7ed25a0d30b12ff8b1420329ed61780e23a20c93157a7b06a699af98",
+    "application_language_sha256_before": "ca64e9fe7ed25a0d30b12ff8b1420329ed61780e23a20c93157a7b06a699af98",
+    "changed_files": [],
+    "generic_runtime_changed_files": []
+  },
+  "exact_command": "PYTHONPATH=. python -m unified.selftest tests/test_github_holdout.py",
+  "format_version": "UC-GITHUB-UNSEEN-HOLDOUT-EVALUATION-1",
+  "unsupported": {
+    "candidate_identity": "556ca0c932d2a5e87b54eef3e2a8904a2e6880df2d25bc8091a8ec66174887cf",
+    "candidate_seed_sha256": "0439198f633d3c47c2b06eae546a8abfe49cf37df6dca424991270138adbc7ce",
+    "extraction_sha256": "3d044fba42743611ed0919c4def10fe387114bba0c9d67aaa7bec3ce610d2d78",
+    "gap_id": "gap.unsupported-feature:application-language-without-backspace-control",
+    "normalization_sha256": "3c9df86ffc9b78ecba7766d16e2dd2a8c743172184a1f3b4c109f619b48ea4e3",
+    "pin_commit": "d59b4649e777b8c114d04cdf09cf25df6e6d9ca5",
+    "repository_identity": "github:repository:609855380",
+    "state": "invalid",
+    "verdict": "standard.gap"
+  }
+}

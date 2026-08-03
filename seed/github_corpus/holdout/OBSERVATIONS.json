@@ -1,0 +1,229 @@
+{
+  "candidates": [
+    {
+      "assessments": [
+        {
+          "assessment_id": "holdout-family",
+          "evidence_ids": ["holdout-readme-family"],
+          "expected_role": "family",
+          "letter_id": "family",
+          "observed_role": "family",
+          "reason": null,
+          "value": "calculator",
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "holdout-interface",
+          "evidence_ids": ["holdout-readme-interface"],
+          "expected_role": "interface",
+          "letter_id": "interface",
+          "observed_role": "interface",
+          "reason": null,
+          "value": "graphical-user-interface",
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "holdout-theme",
+          "evidence_ids": ["holdout-readme-theme"],
+          "expected_role": "presentation",
+          "letter_id": "theme",
+          "observed_role": "presentation",
+          "reason": null,
+          "value": "dark",
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "holdout-layout",
+          "evidence_ids": ["holdout-readme-layout"],
+          "expected_role": "presentation",
+          "letter_id": "layout",
+          "observed_role": "presentation",
+          "reason": null,
+          "value": "typical-calculator-grid",
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "holdout-operations",
+          "evidence_ids": ["holdout-readme-operations"],
+          "expected_role": "behavior",
+          "letter_id": "binary-operations",
+          "observed_role": "behavior",
+          "reason": null,
+          "value": ["add", "subtract", "multiply", "divide"],
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "holdout-controls",
+          "evidence_ids": ["holdout-readme-controls"],
+          "expected_role": "input",
+          "letter_id": "controls",
+          "observed_role": "input",
+          "reason": null,
+          "value": ["digits", "operators", "evaluate", "clear"],
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "holdout-flow",
+          "evidence_ids": ["holdout-readme-flow"],
+          "expected_role": "behavior",
+          "letter_id": "interaction-flow",
+          "observed_role": "behavior",
+          "reason": null,
+          "value": "buttons-append-evaluate-displays-result",
+          "verdict": "valid"
+        },
+        {
+          "assessment_id": "holdout-division-misplaced",
+          "evidence_ids": ["holdout-source-division"],
+          "expected_role": "divide",
+          "letter_id": "division-control",
+          "observed_role": "multiply",
+          "reason": "The source labels the control as division but inserts the multiplication token.",
+          "value": {"inserted_token": "*", "label": "/"},
+          "verdict": "misplaced"
+        },
+        {
+          "assessment_id": "holdout-dynamic-eval-foreign",
+          "evidence_ids": ["holdout-source-eval"],
+          "expected_role": "safe-declared-operation",
+          "letter_id": "dynamic-code-execution",
+          "observed_role": "foreign-implementation",
+          "reason": "Dynamic evaluation is observed implementation behavior, not accepted seed meaning.",
+          "value": "eval",
+          "verdict": "foreign"
+        },
+        {
+          "assessment_id": "holdout-acceptance-missing",
+          "evidence_ids": [],
+          "expected_role": "verification",
+          "letter_id": "acceptance-cases",
+          "observed_role": "verification",
+          "reason": "The pinned repository supplies no executable acceptance cases at the permitted evidence boundary.",
+          "value": null,
+          "verdict": "missing"
+        },
+        {
+          "assessment_id": "holdout-error-law-unresolved",
+          "evidence_ids": [],
+          "expected_role": "validation",
+          "letter_id": "error-law",
+          "observed_role": "validation",
+          "reason": "The README does not determine a safe canonical error contract.",
+          "value": null,
+          "verdict": "unresolved"
+        }
+      ],
+      "boundary_evidence_ids": ["holdout-readme-family"],
+      "boundary_path": ".",
+      "human_review": {
+        "reviewer": "issue-47-independent-acceptance",
+        "status": "reviewed-candidate",
+        "verdict": "readme-intent-accepted-source-defects-rejected"
+      },
+      "repository_identity": "github:repository:609855380"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "holdout-readme-family",
+      "license_spdx": "MIT",
+      "location": "README.md:introduction",
+      "observation": "The README describes a simple calculator GUI.",
+      "repository_identity": "github:repository:609855380",
+      "revision": "dff0c896e59f19ca9a7c007bc4dd30f20385c722",
+      "source_path": "README.md",
+      "source_sha256": "ae129a4212cefa4136b03bf2285a7115908a608072b7cdadfed480cb519eb56c",
+      "source_url": "https://github.com/Carlos-Guilherme/calculator-customtk/blob/dff0c896e59f19ca9a7c007bc4dd30f20385c722/README.md"
+    },
+    {
+      "evidence_id": "holdout-readme-interface",
+      "license_spdx": "MIT",
+      "location": "README.md:introduction",
+      "observation": "The README identifies a graphical user interface.",
+      "repository_identity": "github:repository:609855380",
+      "revision": "dff0c896e59f19ca9a7c007bc4dd30f20385c722",
+      "source_path": "README.md",
+      "source_sha256": "ae129a4212cefa4136b03bf2285a7115908a608072b7cdadfed480cb519eb56c",
+      "source_url": "https://github.com/Carlos-Guilherme/calculator-customtk/blob/dff0c896e59f19ca9a7c007bc4dd30f20385c722/README.md"
+    },
+    {
+      "evidence_id": "holdout-readme-theme",
+      "license_spdx": "MIT",
+      "location": "README.md:description",
+      "observation": "The README specifies a dark-themed window.",
+      "repository_identity": "github:repository:609855380",
+      "revision": "dff0c896e59f19ca9a7c007bc4dd30f20385c722",
+      "source_path": "README.md",
+      "source_sha256": "ae129a4212cefa4136b03bf2285a7115908a608072b7cdadfed480cb519eb56c",
+      "source_url": "https://github.com/Carlos-Guilherme/calculator-customtk/blob/dff0c896e59f19ca9a7c007bc4dd30f20385c722/README.md"
+    },
+    {
+      "evidence_id": "holdout-readme-layout",
+      "license_spdx": "MIT",
+      "location": "README.md:description",
+      "observation": "The README specifies number buttons in a typical calculator layout.",
+      "repository_identity": "github:repository:609855380",
+      "revision": "dff0c896e59f19ca9a7c007bc4dd30f20385c722",
+      "source_path": "README.md",
+      "source_sha256": "ae129a4212cefa4136b03bf2285a7115908a608072b7cdadfed480cb519eb56c",
+      "source_url": "https://github.com/Carlos-Guilherme/calculator-customtk/blob/dff0c896e59f19ca9a7c007bc4dd30f20385c722/README.md"
+    },
+    {
+      "evidence_id": "holdout-readme-operations",
+      "license_spdx": "MIT",
+      "location": "README.md:description",
+      "observation": "The README declares addition, subtraction, multiplication and division.",
+      "repository_identity": "github:repository:609855380",
+      "revision": "dff0c896e59f19ca9a7c007bc4dd30f20385c722",
+      "source_path": "README.md",
+      "source_sha256": "ae129a4212cefa4136b03bf2285a7115908a608072b7cdadfed480cb519eb56c",
+      "source_url": "https://github.com/Carlos-Guilherme/calculator-customtk/blob/dff0c896e59f19ca9a7c007bc4dd30f20385c722/README.md"
+    },
+    {
+      "evidence_id": "holdout-readme-controls",
+      "license_spdx": "MIT",
+      "location": "README.md:description",
+      "observation": "The README declares number, operation, evaluate and clear controls.",
+      "repository_identity": "github:repository:609855380",
+      "revision": "dff0c896e59f19ca9a7c007bc4dd30f20385c722",
+      "source_path": "README.md",
+      "source_sha256": "ae129a4212cefa4136b03bf2285a7115908a608072b7cdadfed480cb519eb56c",
+      "source_url": "https://github.com/Carlos-Guilherme/calculator-customtk/blob/dff0c896e59f19ca9a7c007bc4dd30f20385c722/README.md"
+    },
+    {
+      "evidence_id": "holdout-readme-flow",
+      "license_spdx": "MIT",
+      "location": "README.md:description",
+      "observation": "The README describes buttons appending input, evaluation, result display and clearing.",
+      "repository_identity": "github:repository:609855380",
+      "revision": "dff0c896e59f19ca9a7c007bc4dd30f20385c722",
+      "source_path": "README.md",
+      "source_sha256": "ae129a4212cefa4136b03bf2285a7115908a608072b7cdadfed480cb519eb56c",
+      "source_url": "https://github.com/Carlos-Guilherme/calculator-customtk/blob/dff0c896e59f19ca9a7c007bc4dd30f20385c722/README.md"
+    },
+    {
+      "evidence_id": "holdout-source-division",
+      "license_spdx": "MIT",
+      "location": "main.py:btn_dividir",
+      "observation": "The division-labeled control inserts the multiplication token.",
+      "repository_identity": "github:repository:609855380",
+      "revision": "dff0c896e59f19ca9a7c007bc4dd30f20385c722",
+      "source_path": "main.py",
+      "source_sha256": "a6592afd14b9d9f2dea645efae287e6760b91c1930e8492454728a1965ee3c74",
+      "source_url": "https://github.com/Carlos-Guilherme/calculator-customtk/blob/dff0c896e59f19ca9a7c007bc4dd30f20385c722/main.py"
+    },
+    {
+      "evidence_id": "holdout-source-eval",
+      "license_spdx": "MIT",
+      "location": "main.py:calcular",
+      "observation": "The implementation evaluates editable text dynamically.",
+      "repository_identity": "github:repository:609855380",
+      "revision": "dff0c896e59f19ca9a7c007bc4dd30f20385c722",
+      "source_path": "main.py",
+      "source_sha256": "a6592afd14b9d9f2dea645efae287e6760b91c1930e8492454728a1965ee3c74",
+      "source_url": "https://github.com/Carlos-Guilherme/calculator-customtk/blob/dff0c896e59f19ca9a7c007bc4dd30f20385c722/main.py"
+    }
+  ],
+  "format_version": "UC-GITHUB-CANDIDATE-OBSERVATIONS-1",
+  "normalization_sha256": "3c9df86ffc9b78ecba7766d16e2dd2a8c743172184a1f3b4c109f619b48ea4e3"
+}
