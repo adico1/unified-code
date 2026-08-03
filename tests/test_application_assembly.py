@@ -25,6 +25,8 @@ from unified.generator.assembly import (
     audited_assembly_cache_admission_boundary,
     audited_assembly_cache_publish_boundary,
     audited_assembly_cache_retain_boundary,
+    audited_materialized_tree_identity_boundary,
+    audited_materialized_tree_copy_boundary,
     audited_tracked_assembly_cache_boundary,
     audited_graphical_retry_boundary,
     audited_graphical_suite_boundary,
@@ -111,7 +113,10 @@ def test_checked_in_materialization_is_admitted_only_by_exact_authority(tmp_path
     metadata.mkdir(parents=True)
     (build / "artifact.txt").write_text("generated", encoding="utf-8")
     manifest = {
-        "cache": {"authority_identity": "exact"},
+        "cache": {
+            "authority_identity": "exact",
+            "tree_identity": audited_materialized_tree_identity_boundary(build),
+        },
         "application_language": {"verdict": "pass"},
         "reports": {
             "product": {
@@ -127,6 +132,32 @@ def test_checked_in_materialization_is_admitted_only_by_exact_authority(tmp_path
     assert admitted["stable"] is True
     assert admitted["manifest"] == manifest
     assert audited_tracked_assembly_cache_boundary(tmp_path, "stale") is None
+    (build / "artifact.txt").write_text("tampered", encoding="utf-8")
+    assert audited_tracked_assembly_cache_boundary(tmp_path, "exact") is None
+
+
+def test_suite_cache_excludes_independently_generated_build_namespaces(tmp_path):
+    source = tmp_path / "source"
+    (source / "calculators").mkdir(parents=True)
+    (source / ".unified").mkdir()
+    (source / "holdouts").mkdir()
+    (source / "README.md").write_text("generated", encoding="utf-8")
+    (source / "index.json").write_text(
+        json.dumps({"groups": {"calculators": 1}}), encoding="utf-8"
+    )
+    managed = source / "calculators" / "product.py"
+    independent = source / "holdouts" / "proof.py"
+    managed.write_text("managed", encoding="utf-8")
+    independent.write_text("independent", encoding="utf-8")
+    baseline = audited_materialized_tree_identity_boundary(source)
+    independent.write_text("independent-change", encoding="utf-8")
+    assert audited_materialized_tree_identity_boundary(source) == baseline
+    managed.write_text("managed-change", encoding="utf-8")
+    assert audited_materialized_tree_identity_boundary(source) != baseline
+    destination = tmp_path / "destination"
+    audited_materialized_tree_copy_boundary(source, destination)
+    assert (destination / "calculators" / "product.py").is_file()
+    assert not (destination / "holdouts").exists()
 
 
 def test_graphical_host_bootstrap_retries_once_without_weakening_result(

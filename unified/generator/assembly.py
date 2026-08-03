@@ -2626,6 +2626,52 @@ def audited_directory_identity_boundary(root):
     )
 
 
+def audited_materialized_tree_identity_boundary(root):
+    """Hash suite-owned bytes, excluding independent build projections."""
+    excluded = ".unified/assembly-manifest.json"
+    index, error = _read_json(root / "index.json")
+    owned = (
+        {".unified", "README.md", "index.json", *index.get("groups", {})}
+        if error is None
+        else None
+    )
+    return _sha(
+        _canonical(
+            {
+                path.relative_to(root).as_posix(): _sha(path.read_bytes())
+                for path in sorted(root.rglob("*"))
+                if path.is_file()
+                and path.relative_to(root).as_posix() != excluded
+                and (
+                    owned is None
+                    or path.relative_to(root).parts[0] in owned
+                )
+                and "__pycache__" not in path.parts
+                and ".pytest_cache" not in path.parts
+            }
+        )
+    )
+
+
+def audited_materialized_tree_copy_boundary(source, destination):
+    """Copy only the application-suite projection declared by its public index."""
+    index, error = _read_json(source / "index.json")
+    if error is not None:
+        shutil.copytree(
+            source, destination, dirs_exist_ok=True, copy_function=os.link
+        )
+        return
+    owned = (".unified", "README.md", "index.json", *sorted(index["groups"]))
+    destination.mkdir(parents=True, exist_ok=True)
+    for name in owned:
+        source_path = source / name
+        destination_path = destination / name
+        if source_path.is_dir():
+            shutil.copytree(source_path, destination_path, copy_function=os.link)
+        else:
+            os.link(source_path, destination_path)
+
+
 def audited_application_language_build_boundary(output):
     """Build the catalog in a fresh process before any GUI host is initialized."""
     cached = audited_application_language_cache_boundary(output)
@@ -2706,6 +2752,8 @@ def audited_application_language_cache_boundary(output):
         or report_error
         or manifest.get("application_language", {}).get("authority_identity")
         != authority
+        or manifest.get("cache", {}).get("tree_identity")
+        != audited_materialized_tree_identity_boundary(canonical)
     ):
         return None
     catalog = manifest["application_language"]
@@ -2895,7 +2943,8 @@ def audited_assembly_cache_admission_boundary(thing, value, output, cache_key):
     cache_root = Path(cached["output"])
     if (
         not cache_root.is_dir()
-        or audited_directory_identity_boundary(cache_root) != cached["tree_identity"]
+        or audited_materialized_tree_identity_boundary(cache_root)
+        != cached["tree_identity"]
     ):
         _ASSEMBLY_PROOF_CACHE.pop(cache_key, None)
         ephemeral = cached.get("ephemeral_root")
@@ -2904,7 +2953,8 @@ def audited_assembly_cache_admission_boundary(thing, value, output, cache_key):
         return None
     if (
         output.is_dir()
-        and audited_directory_identity_boundary(output) == cached["tree_identity"]
+        and audited_materialized_tree_identity_boundary(output)
+        == cached["tree_identity"]
     ):
         return outward(
             {
@@ -2935,12 +2985,7 @@ def audited_assembly_cache_admission_boundary(thing, value, output, cache_key):
     staging = Path(
         tempfile.mkdtemp(prefix="." + output.name + ".uc-cache-", dir=output.parent)
     )
-    shutil.copytree(
-        cache_root,
-        staging,
-        dirs_exist_ok=True,
-        copy_function=os.link,
-    )
+    audited_materialized_tree_copy_boundary(cache_root, staging)
     _atomic_publish(staging, output)
     previous_ephemeral = cached.pop("ephemeral_root", None)
     if not cached.get("stable"):
@@ -2981,6 +3026,8 @@ def audited_tracked_assembly_cache_boundary(source_root, cache_key):
     if (
         error
         or manifest.get("cache", {}).get("authority_identity") != cache_key
+        or manifest.get("cache", {}).get("tree_identity")
+        != audited_materialized_tree_identity_boundary(cache_root)
         or manifest.get("application_language", {}).get("verdict") != "pass"
         or any(
             report.get("verdict") != "pass"
@@ -2994,7 +3041,7 @@ def audited_tracked_assembly_cache_boundary(source_root, cache_key):
         }
     return {
         "output": str(cache_root),
-        "tree_identity": audited_directory_identity_boundary(cache_root),
+        "tree_identity": manifest["cache"]["tree_identity"],
         "manifest": manifest,
         "stable": True,
     }
@@ -3004,7 +3051,7 @@ def audited_assembly_cache_publish_boundary(cache_key, output, manifest):
     previous = _ASSEMBLY_PROOF_CACHE.pop(cache_key, None)
     if previous and previous.get("ephemeral_root"):
         shutil.rmtree(previous["ephemeral_root"], ignore_errors=True)
-    identity = audited_directory_identity_boundary(output)
+    identity = audited_materialized_tree_identity_boundary(output)
     _ASSEMBLY_PROOF_CACHE[cache_key] = {
         "output": str(output),
         "tree_identity": identity,
@@ -3279,9 +3326,6 @@ def run_assemble(thing):
             "groups": product_index["groups"],
             "total_products": product_index["total_products"],
         }
-        (metadata_root / "assembly-manifest.json").write_bytes(
-            _canonical(suite_manifest)
-        )
         ok = (
             all(
                 report["verdict"] == "pass"
@@ -3309,6 +3353,12 @@ def run_assemble(thing):
             existing_registry,
             registry,
             application_language_summary,
+        )
+        suite_manifest["cache"]["tree_identity"] = (
+            audited_materialized_tree_identity_boundary(staging)
+        )
+        (metadata_root / "assembly-manifest.json").write_bytes(
+            _canonical(suite_manifest)
         )
         _atomic_publish(staging, output)
         cache_identity = audited_assembly_cache_publish_boundary(
