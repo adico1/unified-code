@@ -1,0 +1,49 @@
+{
+  "completion": {
+    "reason": "exhausted",
+    "records_observed": 1
+  },
+  "evidence": {
+    "acquisition_mode": "replay",
+    "attempts": [
+      {"outcome": "success", "page_index": 0, "retry_ordinal": 0}
+    ],
+    "duration_ns": 0,
+    "observed_at": "2026-08-03T00:00:00Z"
+  },
+  "format_version": "UC-GITHUB-CORPUS-FIXTURE-PACK-1",
+  "pages": [
+    {
+      "content_sha256": "bec590583f65a286eb4f78fe36e529097dcdf7cb22b1790762e8b5f177bc06e6",
+      "index": 0,
+      "next_cursor": null,
+      "path": "pages/000.json",
+      "request_cursor": null,
+      "retrieval_contract_version": "UC-GITHUB-CORPUS-SNAPSHOT-1",
+      "source_url": "https://api.github.com/search/repositories?q=repo%3ACarlos-Guilherme%2Fcalculator-customtk&per_page=1&page=1"
+    }
+  ],
+  "request": {
+    "api_version": "2022-11-28",
+    "endpoint": "/search/repositories",
+    "format_version": "UC-GITHUB-CORPUS-REQUEST-1",
+    "initial_cursor": null,
+    "page_size": 1,
+    "provider": "github",
+    "query": "repo:Carlos-Guilherme/calculator-customtk",
+    "record_fields": [
+      "default_branch",
+      "full_name",
+      "html_url",
+      "id",
+      "license",
+      "node_id",
+      "source_url"
+    ],
+    "transport": "rest",
+    "variables": {"sort": "indexed"},
+    "visibility_scope": "public"
+  },
+  "retrieval_contract_version": "UC-GITHUB-CORPUS-SNAPSHOT-1",
+  "status": "complete"
+}

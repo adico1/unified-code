@@ -1,0 +1,31 @@
+{
+  "format_version": "UC-GITHUB-UNSEEN-HOLDOUT-PIN-1",
+  "generic_compiler_baseline": {
+    "application_language_sha256": "ca64e9fe7ed25a0d30b12ff8b1420329ed61780e23a20c93157a7b06a699af98",
+    "repository_commit": "1cbdec0b2ae3bd36512ef7351f141165aa3fae9f"
+  },
+  "pinned_before_evaluation": true,
+  "pinned_at": "2026-08-03T00:00:00Z",
+  "repository": {
+    "commit_sha256_identity": "dff0c896e59f19ca9a7c007bc4dd30f20385c722",
+    "default_branch": "main",
+    "full_name": "Carlos-Guilherme/calculator-customtk",
+    "license_spdx": "MIT",
+    "repository_identity": "github:repository:609855380",
+    "source_url": "https://github.com/Carlos-Guilherme/calculator-customtk/tree/dff0c896e59f19ca9a7c007bc4dd30f20385c722"
+  },
+  "sources": [
+    {
+      "git_blob_sha1": "a3fb2a529b3d9675eb919fba2aee1e801175d67e",
+      "path": "README.md",
+      "sha256": "ae129a4212cefa4136b03bf2285a7115908a608072b7cdadfed480cb519eb56c",
+      "source_url": "https://github.com/Carlos-Guilherme/calculator-customtk/blob/dff0c896e59f19ca9a7c007bc4dd30f20385c722/README.md"
+    },
+    {
+      "git_blob_sha1": "f0841d6833b8e4b901630d980b9d80503cebc1f8",
+      "path": "main.py",
+      "sha256": "a6592afd14b9d9f2dea645efae287e6760b91c1930e8492454728a1965ee3c74",
+      "source_url": "https://github.com/Carlos-Guilherme/calculator-customtk/blob/dff0c896e59f19ca9a7c007bc4dd30f20385c722/main.py"
+    }
+  ]
+}
