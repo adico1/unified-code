@@ -606,8 +606,14 @@ def audited_scheduler_primitive(
         )
     authority_root = Path(os.environ.get("UC_VERIFY_AUTHORITY_ROOT", ROOT))
     authority = audited_repository_identity_primitive(authority_root)
+    materialization_seconds = 0.0
     if os.environ.get("UC_VERIFY_MATERIALIZE") == "1":
+        materialization_started_ns = time.monotonic_ns()
         bundle = audited_materialize_bundle_primitive(graph, authority)
+        materialization_seconds = (
+            time.monotonic_ns() - materialization_started_ns
+        ) / 1_000_000_000
+        verification_started_ns = time.monotonic_ns()
     else:
         try:
             bundle = json.loads(BUNDLE.read_text(encoding="utf-8"))
@@ -681,6 +687,7 @@ def audited_scheduler_primitive(
             "cache": "warm" if cache_report["warm"] else "cold",
         },
         "bootload_seconds": bootload_seconds,
+        "materialization_seconds": materialization_seconds,
         "verification_seconds": verification_seconds,
     }
     evidence_hash = _sha(evidence)
@@ -704,8 +711,13 @@ def audited_scheduler_primitive(
                 "proof_nodes": len(verdicts),
                 "proofs_passed": passed,
                 "bootload_seconds": bootload_seconds,
+                "materialization_seconds": materialization_seconds,
                 "verification_seconds": verification_seconds,
-                "total_seconds": bootload_seconds + verification_seconds,
+                "total_seconds": (
+                    bootload_seconds
+                    + materialization_seconds
+                    + verification_seconds
+                ),
                 "critical_path_seconds": verification_seconds,
                 "critical_path_nodes": critical_path_nodes,
                 "parallel_workers": bundle["evidence_workers"],

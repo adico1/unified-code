@@ -8,6 +8,7 @@ that the repository actually uses; no third-party test framework is required.
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import contextlib
 import importlib
 import importlib.util
@@ -16,6 +17,7 @@ import io
 import json
 import os
 import re
+import subprocess
 import sys
 import tempfile
 import time
@@ -208,7 +210,7 @@ def _invoke(function, parameters, temporary):
         patch.undo()
 
 
-def run(paths=()):
+def _local_report(paths):
     started = time.monotonic_ns()
     results = []
     cwd = str(Path.cwd())
@@ -243,12 +245,89 @@ def run(paths=()):
                         results.append({"id": identity, "status": "pass", "error": None})
     failures = [item for item in results if item["status"] == "fail"]
     return {
-        "format": "uc-selftest-1",
         "passed": sum(item["status"] == "pass" for item in results),
         "skipped": sum(item["status"] == "skip" for item in results),
         "failed": len(failures),
         "total": len(results),
         "duration_ns": time.monotonic_ns() - started,
+        "failures": failures,
+        "results": results,
+        "ok": not failures,
+    }
+
+
+def _run_shard_boundary(item):
+    ordinal, path = item
+    completed = subprocess.run(
+        [sys.executable, str(Path(__file__).resolve()), "--worker", str(path)],
+        cwd=str(Path.cwd()),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    lines = completed.stdout.splitlines()
+    try:
+        report = json.loads(lines[-1])
+    except (IndexError, json.JSONDecodeError):
+        detail = (completed.stderr or completed.stdout or "no-report").strip()
+        identity = f"{path.name}::worker[0]"
+        report = {
+            "passed": 0,
+            "skipped": 0,
+            "failed": 1,
+            "total": 1,
+            "duration_ns": 0,
+            "failures": [
+                {"id": identity, "status": "fail", "error": f"worker:{detail}"}
+            ],
+            "results": [],
+            "ok": False,
+        }
+    return ordinal, report
+
+
+def _parallel_reports(files, workers):
+    indexed = tuple(enumerate(files))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
+        completed = executor.map(_run_shard_boundary, indexed)
+        return tuple(report for _ordinal, report in completed)
+
+
+def _worker_count(requested, file_count):
+    configured = requested if requested is not None else os.environ.get(
+        "UC_SELFTEST_WORKERS", "4"
+    )
+    try:
+        workers = int(configured)
+    except (TypeError, ValueError) as error:
+        raise ValueError("selftest:invalid-workers") from error
+    if workers < 1:
+        raise ValueError("selftest:invalid-workers")
+    return max(1, min(workers, max(1, file_count)))
+
+
+def run(paths=(), workers=None):
+    started = time.monotonic_ns()
+    files = _files(paths)
+    worker_count = _worker_count(workers, len(files))
+    reports = (
+        (_local_report(files),)
+        if worker_count == 1
+        else _parallel_reports(files, worker_count)
+    )
+    failures = [
+        failure
+        for report in reports
+        for failure in report["failures"]
+    ]
+    return {
+        "format": "uc-selftest-1",
+        "passed": sum(report["passed"] for report in reports),
+        "skipped": sum(report["skipped"] for report in reports),
+        "failed": sum(report["failed"] for report in reports),
+        "total": sum(report["total"] for report in reports),
+        "duration_ns": time.monotonic_ns() - started,
+        "workers": worker_count,
         "failures": failures,
         "ok": not failures,
     }
@@ -256,9 +335,15 @@ def run(paths=()):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="python -m unified.selftest")
+    parser.add_argument("--workers", type=int)
+    parser.add_argument("--worker", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("paths", nargs="*")
     arguments = parser.parse_args(argv)
-    report = run(arguments.paths)
+    report = (
+        _local_report(_files(arguments.paths))
+        if arguments.worker
+        else run(arguments.paths, workers=arguments.workers)
+    )
     print(json.dumps(report, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
     return 0 if report["ok"] else 1
 

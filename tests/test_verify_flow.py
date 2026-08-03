@@ -117,6 +117,41 @@ def test_empty_and_valid_cache_measure_complete_verification(monkeypatch, tmp_pa
     assert cold["value"]["events"] == warm["value"]["events"] == list(FLOW_EVENTS)
 
 
+def test_physical_materialization_time_is_reported_outside_validation_budget(
+    monkeypatch, tmp_path
+):
+    graph = mini_graph()
+    source = tmp_path / "source"
+    source.mkdir()
+    monkeypatch.setattr(flow, "ROOT", source)
+    monkeypatch.setattr(flow, "BUNDLE", tmp_path / "PROOF_BUNDLE.json")
+    monkeypatch.setattr(
+        flow,
+        "audited_repository_identity_primitive",
+        lambda _root: {"identity": "test-authority", "file_count": 0, "files": {}},
+    )
+    clock = {"value": 0}
+    original = flow.audited_materialize_bundle_primitive
+
+    def delayed_materialization(graph_value, authority):
+        bundle = original(graph_value, authority)
+        clock["value"] += 10_000_000_000
+        return bundle
+
+    monkeypatch.setattr(
+        flow, "audited_materialize_bundle_primitive", delayed_materialization
+    )
+    monkeypatch.setattr(flow.time, "monotonic_ns", lambda: clock["value"])
+    monkeypatch.setenv("UC_VERIFY_MATERIALIZE", "1")
+    result = audited_scheduler_primitive(
+        request(), graph, tmp_path / "materialization-cache", 0
+    )
+    assert result["state"] == "valid"
+    assert result["value"]["materialization_seconds"] == 10.0
+    assert result["value"]["verification_seconds"] == 0.0
+    assert result["value"]["total_seconds"] == 10.0
+
+
 def test_flow_source_confines_every_control_node_to_audited_primitives():
     source = __import__("pathlib").Path(flow.__file__).read_text()
     report = audited_source_report_primitive(source)

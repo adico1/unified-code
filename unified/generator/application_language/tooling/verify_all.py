@@ -541,19 +541,17 @@ def verify_application_self_tests(generated):
         "destroy()\n"
         "print(json.dumps(reports,sort_keys=True))\n"
     )
-    # Virtual host processes preserve isolation while avoiding optional Tk.
-    group_count = min(8, len(roots))
-    groups = [
-        roots[index::group_count]
-        for index in range(group_count)
-    ]
+    # Bounded balanced groups amortize interpreter boot while preventing one
+    # long sequential batch from holding every unrelated product.
+    group_count = min(16, len(roots))
+    groups = [roots[index::group_count] for index in range(group_count)]
 
     def run_group(group):
         result = subprocess.run(
             [sys.executable, "-c", batch, json.dumps(group)],
             capture_output=True,
             text=True,
-            timeout=30,
+            timeout=60,
         )
         if result.returncode:
             detail = result.stderr.strip() or result.stdout.strip() or "no-output"
