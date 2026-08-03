@@ -180,6 +180,9 @@ generates the first isolated runnable framework/generator surface described in
 [STAGE1.md](STAGE1.md), without widening the application-language surface. Its
 isolated byte-identical two-stage proof is documented in
 [STAGE1_FIXED_POINT.md](STAGE1_FIXED_POINT.md).
+The next clean-room boundary is explicit in
+[ROOT_PROJECTIONS.md](ROOT_PROJECTIONS.md): ROOT declares typed projections,
+renderers and dependency edges; opaque checkout-source copying is rejected.
 
 The complete dependency-aware verification graph is executed once with
 [`uc verify-all`](VERIFY_FLOW.md), with tool bootstrap measured separately from

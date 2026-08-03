@@ -19,7 +19,7 @@ from unified.verify_flow import audited_source_report_primitive
 
 ROOT = Path(__file__).resolve().parents[1]
 CHECKED = ROOT / "generated" / "uem_surface"
-FIXED_HASH = "443671f1c8c752989489112d045c09ce7589abe03f9336f8a14a24edfdab8acf"
+FIXED_HASH = "6d2b6ce26ee8e543f6d0a3d9fcbe121f0f1f9db2686327ce3ce2ea06b7782e34"
 PERMANENT_HOSTS = (
     ROOT / "unified" / "machine",
     ROOT / "c" / "core",

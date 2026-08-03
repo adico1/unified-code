@@ -14,7 +14,11 @@ from pathlib import Path
 FORMAT_VERSION = "UC-STAGE1-FIXED-POINT-1"
 STAGE1_FILES = (
     "framework/contract.json",
+    "generated/root_surface/ROOT_STATUS.md",
+    "generated/root_surface/repository-contract.json",
+    "generated/root_surface/watchers.json",
     "generator/contract.json",
+    "seed/ROOT.seed.json",
     "stage1-manifest.json",
     "stage1.py",
     "uem/contract.json",

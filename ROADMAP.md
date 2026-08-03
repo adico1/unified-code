@@ -109,7 +109,9 @@ This milestone is deliberately non-blocking for Milestone 1. Open items:
   [external dependency provenance inventory](docs/EXTERNAL_DEPENDENCIES.md)
   without claiming vendored bytes were generated.
 - Rebuild the complete repository in a clean room from Stage 0 plus the root
-  seed.
+  seed. The generic typed projection vocabulary and its first seed-driven
+  outputs are implemented ([ROOT_PROJECTIONS.md](ROOT_PROJECTIONS.md)); the
+  complete projection inventory remains open.
 - Reach a whole-tree fixed point with byte-identical hashes.
 - Unify the UEM surface while preserving independent Python and C hosts for
   L11 equivalence. The generated surface and differential-vector authority now

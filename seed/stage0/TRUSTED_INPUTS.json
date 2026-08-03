@@ -47,13 +47,13 @@
       "role": "root-seed",
       "path": "seed/ROOT.seed.json",
       "hash_mode": "canonical-json",
-      "sha256": "1dcaa5b6bb6f7744e8ca7be82586aa57939f2b3b5a9845ce2261d42139119f94"
+      "sha256": "6368ccedc458f4fd9dfb935f1d14f82a9a6b323798a35ae2c59583b0f0c912af"
     },
     {
       "role": "root-seed-schema",
       "path": "seed/SCHEMA.json",
       "hash_mode": "canonical-json",
-      "sha256": "eb1f3ea100ce03d50d83e67f16a7e4d387ebf3ad93e6edbad30079722163a3de"
+      "sha256": "36b3e103f16cdc7897b65049e4c2284fb03983e4391a842df522d3fa9a4e9c8f"
     },
     {
       "role": "stage0-contract-schema",
@@ -77,7 +77,7 @@
       "role": "stage0-executable",
       "path": "bootstrap/stage0.py",
       "hash_mode": "raw-bytes",
-      "sha256": "d1ba66af02b606e209421ed786eb0e0795e1fc847107ecb3cb6b99959c7b6514"
+      "sha256": "7150372ad1fdb6eb392edc12157310df4a2d32834537a97eccbbb5f7e585ca87"
     }
   ],
   "external_dependencies": [],

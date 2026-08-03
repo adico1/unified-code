@@ -134,6 +134,7 @@ def test_stage1_seed_mutation_is_detected_by_byte_comparison(tmp_path):
     assert comparison["byte_identical"] is False
     assert comparison["tree_sha256_a"] != comparison["tree_sha256_b"]
     assert [item["path"] for item in comparison["mismatches"]] == [
+        "seed/ROOT.seed.json",
         "stage1-manifest.json"
     ]
 

@@ -194,6 +194,49 @@
       "status": "standard.gap"
     }
   ],
+  "repository": {
+    "format_version": "UC-ROOT-REPOSITORY-1",
+    "renderers": [
+      "canonical-json",
+      "utf8-lines",
+      "hex-bytes"
+    ],
+    "generation_bound": 3,
+    "depths": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "watchers": [
+      {"id": "authority", "depth": 1},
+      {"id": "identity", "depth": 2},
+      {"id": "structure", "depth": 3},
+      {"id": "dependency", "depth": 4},
+      {"id": "boundary", "depth": 5},
+      {"id": "behavior", "depth": 6},
+      {"id": "equivalence", "depth": 7},
+      {"id": "provenance", "depth": 8},
+      {"id": "verification", "depth": 9},
+      {"id": "fixed-point", "depth": 10}
+    ],
+    "summary_lines": [
+      "# ROOT projection status",
+      "",
+      "This file is projected from seed/ROOT.seed.json by the generated Stage-1 runner.",
+      "",
+      "The projection language is active; complete-repository root manifestation remains open."
+    ],
+    "projections": [
+      {
+        "path": "generated/root_surface/watchers.json",
+        "seed_node": "/repository/watchers",
+        "renderer": "canonical-json",
+        "depends_on": ["generated/root_surface/repository-contract.json"]
+      },
+      {
+        "path": "generated/root_surface/ROOT_STATUS.md",
+        "seed_node": "/repository/summary_lines",
+        "renderer": "utf8-lines",
+        "depends_on": ["generated/root_surface/watchers.json"]
+      }
+    ]
+  },
   "seed_id": "uc-canonical",
   "stage1": {
     "format_version": "UC-STAGE1-SEED-1",
@@ -236,6 +279,9 @@
         "canonicalize-json",
         "resolve-seed-node",
         "render-canonical-json",
+        "render-utf8-lines",
+        "render-hex-bytes",
+        "resolve-projection-dependencies",
         "render-stage1-runner",
         "hash-file",
         "hash-tree",
@@ -246,17 +292,32 @@
         {
           "path": "framework/contract.json",
           "seed_node": "/stage1/framework",
-          "encoding": "canonical-json"
+          "renderer": "canonical-json",
+          "depends_on": []
         },
         {
           "path": "generator/contract.json",
           "seed_node": "/stage1/generator",
-          "encoding": "canonical-json"
+          "renderer": "canonical-json",
+          "depends_on": ["framework/contract.json"]
         },
         {
           "path": "uem/contract.json",
           "seed_node": "/stage1/uem",
-          "encoding": "canonical-json"
+          "renderer": "canonical-json",
+          "depends_on": ["framework/contract.json"]
+        },
+        {
+          "path": "seed/ROOT.seed.json",
+          "seed_node": "/",
+          "renderer": "canonical-json",
+          "depends_on": ["generator/contract.json"]
+        },
+        {
+          "path": "generated/root_surface/repository-contract.json",
+          "seed_node": "/repository",
+          "renderer": "canonical-json",
+          "depends_on": ["generator/contract.json"]
         }
       ]
     },
