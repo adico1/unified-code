@@ -8,6 +8,8 @@ import os
 import shutil
 import subprocess
 import sys
+import threading
+import time
 from pathlib import Path
 
 from unified.boundary import inward
@@ -23,7 +25,9 @@ from unified.generator.assembly import (
     audited_assembly_cache_admission_boundary,
     audited_assembly_cache_publish_boundary,
     audited_assembly_cache_retain_boundary,
+    audited_tracked_assembly_cache_boundary,
     audited_graphical_retry_boundary,
+    audited_graphical_suite_boundary,
     audited_registry_authority_boundary,
     audited_registry_projection_boundary,
     derive_application_registry,
@@ -101,6 +105,30 @@ def test_manifestation_cache_advances_without_duplicate_file_bytes(tmp_path):
     assert _ASSEMBLY_PROOF_CACHE["probe"]["output"] == str(second_output)
 
 
+def test_checked_in_materialization_is_admitted_only_by_exact_authority(tmp_path):
+    build = tmp_path / "build"
+    metadata = build / ".unified"
+    metadata.mkdir(parents=True)
+    (build / "artifact.txt").write_text("generated", encoding="utf-8")
+    manifest = {
+        "cache": {"authority_identity": "exact"},
+        "application_language": {"verdict": "pass"},
+        "reports": {
+            "product": {
+                "verdict": "pass",
+                "depths": {identity: {} for identity in DEPTHS},
+            }
+        },
+    }
+    (metadata / "assembly-manifest.json").write_text(
+        json.dumps(manifest), encoding="utf-8"
+    )
+    admitted = audited_tracked_assembly_cache_boundary(tmp_path, "exact")
+    assert admitted["stable"] is True
+    assert admitted["manifest"] == manifest
+    assert audited_tracked_assembly_cache_boundary(tmp_path, "stale") is None
+
+
 def test_graphical_host_bootstrap_retries_once_without_weakening_result(
     monkeypatch,
 ):
@@ -124,6 +152,39 @@ def test_graphical_host_bootstrap_retries_once_without_weakening_result(
         "checks": {"rendered": True},
     }
     assert shutdowns == ["shutdown"]
+
+
+def test_graphical_suite_releases_independent_products_concurrently(monkeypatch):
+    active = {"count": 0, "maximum": 0}
+    lock = threading.Lock()
+
+    def proof(root, _seed):
+        with lock:
+            active["count"] += 1
+            active["maximum"] = max(active["maximum"], active["count"])
+        time.sleep(0.01)
+        with lock:
+            active["count"] -= 1
+        return {"ok": True, "product": root.name}
+
+    monkeypatch.setattr(
+        "unified.generator.assembly._browser_executable", lambda: "browser"
+    )
+    monkeypatch.setattr(
+        "unified.generator.assembly.audited_browser_bootstrap_boundary",
+        lambda _executable, _deadline: 1,
+    )
+    monkeypatch.setattr(
+        "unified.generator.assembly.audited_graphical_retry_boundary", proof
+    )
+    roots = (Path("first"), Path("second"), Path("third"))
+    seeds = {
+        root.name: {"boundaries": {"acceptance_deadline_seconds": 1}}
+        for root in roots
+    }
+    reports = audited_graphical_suite_boundary(roots, seeds)
+    assert active["maximum"] == 3
+    assert list(reports) == ["first", "second", "third"]
 
 
 def tree_bytes(root):

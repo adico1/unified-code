@@ -5,7 +5,7 @@
       "total": 176
     },
     "applications": 75,
-    "complete_tree_sha256": "20aababee62e8b562e2fbc9b010af803d9a1125dc18d19757023c00cde8f2bba",
+    "complete_tree_sha256": "2f2a9e0998e740a9b24ef7843931f111847afb520309829dba1132c6e0deb0a7",
     "seed_catalog": {
       "catalog": "seed/application_language/catalog.seed.json",
       "suite": "seed/application_language/suite.seed.json"
