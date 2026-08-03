@@ -1,0 +1,13 @@
+{
+  "credential_policy": "explicit-boundary-only",
+  "fixture_pack": "fixtures/PACK.json",
+  "fixture_pack_sha256": "b3c8b9464f3867ef742d63985d148e8075e20533219a1b2425dad2d8ae01262f",
+  "format_version": "UC-GITHUB-ACQUISITION-PIN-1",
+  "license_boundary": "recorded-public-metadata-only",
+  "live_request": "acquisition/LIVE_REQUEST.json",
+  "live_request_sha256": "a74d785ebf32684f7e2989cddbfd84d08acd867f92a85f9dab1e74d579970499",
+  "outward_part": "unified.github_acquisition.outward_read_github_page",
+  "page_limit": 1,
+  "request_sha256": "7484bd1c1983b0d2e25d361778baa35788ddd8b11e434de2d1bb149a7d48886f",
+  "snapshot_sha256": "e69517fc5087b44f1541467bc619e484a4a16cf2121b6dd3c7938c93b0d160a4"
+}

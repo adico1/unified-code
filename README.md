@@ -13,6 +13,9 @@ the [AI-swarm economic proof contract](ECONOMIC_PROOF.md), and its bounded
 
 [Discuss: Standard Ten — one deterministic software structure for humans and AI](https://github.com/adico1/unified-code/discussions/2)
 
+The Application Atlas corpus uses a documented, read-only
+[GitHub OUTWARD acquisition boundary](docs/GITHUB_CORPUS_ACQUISITION.md).
+
 ```python
 def part(thing):
     return thing

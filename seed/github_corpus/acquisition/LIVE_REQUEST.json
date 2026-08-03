@@ -1,0 +1,21 @@
+{
+  "api_version": "2022-11-28",
+  "endpoint": "/search/repositories",
+  "format_version": "UC-GITHUB-CORPUS-REQUEST-1",
+  "initial_cursor": null,
+  "page_size": 1,
+  "provider": "github",
+  "query": "FluxCalc in:name user:Futura-Py",
+  "record_fields": [
+    "default_branch",
+    "full_name",
+    "html_url",
+    "id",
+    "license",
+    "node_id",
+    "source_url"
+  ],
+  "transport": "rest",
+  "variables": {},
+  "visibility_scope": "public"
+}
