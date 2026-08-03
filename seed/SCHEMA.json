@@ -14,7 +14,8 @@
     "laws",
     "standard_ten",
     "gaps",
-    "stage1"
+    "stage1",
+    "repository"
   ],
   "additionalProperties": false,
   "properties": {
@@ -91,6 +92,64 @@
       "items": { "type": "string" }
     },
     "standard_ten": { "const": true },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format_version",
+        "renderers",
+        "generation_bound",
+        "depths",
+        "watchers",
+        "summary_lines",
+        "projections"
+      ],
+      "properties": {
+        "format_version": { "const": "UC-ROOT-REPOSITORY-1" },
+        "renderers": {
+          "const": ["canonical-json", "utf8-lines", "hex-bytes"]
+        },
+        "generation_bound": { "type": "integer", "minimum": 2 },
+        "depths": { "const": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
+        "watchers": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "depth"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "depth": { "type": "integer", "minimum": 1, "maximum": 10 }
+            }
+          }
+        },
+        "summary_lines": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "projections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "seed_node", "renderer", "depends_on"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "seed_node": { "type": "string", "pattern": "^/" },
+              "renderer": {
+                "enum": ["canonical-json", "utf8-lines", "hex-bytes"]
+              },
+              "depends_on": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
     "stage1": {
       "type": "object",
       "additionalProperties": false,
@@ -162,6 +221,9 @@
                 "canonicalize-json",
                 "resolve-seed-node",
                 "render-canonical-json",
+                "render-utf8-lines",
+                "render-hex-bytes",
+                "resolve-projection-dependencies",
                 "render-stage1-runner",
                 "hash-file",
                 "hash-tree",
@@ -178,7 +240,8 @@
                 "required": [
                   "path",
                   "seed_node",
-                  "encoding"
+                  "renderer",
+                  "depends_on"
                 ],
                 "properties": {
                   "path": {
@@ -187,10 +250,14 @@
                   },
                   "seed_node": {
                     "type": "string",
-                    "pattern": "^/stage1/"
+                    "pattern": "^/"
                   },
-                  "encoding": {
-                    "const": "canonical-json"
+                  "renderer": {
+                    "enum": ["canonical-json", "utf8-lines", "hex-bytes"]
+                  },
+                  "depends_on": {
+                    "type": "array",
+                    "items": {"type": "string"}
                   }
                 }
               }

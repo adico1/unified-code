@@ -26,8 +26,8 @@ Generated target declarations begin as `declared-unverified` with
 `support_claim=false`. Physical support remains governed by native goldens in
 `c/targets/manifests/`; generation alone never creates a hardware claim.
 
-The frozen five-file Stage-1 fixed point remains
-`443671f1c8c752989489112d045c09ce7589abe03f9336f8a14a24edfdab8acf`.
+The frozen nine-file Stage-1 fixed point is
+`6d2b6ce26ee8e543f6d0a3d9fcbe121f0f1f9db2686327ce3ce2ea06b7782e34`.
 The generated UEM surface has its own clean-room fixed point.
 
 **Status:** foundation beneath Unified Code. Chip-neutral canonical machine.  

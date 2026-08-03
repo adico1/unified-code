@@ -20,7 +20,12 @@ stage1-a/
 ├── stage1-manifest.json
 ├── framework/contract.json
 ├── generator/contract.json
-└── uem/contract.json
+├── uem/contract.json
+├── seed/ROOT.seed.json
+└── generated/root_surface/
+    ├── repository-contract.json
+    ├── watchers.json
+    └── ROOT_STATUS.md
 ```
 
 `stage1.py` is a generic generated runner. It consumes the same canonical root
@@ -42,13 +47,15 @@ The root seed declares:
 - every generated semantic output and its originating JSON pointer;
 - the UEM-16 opcode and primitive-registry input surface;
 - the canonical Stage-1 boilerplate identity.
+- the typed repository projections, renderer identity and dependency edges.
 
 Stage 0 supplies only the pinned generic `UC-STAGE1-PY-1` syntax boilerplate
 and interpreter. It does not read or copy `unified/`, `tests/`, documentation,
 application source, or other untrusted checkout files.
 
-Unsupported operations, encodings, seed nodes, paths, or boilerplate identities
-fail explicitly. There is no conventional or opaque-copy fallback.
+Unsupported operations, renderers, dependency edges, seed nodes, paths, or
+boilerplate identities fail explicitly. There is no conventional or
+opaque-copy fallback.
 
 ## Manifest and identity
 
@@ -78,19 +85,16 @@ path and prove that changes to untrusted checkout files cannot affect output.
 
 ## Boundary
 
-This closes the bounded Stage1-A generation dependency. It does not by itself
-close:
+This closes the bounded Stage1-A generation dependency and exposes the typed
+projection language described in [ROOT_PROJECTIONS.md](ROOT_PROJECTIONS.md).
+It does not by itself close:
 
-- the independently isolated Stage1-A/Stage1-B fixed-point harness;
-- generated independent Python/C UEM hosts;
-- generated tests, documentation and audit tooling;
-- external dependency provenance;
 - clean-room whole-repository regeneration.
 
 Those remain separate Milestone 2 issues and cannot be inferred from this
 minimal runnable Stage-1 surface.
 
-The bounded UEM-surface successor consumes generated `uem/contract.json`
-without changing this five-file identity. It generates independent Python/C
+The bounded UEM-surface successor consumes generated `uem/contract.json`.
+It generates independent Python/C
 host boundaries, registries, target declarations and shared L11 vector
 declarations under `generated/uem_surface/`.

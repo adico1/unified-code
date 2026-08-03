@@ -13,7 +13,7 @@ from unified.verify_flow import audited_source_report_primitive
 ROOT = Path(__file__).resolve().parents[1]
 CHECKED = ROOT / "generated" / "verification_surface"
 GENERATOR = ROOT / "bootstrap" / "verification_surface.py"
-STAGE1_FIXED = "443671f1c8c752989489112d045c09ce7589abe03f9336f8a14a24edfdab8acf"
+STAGE1_FIXED = "6d2b6ce26ee8e543f6d0a3d9fcbe121f0f1f9db2686327ce3ce2ea06b7782e34"
 UEM_FIXED = "ef231c4615dd4fe9824e95f84e6e5ff9f202e152a3c5da4ff2bb910802ff5881"
 DOC_TARGETS = (
     "README.md",
@@ -105,7 +105,7 @@ def test_isolated_generation_is_byte_identical_and_preserves_prior_fixed_points(
     )["tree_sha256"]
     assert uem["tree_sha256"] == UEM_FIXED
     assert STAGE1_FIXED == (
-        "443671f1c8c752989489112d045c09ce7589abe03f9336f8a14a24edfdab8acf"
+        "6d2b6ce26ee8e543f6d0a3d9fcbe121f0f1f9db2686327ce3ce2ea06b7782e34"
     )
 
 

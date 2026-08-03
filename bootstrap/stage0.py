@@ -57,6 +57,9 @@ STAGE1_OPERATIONS = (
     "canonicalize-json",
     "resolve-seed-node",
     "render-canonical-json",
+    "render-utf8-lines",
+    "render-hex-bytes",
+    "resolve-projection-dependencies",
     "render-stage1-runner",
     "hash-file",
     "hash-tree",
@@ -78,6 +81,9 @@ OPERATIONS = (
     "canonicalize-json",
     "resolve-seed-node",
     "render-canonical-json",
+    "render-utf8-lines",
+    "render-hex-bytes",
+    "resolve-projection-dependencies",
     "render-stage1-runner",
     "hash-file",
     "hash-tree",
@@ -112,6 +118,8 @@ def safe_path(raw):
 
 
 def resolve(root, pointer):
+    if pointer == "/":
+        return root
     parts = pointer.split("/")[1:]
     if not pointer.startswith("/") or not parts:
         raise ValueError("unsupported-seed-node")
@@ -121,6 +129,61 @@ def resolve(root, pointer):
             raise ValueError("unsupported-seed-node")
         value = value[part]
     return value
+
+
+def render_canonical_json(value):
+    return canonical(value)
+
+
+def render_utf8_lines(value):
+    if not isinstance(value, list) or not all(isinstance(line, str) for line in value):
+        raise ValueError("unsupported-utf8-lines")
+    return ("\\n".join(value) + "\\n").encode("utf-8")
+
+
+def render_hex_bytes(value):
+    if not isinstance(value, str):
+        raise ValueError("unsupported-hex-bytes")
+    try:
+        return bytes.fromhex(value)
+    except ValueError as error:
+        raise ValueError("unsupported-hex-bytes") from error
+
+
+RENDERERS = {
+    "canonical-json": render_canonical_json,
+    "utf8-lines": render_utf8_lines,
+    "hex-bytes": render_hex_bytes,
+}
+
+
+def validate_repository(seed):
+    repository = seed.get("repository")
+    if (
+        not isinstance(repository, dict)
+        or set(repository) != {
+            "format_version",
+            "renderers",
+            "generation_bound",
+            "depths",
+            "watchers",
+            "summary_lines",
+            "projections",
+        }
+        or repository["format_version"] != "UC-ROOT-REPOSITORY-1"
+        or repository["renderers"] != list(RENDERERS)
+        or repository["generation_bound"] != 3
+        or repository["depths"] != list(range(1, 11))
+        or not isinstance(repository["watchers"], list)
+        or [item.get("depth") for item in repository["watchers"] if isinstance(item, dict)] != list(range(1, 11))
+        or any(set(item) != {"id", "depth"} or not isinstance(item["id"], str) or not item["id"] for item in repository["watchers"])
+        or len({item["id"] for item in repository["watchers"]}) != 10
+        or not isinstance(repository["summary_lines"], list)
+        or not all(isinstance(line, str) for line in repository["summary_lines"])
+        or not isinstance(repository["projections"], list)
+    ):
+        raise ValueError("unsupported-repository-declaration")
+    return repository
 
 
 def render_runner():
@@ -169,6 +232,7 @@ def validate(seed):
         or any(not isinstance(item, str) or not item for item in uem["primitives"])
     ):
         raise ValueError("unsupported-uem-declaration")
+    validate_repository(seed)
     return stage1
 
 
@@ -182,17 +246,24 @@ def tree_hash(inventory):
 
 def render(seed):
     stage1 = validate(seed)
+    outputs = stage1["generator"]["outputs"] + seed["repository"]["projections"]
     files = {"stage1.py": render_runner()}
     origins = {"stage1.py": ["/stage1/generator"]}
     seen = {"stage1.py"}
-    for output in stage1["generator"]["outputs"]:
-        if not isinstance(output, dict) or set(output) != {"path", "seed_node", "encoding"}:
+    for output in outputs:
+        if not isinstance(output, dict) or set(output) != {"path", "seed_node", "renderer", "depends_on"}:
             raise ValueError("unsupported-output-declaration")
         path = safe_path(output["path"]).as_posix()
-        if path in seen or output["encoding"] != "canonical-json":
+        dependencies = output["depends_on"]
+        if (
+            path in seen
+            or output["renderer"] not in RENDERERS
+            or not isinstance(dependencies, list)
+            or not all(isinstance(item, str) and item in seen for item in dependencies)
+        ):
             raise ValueError("unsupported-output-declaration")
         seen.add(path)
-        files[path] = canonical(resolve(seed, output["seed_node"]))
+        files[path] = RENDERERS[output["renderer"]](resolve(seed, output["seed_node"]))
         origins[path] = [output["seed_node"]]
     inventory = [
         {
@@ -200,6 +271,10 @@ def render(seed):
             "sha256": sha(raw),
             "size": len(raw),
             "originating_seed_nodes": origins[path],
+            "depends_on": next(
+                (item["depends_on"] for item in outputs if item["path"] == path),
+                [],
+            ),
         }
         for path, raw in sorted(files.items())
     ]
@@ -798,7 +873,74 @@ def _validate_stage1_seed(seed):
         or any(not isinstance(item, str) or not item for item in uem["primitives"])
     ):
         raise ValueError("unsupported-uem-declaration")
+    _validate_repository(seed)
     return stage1
+
+
+def _render_canonical_json(value):
+    return _canonical_json_bytes(value)
+
+
+def _render_utf8_lines(value):
+    if not isinstance(value, list) or not all(isinstance(line, str) for line in value):
+        raise ValueError("unsupported-utf8-lines")
+    return ("\n".join(value) + "\n").encode("utf-8")
+
+
+def _render_hex_bytes(value):
+    if not isinstance(value, str):
+        raise ValueError("unsupported-hex-bytes")
+    try:
+        return bytes.fromhex(value)
+    except ValueError as error:
+        raise ValueError("unsupported-hex-bytes") from error
+
+
+_STAGE1_RENDERERS = {
+    "canonical-json": _render_canonical_json,
+    "utf8-lines": _render_utf8_lines,
+    "hex-bytes": _render_hex_bytes,
+}
+
+
+def _validate_repository(seed):
+    repository = seed.get("repository") if isinstance(seed, dict) else None
+    if (
+        not isinstance(repository, dict)
+        or set(repository)
+        != {
+            "format_version",
+            "renderers",
+            "generation_bound",
+            "depths",
+            "watchers",
+            "summary_lines",
+            "projections",
+        }
+        or repository["format_version"] != "UC-ROOT-REPOSITORY-1"
+        or repository["renderers"] != list(_STAGE1_RENDERERS)
+        or repository["generation_bound"] != 3
+        or repository["depths"] != list(range(1, 11))
+        or not isinstance(repository["watchers"], list)
+        or [
+            item.get("depth")
+            for item in repository["watchers"]
+            if isinstance(item, dict)
+        ]
+        != list(range(1, 11))
+        or any(
+            set(item) != {"id", "depth"}
+            or not isinstance(item["id"], str)
+            or not item["id"]
+            for item in repository["watchers"]
+        )
+        or len({item["id"] for item in repository["watchers"]}) != 10
+        or not isinstance(repository["summary_lines"], list)
+        or not all(isinstance(line, str) for line in repository["summary_lines"])
+        or not isinstance(repository["projections"], list)
+    ):
+        raise ValueError("unsupported-repository-declaration")
+    return repository
 
 
 def plan_stage1_tree(thing):
@@ -809,24 +951,34 @@ def plan_stage1_tree(thing):
     try:
         seed = value["trusted_documents"]["root-seed"]
         stage1 = _validate_stage1_seed(seed)
+        outputs = stage1["generator"]["outputs"] + seed["repository"]["projections"]
         files = {"stage1.py": _render_stage1_runner()}
         origins = {"stage1.py": ["/stage1/generator"]}
         seen = {"stage1.py"}
-        for output in stage1["generator"]["outputs"]:
+        for output in outputs:
             if not isinstance(output, dict) or set(output) != {
                 "path",
                 "seed_node",
-                "encoding",
+                "renderer",
+                "depends_on",
             }:
                 raise ValueError("unsupported-output-declaration")
             path = _safe_relative_path(
                 output["path"], value["contract"]["limits"]["maximum_path_bytes"]
             ).as_posix()
-            if path in seen or output["encoding"] != "canonical-json":
+            dependencies = output["depends_on"]
+            if (
+                path in seen
+                or output["renderer"] not in _STAGE1_RENDERERS
+                or not isinstance(dependencies, list)
+                or not all(isinstance(item, str) and item in seen for item in dependencies)
+            ):
                 raise ValueError("unsupported-output-declaration")
             seen.add(path)
-            files[path] = _canonical_json_bytes(
-                _resolve_seed_node(seed, output["seed_node"])
+            files[path] = _STAGE1_RENDERERS[output["renderer"]](
+                seed
+                if output["seed_node"] == "/"
+                else _resolve_seed_node(seed, output["seed_node"])
             )
             origins[path] = [output["seed_node"]]
         inventory = [
@@ -835,6 +987,14 @@ def plan_stage1_tree(thing):
                 "sha256": _sha256(raw),
                 "size": len(raw),
                 "originating_seed_nodes": origins[path],
+                "depends_on": next(
+                    (
+                        item["depends_on"]
+                        for item in outputs
+                        if item["path"] == path
+                    ),
+                    [],
+                ),
             }
             for path, raw in sorted(files.items())
         ]

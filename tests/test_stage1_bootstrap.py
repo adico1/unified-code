@@ -11,8 +11,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-from unified import selftest
-
 REPO = Path(__file__).resolve().parents[1]
 CONTRACT = REPO / "seed" / "stage0" / "TRUSTED_INPUTS.json"
 SPEC = importlib.util.spec_from_file_location(
@@ -88,7 +86,11 @@ def test_stage0_generates_runnable_stage1_with_complete_provenance(tmp_path):
     ]["tree_sha256"]
     assert sorted(tree_bytes(output)) == [
         "framework/contract.json",
+        "generated/root_surface/ROOT_STATUS.md",
+        "generated/root_surface/repository-contract.json",
+        "generated/root_surface/watchers.json",
         "generator/contract.json",
+        "seed/ROOT.seed.json",
         "stage1-manifest.json",
         "stage1.py",
         "uem/contract.json",
@@ -97,11 +99,31 @@ def test_stage0_generates_runnable_stage1_with_complete_provenance(tmp_path):
     assert manifest["generator_identity"] == "UC-STAGE1-PY-1"
     assert {item["path"] for item in manifest["files"]} == {
         "framework/contract.json",
+        "generated/root_surface/ROOT_STATUS.md",
+        "generated/root_surface/repository-contract.json",
+        "generated/root_surface/watchers.json",
         "generator/contract.json",
+        "seed/ROOT.seed.json",
         "stage1.py",
         "uem/contract.json",
     }
     assert all(item["originating_seed_nodes"] for item in manifest["files"])
+    assert all("depends_on" in item for item in manifest["files"])
+    assert json.loads((output / "seed/ROOT.seed.json").read_text()) == json.loads(
+        (root / "seed/ROOT.seed.json").read_text()
+    )
+    repository = json.loads(
+        (output / "generated/root_surface/repository-contract.json").read_text()
+    )
+    assert repository["format_version"] == "UC-ROOT-REPOSITORY-1"
+    assert repository["depths"] == list(range(1, 11))
+    assert len(repository["watchers"]) == 10
+    assert json.loads(
+        (output / "generated/root_surface/watchers.json").read_text()
+    ) == repository["watchers"]
+    assert (output / "generated/root_surface/ROOT_STATUS.md").read_text() == (
+        "\n".join(repository["summary_lines"]) + "\n"
+    )
     assert os.access(output / "stage1.py", os.R_OK)
 
 
@@ -208,9 +230,58 @@ def test_invalid_stage1_seed_cannot_replace_generated_tree(tmp_path):
     assert tree_bytes(output) == before
 
 
-@selftest.mark.parametrize(
-    ("mutate", "error"),
-    [
+def test_invalid_repository_projections_are_rejected_atomically(tmp_path):
+    cases = [
+        (
+            lambda seed: seed["repository"]["projections"][0].update(
+                {"renderer": "copy-source"}
+            ),
+            "unsupported-output-declaration",
+        ),
+        (
+            lambda seed: seed["repository"]["projections"][0].update(
+                {"depends_on": ["missing-output.json"]}
+            ),
+            "unsupported-output-declaration",
+        ),
+        (
+            lambda seed: seed["repository"]["projections"][0].update(
+                {"path": "framework/contract.json"}
+            ),
+            "unsupported-output-declaration",
+        ),
+        (
+            lambda seed: seed["repository"].update({"depths": list(range(9))}),
+            "unsupported-repository-declaration",
+        ),
+        (
+            lambda seed: seed["repository"]["watchers"][9].update(
+                {"id": "authority"}
+            ),
+            "unsupported-repository-declaration",
+        ),
+    ]
+    for index, (mutate, error) in enumerate(cases):
+        root = tmp_path / f"trust-{index}"
+        contract_path, contract = copy_trust_tree(root)
+        output = tmp_path / f"stage1-{index}"
+        assert generate(root, contract_path, output)["state"] == "valid"
+        before = tree_bytes(output)
+        seed_path = root / "seed" / "ROOT.seed.json"
+        seed = json.loads(seed_path.read_text())
+        mutate(seed)
+        seed_path.write_bytes(canonical(seed))
+        update_root_hash(contract, root)
+        contract_path.write_bytes(canonical(contract))
+        rejected = generate(root, contract_path, output)
+        assert rejected["state"] == "invalid"
+        assert rejected["value"]["error"] == "stage1.generate:" + error
+        assert rejected["value"]["ticket"] is None
+        assert tree_bytes(output) == before
+
+
+def test_invalid_framework_and_uem_declarations_are_rejected(tmp_path):
+    cases = [
         (
             lambda seed: seed["stage1"]["framework"]["thing_states"].reverse(),
             "unsupported-framework-declaration",
@@ -225,23 +296,20 @@ def test_invalid_stage1_seed_cannot_replace_generated_tree(tmp_path):
             lambda seed: seed["stage1"]["uem"]["primitives"].append("identity"),
             "unsupported-uem-declaration",
         ),
-    ],
-)
-def test_invalid_framework_and_uem_declarations_are_rejected(
-    tmp_path, mutate, error
-):
-    root = tmp_path / "trust"
-    contract_path, contract = copy_trust_tree(root)
-    seed_path = root / "seed" / "ROOT.seed.json"
-    seed = json.loads(seed_path.read_text())
-    mutate(seed)
-    seed_path.write_bytes(canonical(seed))
-    update_root_hash(contract, root)
-    contract_path.write_bytes(canonical(contract))
-    result = generate(root, contract_path, tmp_path / "out")
-    assert result["state"] == "invalid"
-    assert result["value"]["error"] == "stage1.generate:" + error
-    assert result["value"]["ticket"] is None
+    ]
+    for index, (mutate, error) in enumerate(cases):
+        root = tmp_path / f"trust-{index}"
+        contract_path, contract = copy_trust_tree(root)
+        seed_path = root / "seed" / "ROOT.seed.json"
+        seed = json.loads(seed_path.read_text())
+        mutate(seed)
+        seed_path.write_bytes(canonical(seed))
+        update_root_hash(contract, root)
+        contract_path.write_bytes(canonical(contract))
+        result = generate(root, contract_path, tmp_path / f"out-{index}")
+        assert result["state"] == "invalid"
+        assert result["value"]["error"] == "stage1.generate:" + error
+        assert result["value"]["ticket"] is None
 
 
 def test_stage1_source_is_generic_and_has_no_opaque_checkout_payload():
