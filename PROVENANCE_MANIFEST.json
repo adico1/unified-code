@@ -1,5 +1,5 @@
 {
-  "file_count": 515,
+  "file_count": 560,
   "files": [
     {
       "compliance": "standard.gap",
@@ -101,8 +101,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "AUDIT_STANDARD_TEN.md",
       "provenance": "evidence",
-      "sha256": "bebb98f6c19a44bacf2062b9cc850b2e8bbb9e4e05d649da4a6bc33a0bc78b6a",
-      "size": 53462,
+      "sha256": "10e85d6c0dcd1eaf4b7b16225cbd2e3bda9b6a328c7f6a98cf614031c0033c80",
+      "size": 57701,
       "standard_ten_class_ok": true
     },
     {
@@ -184,8 +184,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "GITHUB_CORPUS.md",
       "provenance": "handwritten-pending",
-      "sha256": "5d1f29d4218dbff3a67259b5721e3b2d7c1ea62079c88fab8171d1bce6633c29",
-      "size": 3229,
+      "sha256": "beae0dbf1e948fe461fc890992fecc7c5eb9a0d73161680edd11d3a5f65d3954",
+      "size": 8129,
       "standard_ten_class_ok": false
     },
     {
@@ -288,8 +288,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "PROVENANCE_MANIFEST.json",
       "provenance": "evidence",
-      "sha256": "cd067ba304772c7986fe1d635fd8cdbd19ce8cdaf3c19ec841d60188af758667",
-      "size": 320572,
+      "sha256": "a24706d6db747b87d05e213f99bd559bd109f4dac80e216b2f7757f76d930b39",
+      "size": 347506,
       "standard_ten_class_ok": true
     },
     {
@@ -309,8 +309,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "README.md",
       "provenance": "handwritten-pending",
-      "sha256": "d226533a044fda1bb0fbded91de75f6b1e9fc4482d6e54d381ca5f560cc90a90",
-      "size": 15436,
+      "sha256": "980647673b611cbeae5ae8fc8d9ceb85b6864b65340a73a1d48638faef98b0ae",
+      "size": 16128,
       "standard_ten_class_ok": false
     },
     {
@@ -330,8 +330,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "ROADMAP.md",
       "provenance": "handwritten-pending",
-      "sha256": "02b0f64139aff69f56dda2c14917a98b2cfe8f6d1d650935d2c842e0026ed60b",
-      "size": 10118,
+      "sha256": "c8dc684c6a5410d5b243cfe582ffe846fefc1ded0a1b9e90f6e867d3bcdc96c5",
+      "size": 10213,
       "standard_ten_class_ok": false
     },
     {
@@ -458,6 +458,27 @@
       "sha256": "d7152599e81fa3e1355bdd4d4338689c1bd46476a3a992d7bb7ba8f3a0458341",
       "size": 3984,
       "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "STANDARD_TEN_PREPROCESSOR.md",
+      "provenance": "handwritten-pending",
+      "sha256": "13baec49e3d309d00fb77fc24959b62aa7a5914a4d66488f6204b19f5545041d",
+      "size": 1623,
+      "standard_ten_class_ok": false
     },
     {
       "compliance": "standard.gap",
@@ -3506,6 +3527,26 @@
       "compliance": "ok",
       "control_flow": {
         "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": null,
+      "path": "c/third_party/LICENSE.cJSON",
+      "provenance": "external-vendored",
+      "sha256": "a36dda207c36db5818729c54e7ad4e8b0c6fba847491ba64f372c1a2037b6d5c",
+      "size": 1084,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
         "for": 17,
         "if": 281,
         "switch": 8,
@@ -3666,6 +3707,48 @@
       "provenance": "handwritten-pending",
       "sha256": "b1e1b48722ac0e51bf174c9bcda46627986cf2632cbcbe4cf1b3c1deb21737fd",
       "size": 5023,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "docs/EXTERNAL_DEPENDENCIES.md",
+      "provenance": "handwritten-pending",
+      "sha256": "f99890a03a4857007bf718e01b173303065c47a043c30af66d94c7662e2437e7",
+      "size": 2721,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "docs/GITHUB_CORPUS_ACQUISITION.md",
+      "provenance": "handwritten-pending",
+      "sha256": "cff3b141d2df00122ab5424ba3826a442cc7ee0d99e2dc438e3d3c4cb51e49b8",
+      "size": 1911,
       "standard_ten_class_ok": false
     },
     {
@@ -3888,6 +3971,51 @@
       "provenance": "handwritten-pending",
       "sha256": "48d90d21a1e77ced451a0cdfe3a30849eed12c0f55c6135520944ebf2f5c2647",
       "size": 242,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "examples/run/invoice-total.request.json",
+      "provenance": "handwritten-pending",
+      "sha256": "10103f7482cac53b1a238451b046ccd6d6ccdd213ee39b029ef41cfba9a4d213",
+      "size": 275,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 0,
+        "for": 0,
+        "if": 0,
+        "match": 0,
+        "total": 0,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "examples/run/invoice-total.request.py",
+      "provenance": "handwritten-pending",
+      "sha256": "9009f2f63c694215f4955a6debd72fb967e55b04dfa2abc7b3eef507b952634c",
+      "size": 353,
       "standard_ten_class_ok": false
     },
     {
@@ -6711,6 +6839,46 @@
       "handwritten": false,
       "oop_classes": 0,
       "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/EXTERNAL_DEPENDENCIES.json",
+      "provenance": "seed",
+      "sha256": "8a3f09dca229fd07886171d6f5799c5d1d911eeaa6d02932a54c9ae7877a3bc9",
+      "size": 7464,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/EXTERNAL_DEPENDENCIES_SCHEMA.json",
+      "provenance": "seed",
+      "sha256": "12894cf28a00fbe957dc0c1519102457a58f4ffd4cdbfa0eb49c3f0511d3e890",
+      "size": 5473,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/MANIFESTATION_SCHEMA.json",
       "provenance": "seed",
       "sha256": "a7d6ea56ac0856de4e4136b9688f9925a93e2b81f1e71c263f6925b6b8747af7",
@@ -6733,8 +6901,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/ROOT.seed.json",
       "provenance": "seed",
-      "sha256": "9b145882d8aaa29dfec413ce78e72e86998349a5d7e63118b0daf361b26d25c2",
-      "size": 7696,
+      "sha256": "7fd82a5409ba5e8567e15bacbf0737bedbd9264ad845d46b25f425825ba876cc",
+      "size": 8864,
       "standard_ten_class_ok": true
     },
     {
@@ -6773,8 +6941,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/SCHEMA.json",
       "provenance": "seed",
-      "sha256": "2682d4a51151cdb488288f37b3220b0c1edf1b57b0a362ef24659c063484d218",
-      "size": 6775,
+      "sha256": "e90f0bc4cf039b7451cb698577eee4cf93fbcd1a487cebb7469a46da78070d5e",
+      "size": 7180,
       "standard_ten_class_ok": true
     },
     {
@@ -7233,8 +7401,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/application_language/catalog.seed.json",
       "provenance": "seed",
-      "sha256": "2f204e15d7aad202aa35af987fdf911a8c99cba3128bad47dc7937fc737e5c82",
-      "size": 1063958,
+      "sha256": "9be5554c61e0cf780dcd3d7dbcc7d5b08660d1c23769e5b9c35aeb60bc379422",
+      "size": 1094494,
       "standard_ten_class_ok": true
     },
     {
@@ -7991,10 +8159,70 @@
       "handwritten": false,
       "oop_classes": 0,
       "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/CANDIDATE_OBSERVATION_SCHEMA.json",
+      "provenance": "seed",
+      "sha256": "b2f62a73ebedfa51b39a8b218a7d86104e79b7aeb81d5ca40a263e1e8cc642ab",
+      "size": 3296,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/github_corpus/CONTRACT_VECTORS.json",
       "provenance": "seed",
       "sha256": "89ab86b2ae34b3e0e7763a8a542b7d7e5a93d0a1de585a9ba353cd3db2eb3ced",
       "size": 617,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/FIXTURE_PACK_SCHEMA.json",
+      "provenance": "seed",
+      "sha256": "c0c22045eff392e13a5d40c385a71b4c72820113544cd663f082d538dace7447",
+      "size": 1548,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/NORMALIZATION_SCHEMA.json",
+      "provenance": "seed",
+      "sha256": "99b3c7afef13f8833f108b01e09c140b095debde4174421bca1b88e8894faf62",
+      "size": 1120,
       "standard_ten_class_ok": true
     },
     {
@@ -8035,6 +8263,446 @@
       "provenance": "seed",
       "sha256": "80a40f0bcdf605e2c2ff3cdc7cd7307427da6051fab5f0da82caadb99ab64327",
       "size": 2691,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/acquisition/LIVE_REQUEST.json",
+      "provenance": "seed",
+      "sha256": "e94b627f6a38520b8d6173d3df32162a9e457430185ca80b0010898f330eeabb",
+      "size": 448,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/acquisition/PIN.json",
+      "provenance": "seed",
+      "sha256": "f112b722fae5a50189c63b6324a81b59beb42f78b88a2db5321b23aa766b80a8",
+      "size": 704,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/candidates/EXPECTED.json",
+      "provenance": "seed",
+      "sha256": "1baf53e8d6aac96037060c7dbd962fd824c769cddbae325601b7afe77e0676c0",
+      "size": 905,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/candidates/OBSERVATIONS.json",
+      "provenance": "seed",
+      "sha256": "19c7be59626a028c60c819beb9a6bb37c4d2268b58b8f93381ab4ace8ff4ba83",
+      "size": 9596,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/fixtures/EXPECTED.json",
+      "provenance": "seed",
+      "sha256": "413ce34767c485609552ba544c11db86c79a1eaa1f88832b5caf411786e18c28",
+      "size": 653,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/fixtures/PACK.json",
+      "provenance": "seed",
+      "sha256": "a596ea66e6f7177792bf4b4417b0e890067e04d93cf542254bd9161d2a0e3456",
+      "size": 2012,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/fixtures/REPLAY_VECTORS.json",
+      "provenance": "seed",
+      "sha256": "9ecd2c559ec0918468a34e85fa7309d3fb1665896fabd6970fe1243acb197f8a",
+      "size": 616,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/fixtures/pages/000.json",
+      "provenance": "seed",
+      "sha256": "8438dd9da5fbd7a1edfef957ead78739609a8b069581e29d0122ae5eabbfffe6",
+      "size": 1331,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/fixtures/pages/001.json",
+      "provenance": "seed",
+      "sha256": "ecfe08975db22abf7c8dbba2631d9839fd7fe97d9d13eaff161967993843f622",
+      "size": 855,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/holdout/EVALUATION.json",
+      "provenance": "seed",
+      "sha256": "b3eb705711635edcb1384c5e43e16e837105561d6bc7ccd11ce7ccc4ec7aee7d",
+      "size": 2348,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/holdout/OBSERVATIONS.json",
+      "provenance": "seed",
+      "sha256": "299e9cdaf91f50f994743420081a016789fdef81c5b195daec33f7b721f77814",
+      "size": 10018,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/holdout/PACK.json",
+      "provenance": "seed",
+      "sha256": "739ac0ea4f958c3719a855b3f470a4d2209d8b2c7bfbc1478d415e68770aaf7f",
+      "size": 1387,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/holdout/PIN.json",
+      "provenance": "seed",
+      "sha256": "7a4a14df0323156cd6f66c39ae68475a956d3aab16d0765156602faf8751fda3",
+      "size": 1397,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/holdout/accepted/OBSERVATIONS.json",
+      "provenance": "seed",
+      "sha256": "634f6e957f019f00c79092180908822b1bb0a1e097dd470215643cc865048cf8",
+      "size": 8305,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/holdout/accepted/PACK.json",
+      "provenance": "seed",
+      "sha256": "45b0d1fa374400c95a2a9055f6a524409d96712d748d324e80a4bf8c1548891b",
+      "size": 1375,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/holdout/accepted/PIN.json",
+      "provenance": "seed",
+      "sha256": "d4a512610521b4bb065bc913fb9ad21f64eaf99387782f2cd1d134ac40f82fe9",
+      "size": 1349,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/holdout/accepted/application.seed.json",
+      "provenance": "seed",
+      "sha256": "c7ea6c62dc8145edfb2f3ece438bcebf1889030d76cf6519adbacb4af8d90492",
+      "size": 3781,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/holdout/accepted/pages/000.json",
+      "provenance": "seed",
+      "sha256": "70c929b51a05e8a2ddc5b9441724628fe5901d1684cf20998761ffae19ab3ed2",
+      "size": 827,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/holdout/application.seed.json",
+      "provenance": "seed",
+      "sha256": "7eb332cfd82cf562039e62dec20633ea15033cd5d623b124183f4ea9df24f607",
+      "size": 3453,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/holdout/pages/000.json",
+      "provenance": "seed",
+      "sha256": "67c2e91847b35c9d7b98fac998fd20f50a823a0c0e6ad50ef972e122f21b3436",
+      "size": 836,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/normalization/EXPECTED.json",
+      "provenance": "seed",
+      "sha256": "5026e4e0386e1a27e340de3b8707df57c4ea17b5ef6b2795e61e266937e14873",
+      "size": 2100,
+      "standard_ten_class_ok": true
+    },
+    {
+      "compliance": "ok",
+      "control_flow": {
+        "classes": 0,
+        "for": 0,
+        "if": 0,
+        "total": 0,
+        "while": 0
+      },
+      "generated": false,
+      "generation_command": null,
+      "handwritten": false,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "seed/github_corpus/normalization/VECTORS.json",
+      "provenance": "seed",
+      "sha256": "07b356f96ac2e959e50fbd323a4da6c4a633f23d3e991b0d776c0e5d097d1ebf",
+      "size": 3713,
       "standard_ten_class_ok": true
     },
     {
@@ -8173,7 +8841,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/registry.json",
       "provenance": "seed",
-      "sha256": "b1e845f3854271421514aa06aa3d7d005f3fdf982f3c73a210ddd7f1cf632c01",
+      "sha256": "93b6c389bac2f239f8e388fcc9e3847e6098dfe3f706a7120e47a178f17f8f0c",
       "size": 65020,
       "standard_ten_class_ok": true
     },
@@ -8193,7 +8861,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/registry.provenance.json",
       "provenance": "seed",
-      "sha256": "9140a82364770a9775b51276cf147b96fd17aba6edde2815c9189293ecc31fe8",
+      "sha256": "69120780c5732bffbf359726ddfe96f0ef583d44a8488592914154430006b987",
       "size": 1309,
       "standard_ten_class_ok": true
     },
@@ -8233,7 +8901,7 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/stage0/TRUSTED_INPUTS.json",
       "provenance": "seed",
-      "sha256": "be794e079a807d00c6c2758d61ddc370692e45409ba436a1552d8b365159c92f",
+      "sha256": "a65606d1b28f68142660dc7b9e9855359c22ff1b4a498aea98c5f9798d9ace22",
       "size": 2703,
       "standard_ten_class_ok": true
     },
@@ -8353,8 +9021,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "seed/verification/PROOF_BUNDLE.json",
       "provenance": "seed",
-      "sha256": "884991b12baa033980d24fb528cfa7036f28933e8209f4c5de21b41124c07b72",
-      "size": 5243,
+      "sha256": "90d1f96f1d630604958c472696ea394ead9209ec9f9bb93af835cc19fc975513",
+      "size": 4599,
       "standard_ten_class_ok": true
     },
     {
@@ -8785,6 +9453,30 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
+        "comp": 2,
+        "for": 3,
+        "if": 0,
+        "match": 0,
+        "total": 5,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_external_dependencies.py",
+      "provenance": "handwritten-pending",
+      "sha256": "9a0be417e5477e807ef9fe16788fc7c6782b5698cebdef2acfa1739f4b840623",
+      "size": 7037,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
         "comp": 1,
         "for": 6,
         "if": 3,
@@ -8803,6 +9495,54 @@
       "provenance": "handwritten-pending",
       "sha256": "a078c9bd924c8299aafc8003e2e6447a1db4b3bd31c9854b77b653af814c8eb1",
       "size": 10382,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 2,
+        "comp": 4,
+        "for": 4,
+        "if": 1,
+        "match": 0,
+        "total": 9,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.oop",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 2,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_github_acquisition.py",
+      "provenance": "handwritten-pending",
+      "sha256": "ad2a5cb3f74f3a9ee3dd599e25aa9871e77da4d6a30dcad623b25bd0e8b46e33",
+      "size": 11386,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 17,
+        "for": 3,
+        "if": 0,
+        "match": 0,
+        "total": 20,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_github_candidates.py",
+      "provenance": "handwritten-pending",
+      "sha256": "14f26aecce6627318eb64070d58ee953721e7ce8ba9224b86e024a211dbcfe36",
+      "size": 11425,
       "standard_ten_class_ok": false
     },
     {
@@ -8833,6 +9573,30 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
+        "comp": 12,
+        "for": 3,
+        "if": 0,
+        "match": 0,
+        "total": 15,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_github_corpus_fixtures.py",
+      "provenance": "handwritten-pending",
+      "sha256": "620fa16a6664ac2688c9e2fde349c6cf7b95011151812783ac2dc0781b11d907",
+      "size": 6324,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
         "comp": 7,
         "for": 0,
         "if": 0,
@@ -8851,6 +9615,54 @@
       "provenance": "handwritten-pending",
       "sha256": "e3d7ed67d79087a4c5e10238d7f1df76ed8033d3c950a449da473650706eaa5d",
       "size": 4597,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 4,
+        "for": 3,
+        "if": 0,
+        "match": 0,
+        "total": 7,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_github_holdout.py",
+      "provenance": "handwritten-pending",
+      "sha256": "e076eb1906c01fbdbace2e7f88730e8f1d37668ec45bbb8215a9dca6ec029633",
+      "size": 7819,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 18,
+        "for": 3,
+        "if": 0,
+        "match": 0,
+        "total": 21,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_github_normalization.py",
+      "provenance": "handwritten-pending",
+      "sha256": "cf6ce7b8451f3a052822d01e2490c5e3d8771d4241af242c21de1cdc12f5b046",
+      "size": 11228,
       "standard_ten_class_ok": false
     },
     {
@@ -9091,6 +9903,30 @@
       "provenance": "handwritten-pending",
       "sha256": "1129f66b15f018bb84cfa24add085554f7a429ec5cb6ef5dc2293b085d0b7e4e",
       "size": 5617,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 8,
+        "for": 1,
+        "if": 2,
+        "match": 0,
+        "total": 11,
+        "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "tests/test_run_pipeline.py",
+      "provenance": "handwritten-pending",
+      "sha256": "915fb70c087f2217515ad59a1cf5bb5ac303407a877227fc7756e4c1486c6955",
+      "size": 6097,
       "standard_ten_class_ok": false
     },
     {
@@ -9523,6 +10359,30 @@
       "provenance": "handwritten-pending",
       "sha256": "45408b495b5b9bf9bb23a0ea5353c357391581d70f2042f59b0abc8b28598e47",
       "size": 13201,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 16,
+        "for": 14,
+        "if": 56,
+        "match": 0,
+        "total": 87,
+        "try": 1,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "unified/dependency_provenance.py",
+      "provenance": "handwritten-pending",
+      "sha256": "e4c9b4a86496f73bfa52e9922ad33ada3b1e2b12a1d20eb142b005226a341181",
+      "size": 18367,
       "standard_ten_class_ok": false
     },
     {
@@ -9987,11 +10847,11 @@
         "classes": 0,
         "comp": 0,
         "for": 0,
-        "if": 79,
+        "if": 83,
         "match": 0,
-        "total": 91,
+        "total": 96,
         "try": 3,
-        "while": 9
+        "while": 10
       },
       "gap_id": "gap.untracked-or-handwritten",
       "generated": false,
@@ -10001,8 +10861,8 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/generator/cli.py",
       "provenance": "handwritten-pending",
-      "sha256": "cea912e2b5861b5721cb4326e5657570890eddcdfa230d097fbc4bcb90c1db02",
-      "size": 17286,
+      "sha256": "b7f7ff313785b19b1df163590a55e2ec52a872fe84a6131c093cd2ae5c38fc4c",
+      "size": 17992,
       "standard_ten_class_ok": false
     },
     {
@@ -10441,12 +11301,60 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
-        "comp": 9,
-        "for": 4,
+        "comp": 8,
+        "for": 5,
         "if": 56,
         "match": 0,
-        "total": 69,
+        "total": 73,
+        "try": 4,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "unified/github_acquisition.py",
+      "provenance": "handwritten-pending",
+      "sha256": "793d7ccd5f4a81ad6e61c459799563d7d9d69d47516e7b07e35eb17d10c1cb05",
+      "size": 25681,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 18,
+        "for": 4,
+        "if": 46,
+        "match": 0,
+        "total": 68,
         "try": 0,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "unified/github_candidates.py",
+      "provenance": "handwritten-pending",
+      "sha256": "0eeda395ff5431af1b5aa29cf677c436d9d6d0731ced09827561f02bc116509b",
+      "size": 17364,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 11,
+        "for": 6,
+        "if": 82,
+        "match": 0,
+        "total": 100,
+        "try": 1,
         "while": 0
       },
       "gap_id": "gap.untracked-or-handwritten",
@@ -10457,8 +11365,32 @@
       "originating_seed": "seed/ROOT.seed.json",
       "path": "unified/github_corpus.py",
       "provenance": "handwritten-pending",
-      "sha256": "445da4c721936c0be1b10713ba1abac0979f9737861c20934436d41ea170c0e9",
-      "size": 15739,
+      "sha256": "ba3df782059eaac2f523ca7062f9df83dd5c6805af495a6303ab742434691ee7",
+      "size": 23271,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
+        "comp": 10,
+        "for": 12,
+        "if": 40,
+        "match": 0,
+        "total": 63,
+        "try": 0,
+        "while": 1
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "unified/github_normalization.py",
+      "provenance": "handwritten-pending",
+      "sha256": "f5d3d612ed0a5a2da76046df5e2a0a78d1ce8e1b94ee3e8a0d79414705689206",
+      "size": 14149,
       "standard_ten_class_ok": false
     },
     {
@@ -10872,6 +11804,30 @@
       "compliance": "standard.gap",
       "control_flow": {
         "classes": 0,
+        "comp": 3,
+        "for": 0,
+        "if": 28,
+        "match": 0,
+        "total": 33,
+        "try": 2,
+        "while": 0
+      },
+      "gap_id": "gap.untracked-or-handwritten",
+      "generated": false,
+      "generation_command": null,
+      "handwritten": true,
+      "oop_classes": 0,
+      "originating_seed": "seed/ROOT.seed.json",
+      "path": "unified/run_pipeline.py",
+      "provenance": "handwritten-pending",
+      "sha256": "147d33c7517fad3f07eae62118b81afa871c1b7bf7950465ad0b29ce21cf2f1b",
+      "size": 10512,
+      "standard_ten_class_ok": false
+    },
+    {
+      "compliance": "standard.gap",
+      "control_flow": {
+        "classes": 0,
         "comp": 8,
         "for": 7,
         "if": 9,
@@ -11037,9 +11993,10 @@
       "standard_ten_class_ok": false
     }
   ],
-  "illegal_provenance_count": 276,
+  "illegal_provenance_count": 293,
   "oop_files": [
-    "scripts/build_github_duplication_pilot.py"
+    "scripts/build_github_duplication_pilot.py",
+    "tests/test_github_acquisition.py"
   ],
   "open_gaps": [
     {
@@ -11106,7 +12063,7 @@
       "summary": "Clean-room regeneration cannot yet emit the full repository from seed alone."
     }
   ],
-  "seed_sha256": "9b145882d8aaa29dfec413ce78e72e86998349a5d7e63118b0daf361b26d25c2",
+  "seed_sha256": "7fd82a5409ba5e8567e15bacbf0737bedbd9264ad845d46b25f425825ba876cc",
   "standard_version": "TEN-1",
   "uem_version": "UEM-16-v0.1",
   "verdict": "fail"
