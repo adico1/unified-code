@@ -1,0 +1,24 @@
+{
+  "format_version": "UC-GITHUB-CORPUS-FIXTURE-PAGE-1",
+  "records": [
+    {
+      "payload": {
+        "candidate_boundaries": ["calculator.py"],
+        "default_branch": "main",
+        "full_name": "nityasaini/calculator",
+        "html_url": "https://github.com/nityasaini/calculator",
+        "id": 995929651,
+        "license": {
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit"
+        },
+        "node_id": "R_kgDOO1yuMw",
+        "source_url": "https://api.github.com/repos/nityasaini/calculator"
+      },
+      "source_identity": "github:repository:995929651"
+    }
+  ],
+  "retrieval_contract_version": "UC-GITHUB-CORPUS-SNAPSHOT-1",
+  "source_url": "https://api.github.com/search/repositories?q=repo%3Anityasaini%2Fcalculator&per_page=1&page=1"
+}

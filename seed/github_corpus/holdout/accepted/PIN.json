@@ -1,0 +1,31 @@
+{
+  "format_version": "UC-GITHUB-UNSEEN-HOLDOUT-PIN-1",
+  "generic_compiler_baseline": {
+    "application_language_sha256": "ca64e9fe7ed25a0d30b12ff8b1420329ed61780e23a20c93157a7b06a699af98",
+    "repository_commit": "1cbdec0b2ae3bd36512ef7351f141165aa3fae9f"
+  },
+  "pinned_before_evaluation": true,
+  "pinned_at": "2026-08-03T00:00:00Z",
+  "repository": {
+    "commit_sha256_identity": "4d2fa2752f30c42dbca87a469879a4781f79502e",
+    "default_branch": "main",
+    "full_name": "nityasaini/calculator",
+    "license_spdx": "MIT",
+    "repository_identity": "github:repository:995929651",
+    "source_url": "https://github.com/nityasaini/calculator/tree/4d2fa2752f30c42dbca87a469879a4781f79502e"
+  },
+  "sources": [
+    {
+      "git_blob_sha1": "5470e9c48ce0b42240ecb6fe9f6e04830f99dca4",
+      "path": "README.md",
+      "sha256": "ddc09d7c8fcebf2eef4957849af36ab8741e255c7d6cb34d8ca2d5eb29c34358",
+      "source_url": "https://github.com/nityasaini/calculator/blob/4d2fa2752f30c42dbca87a469879a4781f79502e/README.md"
+    },
+    {
+      "git_blob_sha1": "da66b07e6c2c7cbb297ed7acb8ca1991e824b07d",
+      "path": "calculator.py",
+      "sha256": "4931d3a3650116a9b33f91347ab0000b3904c85d9a107204a87492cc4aa820d2",
+      "source_url": "https://github.com/nityasaini/calculator/blob/4d2fa2752f30c42dbca87a469879a4781f79502e/calculator.py"
+    }
+  ]
+}

@@ -173,3 +173,38 @@ The checked-in observation authority, schema and golden identities are under
 copy no opaque source blobs. Extraction performs no network access, untrusted
 source execution, application ranking, seed inference, compiler mutation or
 live acquisition.
+
+## Frozen unseen holdout
+
+Issue #47 pins two repositories by immutable commit and source hashes before
+evaluation. The first exposes an unsupported distinction: its documented GUI
+omits the backspace control currently assumed by generated expression tests.
+The compiler is unchanged; the result is the exact `standard.gap` identity
+`gap.unsupported-feature:application-language-without-backspace-control`.
+
+The second holdout selects its README-documented desktop keyboard projection.
+The existing replay, normalization, candidate extraction and application
+assembly operations produce seven passing cases with compiler identity
+`ca64e9fe7ed25a0d30b12ff8b1420329ed61780e23a20c93157a7b06a699af98`
+and generated tree identity
+`bc4a12032771aaaec094bec5240c66817a6fec19c9c71ae778461d60de58ded8`.
+The acquired source's dynamic evaluation and undocumented controls remain
+foreign observations; they are not copied into the seed or generated runtime.
+
+Run the offline behavioral proof:
+
+```bash
+PYTHONPATH=. python -m unified.selftest tests/test_github_holdout.py
+```
+
+Regenerate the accepted artifact with the existing compiler:
+
+```bash
+PYTHONPATH=. python -m unified.generator.application_language.seed_compiler \
+  seed/github_corpus/holdout/accepted/application.seed.json \
+  --output build/holdouts/documented-keyboard-calculator-holdout@1
+```
+
+This proves one pinned unsupported verdict and one pinned accepted projection.
+It does not prove universal repository-to-application generation, live corpus
+acquisition, seed inference, fuzzy merging or automatic catalog promotion.
